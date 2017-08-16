@@ -6,12 +6,12 @@ date: "`r Sys.Date()`"
 affiliation: Department of Communication Sciences and Disorder, University of Wisconsin–Madison
 site: bookdown::bookdown_site
 documentclass: book
-bibliography: 
-  - ./assets/refs.bib
-  - ./assets/book.bib
-  - ./assets/packages.bib
+# bibliography: 
+#   - ./assets/refs.bib
+#   - ./assets/book.bib
+#   - ./assets/packages.bib
 biblio-style: apalike
-csl: ./assets/apa.csl
+# csl: ./assets/apa.csl
 link-citations: yes
 github-repo: tjmahr/dissertation
 description: > 

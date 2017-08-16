@@ -1,0 +1,42 @@
+--- 
+title: "Test"
+bibliography: 
+  - ./assets/refs.bib
+  - ./assets/book.bib
+  - ./assets/packages.bib
+csl: ./assets/apa.csl
+panflute-filters: fix-apa-ampersands
+---
+
+A related complication is the apparent predictive validity of word
+recognition measures. @MarchmanFernald2008 found that vocabulary size
+and lexical processing efficiency at age 2 jointly predicted working
+memory scores and expressive language scores at age 8. This result would
+suggest domain-general processing advantages influence word learning.
+@Fernald2012 also found that late talkers who looked more quickly to a
+named word at 18 months showed larger gains in vocabulary by 30 months
+compared to late-talkers who looked more slowly at 18 months.
+@Weisleder2013 found that lexical processing and language input at 19
+months predict vocabulary size at 25 months and that lexical processing
+mediated the effect of language input.
+
+***
+
+Another avenue for studying word recognition is to examine how listeners
+respond to unfamiliar or novel stimuli. A productive line of research
+has found that children are sensitive to mispronunciations during word
+recognition [e.g., @Swingley2000; @Swingley2002]. @WhiteMorgan2008
+presented toddlers with images of a familiar and novel object, and
+children heard a correct production of the familiar object,
+mispronunciations of the familiar object of varying severity, or an
+unrelated nonword. Toddlers looked less to a familiar word when the
+first segment was mispronounced. Moreover, they demonstrated graded
+sensitivity such that a 1-feature mispronunciation yielded more looks to
+an image than a 2-feature mispronunciation, and a 2-feature
+mispronunciation yielded more looks than a 3-feature one. Finally, in
+the nonword condition, the children looked more to the novel object than
+the familiar one, demonstrating *fast referent selection* as they
+associated novel words to novel objects in the moment. A similar pattern
+of effects was observed in the mispronunciation study by @MPPaper with
+preschoolers mapping real words to familiar objects, nonwords to novel
+objects, and equivocating about mispronunciations of familiar words.
