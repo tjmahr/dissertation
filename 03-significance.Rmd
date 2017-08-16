@@ -2,20 +2,19 @@ Significance
 ============
 
 Public Health Significance
----------------------------
+--------------------------
 
 Vocabulary size in preschool is a robust predictor of later language
 development, and early language skills predict early literacy skills at
-school entry [@Morgan2015]. By studying the mechanisms that
-shape word learning, we can understand how individual differences in
-language ability arise and identify strategies for closing language gaps
-between children. Word recognition—the process of mapping incoming
-speech sounds to known or novel words—has been shown to predict later
-language outcomes. We do not know how this ability develops over time,
-and we do not know when word recognition is most predictive of future
-outcomes. This project will provide an integrated account of how word
-recognition and its relationship with vocabulary size change from age 3
-to age 5.
+school entry [@Morgan2015]. By studying the mechanisms that shape word
+learning, we can understand how individual differences in language
+ability arise and identify strategies for closing language gaps between
+children. Word recognition—the process of mapping incoming speech sounds
+to known or novel words—has been shown to predict later language
+outcomes. We do not know how this ability develops over time, and we do
+not know when word recognition is most predictive of future outcomes.
+This project will provide an integrated account of how word recognition
+and its relationship with vocabulary size change from age 3 to age 5.
 
 Scientific Significance
 -----------------------
@@ -32,10 +31,11 @@ additional "m" would narrow the candidates to just *beam*. Semantic
 relationships also influence lexical processing, and cascading
 phonological-semantic effects—e.g., where *castle* activates the
 phonologically similar *candy* which in turn activates the semantically
-related *sweet*—have been demonstrated [@Marslen-Wilson1989]. Both low-level
-phonetic cues and high-level grammatical, semantic and pragmatic information
-can influence this process, but the *continuous processing of multiple competing
-candidates* is the essential dynamic underlying word recognition [@Magnuson2013].
+related *sweet*—have been demonstrated [@Marslen-Wilson1989]. Both
+low-level phonetic cues and high-level grammatical, semantic and
+pragmatic information can influence this process, but the *continuous
+processing of multiple competing candidates* is the essential dynamic
+underlying word recognition [@Magnuson2013].
 
 What about young children who know considerably fewer words? Eyetracking
 studies with toddlers have suggested a developmental continuity between
@@ -107,9 +107,9 @@ children come to process words efficiently.
 Another avenue for studying word recognition is to examine how listeners
 respond to unfamiliar or novel stimuli. A productive line of research
 has found that children are sensitive to mispronunciations during word
-recognition [e.g., @Swingley2000; @Swingley2002]. @WhiteMorgan2008 
-presented toddlers with images of a familiar and novel object,
-and children heard a correct production of the familiar object,
+recognition [e.g., @Swingley2000; @Swingley2002]. @WhiteMorgan2008
+presented toddlers with images of a familiar and novel object, and
+children heard a correct production of the familiar object,
 mispronunciations of the familiar object of varying severity, or an
 unrelated nonword. Toddlers looked less to a familiar word when the
 first segment was mispronounced. Moreover, they demonstrated graded
@@ -119,10 +119,9 @@ mispronunciation yielded more looks than a 3-feature one. Finally, in
 the nonword condition, the children looked more to the novel object than
 the familiar one, demonstrating *fast referent selection* as they
 associated novel words to novel objects in the moment. A similar pattern
-of effects was observed in the mispronunciation study by @MPPaper with 
-preschoolers mapping real words to familiar objects,
-nonwords to novel objects, and equivocating about mispronunciations of
-familiar words.
+of effects was observed in the mispronunciation study by @MPPaper with
+preschoolers mapping real words to familiar objects, nonwords to novel
+objects, and equivocating about mispronunciations of familiar words.
 
 As with lexical competition, it is unclear how children’s responses to
 mispronunciations and novel words change over time or how individual
@@ -183,15 +182,16 @@ instance, measures of speech perception at 6–8 months predict vocabulary
 size at 24 months (e.g., Tsao, Liu, & Kuhl, 2004; Kuhl et al, 2008), so
 processing predicts future vocabulary predicts concurrent processing.
 
-A related complication is the apparent predictive validity of word recognition
-measures. @MarchmanFernald2008 found that vocabulary size and lexical processing
-efficiency at age 2 jointly predicted working memory scores and expressive
-language scores at age 8. This result would suggest domain-general processing
-advantages influence word learning. @Fernald2012 also found that late talkers
-who looked more quickly to a named word at 18 months showed larger gains in
-vocabulary by 30 months compared to late-talkers who looked more slowly at 
-18 months. @Weisleder2013 found that lexical processing and language input at 
-19 months predict vocabulary size at 25 months and that lexical processing 
+A related complication is the apparent predictive validity of word
+recognition measures. @MarchmanFernald2008 found that vocabulary size
+and lexical processing efficiency at age 2 jointly predicted working
+memory scores and expressive language scores at age 8. This result would
+suggest domain-general processing advantages influence word learning.
+@Fernald2012 also found that late talkers who looked more quickly to a
+named word at 18 months showed larger gains in vocabulary by 30 months
+compared to late-talkers who looked more slowly at 18 months.
+@Weisleder2013 found that lexical processing and language input at 19
+months predict vocabulary size at 25 months and that lexical processing
 mediated the effect of language input.
 
 Word recognition efficiency and vocabulary size are interconnected
@@ -234,25 +234,27 @@ use computational models as a way to describe word recognition trends
 and variation in terms of psychological mechanisms and processing
 parameters.
 
-The TRACE model of speech perception and word recognition [@TRACE] is well
-suited for this kind of simulation work. TRACE can simulate a dozen or so
-empirical results from speech perception literature [@jTRACE, Table 1], and it
-has been used to simulate word-recognition data from adults [@Allopenna1998],
-adults with aphasia [@Mirman2011], and toddlers [@TRACE_Mispro].
+The TRACE model of speech perception and word recognition [@TRACE] is
+well suited for this kind of simulation work. TRACE can simulate a dozen
+or so empirical results from speech perception literature [@jTRACE,
+Table 1], and it has been used to simulate word-recognition data from
+adults [@Allopenna1998], adults with aphasia [@Mirman2011], and toddlers
+[@TRACE_Mispro].
 
-@McMurray2010 used TRACE to simulate word recognition results from adolescents
-with specific language impairment (SLI). They mapped certain theories about SLI
-onto different model parameters. To test the theory that listeners with SLI have
-impairments in acoustic perception, for example, they varied three of the
-model’s parameters: amount of noise added to the model’s mock-speech input
-(acoustic resolution), temporal spread of acoustic features in the input
-(temporal resolution), and rate of decay in the model’s acoustic feature
-detectors (perceptual memory). Other theories of SLI (and other model
-parameters) provided a closer fit to the observed data than the perceptual
-deficit theory. Specifically, lexical decay—“the ability to maintain words in
-memory” (p. 23)—was the most important model parameter, implying that individual
-differences in word recognition for listeners with SLI are rooted in lexical
-processes, as opposed to perceptual or phonological ones.
+@McMurray2010 used TRACE to simulate word recognition results from
+adolescents with specific language impairment (SLI). They mapped certain
+theories about SLI onto different model parameters. To test the theory
+that listeners with SLI have impairments in acoustic perception, for
+example, they varied three of the model’s parameters: amount of noise
+added to the model’s mock-speech input (acoustic resolution), temporal
+spread of acoustic features in the input (temporal resolution), and rate
+of decay in the model’s acoustic feature detectors (perceptual memory).
+Other theories of SLI (and other model parameters) provided a closer fit
+to the observed data than the perceptual deficit theory. Specifically,
+lexical decay—“the ability to maintain words in memory” (p. 23)—was the
+most important model parameter, implying that individual differences in
+word recognition for listeners with SLI are rooted in lexical processes,
+as opposed to perceptual or phonological ones.
 
 This example shows how simulations with TRACE recast word recognition
 performance in terms of psychological processes. For this project, I

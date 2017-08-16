@@ -1,6 +1,7 @@
 --- 
 title: "My dissertation"
 author: "Tristan Mahr"
+panflute-filters: fix-apa-ampersands
 date: "`r Sys.Date()`"
 affiliation: Department of Communication Sciences and Disorder, University of Wisconsin–Madison
 site: bookdown::bookdown_site

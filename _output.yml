@@ -1,5 +1,11 @@
 bookdown::gitbook:
   css: ./assets/style.css
+  pandoc_args: [
+    "--csl", "./assets/apa.csl",
+    "--bibliography", "./assets/refs.bib",
+    "--filter", "pandoc-citeproc",
+    "--filter", "panflute"
+  ]
   config:
     toc:
       before: |
@@ -9,6 +15,7 @@ bookdown::gitbook:
         <li><a href="https://tjmahr.github.io/" target="blank">Tristan Mahr</a></li>
     download: ["pdf", "epub"]
     split_bib: false
+
 bookdown::pdf_book:
   includes:
     in_header: "assets/preamble.tex"
