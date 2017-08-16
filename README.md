@@ -57,7 +57,7 @@ or `markdown_github`.)
 This filter needs to run _after_ the `pandoc-citeproc` filter because it is
 manipulating the citations created by pandoc. But I think RMarkdown makes
 `pandoc-citeproc` run last by default, so I had to manually specify the order of
-the Pandoc filters in the pandoc_args setting in [`_output.yaml`](./_output.yaml).
+the Pandoc filters in the pandoc_args setting in [`_output.yml`](./_output.yml).
 This also meant, for some reason, that I could no longer put the bibliography
 and csl file locations in the [`index.Rmd`](./index.Rmd) YAML header, but instead,
 I had to manually write those out in the pandoc args as well. Here's what my
