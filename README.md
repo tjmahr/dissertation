@@ -37,8 +37,9 @@ updated references to these files to use the assets path.
 ### Fixing APA citations
 
 I used [panflute](http://scorreia.com/software/panflute/index.html) to write a
-Pandoc filter `fix-apa-ampersands.py` to ampersands into "and"s for inline
-citations. Here's an example usage from my tester file `test-apa/test-apa.sh`:
+Pandoc filter [`fix-apa-ampersands.py`](./fix-apa-ampersands.py) to convert
+ampersands into "and"s for inline citations. Here's an example usage from my
+tester file [`test-apa/test-apa.sh`](./test-apa/test-apa.sh):
 
 ```
 pandoc "test-apa/test-file.Rmd" \
@@ -56,11 +57,11 @@ or `markdown_github`.)
 This filter needs to run _after_ the `pandoc-citeproc` filter because it is
 manipulating the citations created by pandoc. But I think RMarkdown makes
 `pandoc-citeproc` run last by default, so I had to manually specify the order of
-the Pandoc filters in the pandoc_args setting in `_output.yaml`. This also
-meant, for some reason, that I could no longer put the bibliography and csl file
-locations in the `index.Rmd` YAML header, but instead, I had to manually write
-those out in the pandoc args as well. Here's what my gitbook (the web version of
-the book) pandoc settings look like now:
+the Pandoc filters in the pandoc_args setting in [`_output.yaml`](./_output.yaml).
+This also meant, for some reason, that I could no longer put the bibliography
+and csl file locations in the [`index.Rmd`](./index.Rmd) YAML header, but instead,
+I had to manually write those out in the pandoc args as well. Here's what my
+gitbook (the web version of the book) pandoc settings look like now:
 
 ```
 bookdown::gitbook:
