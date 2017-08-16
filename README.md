@@ -7,12 +7,11 @@ https://bookdown.org/yihui/bookdown-demo/
 
 ## My notes
 
-All the text here is from the 
-[bookdown demo](https://github.com/rstudio/bookdown-demo) repository, except...
-
 (Once I get the repository to my liking, I'll do a hard-fork with a fresh commit
 history. Therefore, I'm taking some notes here of how I changed the original
 demo. This is like a commit history, but with a more big picture description.)
+
+Some things I had to change from the original version:
 
 **Change the build tools**: I first had to change the RStudio Project build
 command from package to website. The Build button became "Build Book" as a

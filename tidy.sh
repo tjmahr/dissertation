@@ -1,3 +1,4 @@
+pandoc "01-prospectus.Rmd" -f markdown -t markdown -o "01-prospectus.Rmd"
 pandoc "02-specific-aims.Rmd" -f markdown -t markdown -o "02-specific-aims.Rmd"
 pandoc "03-significance.Rmd" -f markdown -t markdown -o "03-significance.Rmd"
 

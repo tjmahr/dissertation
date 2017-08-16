@@ -1,5 +1,5 @@
 Specific Aims
-=====================================================================
+=============
 
 Individual differences in language ability are apparent as soon as
 children start talking, but it is difficult to identify children at risk
@@ -40,13 +40,12 @@ word recognition abilities. These simulations can identify plausible
 psychological mechanisms that underlie changes in word recognition
 behavior.
 
-
 Specific Aim 1 (Familiar Word Recognition and Lexical Competition)
----------------------------------------------------------------------
+------------------------------------------------------------------
 
-**To characterize the development of familiar word recognition and lexical
-competition, I will analyze data from a visual world paradigm experiment,
-conducted at age 3, age 4, and age 5.**
+**To characterize the development of familiar word recognition and
+lexical competition, I will analyze data from a visual world paradigm
+experiment, conducted at age 3, age 4, and age 5.**
 
 In these eyetracking experiments, children were presented with four
 images of familiar objects and heard a prompt to view one of the images.
@@ -63,19 +62,20 @@ Changes in sensitivity to competing words can reveal how lexical
 competition emerges as a byproduct of learning new words.
 
 Specific Aim 2 (Referent Selection and Mispronunciations)
----------------------------------------------------------------------
+---------------------------------------------------------
 
-**To characterize how fast referent selection develops longitudinally, I will
-analyze data from a looking-while-listening mispronunciation experiment,
-conducted at age 3, age 4, and age 5.**
+**To characterize how fast referent selection develops longitudinally, I
+will analyze data from a looking-while-listening mispronunciation
+experiment, conducted at age 3, age 4, and age 5.**
 
-In these eyetracking experiments [based on @WhiteMorgan2008; @MPPaper], children
-saw an image of a familiar object and an unfamiliar object, and they heard
-either a correct production of the familiar object (e.g., *soup*), a one-feature
-mispronunciation of the familiar object (*shoop*), or a novel word unrelated to
-either image (*cheem*). The correct productions test familiar word recognition
-and the nonwords test fast referent selection. The mispronunciations test a
-child’s phonological categories (whether the child permits, rejects, or
+In these eyetracking experiments [based on @WhiteMorgan2008; @MPPaper],
+children saw an image of a familiar object and an unfamiliar object, and
+they heard either a correct production of the familiar object (e.g.,
+*soup*), a one-feature mispronunciation of the familiar object
+(*shoop*), or a novel word unrelated to either image (*cheem*). The
+correct productions test familiar word recognition and the nonwords test
+fast referent selection. The mispronunciations test a child’s
+phonological categories (whether the child permits, rejects, or
 equivocates about mispronunciations).
 
 I will use growth curve analyses to study how children’s responses to
@@ -85,39 +85,41 @@ lexical processing better predicts vocabulary growth. I plan to examine
 dissociations or asymmetries in these forms of processing within
 children as a way to empirically assess the claim that "novel word
 processing (referent selection) is not distinct from familiar word
-recognition" (McMurray, Horst, & Samuelson, 2012). Finally, I will
-examine how individual differences in vocabulary and speech perception
-predict responses to mispronunciations and novel words.
+recognition" [@McMurray2012]. Finally, I will examine how individual
+differences in vocabulary and speech perception predict responses to
+mispronunciations and novel words.
 
 Specific Aim 3 (Computational Modeling)
----------------------------------------------------------------------
+---------------------------------------
 
-**To identify plausible psychological mechanisms underlying the development of
-word recognition, I will simulate the word recognition data using cognitive
-computation models.**
+**To identify plausible psychological mechanisms underlying the
+development of word recognition, I will simulate the word recognition
+data using cognitive computation models.**
 
-The TRACE model of word recognition [@TRACE] has been used to simulate word
-recognition data from adults [@Allopenna1998], adults with aphasia
+The TRACE model of word recognition [@TRACE] has been used to simulate
+word recognition data from adults [@Allopenna1998], adults with aphasia
 [@Mirman2011], toddlers [@TRACE_Mispro], and adolescents with language
-impairments [@McMurray2010]. In this model, incoming acoustic information
-activates perceptual units which in turn activate phoneme units which in turn
-activate word units. Connections are interactive, so the model can accommodate
-top-down processing effects and competition among units through inhibition. The
-model is controlled by psychological parameters like inhibition strength,
-activation decay rates, and lexicon size and composition. The advantage of using
-this model is how one can map different behavioral patterns onto changes in
-model parameterizations to develop a plausible psychological account of
-developmental changes. I will simulate the Year 1 word recognition data in
-TRACE, and I will study how the model’s parameters need to change in order to
-accommodate data from Year 2 and Year 3. I will examine how different model
-parameters map onto individual differences in word recognition. For instance,
-under what modeling conditions are mispronunciations of familiar words accepted
-and do these conditions correspond to child-level differences in vocabulary or
-speech perception? These simulations will provide a psychological account for
+impairments [@McMurray2010]. In this model, incoming acoustic
+information activates perceptual units which in turn activate phoneme
+units which in turn activate word units. Connections are interactive, so
+the model can accommodate top-down processing effects and competition
+among units through inhibition. The model is controlled by psychological
+parameters like inhibition strength, activation decay rates, and lexicon
+size and composition. The advantage of using this model is how one can
+map different behavioral patterns onto changes in model
+parameterizations to develop a plausible psychological account of
+developmental changes. I will simulate the Year 1 word recognition data
+in TRACE, and I will study how the model’s parameters need to change in
+order to accommodate data from Year 2 and Year 3. I will examine how
+different model parameters map onto individual differences in word
+recognition. For instance, under what modeling conditions are
+mispronunciations of familiar words accepted and do these conditions
+correspond to child-level differences in vocabulary or speech
+perception? These simulations will provide a psychological account for
 the developmental trends and individual variation in word recognition.
 
 Summary
-------------------------------------------------------------------------
+-------
 
 This project investigates how word recognition develops during the
 preschool years. There has been no research studying word recognition
