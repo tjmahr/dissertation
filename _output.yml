@@ -4,7 +4,6 @@ bookdown::gitbook:
     "--csl", "./assets/apa.csl",
     "--bibliography", "./assets/refs.bib",
     "--filter", "pandoc-citeproc",
-    #"--filter", "panflute"
     "--filter", "fix-apa-ampersands.py"
   ]
   config:
@@ -16,19 +15,33 @@ bookdown::gitbook:
         <li><a href="https://tjmahr.github.io/" target="blank">Tristan Mahr</a></li>
     download: ["pdf", "epub"]
     split_bib: false
-bookdown::pdf_book:
-  includes:
-    in_header: "assets/preamble.tex"
-  latex_engine: xelatex
-  citation_package: natbib
-  keep_tex: yes
-bookdown::epub_book: default
-bookdown::word_document2: default
-bookdown::tufte_book2:
-  citation_package: natbib
+# bookdown::pdf_book:
+#   includes:
+#     in_header: "assets/preamble.tex"
+#   latex_engine: xelatex
+#   keep_tex: yes
+#   citation_package: natbib
+#   pandoc_args: [
+#     "--csl", "./assets/apa.csl",
+#     "--bibliography", "./assets/refs"
+#   ]
+bookdown::epub_book:
+    pandoc_args: [
+    "--csl", "./assets/apa.csl",
+    "--bibliography", "./assets/refs.bib",
+    "--filter", "pandoc-citeproc",
+    "--filter", "fix-apa-ampersands.py"
+  ]
+bookdown::word_document2:
   pandoc_args: [
     "--csl", "./assets/apa.csl",
     "--bibliography", "./assets/refs.bib",
     "--filter", "pandoc-citeproc",
-    "--filter", "panflute"
+    "--filter", "fix-apa-ampersands.py"
+  ]
+bookdown::tufte_book2:
+  citation_package: natbib
+  pandoc_args: [
+    "--csl", "./assets/apa.csl",
+    "--bibliography", "./assets/refs"
   ]
