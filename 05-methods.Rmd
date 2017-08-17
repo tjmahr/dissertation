@@ -175,7 +175,7 @@ word (*swing*).
 the semantic foil *drum*, the phonological foil *bee*, and the unrelated
 *swing*.
 
-```{r sample-vw-screen, echo = FALSE, fig.cap = "(ref:sample-vw-screen-cap)", out.width = "70%"}
+```{r sample-vw-screen, echo = FALSE, fig.cap = "(ref:sample-vw-screen-cap)", out.width = "100%"}
 knitr::include_graphics("./misc/rwl-screens/TimePoint1/actual/Block2_17_swing2_bell2_bee2_drum2_UpperRightImage_bell.png")
 ```
 
@@ -203,7 +203,7 @@ mispronunciations.
 (ref:sample-mp-screen-cap) Example display for a trial in which *duck* 
 is mispronounced as “guck”.
 
-```{r sample-mp-screen, echo = FALSE, fig.cap = "(ref:sample-mp-screen-cap)", out.width = "70%"}
+```{r sample-mp-screen, echo = FALSE, fig.cap = "(ref:sample-mp-screen-cap)", out.width = "100%"}
 knitr::include_graphics("./misc/mp-screens/TimePoint1/actual/Block1_03_MP_bull2_duck2_ImageR_guk.png")
 ```
 

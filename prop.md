@@ -21,91 +21,6 @@ March 20, 2017
 
 
 
-General Analysis
-----------------
-
-### Growth Curve Analysis
-
-Eyetracking growth curves will be analyzed using **Bayesian mixed
-effects logistic regression**. I will use *logistic* regression because
-the outcome measurement is a probability (the log-odds of looking to the
-target image versus a distractor). I will use *mixed-effects* models
-because I want to estimate a separate growth curve for each child (to
-measure individual differences in word recognition) but also treat each
-child's individual growth curve as a draw from a distribution of related
-curves.
-
-I plan to use *Bayesian* techniques to study a generative model of the
-data. Instead of reporting and describing a single, best-fitting model
-of some data, Bayesian techniques consider an entire distribution of
-plausible models that are consistent with the data and any prior
-information we have about the models. By using this approach, I can
-explicitly quantify uncertainty about statistical effects and draw
-inferences using estimates of uncertainty (instead of using statistical
-significance—which is not a straightforward matter for mixed-effects
-models).[^2]
-
- 
-
-The eyetracking growth curves will be fit using an orthogonal cubic
-polynomial function of time (a now-conventional approach; see Mirman,
-2014). Put differently, I will model the probability of looking to the
-target during an eyetracking task as:
-
-log­odds(*looking to target*) = *B*~0~ + *B*~1~ × Time^1^ + *B*~2~ ×
-Time^2^ + *B*~3~ × Time^3^
-
-That the time terms are *orthogonal* means that Time^1^, Time^2^ and
-Time^3^ are transformed so that they are uncorrelated. Under this
-formulation, the parameters *B*~0~ and *B*~1~ have a clear
-interpretation in terms of lexical processing performance. The
-intercept, *B*~0~, measures the area under the growth curve—or the
-probability of fixating on the target word averaged over the whole
-window. We can think of *B*~0~ as a measure of average accuracy or of
-*word recognition reliability*. The linear time parameter, *B*~1~,
-estimates the steepness of the growth curve—or how the probability of
-fixating changes from frame to frame. We can think of *B*~1~ as a
-measure of *processing efficiency*, because growth curves with stronger
-linear features exhibit steeper frame-by-frame increases in looking
-probability.[^3]
-
-For each experimental task, I will study how word recognition changes
-over time by modeling how growth curves change over developmental time.
-This amounts to study how the growth curve parameters changes year over
-year in the study. I can model the data for an eyetracking task by
-including dummy-coded indicators for Year 1, Year 2, and Year 3 and
-having these indicators interact with the growth curve parameters. In
-such a model, Year 2 would be the reference year, so the Year 1
-parameters would estimate how the word-recognition-curves change from
-Year 2 to Year 1, and Year 3 parameters would be interpreted similarly.
-
-log­odds(*looking to target*) = *C*~0~ + *C*~1~ × Time^1^ + *C*~2~ ×
-Time^2^ + *C*~3~ × Time^3^ \[Year 2 growth curve\]
-
-*C~i~* = *B~i~* + *B~i~*~Year1~ × Year1 + *B~i~*~Year3~ × Year3
-\[Adjustments to Year 2 curve\]
-
-Thus, the interaction effects for the intercept term describe how
-overall accuracy changed between years, and interaction effects for the
-linear-time terms describe changes in overall processing efficiency
-between years.
-
-[]{#_Toc477528797 .anchor}Lastly, a brief comment about priors. Bayesian
-models require prior information (“priors”). For these models, I will
-use weakly to moderately informative priors. For example, suppose *x*
-and *y* are scaled to mean 0 and standard deviation 1. A weakly
-informative prior for the effect of *x* on *y* might be Normal(0, 5)—a
-normal distribution with mean 0 and standard deviation 5. If we fit a
-regression model and observed an effect size of 12 SD units, our first
-assumption would be that something went wrong with our software. The
-weakly informative prior captures this level of prior information. A
-moderately informative prior would be Normal(0, 1). This prior
-information captures our disciplinary experience that effect sizes
-greater than ±1 relatively uncommon in child language research. A
-strongly informative prior for this effect might be something like
-Normal(.4, .1) which says that our model should be very skeptical of
-negative effects and of effects larger than .8. For this project, I will
-default to the first two levels of prior information.
 
 Specific Analysis: Aim 1 (Familiar Word Recognition and Lexical Competition)
 ----------------------------------------------------------------------------
@@ -409,25 +324,7 @@ competition effects or the development of word recognition within
 children.
 
 
-[^2]: It is tempting to further justify this approach by comparing
-    Bayesian versus classical/frequentist statistics, but my goals in
-    using this method are simple: To estimate statistical effects and
-    quantify uncertainty about those effects. This pragmatic brand of
-    Bayesian statistics is illustrated in texts by Gelman and Hill
-    (2007) and McElreath (2015).
 
-[^3]: The polynomial other terms are less important—or rather, they have
-    do not map as neatly onto behavioral descriptions as the accuracy
-    and efficiency parameters. The primary purpose of quadratic and
-    cubic terms is to ensure that the estimated growth curve adequately
-    fits the data. In this kind of data, there is a steady baseline at
-    chance probability before the child hears the word, followed a
-    window of increasing probability of fixating on the target as the
-    child recognizes the word, followed by a period of plateauing and
-    then diminishing looks to target. The cubic polynomial allows the
-    growth curve to be fit with two inflection points: the point when
-    the looks to target start to increase from baseline and the point
-    when the looks to target stops increasing.
 
 [^4]: Most of the phonological foils for this task are cohorts or words
     that shared onset consonants (*bear-bell*, *flag-fly*). Only trials

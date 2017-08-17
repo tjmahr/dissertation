@@ -1,7 +1,12 @@
-list_bibcodes <- function() {
+list_bibcodes <- function(sort = TRUE) {
   refs <- bibtex::read.bib("./assets/refs.bib")
 
+  if (sort) {
+    refs <- refs[sort(names(refs))]
+  }
+
   titles <- purrr::map_chr(refs, purrr::pluck, 1, "title")
+
   titles <- stringr::str_replace_all(titles, "\\{|\\}", "")
   titles <- stringr::str_replace_all(titles, "\\s\\s+", " ")
 
