@@ -37,8 +37,11 @@ Code settings:
 knitr::opts_chunk$set(
   tidy = FALSE,
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  out.width = 80
 )
+
+options(width = 80)
 ```
 
 ```{r, include = FALSE}
@@ -166,7 +169,7 @@ knitr::include_graphics("./misc/happy-cat-grooming-itself-vector-file.png")
 
 ```{r}
 str(list(html = is_html_output(), latex = is_latex_output(),
-         word = is_word_output()))
+         word = is_word_output(), width = options("width")[[1]]))
 
 devtools::session_info()
 
