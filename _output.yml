@@ -40,6 +40,8 @@ bookdown::word_document2:
     "--filter", "fix-apa-ampersands.py"
   ]
 bookdown::tufte_book2:
+  includes:
+    in_header: "assets/preamble2.tex"
   latex_engine: xelatex
   citation_package: natbib
   pandoc_args: [
