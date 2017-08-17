@@ -1,25 +1,22 @@
 --- 
 title: "My dissertation"
 author: "Tristan Mahr"
-panflute-filters: fix-apa-ampersands
 date: "`r Sys.Date()`"
-affiliation: Department of Communication Sciences and Disorder, University of Wisconsin–Madison
-site: bookdown::bookdown_site
 documentclass: book
-biblio-style: apalike
-link-citations: yes
 github-repo: tjmahr/dissertation
-description: > 
-  This is a minimal example of using the bookdown package to write a book. The
-  output format for this example is bookdown::gitbook.
+link-citations: yes
+biblio-style: apalike
+panflute-filters: fix-apa-ampersands
+site: bookdown::bookdown_site
+affiliation: Department of Communication Sciences and Disorder, University of Wisconsin--Madison
 ---
 
-
-# [demo] Scratch paper
+# Scratch paper
 
 This book is made with bookdown, an R package/tool-chain for creating a books in
-multiple formats. This page is just a placeholder/scratch-paper so I have some
-examples on-hand of how to use bookdown's syntax and features. 
+multiple formats. This chapter is just a placeholder section and some
+scratch-paper so that I have some examples on-hand of how to use bookdown's
+syntax and features.
 
 ***
 
@@ -29,8 +26,27 @@ Pandoc's Markdown supports, e.g., a math equation $a^2 + b^2 = c^2$.
 For now, you have to install the development versions of **bookdown** from
 Github:
 
-```{r eval = FALSE}
+
+```{r, eval = FALSE}
 devtools::install_github("rstudio/bookdown")
+```
+
+Code settings:
+
+```{r, tidy = FALSE}
+knitr::opts_chunk$set(
+  tidy = FALSE,
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r, include = FALSE}
+is_word_output <- function() {
+  knitr::opts_knit$get("rmarkdown.pandoc.to") == "docx"
+}
+is_html_output <- knitr:::is_html_output
+is_latex_output <- knitr:::is_latex_output
 ```
 
 ## Bookdown cheatsheet
@@ -45,7 +61,7 @@ The headings above were written with the following markdown:
 ### Cross-references to sections {#manual-section-label-demo}
 ```
 
-The first one get an implicit label. The second one has an 
+The first one gets an implicit label. The second one has an 
 explicit section label.
 
 ```markdown
@@ -86,7 +102,7 @@ Both: See [Appendix \@ref(mp-experiment-items)](#mp-experiment-items)
 The chunk label `table-single` provides an implicit label 
 for Table \@ref(tab:table-single).
 
-`r ''````{r table-single, tidy = FALSE, echo = FALSE}
+`r ''````{r table-single, echo = FALSE}
 knitr::kable(
   head(mtcars[, 1:5], 5), booktabs = TRUE,
   caption = 'A table of the first 5 rows of the mtcars data.'
@@ -97,7 +113,7 @@ knitr::kable(
 The chunk label `table-single` provides an implicit label 
 for Table \@ref(tab:table-single).
 
-```{r table-single, tidy = FALSE, echo = FALSE}
+```{r table-single, echo = FALSE}
 knitr::kable(
   head(mtcars[, 1:5], 5), booktabs = TRUE,
   caption = 'A table of the first 5 rows of the mtcars data.'
@@ -123,21 +139,40 @@ knitr::include_graphics(
 <!-- then that text will be injected into the code block above, so I -->
 <!-- add `happy-` to the labels. -->
 
-The caption for Figure \@ref(fig:happy-cat) is defined as a _text reference_
+```{r, echo = FALSE}
+happy_cat_ref <- ifelse(is_word_output(), "happy-cat-docx", "happy-cat")
+```
+
+
+The caption for Figure \@ref(fig:`r happy_cat_ref`) is defined as a _text reference_
 below and passed to the `fig.cap` chunk option.
 
 (ref:happy-cat-cap) This is a happy cat.
 
-```{r happy-cat, fig.cap = "(ref:happy-cat-cap)", out.width = "30%", fig.show = "hold"}
+
+```{r happy-cat, fig.cap = "(ref:happy-cat-cap)", echo = !is_word_output(), eval = !is_word_output(), out.width = "30%", fig.show = "hold"}
 knitr::include_graphics(
   rep("./misc/happy-cat-grooming-itself-vector-file.png", 2)
 )
 ```
 
+```{r happy-cat-docx, fig.cap = "(ref:happy-cat-cap)", eval = is_word_output(), echo = is_word_output(), fig.width = 3}
+knitr::include_graphics("./misc/happy-cat-grooming-itself-vector-file.png")
+```
 
 
 
+## Debug info
 
+```{r}
+str(list(html = is_html_output(), latex = is_latex_output(),
+         word = is_word_output()))
+
+devtools::session_info()
+
+last_four_commits <- git2r::commits(git2r::repository("."), n = 4)
+msgs <- lapply(last_four_commits, show)
+```
 
 
 
