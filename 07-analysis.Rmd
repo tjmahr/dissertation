@@ -25,8 +25,8 @@ models).[^2]
     Bayesian versus classical/frequentist statistics, but my goals in
     using this method are simple: To estimate statistical effects and
     quantify uncertainty about those effects. This pragmatic brand of
-    Bayesian statistics is illustrated in texts by [@GelmanHill] and 
-    [@RethinkingBook].
+    Bayesian statistics is illustrated in texts by @GelmanHill and 
+    @RethinkingBook.
 
 The eyetracking growth curves will be fit using an orthogonal cubic polynomial
 function of time [a now-conventional approach; see @Mirman2014]. Put
@@ -82,18 +82,18 @@ and compare those measures in a second stage of modeling.
 
 Lastly, a brief comment about priors. Bayesian
 models require prior information (“priors”). For these models, I will
-use weakly to moderately informative priors. For example, suppose $x$
-and $y$ are scaled to mean 0 and standard deviation 1. A weakly
-informative prior for the effect of $x$ on $y$ might be $\text{Normal}(0, 5)$—a
+use weakly to moderately informative priors. For example, suppose _x_
+and _y_ are scaled to mean 0 and standard deviation 1. A weakly
+informative prior for the effect of _x_ on _y_ might be Normal(0,\ 5)—a
 normal distribution with mean 0 and standard deviation 5. If we fit a
 regression model and observed an effect size of 12 SD units, our first
 assumption would be that something went wrong with our software. The
 weakly informative prior captures this level of prior information. A
-moderately informative prior would be $\text{Normal}(0, 1)$. This prior
+moderately informative prior would be Normal(0,\ 1). This prior
 information captures our disciplinary experience that effect sizes
 greater than ±1 relatively uncommon in child language research. A
 strongly informative prior for this effect might be something like
-$\text{Normal}(.4, .1)$ which says that our model should be very skeptical of
+Normal(.4,\ .1) which says that our model should be very skeptical of
 negative effects and of effects larger than .8. For this project, I will
 default to the first two levels of prior information.
 
@@ -109,3 +109,162 @@ default to the first two levels of prior information.
     growth curve to be fit with two inflection points: the point when
     the looks to target start to increase from baseline and the point
     when the looks to target stops increasing.
+
+
+
+
+
+Specific Analysis: Aim 1 (Familiar Word Recognition and Lexical Competition)
+----------------------------------------------------------------------------
+
+In the four-image task, I will model the development of familiar word
+recognition by studying how looks to the target image change year over
+year, as described in [Growth Curve Analysis](#growth-curve-analysis).
+
+I predict that children will be more sensitive to the phonological foil
+and semantic foils in this task as they age and learn more words. This
+hypothesis is based on the idea that children discover similarities
+among words as they learn word and integrate them into their lexicon. To
+test this hypothesis, I will study how the probability of fixating on
+the foils changes over trial-time and how these growth curves change
+from year to year. In the conventional model of eyetracking data, the
+outcome is a binomial choice—Target versus Distractor—and we can
+estimate the log-odds of fixating on the target image relative to the
+distractors. To study the specific effect of the Phonological foil in
+this task, @RWLPaper treated the
+Unrelated foil as a reference distractor and compared two separate
+binomial growth curves (see Figure \@ref(fig:rwl-comp-to-unre)): Target versus 
+Phonological, and Target versus
+Unrelated. The same technique was used on the Semantic foil as well.
+With this approach, shown below, we observed an early negative effect of
+the phonological foil and a late negative effect of the semantic foil.
+
+(ref:rwl-comp-to-unre-cap) Reprint of Figure 4 from @RWLPaper to illustrate the strategy of examining lexical competition effects where the semantic foil and phonological foil are compared to the unrelated image.
+
+```{r rwl-comp-to-unre, fig.cap = "(ref:rwl-comp-to-unre-cap)", echo = FALSE, out.width="80%"}
+knitr::include_graphics("./misc/rwl-screenshot.png")
+```
+
+I plan to employ this technique for studying lexical competition effects
+and their development from Year\ 1 to Year\ 2 to Year\ 3.[^4] Increased
+lexical completion would be reflected in greater interference from the
+foils compared to the unrelated image.
+
+[^4]: Most of the phonological foils for this task are cohorts or words
+    that shared onset consonants (*bear-bell*, *flag-fly*). Only trials
+    with this type of phonological foil will be used to measure
+    phonological interference effects. The other phonological foils
+    included some rhymes (like *ring*-*swing*) and some words with
+    onsets that differed by a phonetic feature (*kite-gift*). Effects
+    from those foils will be considered separately.
+
+
+
+A more comprehensive statistical model for this experiment would capture
+the fact that the data are multinomial: Target versus Phonological
+versus Semantic versus Unrelated. However, multinomial mixed effects
+growth curves have not been used for eyetracking data. They are not
+estimable with the standard classical modeling software (lme4). I plan
+to examine whether such a model is feasible with Bayesian techniques,
+but it may prove to be too unstable. In that case, I will fall back to
+the above described strategy.
+
+I will also examine whether individual differences in lexical processing
+are stable over time. For an initial analytic step, I will identify how
+frequently children change quartiles or deciles. The idea here is that
+stable individual differences in processing should preserve some
+relative rankings—fast-processing children should remain relatively fast
+compared to their peers. If children make large swings in their
+rankings, e.g., changing from the bottom 55^th^ to the 30^th^
+percentile, then we have evidence that these rankings are unstable. I am
+also interested in how the magnitude of individual differences change
+over time. The differences among children could diminish over time so
+that the rankings are unstable and reflect small variations among
+children.
+
+Another question concerns the relationship between the development of
+lexical processing and the development of vocabulary size. Specifically,
+I will ask how age-adjusted lexical processing measures (accuracy and
+efficiency) correlate with age-adjusted vocabulary size each year.
+Moreover, I will also examine whether children who make large gains in
+vocabulary size also show large concurrent changes in their lexical
+processing measures.
+
+
+Specific Analysis: Aim 2 (Referent Selection and Mispronunciations)
+-------------------------------------------------------------------
+
+For this task, I will model how the looks to the familiar image differ
+in each condition (real words, mispronunciations, nonwords) and how the
+growth curves for each condition change year over year. This model will
+use growth curve model described in [Growth Curve Analysis](#growth-curve-analysis) but
+augmented with Condition effects.
+
+I will examine whether and when any dissociation is observed for word
+recognition in the real word and nonword conditions. @McMurray2012 argue that 
+familiar word recognition and fast
+association for novel words reflect the same cognitive process: referent
+selection. Data from this task would support with this hypothesis when
+the growth curves for looks to the familiar image are symmetrical for
+the real word and nonword conditions. Figure \@ref(fig:le-means), showing data
+from Law and Edwards (2015, 34 children, 30-46 months old), shows some
+symmetry for the real word and nonword conditions.
+
+(ref:le-means-cap) Condition averages for data described by Law and Edwards
+(2015; cf. Figure 2 in the original manuscript).
+
+```{r le-means, fig.cap = "(ref:le-means-cap)", echo = FALSE, out.width="80%"}
+knitr::include_graphics("./misc/le_means.png")
+```
+
+
+I will test whether the two measures ever dissociate by computing the
+posterior predicted difference between the growth curves. This approach
+is similar to the bootstrap-based divergence analyses used in some word
+recognition experiments [e.g., @Oleson2015; @eyetrackingR]. The essential question is when—at which
+specific time points—do two growth curves differ significantly from one
+another. The bootstrap approach uses resampling to get an estimate,
+whereas I will use posterior predicted samples to estimate these
+differences. (I have not seen my approach used yet in the literature, so
+it is a small innovation.)
+
+Specifically, I will compute the posterior-predicted looks to the
+familiar object in the real word condition, P(Familiar | Real Word, Time
+*t*, Child *i*) and the analogous looks to the unfamiliar object in the
+nonword condition, P(Unfamiliar | Nonword, Time *t*, Child *i*). The
+difference between these two probabilities estimates how the time course
+of word recognition differs between these two conditions, and I can use
+50% and 90% uncertainty intervals to determine during which time points
+the curves credibly differ from each other. Figure \@ref(fig:le-post-diff) 
+shows this calculation performed on data from @MPPaper. If feasible, I will also
+examine whether these measures dissociate *within* children and examine
+which child-level factors are associated with these kinds of listeners.
+
+(ref:le-post-diff-cap) Demonstration of posterior difference technique on data from @MPPaper.
+
+```{r le-post-diff, fig.cap = "(ref:le-post-diff-cap)", echo = FALSE, out.width="80%"}
+knitr::include_graphics("./misc/mp_post_diff.png")
+```
+
+Even though performance on the real word and nonword conditions might be
+highly correlated, one might intuitively hypothesize that that
+performance on the nonword condition to be a better predictor of
+concurrent or future vocabulary size. The rationale would be that
+referent selection for novel words is a more transparent test of the
+word learner’s basic task of associating new labels with objects.
+Therefore, I will examine how each of these measures relates to
+vocabulary growth.
+
+I will describe how looking behavior in the mispronunciation condition
+changes over time and changes for specific mispronunciation patterns.
+Overall, I predict that children will be more tolerant of
+mispronunciations as they age, because older children know more words
+and have more implicit knowledge about the similarities among words. As
+for specific mispronunciation items, let us (safely) suppose that speech
+perception improves with age, especially for later mastered sounds. Then
+we should expect that looking patterns for the *rice*-*wice* trials
+change significantly between Year 2 and Year 3, at least compared to
+looking patterns on trials with mispronunciations of earlier acquired
+sounds (e.g., *girl*-*dirl* or *duck*-*guck*). Therefore, I will examine
+individual mispronunciation effects and how they are associated with
+child-level measures, including speech perception.
