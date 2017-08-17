@@ -38,7 +38,7 @@ and data exclusions following guidelines by the Center for Open Science
 ----------------------------------------- ------------------ ------------------ ------------------
 N                                         184                175                160
 Boys, Girls                               94, 90             89, 86             82, 78
-Maternal education: Low, Middle, High\*   15, 98, 71         12, 92, 71         6, 90, 64
+Maternal education: Low, Middle, High     15, 98, 71         12, 92, 71         6, 90, 64
 Dialect: MAE, AAE                         171, 13            163, 12            153, 7
 Parent-identified late talkers            20                 19                 16
 Age (months): Mean (SD) [Range]           33 (3) [28–39]     45 (4) [39–52]     57 (4) [51–66]
@@ -46,9 +46,10 @@ EVT-2 standard score: Mean (SD)           115 (18)           118 (16)           
 PPVT-4 standard score: Mean (SD)          113 (17)           120 (16)           —
 GFTA-2 standard score: Mean (SD)          92 (13)            —                  91 (13)
 
-Table: (\#tab:participant-info) Participant characteristics. \* Education levels: Low: less 
-than high school, or high school; Middle: trade school, technical or associates 
-degree, some college, or college degree; and High: graduate degree.
+Table: (\#tab:participant-info) Participant characteristics. Education levels:
+_Low_: less than high school, or high school; _Middle_: trade school, technical
+or associates degree, some college, or college degree; and _High_: graduate
+degree.
 
 General Eyetracking Procedure
 -----------------------------

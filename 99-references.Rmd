@@ -1,0 +1,8 @@
+```{r, echo = FALSE, results = "asis"}
+if (knitr:::is_html_output()) { 
+cat("
+# References {-}
+
+")
+}
+```

@@ -74,3 +74,15 @@ bookdown::gitbook:
   # [...some other settings...]
 ```
 
+
+### Etc
+
+To fix, this LaTeX error
+
+```
+! Package inputenc Error: Unicode char ɔ (U+254)
+(inputenc)                not set up for use with LaTeX.
+```
+
+add `latex_engine: xelatex` to the YAML configuration for the format in 
+[`_output.yml`](./_output.yml).
