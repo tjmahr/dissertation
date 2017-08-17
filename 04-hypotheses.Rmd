@@ -1,0 +1,108 @@
+Research Hypotheses
+===================
+
+In this section, I outline the main hypotheses I plan to study for each
+specific aim. This section is intended to preregister the main analyses
+for this project, so I can cleanly separate confirmatory and exploratory
+results.
+
+Specific Aim 1 (Familiar Word Recognition and Lexical Competition)
+------------------------------------------------------------------
+
+-   Children’s accuracy and efficiency of recognizing words will improve
+    each year.
+
+-   There are stable individual differences in lexical processing of
+    familiar words such that children who are relatively fast at Year 1
+    remain relatively fast at Year 2 and Year 3.
+
+-   However, the magnitude of these individual differences diminishes
+    over time, as children converge on a mature level of performance for
+    this paradigm.
+
+-   As a consequence, individual differences in word recognition at age
+    3, for example, will be more discriminating and predictive of age 5
+    language outcomes than differences at age 4.
+
+-   Vocabulary size and lexical processing will be tightly correlated
+    such that large year-over-year gains in one measure will predict
+    large year-over-years gains in the other measure.
+
+-   Children will become more sensitive to lexical competitors as they
+    age, based on the hypothesis that children discover similarities
+    among words as a consequence of learning more and more words.
+
+-   Children will differ in their sensitivity to lexical competitors,
+    and these individual differences will correlate with other
+    child-level measures.
+
+
+Specific Aim 2 (Referent Selection and Mispronunciations)
+---------------------------------------------------------
+
+-   Children’s accuracy and efficiency of recognizing real words and
+    fast-associating nonwords will improve each year.
+
+-   Performance in real word recognition and fast association of
+    nonwords will be highly correlated, based on the hypothesis that the
+    same process (referent selection) operates in both situations.
+
+-   Under the alternative hypothesis, real word recognition and fast
+    referent selection reflect different skills with different
+    developmental trajectories. Thus, if there is any dissociation
+    between recognition of real words and nonwords, it will be observed
+    in younger children.
+
+-   Although these two measures will be correlated, I predict
+    performance in the nonword condition will be a better predict of
+    future vocabulary growth than performance in the real word
+    condition. This hypothesis is based on the idea that fast referent
+    selection is a more relevant skill for learning new words than
+    recognition of known words.
+
+-   For the mispronunciations, I predict children with larger
+    vocabularies (that is, older children) will be more likely to
+    tolerate a mispronunciation as a production of familiar word
+    compared to children with smaller vocabularies.
+
+-   Mispronunciations that feature later-mastered sounds (e.g.,
+    *rice*/*wice*) will be more likely to be associated to novel objects
+    than earlier-mastered sounds (*duck*/*guck*).
+
+
+Specific Aim 3 (Computational Modeling)
+---------------------------------------
+
+The research questions for this aim are more exploratory than
+confirmatory. I plan to use the well-studied TRACE model of spoken word
+recognition [@TRACE]. The TRACE model has no built-in
+semantic representations, so it will be used to model data from the
+two-image mispronunciation experiment (Aim 2) and a “semantic-less”
+subset of the data from the four-image experiment (Aim 1). Research
+questions include:
+
+-   What parameterizations of the TRACE model of word recognition
+    account Year 1 word recognition data?
+
+-   If the default model of TRACE represents “default” adult listeners,
+    how the children are Year 1 different than adults.
+
+-   How do these parameterizations have to change year over year to
+    accommodate the data from older children at Year 2 and again at Year
+    3? What is the developmental story for these changing
+    parameterizations?
+
+-   How does the model handle mispronunciations? What changes are
+    required to accommodate mispronunciations and novel words? @TRACE_Mispro have simulated mispronunciation experiments like
+    @WhiteMorgan2008, although it is not clear how the model can
+    accommodate the current mispronunciation experiment which presents
+    mispronunciations and nonwords.
+
+-   How does the model’s vocabulary parameters (namely the size and
+    composition of the lexicon used for the simulations) correlate with
+    the vocabulary size of participants?
+
+-   Can the model simulations incorporate other child-level measures?
+    For example, do children who demonstrate poorer speech perception in
+    a non-eyetracking speech discrimination task require lower levels of
+    phoneme inhibition in their word recognition models?
