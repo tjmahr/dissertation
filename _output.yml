@@ -13,7 +13,7 @@ bookdown::gitbook:
       after: |
         <li><a href="https://github.com/rstudio/bookdown" target="blank">Created with bookdown</a></li>
         <li><a href="https://tjmahr.github.io/" target="blank">Tristan Mahr</a></li>
-    download: ["pdf", "epub"]
+    download: ["pdf", "epub", "docx"]
     split_bib: false
 # bookdown::pdf_book:
 #   includes:
