@@ -1,0 +1,194 @@
+# Scratch paper
+
+This book is made with bookdown, an R package/tool-chain for creating a books in
+multiple formats. This chapter is just a placeholder section and some
+scratch-paper so that I have some examples on-hand of how to use bookdown's
+syntax and features.
+
+***
+
+This is _a book_ written in **Markdown**. You can use anything that
+Pandoc's Markdown supports, e.g., a math equation $a^2 + b^2 = c^2$.
+
+For now, you have to install the development versions of **bookdown** from
+Github:
+
+
+```{r, eval = FALSE}
+devtools::install_github("rstudio/bookdown")
+```
+
+Code settings:
+
+```{r, tidy = FALSE}
+knitr::opts_chunk$set(
+  tidy = FALSE,
+  collapse = TRUE,
+  comment = "#>",
+  out.width = 80
+)
+
+options(width = 80)
+```
+
+```{r, include = FALSE}
+is_word_output <- function() {
+  knitr::opts_knit$get("rmarkdown.pandoc.to") == "docx"
+}
+is_html_output <- knitr:::is_html_output
+is_latex_output <- knitr:::is_latex_output
+
+# Make a function that prints a string of characters if the output is pdf
+make_latex_decorator <- function(output, otherwise) {
+  function() {
+      if (is_latex_output()) output else otherwise
+  }
+}
+
+# insert_pause <- make_latex_decorator(". . .", "\n")
+# insert_slide_break <- make_latex_decorator("----", "\n")
+# insert_inc_bullet <- make_latex_decorator("> *", "*")
+insert_html_math <- make_latex_decorator("", "$$")
+```
+
+## Bookdown cheatsheet
+
+### Cross-references to sections {#manual-section-label-demo}
+
+The headings above were written with the following markdown:
+
+```markdown
+## Bookdown cheatsheet
+
+### Cross-references to sections {#manual-section-label-demo}
+```
+
+The first one gets an implicit label. The second one has an 
+explicit section label.
+
+```markdown
+I can refer to Section \@ref(bookdown-cheatsheet) and 
+[link to it](#bookdown-cheatsheet) with its implicit label.
+
+I can refer to Section \@ref(manual-section-label-demo) and 
+[link to it](#manual-section-label-demo) with its explicit label.
+```
+
+I can refer to Section \@ref(bookdown-cheatsheet) and 
+[link to it](#bookdown-cheatsheet) with its implicit label.
+
+I can refer to Section \@ref(manual-section-label-demo) and 
+[link to it](#manual-section-label-demo) with its explicit label.
+
+### Cross-references to appendices
+
+The sample principles apply to appendices.
+
+```markdown
+This is a reference to [an appendix](#mp-experiment-items)
+
+The number of that appendix \@ref(mp-experiment-items). I hope.
+
+Both: See [Appendix \@ref(mp-experiment-items)](#mp-experiment-items)
+```
+
+This is a reference to [an appendix](#mp-experiment-items)
+
+The number of that appendix \@ref(mp-experiment-items). I hope.
+
+Both: See [Appendix \@ref(mp-experiment-items)](#mp-experiment-items)
+
+### Cross-references to tables
+
+````markdown
+The chunk label `table-single` provides an implicit label 
+for Table \@ref(tab:table-single).
+
+`r ''````{r table-single, echo = FALSE}
+knitr::kable(
+  head(mtcars[, 1:5], 5), booktabs = TRUE,
+  caption = 'A table of the first 5 rows of the mtcars data.'
+)
+```
+````
+
+The chunk label `table-single` provides an implicit label 
+for Table \@ref(tab:table-single).
+
+```{r table-single, echo = FALSE}
+knitr::kable(
+  head(mtcars[, 1:5], 5), booktabs = TRUE,
+  caption = 'A table of the first 5 rows of the mtcars data.'
+)
+```
+
+### Figure references and using text references as captions
+
+````markdown
+The caption for Figure \@ref(fig:cat) is defined as a _text reference_
+below and passed to the `fig.cap` chunk option.
+
+(ref:cat-cap) This is a happy cat.
+
+`r ''````{r cat, fig.cap = "(ref:cat-cap)", out.width = "30%", fig.show = "hold"}
+knitr::include_graphics(
+  rep("./misc/happy-cat-grooming-itself-vector-file.png", 2)
+)
+```
+````
+
+<!-- I actually can't use that same text-reference label here because  -->
+<!-- then that text will be injected into the code block above, so I -->
+<!-- add `happy-` to the labels. -->
+
+```{r, echo = FALSE}
+happy_cat_ref <- ifelse(is_word_output(), "happy-cat-docx", "happy-cat")
+```
+
+
+The caption for Figure \@ref(fig:`r happy_cat_ref`) is defined as a _text reference_
+below and passed to the `fig.cap` chunk option.
+
+(ref:happy-cat-cap) This is a happy cat.
+
+
+```{r happy-cat, fig.cap = "(ref:happy-cat-cap)", echo = !is_word_output(), eval = !is_word_output(), out.width = "30%", fig.show = "hold"}
+knitr::include_graphics(
+  rep("./misc/happy-cat-grooming-itself-vector-file.png", 2)
+)
+```
+
+```{r happy-cat-docx, fig.cap = "(ref:happy-cat-cap)", eval = is_word_output(), echo = is_word_output(), fig.width = 3}
+knitr::include_graphics("./misc/happy-cat-grooming-itself-vector-file.png")
+```
+
+
+
+## Debug info
+
+```{r}
+str(list(html = is_html_output(), latex = is_latex_output(),
+         word = is_word_output(), width = options("width")[[1]]))
+
+devtools::session_info()
+
+last_four_commits <- git2r::commits(git2r::repository("."), n = 4)
+msgs <- lapply(last_four_commits, show)
+```
+
+
+
+```{r include = FALSE}
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+), './assets/packages.bib')
+
+# dir.create("./docs/")
+# dir.create("./docs/assets/")
+# file.copy(
+#   list.files("./assets/", full.names = TRUE), 
+#   file.path("./docs/assets", list.files("./assets/")), 
+#   overwrite = TRUE)
+```
+
