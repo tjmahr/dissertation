@@ -20,8 +20,8 @@ Specific Aim 1 (Familiar Word Recognition and Lexical Competition)
     over time, as children converge on a mature level of performance for
     this paradigm.
 
--   As a consequence, individual differences in word recognition at age
-    3, for example, will be more discriminating and predictive of age 5
+-   As a consequence, individual differences in word recognition at age\ 3, 
+    for example, will be more discriminating and predictive of age 5
     language outcomes than differences at age 4.
 
 -   Vocabulary size and lexical processing will be tightly correlated
@@ -93,7 +93,8 @@ questions include:
     parameterizations?
 
 -   How does the model handle mispronunciations? What changes are
-    required to accommodate mispronunciations and novel words? @TRACE_Mispro have simulated mispronunciation experiments like
+    required to accommodate mispronunciations and novel words? @TRACE_Mispro 
+    have simulated mispronunciation experiments like
     @WhiteMorgan2008, although it is not clear how the model can
     accommodate the current mispronunciation experiment which presents
     mispronunciations and nonwords.
