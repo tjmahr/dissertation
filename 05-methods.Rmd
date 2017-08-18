@@ -19,8 +19,8 @@ collection occurred at two Learning to Talk lab sites—one at the
 University of Wisconsin–Madison and the other at the University of
 Minnesota.
 
-[^1]: Appendix C (Related Work) describes how this dissertation relates
-    to other work from our lab.
+[^1]: [Appendix \@ref(related-work)](#related-work) describes how this 
+      dissertation relates to other work from our lab.
 
 Table \@ref(tab:participant-info) summarizes the cohort of children in each year of
 testing. The numbers and summary statistics here are approximate,
