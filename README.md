@@ -1,15 +1,11 @@
-This is a minimal example of a book based on R Markdown and **bookdown**
-(https://github.com/rstudio/bookdown). Please see the page "Get Started" at
-https://bookdown.org/ for how to compile this example.
+My dissertation is a  book based on R Markdown and **bookdown**
+(https://github.com/rstudio/bookdown, https://bookdown.org/).
 
-You can find the preview of this example at
-https://bookdown.org/yihui/bookdown-demo/
 
-## My notes
+## Notes
 
-(Once I get the repository to my liking, I'll do a hard-fork with a fresh commit
-history. Therefore, I'm taking some notes here of how I changed the original
-demo. This is like a commit history, but with a more big picture description.)
+This bookdown project was originally a fork of the demo book
+https://github.com/rstudio/bookdown-demo
 
 Some things I had to change from the original version:
 
@@ -86,3 +82,25 @@ To fix, this LaTeX error
 
 add `latex_engine: xelatex` to the YAML configuration for the format in 
 [`_output.yml`](./_output.yml).
+
+
+## Migration notes
+
+This bookdown file was originally a fork of
+https://github.com/rstudio/bookdown-demo
+
+I unforked from that repository by 
+
+* Renaming this repository
+* Using Github + (plus) button >> Import repository and imported the URL of 
+  this repository
+* Now I had a fresh copy of the repository without any forking-history from the 
+  from the demo book.
+* Updated the Github settings to match the old repository's.
+* Deleted the old, renamed copy of the repository.
+* Deleted all the non-master branches that were also imported.
+
+Next, I truncated the git history to remove most of the older commits that I
+didn't write, following steps like 
+https://stackoverflow.com/questions/41953300/how-to-delete-the-old-git-history
+
