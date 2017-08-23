@@ -65,10 +65,13 @@ bookdown::gitbook:
     "--csl", "./assets/apa.csl",
     "--bibliography", "./assets/refs.bib",
     "--filter", "pandoc-citeproc",
-    "--filter", "fix-apa-ampersands.py"
+    "--filter", "./fix-apa-ampersands.py"
   ]
   # [...some other settings...]
 ```
+
+Note that the filter to a file works best when it has "./" at the beginning.
+https://github.com/jgm/pandoc/issues/3543
 
 
 ### Etc
