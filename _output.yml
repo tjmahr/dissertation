@@ -4,7 +4,7 @@ bookdown::gitbook:
     "--csl", "./assets/apa.csl",
     "--bibliography", "./assets/refs.bib",
     "--filter", "pandoc-citeproc",
-    "--filter", "fix-apa-ampersands.py"
+    "--filter", "./fix-apa-ampersands.py"
   ]
   config:
     toc:
@@ -30,14 +30,14 @@ bookdown::epub_book:
     "--csl", "./assets/apa.csl",
     "--bibliography", "./assets/refs.bib",
     "--filter", "pandoc-citeproc",
-    "--filter", "fix-apa-ampersands.py"
+    "--filter", "./fix-apa-ampersands.py"
   ]
 bookdown::word_document2:
   pandoc_args: [
     "--csl", "./assets/apa.csl",
     "--bibliography", "./assets/refs.bib",
     "--filter", "pandoc-citeproc",
-    "--filter", "fix-apa-ampersands.py"
+    "--filter", "./fix-apa-ampersands.py"
   ]
 bookdown::tufte_book2:
   includes:
