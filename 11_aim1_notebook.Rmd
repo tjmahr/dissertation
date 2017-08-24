@@ -21,7 +21,7 @@ resp_def <- create_response_def(
 )
 
 raw_data <- looks %>% 
-  filter(-505 <= Time, Time <= 2000, Version == "Standard") %>% 
+  filter(-505 <= Time, Time <= 2020, Version == "Standard") %>% 
   aggregate_looks(resp_def, Study + ResearchID + Time ~ GazeByImageAOI)
 ```
 
@@ -79,3 +79,78 @@ ggplot(raw_data) +
 
 Next up... Filter out bad trials. Filter out bad blocks. Make a table with a
 head-count by study.
+
+```{r}
+missing_data_by_trial <- looks %>% 
+  filter(-20 <= Time, Time <= 2020) %>% 
+  aggregate_looks(
+    resp_def, 
+    Study + Version + ResearchID + Basename + TrialNo ~ GazeByImageAOI) %>% 
+  mutate(BadTrial = .5 <= PropNA)
+
+bad_trial_counts <- missing_data_by_trial %>% 
+  count(Study, ResearchID, Basename, BadTrial) %>% 
+  tidyr::spread(BadTrial, n) %>% 
+  rename(n_bad = `TRUE`, n_good = `FALSE`) %>% 
+  # Replace NAs with 0, in case there were 0 good trials in a block or 
+  # 0 bad trials in a block
+  mutate(n_bad = coalesce(n_bad, 0L),
+         n_good = coalesce(n_good, 0L),
+         trials = n_good + n_bad,
+         prop_bad = round(n_bad / trials, 2)) 
+
+blocks_to_drop <- bad_trial_counts %>% 
+  filter(.5 <= prop_bad)
+blocks_to_drop
+
+leftover_bad_trials <- missing_data_by_trial %>% 
+  anti_join(blocks_to_drop, by = c("Study", "ResearchID", "Basename")) %>% 
+  filter(.5 <= PropNA)
+
+clean_looks <- looks %>% 
+  anti_join(blocks_to_drop, by = c("Study", "ResearchID", "Basename")) %>% 
+  anti_join(leftover_bad_trials)
+```
+
+
+Plot the data after cleaning up trials.
+
+
+```{r}
+data <- clean_looks %>% 
+  filter(-505 <= Time, Time <= 2020, Version == "Standard") %>% 
+  aggregate_looks(resp_def, Study + ResearchID + Time ~ GazeByImageAOI)
+```
+
+We include the curves from the earlier plots in gray. The data-cleaning process 
+slightly increases the average accuracy during the plateau-ed portion of the
+growth curve.
+
+```{r clean-aim1, out.width = "50%", fig.show='hold', fig.height=3, fig.width=3}
+ggplot(data) + 
+  aes(x = Time, y = Prop, color = Study) +
+  geom_hline(size = 2, color = "white", yintercept = .25) +
+  stat_summary(aes(group = Study), data = raw_data, 
+               color = "gray70") +
+  stat_summary() +
+  labs(x = "Time after target onset [ms]",
+       y = "Proportion looks to target",
+       caption = "Mean +/- SE") +
+  theme_grey(base_size = 9) +
+  theme(legend.position = c(0.05, 0.95), 
+        legend.justification = c(0, 1))
+
+ggplot(data) + 
+  aes(x = Time, y = Prop, color = Study) +
+  geom_hline(size = 2, color = "white", yintercept = .25) +
+  stat_smooth(aes(group = Study), data = raw_data, 
+              color = "gray70") +
+  stat_smooth() +
+  labs(x = "Time after target onset [ms]",
+       y = "Proportion looks to target",
+       caption = "GAM Smooth") +
+  theme_grey(base_size = 9) +
+  theme(legend.position = c(0.05, 0.95), 
+        legend.justification = c(0, 1))
+```
+
