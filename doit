@@ -1,13 +1,8 @@
 #!/usr/bin/env Rscript
 
 args <- commandArgs(TRUE)
-# cat("doit", args, "\n")
-#
-# print(length(args))
 
 help <- any(c("-h", "--help", "help") %in% args) | length(args) == 0
-
-# print(help)
 
 if (help) {
   args <- "help"
