@@ -15,16 +15,22 @@ if (help) {
 "Usage: doit [commands]
 
 Commands:
-  help            display usage
-  erase_raw_data  erase all data downloaded from database
-  get_et_blocks   download eyetracking block attributes
-  get_et_trials   download eyetracking trial attributes
-  get_et_looks    download eyetracking looks"
+  help                 display usage
+  install_gh_packages  installs required packages from github
+  erase_raw_data       erase all data downloaded from database
+  get_et_blocks        download eyetracking block attributes
+  get_et_trials        download eyetracking trial attributes
+  get_et_looks         download eyetracking looks"
 )
 }
 
 if (!help)  {
   source("./R/database-helpers.R")
+}
+
+if ("install_gh_packages" %in% args) {
+  source("./R/setup_helpers.R")
+  install_github_packages()
 }
 
 if ("erase_raw_data" %in% args) {
