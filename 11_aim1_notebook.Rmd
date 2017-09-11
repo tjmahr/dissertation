@@ -10,7 +10,8 @@ library(dplyr)
 looks1 <- readr::read_csv("./data-raw/rwl_timepoint1_looks.csv.gz")
 looks2 <- readr::read_csv("./data-raw/rwl_timepoint2_looks.csv.gz")
 looks3 <- readr::read_csv("./data-raw/rwl_timepoint3_looks.csv.gz")
-looks <- bind_rows(looks1, looks2, looks3)
+looks <- bind_rows(looks1, looks2, looks3) %>% 
+  filter(Version == "Standard")
 
 library(littlelisteners)
 resp_def <- create_response_def(
@@ -21,7 +22,7 @@ resp_def <- create_response_def(
 )
 
 raw_data <- looks %>% 
-  filter(-505 <= Time, Time <= 2020, Version == "Standard") %>% 
+  filter(-505 <= Time, Time <= 2020) %>% 
   aggregate_looks(resp_def, Study + ResearchID + Time ~ GazeByImageAOI)
 ```
 
@@ -75,18 +76,38 @@ ggplot(raw_data) +
 
 
 
-## Next up
+## Data cleaning
 
-Next up... Filter out bad trials. Filter out bad blocks. Make a table with a
-head-count by study.
+We use the following options for data screening.
 
 ```{r}
+rules <- list(
+  screening_window = c(0, 2000),
+  missing_data_limit = .5,
+  min_trials = 12
+)
+```
+
+That is:
+
+* Filter out bad trials. These have at least 
+  `r rules$missing_data_limit * 100`% missing data between 
+  `r rules$screening_window[1]` to `r rules$screening_window[2]`ms. 
+* Filter out bad blocks. These have fewer than `r rules$min_trials` trials.
+
+These are the default conventions four lab on these eyetracking experiments.
+
+```{r}
+# offset to catch frame before and after window
+screen_from <- rules$screening_window[1] - 20
+screen_to <- rules$screening_window[2] + 20
+
 missing_data_by_trial <- looks %>% 
-  filter(-20 <= Time, Time <= 2020) %>% 
+  filter(screen_from <= Time, Time <= screen_to) %>% 
   aggregate_looks(
     resp_def, 
     Study + Version + ResearchID + Basename + TrialNo ~ GazeByImageAOI) %>% 
-  mutate(BadTrial = .5 <= PropNA)
+  mutate(BadTrial = rules$missing_data_limit <= PropNA)
 
 bad_trial_counts <- missing_data_by_trial %>% 
   count(Study, ResearchID, Basename, BadTrial) %>% 
@@ -112,9 +133,22 @@ clean_looks <- looks %>%
   anti_join(leftover_bad_trials)
 ```
 
+Do some head counts.
 
-Plot the data after cleaning up trials.
+```{r}
+screening_results <- list(Screened = clean_looks, Raw = looks) %>% 
+  bind_rows(.id = "Dataset") %>% 
+  distinct(Dataset, Study, ResearchID, TrialID) %>% 
+  group_by(Dataset, Study) %>% 
+  summarise(
+    `Num Children` = n_distinct(ResearchID),
+    `Num Trials` = n_distinct(TrialID))
 
+screening_results %>% 
+  knitr::kable(caption = "Eyetracking data before and after data screening")
+```
+
+Plot the data after partial data screening.
 
 ```{r}
 data <- clean_looks %>% 
@@ -148,9 +182,95 @@ ggplot(data) +
   stat_smooth() +
   labs(x = "Time after target onset [ms]",
        y = "Proportion looks to target",
-       caption = "GAM Smooth") +
+       caption = "GAM smooth on partially screened data") +
   theme_grey(base_size = 9) +
   theme(legend.position = c(0.05, 0.95), 
         legend.justification = c(0, 1))
 ```
+
+### Special case data screening
+
+(_Skip for now._ This is where I review the participant notes and will remove 
+children who have to be excluded for other reasons, like being diagnosed with a 
+language disorder at TimePoint 3.)
+
+
+### Add a note about the bad version of the experiment
+
+(_Skip for now._)
+
+### Aggregate looks to each image type
+
+```{r by-aoi-prop, out.width = "100%", fig.height=2.5, fig.width=6}
+# Create a rule for each AOI type
+fast_resp_def <- function(i) {
+  aois <- c("Target", "PhonologicalFoil", "SemanticFoil", "Unrelated")
+  create_response_def(
+    primary = aois[i], others = aois[-i],
+    elsewhere = "tracked", missing = NA)
+}
+defs <- purrr::map(1:4, fast_resp_def)
+names(defs) <- defs %>% purrr::map("primary")
+
+# Aggregate looks using each rule
+data <- clean_looks %>% 
+  filter(-505 <= Time, Time <= 2020) 
+
+looks_by_aoi <- defs %>% 
+  purrr::map_df(
+    ~ aggregate_looks(data, .x, 
+                      Study + ResearchID + Time ~ GazeByImageAOI), 
+    .id = "AOI") %>% 
+  select(AOI:Time, Prop, Primary, Unrelated) %>% 
+  mutate(AOI = factor(AOI, c("Target", "PhonologicalFoil", 
+                             "SemanticFoil", "Unrelated")))
+  
+ggplot(looks_by_aoi) + 
+  aes(x = Time, y = Prop, color = Study) + 
+  geom_hline(size = 2, color = "white", yintercept = .25) +
+  stat_smooth() + 
+  facet_grid( ~ AOI) + 
+    labs(x = "Time after target onset [ms]",
+       y = "Proportion looks",
+       caption = "GAM smooth on partially screened data") +
+  theme_grey(base_size = 9) +
+  theme(legend.position = c(0.95, 0.95), 
+        legend.justification = c(1, 1))
+```
+
+Normalize by using ratio of looks to each AOI versus the unrelated image. 
+
+```{r by-aoi-logit, out.width = "100%", fig.height=2.5, fig.width=6}
+ggplot(looks_by_aoi %>% filter(AOI != "Unrelated")) + 
+  aes(x = Time, y = log(Primary / Unrelated), color = Study) + 
+  geom_hline(size = 2, color = "white", yintercept = 0) +
+  stat_smooth() + 
+  facet_grid( ~ AOI) + 
+    labs(x = "Time after target onset [ms]",
+       y = "Log odds looking to word vs. unrelated word",
+       caption = "GAM smooth on partially screened data") +
+  theme_grey(base_size = 9) +
+  theme(legend.position = c(0.95, 0.95), 
+        legend.justification = c(1, 1))
+```
+
+Each curve is the log odds of looking to the target, phonological foil, and
+semantic foil versus the unrelated word. Positive values mean more looks to an
+image type than the unrelated. If you think of the _y_ axis as the image's
+_relatedness_ to the target, you can see a time course of relatedness in each
+panel: Here early phonological effects meaning early relatedness and later,
+flatter semantic effects meaning late relate relatedness. (Which makes extra
+sense if phonological representations come into play before semantic ones.)
+
+_To do: Filter items for each comparison._
+
+This plot suggests an important finding: Children becoming more sensitive to the
+phonological and semantic foils as they grow older. (I use the verb _suggest_
+because this is still a preliminary finding). Jan and I had made opposite 
+predictions about whether this would happen. Her argument, I think, was that 
+children become better at word recognition by becoming better able to inhibit 
+interference from competing words. This plot would suggest that they show 
+increased sensitive to the target and foils words by looking less to the 
+unrelated word as they age and reapportioning those looks to the other three 
+lexically relevant words.
 
