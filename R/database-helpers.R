@@ -14,6 +14,10 @@ find_database_config <- function() {
   }
 }
 
+create_infrastructure <- function() {
+  dir.create("./data-raw", showWarnings = FALSE)
+}
+create_infrastructure()
 
 get_scores_for_participant_summary <- function() {
   l2t <- l2t_connect(find_database_config())

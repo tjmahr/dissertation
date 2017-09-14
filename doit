@@ -19,13 +19,14 @@ Commands:
 )
 }
 
-if (!help)  {
-  source("./R/database-helpers.R")
-}
 
 if ("install_gh_packages" %in% args) {
   source("./R/setup_helpers.R")
   install_github_packages()
+}
+
+if (!help)  {
+  source("./R/database-helpers.R")
 }
 
 if ("erase_raw_data" %in% args) {
