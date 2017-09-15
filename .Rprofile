@@ -22,3 +22,4 @@ list_bibcodes <- function(sort = TRUE) {
   print(glue::glue("{padded} {short_titles}"))
 }
 
+invisible(file.copy("dissertate.R", "dissertate", overwrite = TRUE))
