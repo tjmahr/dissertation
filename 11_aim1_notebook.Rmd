@@ -322,24 +322,24 @@ We should verify that the two sets of words behave differently.
 ```{r by-aoi-logit-foils, out.width = "100%", fig.height=2.5, fig.width=6}
 weak_phon_looks <- trial_info %>% 
   semi_join(phono_foils$weak_foil) %>% 
-  left_join(data) %>% 
+  inner_join(data) %>% 
   mutate(PhonFoil = "Weak")
 
 strong_phon_looks <- trial_info %>% 
   semi_join(phono_foils$strong_foil) %>% 
-  left_join(data) %>% 
+  inner_join(data) %>% 
   mutate(PhonFoil = "Strong")
 
 phon_data <- bind_rows(strong_phon_looks, weak_phon_looks)
 
 weak_semy_looks <- trial_info %>% 
   semi_join(semy_foils$weak_foil) %>% 
-  left_join(data) %>% 
+  inner_join(data) %>% 
   mutate(SemyFoil = "Weak")
 
 strong_semy_looks <- trial_info %>% 
   semi_join(semy_foils$strong_foil) %>% 
-  left_join(data) %>% 
+  inner_join(data) %>% 
   mutate(SemyFoil = "Strong")
 
 phon_data <- bind_rows(strong_phon_looks, weak_phon_looks)
@@ -444,5 +444,98 @@ The two comparisons do not attain the same height, so the semantic foil reduces
 odds of fixating to the target later on in a trial. There appears to be no 
 difference in strong and weak foils in Year 2 and Year 3, so I might be able 
 to collapse to remove this distinction and include more items in the analysis.
+
+
+
+## Look for individual differences in competitor sensitivity
+
+Let's just run with all the foils. There's a trade-off here about sparsity and
+strength of the stimuli.
+
+```{r}
+# Downsample to 50 ms bins
+d <- phon_data %>% 
+  filter(-467 <= Time) %>% 
+  # filter(PhonFoil == "Strong") %>% 
+  assign_bins(bin_width = 3, Time, TrialID) %>% 
+  group_by(TrialID, .bin) %>% 
+  mutate(BinTime = round(median(Time), -1)) %>% 
+  ungroup() %>% 
+  aggregate_looks(phon_defs, Study + ResearchID + BinTime ~ GazeByImageAOI)
+
+ggplot(d %>% filter(.response_def == "PhonologicalFoil")) + 
+  aes(x = BinTime, y = empirical_logit(PhonologicalFoil, Unrelated)) + 
+  geom_line(aes(group = ResearchID), alpha = .2) + 
+  stat_smooth() +
+  facet_grid(. ~ Study)
+
+d_m <- d %>% 
+  filter(250 <= BinTime, BinTime <= 1500) %>% 
+  filter(.response_def == "PhonologicalFoil") %>% 
+  polypoly::poly_add_columns(BinTime, degree = 3, 
+                             scale_width = 1, prefix = "ot")
+
+ggplot(d_m %>% filter(.response_def == "PhonologicalFoil")) + 
+  aes(x = BinTime, y = empirical_logit(PhonologicalFoil, Unrelated)) + 
+  geom_line(aes(group = ResearchID), alpha = .2) + 
+  stat_smooth() +
+  facet_grid(. ~ Study)
+
+
+# m <- glmer(
+#   cbind(PhonologicalFoil, Unrelated) ~ 
+#     (ot1 + ot2 + ot3) * Study + 
+#     (ot1 + ot2 + ot3 | ResearchID), 
+#   family = binomial,
+#   data = d_m)
+# summary(m)
+```
+
+
+```{r}
+library(lme4)
+fx <- . %>% 
+  glmer(
+    cbind(PhonologicalFoil, Unrelated) ~
+      (ot1 + ot2 + ot3) +
+      (ot1 + ot2 + ot3 | ResearchID),
+    family = binomial,
+    data = .)
+
+by_study <- d_m %>% 
+  tidyr::nest(-Study) %>% 
+  mutate(model = purrr::map(data, fx))
+
+
+lapply(by_study$model, summary)
+
+by_study <- by_study %>% 
+  mutate(data = purrr::map2(model, data, broom::augment))
+
+library(rlang)
+sample_n_of <- function(data, size, ...) {
+  dots <- quos(...)  
+  rows <- data_frame(row = seq_len(nrow(data)))
+  rows[, "group"] <- data %>% 
+    group_by(!!! dots) %>% 
+    group_indices()
+  
+  subset <- rows %>% 
+    filter(.data$group %in% sample(unique(.data$group), size)) %>% 
+    pull(.data$row)
+  
+  data[subset, ]  
+}
+
+data
+size = 10
+tidyr::unnest(by_study, data) %>% 
+  sample_n_of(12, ResearchID) %>% 
+  ggplot() + 
+  aes(x = BinTime, y = .fitted, color = Study) + 
+  geom_point() + 
+  geom_line(aes(group = interaction(ResearchID, Study))) + 
+  facet_wrap("ResearchID")
+```
 
 
