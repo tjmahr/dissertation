@@ -1,4 +1,5 @@
 #!/usr/bin/env Rscript
+library(methods)
 
 info <- list(
   filename = "dissertate",
@@ -128,6 +129,21 @@ check_fig_names <- function(...) {
     stop("Unnamed chunk found \n  ", file_log, call. = FALSE)
   }
   invisible(TRUE)
+}
+
+#' delete current bookdown files
+clean_site <- function(...) {
+  rmarkdown::clean_site()
+  if (file.exists("./dissertation.Rmd")) {
+    message(" dissertation.Rmd")
+    invisible(file.remove("./dissertation.Rmd"))
+  }
+}
+
+#' rebuild bookdown site
+build_gitbook <- function(...) {
+  rmarkdown::render_site(output_format = 'bookdown::gitbook',
+                         encoding = 'UTF-8')
 }
 
 debug <- function(...) {

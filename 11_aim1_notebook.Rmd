@@ -5,8 +5,32 @@ Look at raw data
 
 First, let's load in all the data and plot the data from each year.
 
-```{r, message = FALSE, warnings = FALSE}
+```{r helper functions}
+# Helpers
+
 library(dplyr)
+library(rlang)
+
+#' group `data` by some grouping variables (`...`),
+#' randomly select `size` of the groups
+#' keep just the data from those sampled groups
+sample_n_of <- function(data, size, ...) {
+  dots <- quos(...)  
+  rows <- data_frame(row = seq_len(nrow(data)))
+  rows[, "group"] <- data %>% 
+    group_by(!!! dots) %>% 
+    group_indices()
+  
+  subset <- rows %>% 
+    filter(.data$group %in% sample(unique(.data$group), size)) %>% 
+    pull(.data$row)
+  
+  data[subset, ]  
+}
+```
+
+
+```{r, message = FALSE, warnings = FALSE}
 looks1 <- readr::read_csv("./data-raw/rwl_timepoint1_looks.csv.gz")
 looks2 <- readr::read_csv("./data-raw/rwl_timepoint2_looks.csv.gz")
 looks3 <- readr::read_csv("./data-raw/rwl_timepoint3_looks.csv.gz")
@@ -447,12 +471,19 @@ to collapse to remove this distinction and include more items in the analysis.
 
 
 
-## Look for individual differences in competitor sensitivity
 
-Let's just run with all the foils. There's a trade-off here about sparsity and
-strength of the stimuli.
 
-```{r}
+
+
+
+### Look for individual differences in competitor sensitivity
+
+[...put this on hold for a while...]
+
+<!-- Let's just run with all the foils. There's a trade-off here about sparsity and -->
+<!-- strength of the stimuli. -->
+
+```{r, eval = FALSE, out.width = "100%", echo = FALSE}
 # Downsample to 50 ms bins
 d <- phon_data %>% 
   filter(-467 <= Time) %>% 
@@ -491,8 +522,7 @@ ggplot(d_m %>% filter(.response_def == "PhonologicalFoil")) +
 # summary(m)
 ```
 
-
-```{r}
+```{r, eval = FALSE, echo = FALSE}
 library(lme4)
 fx <- . %>% 
   glmer(
@@ -512,20 +542,7 @@ lapply(by_study$model, summary)
 by_study <- by_study %>% 
   mutate(data = purrr::map2(model, data, broom::augment))
 
-library(rlang)
-sample_n_of <- function(data, size, ...) {
-  dots <- quos(...)  
-  rows <- data_frame(row = seq_len(nrow(data)))
-  rows[, "group"] <- data %>% 
-    group_by(!!! dots) %>% 
-    group_indices()
-  
-  subset <- rows %>% 
-    filter(.data$group %in% sample(unique(.data$group), size)) %>% 
-    pull(.data$row)
-  
-  data[subset, ]  
-}
+
 
 data
 size = 10
@@ -537,5 +554,23 @@ tidyr::unnest(by_study, data) %>%
   geom_line(aes(group = interaction(ResearchID, Study))) + 
   facet_wrap("ResearchID")
 ```
+
+### Interim summary
+
+Results thus far...
+
+* Visual evidence that group averages get faster and more reliable at looking 
+  to target each year 
+* Visual evidence that the semantic foil and phonological foil become more 
+  relevant (compared to unrelated foil) each 
+* Our previous distinction between strong and weak foils still applies, 
+  although it might be better to exclude only the (a priori) weakest foils, 
+  like the rime phonological foils.
+
+## Next steps
+
+Model year over year changes.
+
+Download test scores and individual differences. 
 
 
