@@ -76,9 +76,9 @@ help <- function(...) {
   cat(msg)
 }
 
-#' installs required packages from github
+#' install required packages from github
 install_gh_packages <- function(...) {
-  source("./R/setup_helpers.R")
+  source("./R/setup-helpers.R")
   install_github_packages()
 }
 
