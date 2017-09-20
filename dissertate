@@ -140,6 +140,13 @@ clean_site <- function(...) {
   }
 }
 
+#' discard changes to bookdown files since last git commit
+reset_site <- function(...) {
+  clean_site()
+  repo <- git2r::repository(".")
+  git2r::checkout(repo, path = "docs/")
+}
+
 #' rebuild bookdown site
 build_gitbook <- function(...) {
   rmarkdown::render_site(output_format = 'bookdown::gitbook',
