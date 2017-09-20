@@ -140,7 +140,7 @@ clean_site <- function(...) {
   }
 }
 
-#' discard changes to bookdown files since last git commit
+#' reset bookdown files to last git commit
 reset_site <- function(...) {
   clean_site()
   repo <- git2r::repository(".")
