@@ -45,8 +45,17 @@ resp_def <- create_response_def(
   missing = NA
 )
 
+# Keep only frames from -500 to 2000 plus or minus any frames to make the 
+# number of frames divisible by 3 (for binning)
+times_to_keep <- looks %>% 
+  distinct(Time) %>% 
+  trim_to_bin_width(3, time_var = Time, key_time = 0, key_position = 2, 
+                    min_time = -500, max_time = 2000) %>% 
+  pull(Time) %>% 
+  range()
+
 raw_data <- looks %>% 
-  filter(-505 <= Time, Time <= 2020) %>% 
+  filter(between(Time, times_to_keep[1], times_to_keep[2])) %>% 
   aggregate_looks(resp_def, Study + ResearchID + Time ~ GazeByImageAOI)
 ```
 
@@ -176,7 +185,8 @@ Plot the data after partial data screening.
 
 ```{r}
 data <- clean_looks %>% 
-  filter(-505 <= Time, Time <= 2020, Version == "Standard") %>% 
+  filter(Version == "Standard") %>% 
+  filter(between(Time, times_to_keep[1], times_to_keep[2])) %>% 
   aggregate_looks(resp_def, Study + ResearchID + Time ~ GazeByImageAOI)
 ```
 
@@ -574,7 +584,6 @@ Results thus far...
 - Model individual differences
 
 ```{r}
-data
 # Downsample to 50 ms bins
 d <- data %>% 
   select(Study, ResearchID, TrialID:GazeByImageAOI) %>% 

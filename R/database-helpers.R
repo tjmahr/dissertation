@@ -1,6 +1,16 @@
 library(dplyr, warn.conflicts = FALSE)
 library(L2TDatabase)
 
+create_directory <- function(path) {
+  if (!dir.exists(path)) {
+    message("Creating directory: ", path)
+    dir.create(path, showWarnings = FALSE)
+  }
+  invisible(path)
+}
+
+create_directory("./data-raw")
+
 find_database_config <- function() {
   home_config <- path.expand("~/l2t_db.cnf")
   repo_config <- rprojroot::find_rstudio_root_file("l2t_db.cnf")
@@ -13,11 +23,6 @@ find_database_config <- function() {
     stop("Cannot find `l2t_db.cnf` file")
   }
 }
-
-create_infrastructure <- function() {
-  dir.create("./data-raw", showWarnings = FALSE)
-}
-create_infrastructure()
 
 get_scores_for_participant_summary <- function() {
   l2t <- l2t_connect(find_database_config())
@@ -61,7 +66,8 @@ get_scores_for_participant_summary <- function() {
     select(Study, ResearchID, Female, Male, MAE, AAE, LateTalker, Age,
            Maternal_Education_LMH, EVT_Standard, PPVT_Standard, GFTA_Standard)
 
-  readr::write_csv(df_all_three, "./data-raw/scores_for_participant_summary.csv")
+  df_all_three %>%
+    verbosely_write_csv("./data-raw/scores_for_participant_summary.csv")
 }
 
 

@@ -119,6 +119,11 @@ get_et_looks <- function(...) {
   get_eyetracking_looks()
 }
 
+#' download test scores and demographics
+get_child_info <- function(...) {
+  source("./R/database-helpers.R")
+  suppressWarnings(get_scores_for_participant_summary())
+}
 
 #' report unnamed-chunk files
 check_fig_names <- function(...) {
