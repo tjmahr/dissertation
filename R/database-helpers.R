@@ -10,6 +10,7 @@ create_directory <- function(path) {
 }
 
 create_directory("./data-raw")
+create_directory("./data")
 
 find_database_config <- function() {
   home_config <- path.expand("~/l2t_db.cnf")

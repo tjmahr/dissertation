@@ -1,5 +1,7 @@
 book_filename: "dissertation"
 output_dir: "docs"
+new_session: yes
+before_chapter_script: ["./R/knitr-helpers.R"]
 language:
   ui:
     chapter_name: "Chapter "
