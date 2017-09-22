@@ -1,0 +1,162 @@
+# Analyze familiar word recognition
+
+Next steps:
+
+- Model year over year changes.
+- Download test scores and individual differences. 
+- Model individual differences
+
+```{r include = FALSE}
+knitr::read_chunk("./helpers.R")
+if (interactive()) source("./helpers.R")
+```
+
+```{r helpers, message = FALSE, warnings = FALSE}
+```
+
+Earlier we cleaned the data to remove trials with excessive missing data 
+and blocks of trials with too few trials. Read in that data.
+
+```{r, message = FALSE, warnings = FALSE}
+data <- readr::read_csv("./data/aim1-screened.csv.gz")
+```
+
+Downsample into 50 ms bins.
+
+```{r, eval = FALSE}
+data <- data %>% 
+  select(Study, ResearchID, TrialID:GazeByImageAOI) %>% 
+  assign_bins(bin_width = 3, Time, TrialID)
+
+# Compute time at center of each bin
+bin_times <- data %>% 
+  distinct(Time, .bin) %>% 
+  group_by(.bin) %>% 
+  mutate(BinTime = round(median(Time), -1)) %>% 
+  ungroup()
+
+# Attach bin times
+binned <- data %>% 
+  left_join(bin_times, by = c("Time", ".bin")) %>% 
+  ungroup() %>% 
+  select(-Time) %>% 
+  rename(Time = BinTime) 
+
+resp_def <- create_response_def(
+  primary = "Target",
+  others = c("PhonologicalFoil", "SemanticFoil", "Unrelated"),
+  elsewhere = "tracked",
+  missing = NA
+)  
+  
+d <- binned %>% 
+  aggregate_looks(resp_def, Study + ResearchID + Time ~ GazeByImageAOI)
+
+d_m <- d %>% 
+  filter(250 <= Time, Time <= 1500) %>% 
+  polypoly::poly_add_columns(Time, degree = 3, 
+                             scale_width = 1, prefix = "ot")
+```
+
+Plot the model-ready data. Use empirical logit because straight log-odds has too
+high of values for plotting.
+
+```{r}
+ggplot(d_m) + 
+  aes(x = Time, y = empirical_logit(Primary, Others)) + 
+  geom_line(aes(group = ResearchID), alpha = .2) + 
+  stat_smooth() +
+  facet_grid(. ~ Study)
+```
+
+Fit a maximum likelihood model as a first pass. We won't fit the model
+automatically. It's too time consuming. We save the results.
+
+```{r, eval = FALSE}
+library(lme4)
+m <- glmer(
+    cbind(Primary, Others) ~
+      (ot1 + ot2 + ot3) * Study +
+      (ot1 + ot2 + ot3 | ResearchID/Study),
+    family = binomial,
+    data = d_m)
+summary(m)
+readr::write_rds(m, "./data/aim1_cubic_model.rds.gz")
+```
+
+And reload them here.
+
+```{r cubic-model-fits}
+library(lme4)
+m <- readr::read_rds("./data/aim1_cubic_model.rds.gz")
+d_m$cubic_fit <- fitted(m)
+
+ggplot(d_m) + 
+  aes(x = Time, y = cubic_fit) + 
+  geom_line(aes(group = ResearchID), alpha = .2) + 
+  stat_smooth() +
+  facet_grid(. ~ Study) + 
+    labs(y = "Proportion looks to target [model fits]", 
+       x = "Time afer noun onset [ms]")
+
+top_10 <- m %>% 
+  ranef() %>% 
+  getElement("ResearchID") %>% 
+  tibble::rownames_to_column("ResearchID") %>% 
+  as_tibble() %>% 
+  top_n(20, ot1) %>% 
+  select(ResearchID, slope = ot1)
+
+bot_10 <- m %>% 
+  ranef() %>% 
+  getElement("ResearchID") %>% 
+  tibble::rownames_to_column("ResearchID") %>% 
+  as_tibble() %>% 
+  top_n(20, -ot1) %>% 
+  select(ResearchID, slope = ot1)
+
+okay <- m %>% 
+  ranef() %>% 
+  getElement("Study:ResearchID") %>% 
+    tibble::rownames_to_column("ResearchID") %>% 
+  as_tibble() %>% 
+  tidyr::separate(ResearchID, c("Year", "ResearchID")) %>% 
+  select(Year, ResearchID, ot1) %>% 
+  tidyr::spread(Year, ot1) %>% 
+  na.omit() %>% 
+  mutate(y1 = rank(TimePoint1), 
+         y2 = rank(TimePoint2), 
+         y3 = rank(TimePoint3))
+cor(okay[, -1], method =  "spearman")
+summary(m)
+
+
+ggplot(d_m) + 
+  aes(x = Time, y = cubic_fit) + 
+  geom_line(aes(group = ResearchID), alpha = .2) +
+  geom_line(aes(group = ResearchID), data = semi_join(d_m, top_10), 
+            size = .7, color = "#0074D9") + 
+  geom_line(aes(group = ResearchID), data = semi_join(d_m, bot_10), 
+            size = .7, color = "#FF4136") + 
+  facet_grid(. ~ Study) + 
+  labs(y = "Proportion looks to target [model fits]", 
+       x = "Time afer noun onset [ms]")
+ggsave("test.png")
+ranks <- m %>% 
+  ranef() %>% 
+  getElement("ResearchID") %>% 
+  tibble::rownames_to_column("ResearchID") %>% 
+  as_tibble() %>% 
+  mutate(rank = rank(ot1)) %>% 
+  select(ResearchID, slope = rank)
+
+# ggplot(inner_join(d_m, ranks),) + 
+#   aes(x = Time, y = cubic_fit, color = -slope) + 
+#   geom_line(aes(group = ResearchID), alpha = .4) +
+#   viridis::scale_color_viridis() + 
+#   facet_grid(. ~ Study)
+  # geom_line(aes(group = ResearchID), data = semi_join(d_m, top_10), size = 1, color = "blue") + 
+  # geom_line(aes(group = ResearchID), data = semi_join(d_m, bot_10), size = 1, color = "red") +
+```
+
+

@@ -1,4 +1,3 @@
-
 # Visualize looks to each image type
 
 We continue our exploration of the raw data by aggregating looks to each image 
@@ -353,7 +352,7 @@ tidyr::unnest(by_study, data) %>%
 ## Interim summary
 
 * Visual evidence that the semantic foil and phonological foil become more 
-  relevant (compared to unrelated foil) each 
+  relevant (compared to unrelated foil) each. 
 * Our previous distinction between strong and weak foils still applies, 
   although it might be better to exclude only the (a priori) weakest foils, 
   like the rime phonological foils.

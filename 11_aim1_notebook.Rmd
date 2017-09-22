@@ -1,8 +1,7 @@
-Look at raw data
+Prepare and explore the data
 ===========================================================================
 
 First, let's load in all the data and plot the data from each year.
-
 
 ```{r include = FALSE}
 knitr::read_chunk("./helpers.R")
@@ -208,6 +207,10 @@ ggplot(agg_data) +
         legend.justification = c(0, 1))
 ```
 
+### Add a note about the bad version of the experiment
+
+(_Skip for now._)
+
 ### Special case data screening
 
 (_Skip for now._ This is where I review the participant notes and will remove 
@@ -215,102 +218,13 @@ children who have to be excluded for other reasons, like being diagnosed with a
 language disorder at TimePoint 3.)
 
 
-### Add a note about the bad version of the experiment
-
-(_Skip for now._)
+```{r}
+# stub for saving the final-final data
+```
 
 
 ### Interim summary
 
 * Visual evidence that group averages get faster and more reliable at looking 
-  to target each year 
+  to target each year. 
   
-
-
-## Next steps
-
-- Model year over year changes.
-- Download test scores and individual differences. 
-- Model individual differences
-
-```{r, eval = FALSE}
-# Downsample to 50 ms bins
-d <- data %>% 
-  select(Study, ResearchID, TrialID:GazeByImageAOI) %>% 
-  filter(-467 <= Time) %>% 
-  assign_bins(bin_width = 3, Time, TrialID)
-
-bin_counts <- d %>% 
-  distinct(Time, .bin) %>% 
-  count(.bin)
-stopifnot(bin_counts$n == 3)
-  
-time_counts <- d %>% count(.bin)
-stopifnot(bin_counts$n == bin_counts$n[1])
-
-d <- d %>% 
-  group_by(.bin) %>% 
-  mutate(BinTime = round(median(.data$Time), -1)) %>% 
-  ungroup() %>% 
-  select(-Time) %>% 
-  rename(Time = BinTime) %>% 
-  aggregate_looks(defs[[1]], Study + ResearchID + Time ~ GazeByImageAOI)
-
-
-d_m <- d %>% 
-  filter(250 <= Time, Time <= 1500) %>% 
-  polypoly::poly_add_columns(Time, degree = 3, 
-                             scale_width = 1, prefix = "ot")
-
-ggplot(d_m) + 
-  aes(x = Time, y = empirical_logit(Primary, Others)) + 
-  geom_line(aes(group = ResearchID), alpha = .2) + 
-  stat_smooth() +
-  facet_grid(. ~ Study)
-```
-
-
-```{r, eval = FALSE}
-library(lme4)
-fx <- . %>% 
-  glmer(
-    cbind(Primary, Others) ~
-      (ot1 + ot2) +
-      (ot1 + ot2 | ResearchID),
-    family = binomial,
-    data = .)
-
-m <- glmer(
-    cbind(Primary, Others) ~
-      (ot1 + ot2) * Study +
-      (ot1 + ot2 | ResearchID/Study),
-    family = binomial,
-    data = d_m)
-
-d_m$quad_fit <- fitted(m)
-ggplot(d_m) + 
-  aes(x = Time, y = quad_fit) + 
-  geom_line(aes(group = ResearchID), alpha = .2) + 
-  stat_smooth() +
-  facet_grid(. ~ Study)
-
-top_10 <- m %>% ranef() %>% getElement("ResearchID") %>% tibble::rownames_to_column("ResearchID") %>% as_tibble() %>% 
-  top_n(10, ot1) %>% 
-  select(ResearchID, slope = ot1)
-
-bot_10 <- m %>% ranef() %>% getElement("ResearchID") %>% tibble::rownames_to_column("ResearchID") %>% as_tibble() %>% 
-  top_n(10, -ot1) %>% 
-  select(ResearchID, slope = ot1)
-
-
-
-ggplot(d_m) + 
-  aes(x = Time, y = quad_fit) + 
-  geom_line(aes(group = ResearchID), alpha = .2) +
-  geom_line(aes(group = ResearchID), data = semi_join(d_m, top_10), size = 1) + 
-  geom_line(aes(group = ResearchID), data = semi_join(d_m, bot_10), size = 1, color = "red") + 
-  facet_grid(. ~ Study)
-```
-
-
-
