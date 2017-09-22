@@ -5,6 +5,7 @@ First, let's load in all the data and plot the data from each year.
 
 ```{r include = FALSE}
 knitr::read_chunk("./helpers.R")
+if (interactive()) source("./helpers.R")
 ```
 
 ```{r helpers, message = FALSE, warnings = FALSE}

@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>My dissertation</title>
+  <meta name="description" content="My dissertation">
+  <meta name="generator" content="bookdown 0.5 and GitBook 2.6.7">
+
+  <meta property="og:title" content="My dissertation" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  <meta name="github-repo" content="tjmahr/dissertation" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="My dissertation" />
+  
+  
+  
+
+<meta name="author" content="Tristan Mahr">
+
+
+<meta name="date" content="2017-09-22">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="prepare-and-explore-the-data.html">
+<link rel="next" href="visualize-looks-to-each-image-type.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="assets\style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">My dissertation</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Development of word recognition in preschoolers</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#updates"><i class="fa fa-check"></i>Updates</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="scratch-paper.html"><a href="scratch-paper.html"><i class="fa fa-check"></i><b>1</b> Scratch paper</a><ul>
+<li class="chapter" data-level="1.1" data-path="scratch-paper.html"><a href="scratch-paper.html#bookdown-cheatsheet"><i class="fa fa-check"></i><b>1.1</b> Bookdown cheatsheet</a><ul>
+<li class="chapter" data-level="1.1.1" data-path="scratch-paper.html"><a href="scratch-paper.html#manual-section-label-demo"><i class="fa fa-check"></i><b>1.1.1</b> Cross-references to sections</a></li>
+<li class="chapter" data-level="1.1.2" data-path="scratch-paper.html"><a href="scratch-paper.html#cross-references-to-appendices"><i class="fa fa-check"></i><b>1.1.2</b> Cross-references to appendices</a></li>
+<li class="chapter" data-level="1.1.3" data-path="scratch-paper.html"><a href="scratch-paper.html#cross-references-to-tables"><i class="fa fa-check"></i><b>1.1.3</b> Cross-references to tables</a></li>
+<li class="chapter" data-level="1.1.4" data-path="scratch-paper.html"><a href="scratch-paper.html#figure-references-and-using-text-references-as-captions"><i class="fa fa-check"></i><b>1.1.4</b> Figure references and using text references as captions</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="scratch-paper.html"><a href="scratch-paper.html#debug-info"><i class="fa fa-check"></i><b>1.2</b> Debug info</a></li>
+</ul></li>
+<li class="part"><span><b>Prospectus</b></span></li>
+<li class="chapter" data-level="2" data-path="front-matter.html"><a href="front-matter.html"><i class="fa fa-check"></i><b>2</b> Front Matter</a><ul>
+<li class="chapter" data-level="" data-path="front-matter.html"><a href="front-matter.html#about-this-document"><i class="fa fa-check"></i>About This Document</a></li>
+<li class="chapter" data-level="" data-path="front-matter.html"><a href="front-matter.html#dissertation-committee-members"><i class="fa fa-check"></i>Dissertation Committee Members</a></li>
+<li class="chapter" data-level="" data-path="front-matter.html"><a href="front-matter.html#planned-dissertation-format"><i class="fa fa-check"></i>Planned Dissertation Format</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="specific-aims.html"><a href="specific-aims.html"><i class="fa fa-check"></i><b>3</b> Specific Aims</a><ul>
+<li class="chapter" data-level="3.1" data-path="specific-aims.html"><a href="specific-aims.html#specific-aim-1-familiar-word-recognition-and-lexical-competition"><i class="fa fa-check"></i><b>3.1</b> Specific Aim 1 (Familiar Word Recognition and Lexical Competition)</a></li>
+<li class="chapter" data-level="3.2" data-path="specific-aims.html"><a href="specific-aims.html#specific-aim-2-referent-selection-and-mispronunciations"><i class="fa fa-check"></i><b>3.2</b> Specific Aim 2 (Referent Selection and Mispronunciations)</a></li>
+<li class="chapter" data-level="3.3" data-path="specific-aims.html"><a href="specific-aims.html#specific-aim-3-computational-modeling"><i class="fa fa-check"></i><b>3.3</b> Specific Aim 3 (Computational Modeling)</a></li>
+<li class="chapter" data-level="3.4" data-path="specific-aims.html"><a href="specific-aims.html#summary"><i class="fa fa-check"></i><b>3.4</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="significance.html"><a href="significance.html"><i class="fa fa-check"></i><b>4</b> Significance</a><ul>
+<li class="chapter" data-level="4.1" data-path="significance.html"><a href="significance.html#public-health-significance"><i class="fa fa-check"></i><b>4.1</b> Public Health Significance</a></li>
+<li class="chapter" data-level="4.2" data-path="significance.html"><a href="significance.html#scientific-significance"><i class="fa fa-check"></i><b>4.2</b> Scientific Significance</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="significance.html"><a href="significance.html#lexical-processing-dynamics"><i class="fa fa-check"></i><b>4.2.1</b> Lexical Processing Dynamics</a></li>
+<li class="chapter" data-level="4.2.2" data-path="significance.html"><a href="significance.html#individual-differences-in-word-recognition"><i class="fa fa-check"></i><b>4.2.2</b> Individual Differences in Word Recognition</a></li>
+<li class="chapter" data-level="4.2.3" data-path="significance.html"><a href="significance.html#computational-modeling"><i class="fa fa-check"></i><b>4.2.3</b> Computational Modeling</a></li>
+<li class="chapter" data-level="4.2.4" data-path="significance.html"><a href="significance.html#summary-1"><i class="fa fa-check"></i><b>4.2.4</b> Summary</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="research-hypotheses.html"><a href="research-hypotheses.html"><i class="fa fa-check"></i><b>5</b> Research Hypotheses</a><ul>
+<li class="chapter" data-level="5.1" data-path="research-hypotheses.html"><a href="research-hypotheses.html#specific-aim-1-familiar-word-recognition-and-lexical-competition-1"><i class="fa fa-check"></i><b>5.1</b> Specific Aim 1 (Familiar Word Recognition and Lexical Competition)</a></li>
+<li class="chapter" data-level="5.2" data-path="research-hypotheses.html"><a href="research-hypotheses.html#specific-aim-2-referent-selection-and-mispronunciations-1"><i class="fa fa-check"></i><b>5.2</b> Specific Aim 2 (Referent Selection and Mispronunciations)</a></li>
+<li class="chapter" data-level="5.3" data-path="research-hypotheses.html"><a href="research-hypotheses.html#specific-aim-3-computational-modeling-1"><i class="fa fa-check"></i><b>5.3</b> Specific Aim 3 (Computational Modeling)</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="methods.html"><a href="methods.html"><i class="fa fa-check"></i><b>6</b> Methods</a><ul>
+<li class="chapter" data-level="6.1" data-path="methods.html"><a href="methods.html#general-research-design-participants"><i class="fa fa-check"></i><b>6.1</b> General Research Design: Participants</a></li>
+<li class="chapter" data-level="6.2" data-path="methods.html"><a href="methods.html#general-eyetracking-procedure"><i class="fa fa-check"></i><b>6.2</b> General Eyetracking Procedure</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="methods.html"><a href="methods.html#experiment-administration"><i class="fa fa-check"></i><b>6.2.1</b> Experiment Administration</a></li>
+<li class="chapter" data-level="6.2.2" data-path="methods.html"><a href="methods.html#stimuli"><i class="fa fa-check"></i><b>6.2.2</b> Stimuli</a></li>
+<li class="chapter" data-level="6.2.3" data-path="methods.html"><a href="methods.html#data-preparation"><i class="fa fa-check"></i><b>6.2.3</b> Data Preparation</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="methods.html"><a href="methods.html#specific-procedure-aim-1-familiar-word-recognition-and-lexical-competition"><i class="fa fa-check"></i><b>6.3</b> Specific Procedure: Aim 1 (Familiar Word Recognition and Lexical Competition)</a></li>
+<li class="chapter" data-level="6.4" data-path="methods.html"><a href="methods.html#specific-procedure-aim-2-referent-selection-and-mispronunciations"><i class="fa fa-check"></i><b>6.4</b> Specific Procedure: Aim 2 (Referent Selection and Mispronunciations)</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="outcome-measures.html"><a href="outcome-measures.html"><i class="fa fa-check"></i><b>7</b> Outcome Measures</a><ul>
+<li class="chapter" data-level="7.1" data-path="outcome-measures.html"><a href="outcome-measures.html#sample-data"><i class="fa fa-check"></i><b>7.1</b> Sample Data</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="analysis.html"><a href="analysis.html"><i class="fa fa-check"></i><b>8</b> Analysis</a><ul>
+<li class="chapter" data-level="8.1" data-path="analysis.html"><a href="analysis.html#growth-curve-analysis"><i class="fa fa-check"></i><b>8.1</b> Growth Curve Analysis</a></li>
+<li class="chapter" data-level="8.2" data-path="analysis.html"><a href="analysis.html#aim-1-familiar-word-recognition-and-lexical-competition"><i class="fa fa-check"></i><b>8.2</b> Aim 1 (Familiar Word Recognition and Lexical Competition)</a></li>
+<li class="chapter" data-level="8.3" data-path="analysis.html"><a href="analysis.html#aim-2-referent-selection-and-mispronunciations"><i class="fa fa-check"></i><b>8.3</b> Aim 2 (Referent Selection and Mispronunciations)</a></li>
+<li class="chapter" data-level="8.4" data-path="analysis.html"><a href="analysis.html#aim-3-computational-modeling"><i class="fa fa-check"></i><b>8.4</b> Aim 3 (Computational Modeling)</a><ul>
+<li class="chapter" data-level="8.4.1" data-path="analysis.html"><a href="analysis.html#trace-model-architecture"><i class="fa fa-check"></i><b>8.4.1</b> TRACE Model Architecture</a></li>
+<li class="chapter" data-level="8.4.2" data-path="analysis.html"><a href="analysis.html#modeling-looking-data"><i class="fa fa-check"></i><b>8.4.2</b> Modeling Looking Data</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>Aim 1: Familiar Word Recognition and Lexical Competition</b></span></li>
+<li class="chapter" data-level="9" data-path="prepare-and-explore-the-data.html"><a href="prepare-and-explore-the-data.html"><i class="fa fa-check"></i><b>9</b> Prepare and explore the data</a><ul>
+<li class="chapter" data-level="9.1" data-path="prepare-and-explore-the-data.html"><a href="prepare-and-explore-the-data.html#data-cleaning"><i class="fa fa-check"></i><b>9.1</b> Data cleaning</a><ul>
+<li class="chapter" data-level="9.1.1" data-path="prepare-and-explore-the-data.html"><a href="prepare-and-explore-the-data.html#add-a-note-about-the-bad-version-of-the-experiment"><i class="fa fa-check"></i><b>9.1.1</b> Add a note about the bad version of the experiment</a></li>
+<li class="chapter" data-level="9.1.2" data-path="prepare-and-explore-the-data.html"><a href="prepare-and-explore-the-data.html#special-case-data-screening"><i class="fa fa-check"></i><b>9.1.2</b> Special case data screening</a></li>
+<li class="chapter" data-level="9.1.3" data-path="prepare-and-explore-the-data.html"><a href="prepare-and-explore-the-data.html#interim-summary"><i class="fa fa-check"></i><b>9.1.3</b> Interim summary</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html"><i class="fa fa-check"></i><b>10</b> Analyze familiar word recognition</a></li>
+<li class="chapter" data-level="11" data-path="visualize-looks-to-each-image-type.html"><a href="visualize-looks-to-each-image-type.html"><i class="fa fa-check"></i><b>11</b> Visualize looks to each image type</a><ul>
+<li class="chapter" data-level="11.1" data-path="visualize-looks-to-each-image-type.html"><a href="visualize-looks-to-each-image-type.html#comparing-strong-versus-weak-foils"><i class="fa fa-check"></i><b>11.1</b> Comparing strong versus weak foils</a></li>
+<li class="chapter" data-level="11.2" data-path="visualize-looks-to-each-image-type.html"><a href="visualize-looks-to-each-image-type.html#look-for-individual-differences-in-competitor-sensitivity"><i class="fa fa-check"></i><b>11.2</b> Look for individual differences in competitor sensitivity</a></li>
+<li class="chapter" data-level="11.3" data-path="visualize-looks-to-each-image-type.html"><a href="visualize-looks-to-each-image-type.html#interim-summary-1"><i class="fa fa-check"></i><b>11.3</b> Interim summary</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="mp-experiment-items.html"><a href="mp-experiment-items.html"><i class="fa fa-check"></i><b>A</b> Items used in the mispronunciation experiment</a></li>
+<li class="chapter" data-level="B" data-path="vw-experiment-items.html"><a href="vw-experiment-items.html"><i class="fa fa-check"></i><b>B</b> Items used in the visual world experiment</a></li>
+<li class="chapter" data-level="C" data-path="related-work.html"><a href="related-work.html"><i class="fa fa-check"></i><b>C</b> Related Work</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Created with bookdown</a></li>
+<li><a href="https://tjmahr.github.io/" target="blank">Tristan Mahr</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">My dissertation</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="analyze-familiar-word-recognition" class="section level1">
+<h1><span class="header-section-number">Chapter 10</span> Analyze familiar word recognition</h1>
+<p>Next steps:</p>
+<ul>
+<li>Model year over year changes.</li>
+<li>Download test scores and individual differences.</li>
+<li>Model individual differences</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)
+<span class="kw">library</span>(rlang)
+<span class="kw">library</span>(littlelisteners)
+<span class="kw">library</span>(ggplot2)
+
+<span class="co">#&#39; group `data` by some grouping variables (`...`),</span>
+<span class="co">#&#39; randomly select `size` of the groups</span>
+<span class="co">#&#39; keep just the data from those sampled groups</span>
+sample_n_of &lt;-<span class="st"> </span><span class="cf">function</span>(data, size, ...) {
+  dots &lt;-<span class="st"> </span><span class="kw">quos</span>(...)
+  rows &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">row =</span> <span class="kw">seq_len</span>(<span class="kw">nrow</span>(data)))
+  rows[, <span class="st">&quot;group&quot;</span>] &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">group_by</span>(<span class="op">!!!</span><span class="st"> </span>dots) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">group_indices</span>()
+
+  subset &lt;-<span class="st"> </span>rows <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">filter</span>(.data<span class="op">$</span>group <span class="op">%in%</span><span class="st"> </span><span class="kw">sample</span>(<span class="kw">unique</span>(.data<span class="op">$</span>group), size)) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">pull</span>(.data<span class="op">$</span>row)
+
+  data[subset, ]
+}</code></pre></div>
+<p>Earlier we cleaned the data to remove trials with excessive missing data and blocks of trials with too few trials. Read in that data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_csv</span>(<span class="st">&quot;./data/aim1-screened.csv.gz&quot;</span>)</code></pre></div>
+<p>Downsample into 50 ms bins.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(Study, ResearchID, TrialID<span class="op">:</span>GazeByImageAOI) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">assign_bins</span>(<span class="dt">bin_width =</span> <span class="dv">3</span>, Time, TrialID)
+
+<span class="co"># Compute time at center of each bin</span>
+bin_times &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">distinct</span>(Time, .bin) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(.bin) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">BinTime =</span> <span class="kw">round</span>(<span class="kw">median</span>(Time), <span class="op">-</span><span class="dv">1</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ungroup</span>()
+
+<span class="co"># Attach bin times</span>
+binned &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">left_join</span>(bin_times, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;Time&quot;</span>, <span class="st">&quot;.bin&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>Time) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">rename</span>(<span class="dt">Time =</span> BinTime) 
+
+resp_def &lt;-<span class="st"> </span><span class="kw">create_response_def</span>(
+  <span class="dt">primary =</span> <span class="st">&quot;Target&quot;</span>,
+  <span class="dt">others =</span> <span class="kw">c</span>(<span class="st">&quot;PhonologicalFoil&quot;</span>, <span class="st">&quot;SemanticFoil&quot;</span>, <span class="st">&quot;Unrelated&quot;</span>),
+  <span class="dt">elsewhere =</span> <span class="st">&quot;tracked&quot;</span>,
+  <span class="dt">missing =</span> <span class="ot">NA</span>
+)  
+  
+d &lt;-<span class="st"> </span>binned <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">aggregate_looks</span>(resp_def, Study <span class="op">+</span><span class="st"> </span>ResearchID <span class="op">+</span><span class="st"> </span>Time <span class="op">~</span><span class="st"> </span>GazeByImageAOI)
+
+d_m &lt;-<span class="st"> </span>d <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(<span class="dv">250</span> <span class="op">&lt;=</span><span class="st"> </span>Time, Time <span class="op">&lt;=</span><span class="st"> </span><span class="dv">1500</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>polypoly<span class="op">::</span><span class="kw">poly_add_columns</span>(Time, <span class="dt">degree =</span> <span class="dv">3</span>, 
+                             <span class="dt">scale_width =</span> <span class="dv">1</span>, <span class="dt">prefix =</span> <span class="st">&quot;ot&quot;</span>)</code></pre></div>
+<p>Plot the model-ready data. Use empirical logit because straight log-odds has too high of values for plotting.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(d_m) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> <span class="kw">empirical_logit</span>(Primary, Others)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">alpha =</span> .<span class="dv">2</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">stat_smooth</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_grid</span>(. <span class="op">~</span><span class="st"> </span>Study) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Time after target onset (smoothed to 50 ms bins)&quot;</span>, 
+       <span class="dt">y =</span> <span class="st">&quot;Emp. logit looking to target&quot;</span>)
+<span class="co">#&gt; `geom_smooth()` using method = &#39;gam&#39;</span></code></pre></div>
+<p><img src="12_aim1_notebook_files/figure-html/spaghetti-elogit-1.png" width="100%" /></p>
+<p>Fit a maximum likelihood model as a first pass. We won’t fit the model automatically. It’s too time consuming. We save the results.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(lme4)
+m &lt;-<span class="st"> </span><span class="kw">glmer</span>(
+    <span class="kw">cbind</span>(Primary, Others) <span class="op">~</span>
+<span class="st">      </span>(ot1 <span class="op">+</span><span class="st"> </span>ot2 <span class="op">+</span><span class="st"> </span>ot3) <span class="op">*</span><span class="st"> </span>Study <span class="op">+</span>
+<span class="st">      </span>(ot1 <span class="op">+</span><span class="st"> </span>ot2 <span class="op">+</span><span class="st"> </span>ot3 <span class="op">|</span><span class="st"> </span>ResearchID<span class="op">/</span>Study),
+    <span class="dt">family =</span> binomial,
+    <span class="dt">data =</span> d_m)
+<span class="kw">summary</span>(m)
+readr<span class="op">::</span><span class="kw">write_rds</span>(m, <span class="st">&quot;./data/aim1_cubic_model.rds.gz&quot;</span>)</code></pre></div>
+<p>And reload them here.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(lme4)
+<span class="co">#&gt; Loading required package: Matrix</span>
+<span class="co">#&gt; Loading required package: methods</span>
+m &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_rds</span>(<span class="st">&quot;./data/aim1_cubic_model.rds.gz&quot;</span>)
+arm<span class="op">::</span><span class="kw">display</span>(m)
+<span class="co">#&gt; glmer(formula = cbind(Primary, Others) ~ (ot1 + ot2 + ot3) * </span>
+<span class="co">#&gt;     Study + (ot1 + ot2 + ot3 | ResearchID/Study), data = d_m, </span>
+<span class="co">#&gt;     family = binomial)</span>
+<span class="co">#&gt;                     coef.est coef.se</span>
+<span class="co">#&gt; (Intercept)         -0.47     0.03  </span>
+<span class="co">#&gt; ot1                  1.58     0.06  </span>
+<span class="co">#&gt; ot2                  0.05     0.04  </span>
+<span class="co">#&gt; ot3                 -0.17     0.03  </span>
+<span class="co">#&gt; StudyTimePoint2      0.41     0.03  </span>
+<span class="co">#&gt; StudyTimePoint3      0.70     0.04  </span>
+<span class="co">#&gt; ot1:StudyTimePoint2  0.56     0.08  </span>
+<span class="co">#&gt; ot1:StudyTimePoint3  1.10     0.08  </span>
+<span class="co">#&gt; ot2:StudyTimePoint2 -0.16     0.05  </span>
+<span class="co">#&gt; ot2:StudyTimePoint3 -0.35     0.05  </span>
+<span class="co">#&gt; ot3:StudyTimePoint2 -0.12     0.04  </span>
+<span class="co">#&gt; ot3:StudyTimePoint3 -0.21     0.04  </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Error terms:</span>
+<span class="co">#&gt;  Groups           Name        Std.Dev. Corr              </span>
+<span class="co">#&gt;  Study:ResearchID (Intercept) 0.30                       </span>
+<span class="co">#&gt;                   ot1         0.68      0.18             </span>
+<span class="co">#&gt;                   ot2         0.44     -0.12  0.03       </span>
+<span class="co">#&gt;                   ot3         0.29     -0.09 -0.44 -0.05 </span>
+<span class="co">#&gt;  ResearchID       (Intercept) 0.27                       </span>
+<span class="co">#&gt;                   ot1         0.46      0.86             </span>
+<span class="co">#&gt;                   ot2         0.09     -0.99 -0.85       </span>
+<span class="co">#&gt;                   ot3         0.03     -0.92 -0.98  0.92 </span>
+<span class="co">#&gt;  Residual                     1.00                       </span>
+<span class="co">#&gt; ---</span>
+<span class="co">#&gt; number of obs: 12584, groups: Study:ResearchID, 484; ResearchID, 195</span>
+<span class="co">#&gt; AIC = 74467.3, DIC = -61745.9</span>
+<span class="co">#&gt; deviance = 6328.7</span>
+
+d_m<span class="op">$</span>cubic_fit &lt;-<span class="st"> </span><span class="kw">fitted</span>(m)
+
+<span class="kw">ggplot</span>(d_m) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> cubic_fit) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">alpha =</span> .<span class="dv">2</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">stat_smooth</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_grid</span>(. <span class="op">~</span><span class="st"> </span>Study) <span class="op">+</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">&quot;Proportion looks to target [model fits]&quot;</span>, 
+       <span class="dt">x =</span> <span class="st">&quot;Time after target onset (smoothed to 50 ms bins)&quot;</span>)
+<span class="co">#&gt; `geom_smooth()` using method = &#39;gam&#39;</span></code></pre></div>
+<p><img src="12_aim1_notebook_files/figure-html/cubic-model-fits-1.png" width="80" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+d_m <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(Time, Study) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">r =</span> <span class="kw">cor</span>(Prop, cubic_fit)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> r, <span class="dt">color =</span> Study) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> .<span class="dv">7</span>, <span class="dt">size =</span> <span class="dv">3</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ylim</span>(<span class="kw">c</span>(.<span class="dv">8</span>, <span class="dv">1</span>)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">labs</span>(
+    <span class="dt">x =</span> <span class="st">&quot;Time after target onset (smoothed to 50 ms bins)&quot;</span>,
+    <span class="dt">y =</span> <span class="st">&quot;Correlation of fitted and observed&quot;</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(
+    <span class="dt">legend.position =</span> <span class="kw">c</span>(<span class="fl">0.025</span>, <span class="fl">0.05</span>), 
+    <span class="dt">legend.justification =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>))</code></pre></div>
+<p><img src="12_aim1_notebook_files/figure-html/cubic-model-fits-2.png" width="80" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+  
+<span class="co"># ggplot(d_m) + </span>
+<span class="co">#   aes(x = Prop, y = cubic_fit) + </span>
+<span class="co">#   geom_point(shape = 1, alpha = .2) + </span>
+<span class="co">#   geom_abline(color = &quot;blue&quot;, size = 2)</span>
+<span class="co">#   geom_line(aes(group = ResearchID), alpha = .2) + </span>
+<span class="co">#   stat_smooth() +</span>
+<span class="co">#   facet_grid(. ~ Study) + </span>
+<span class="co">#     labs(y = &quot;Proportion looks to target [model fits]&quot;, </span>
+<span class="co">#        x = &quot;Time after target onset (smoothed to 50 ms bins)&quot;)</span>
+
+
+<span class="co"># ggplot(inner_join(d_m, ranks),) + </span>
+<span class="co">#   aes(x = Time, y = cubic_fit, color = -slope) + </span>
+<span class="co">#   geom_line(aes(group = ResearchID), alpha = .4) +</span>
+<span class="co">#   viridis::scale_color_viridis() + </span>
+<span class="co">#   facet_grid(. ~ Study)</span>
+  <span class="co"># geom_line(aes(group = ResearchID), data = semi_join(d_m, top_10), size = 1, color = &quot;blue&quot;) + </span>
+  <span class="co"># geom_line(aes(group = ResearchID), data = semi_join(d_m, bot_10), size = 1, color = &quot;red&quot;) +</span></code></pre></div>
+<p>Visualize the top and bottom 20 children (pooled over studies).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">top_<span class="dv">20</span> &lt;-<span class="st"> </span>m <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ranef</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">getElement</span>(<span class="st">&quot;ResearchID&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>tibble<span class="op">::</span><span class="kw">rownames_to_column</span>(<span class="st">&quot;ResearchID&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">top_n</span>(<span class="dv">20</span>, ot1) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(ResearchID, <span class="dt">slope =</span> ot1)
+
+bot_<span class="dv">20</span> &lt;-<span class="st"> </span>m <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ranef</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">getElement</span>(<span class="st">&quot;ResearchID&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>tibble<span class="op">::</span><span class="kw">rownames_to_column</span>(<span class="st">&quot;ResearchID&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">top_n</span>(<span class="dv">20</span>, <span class="op">-</span>ot1) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(ResearchID, <span class="dt">slope =</span> ot1)
+
+<span class="kw">ggplot</span>(d_m) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> cubic_fit) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">alpha =</span> .<span class="dv">2</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">data =</span> <span class="kw">semi_join</span>(d_m, top_<span class="dv">20</span>), 
+            <span class="dt">size =</span> .<span class="dv">7</span>, <span class="dt">color =</span> <span class="st">&quot;#0074D9&quot;</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">data =</span> <span class="kw">semi_join</span>(d_m, bot_<span class="dv">20</span>), 
+            <span class="dt">size =</span> .<span class="dv">7</span>, <span class="dt">color =</span> <span class="st">&quot;#FF4136&quot;</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">facet_grid</span>(. <span class="op">~</span><span class="st"> </span>Study) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">&quot;Proportion looks to target [model fits]&quot;</span>, 
+       <span class="dt">x =</span> <span class="st">&quot;Time after target onset (smoothed to 50 ms bins)&quot;</span>)
+<span class="co">#&gt; Joining, by = &quot;ResearchID&quot;</span>
+<span class="co">#&gt; Joining, by = &quot;ResearchID&quot;</span></code></pre></div>
+<p><img src="12_aim1_notebook_files/figure-html/ranks-by-study-1.png" width="80" /></p>
+<p>Plot the ranks on the raw data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(d_m) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> Prop) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">alpha =</span> .<span class="dv">2</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">data =</span> <span class="kw">semi_join</span>(d_m, top_<span class="dv">20</span>), 
+            <span class="dt">size =</span> .<span class="dv">7</span>, <span class="dt">color =</span> <span class="st">&quot;#0074D9&quot;</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">data =</span> <span class="kw">semi_join</span>(d_m, bot_<span class="dv">20</span>), 
+            <span class="dt">size =</span> .<span class="dv">7</span>, <span class="dt">color =</span> <span class="st">&quot;#FF4136&quot;</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">facet_grid</span>(. <span class="op">~</span><span class="st"> </span>Study) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">&quot;Proportion looks to target&quot;</span>, 
+       <span class="dt">x =</span> <span class="st">&quot;Time after target onset (smoothed to 50 ms bins)&quot;</span>)
+<span class="co">#&gt; Joining, by = &quot;ResearchID&quot;</span>
+<span class="co">#&gt; Joining, by = &quot;ResearchID&quot;</span></code></pre></div>
+<p><img src="12_aim1_notebook_files/figure-html/unnamed-chunk-6-1.png" width="80" /></p>
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="prepare-and-explore-the-data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="visualize-looks-to-each-image-type.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"download": ["dissertation.pdf", "dissertation.epub", "dissertation.docx"],
+"toc": {
+"collapse": "subsection"
+},
+"split_bib": false
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(script.src))
+      script.src  = script.src.replace(/^https?:/, '');
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

@@ -23,7 +23,7 @@ data <- readr::read_csv("./data/aim1-screened.csv.gz")
 
 Downsample into 50 ms bins.
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 data <- data %>% 
   select(Study, ResearchID, TrialID:GazeByImageAOI) %>% 
   assign_bins(bin_width = 3, Time, TrialID)
@@ -61,12 +61,15 @@ d_m <- d %>%
 Plot the model-ready data. Use empirical logit because straight log-odds has too
 high of values for plotting.
 
-```{r}
+```{r spaghetti-elogit, out.width = "100%", fig.height=2.5, fig.width=6}
 ggplot(d_m) + 
   aes(x = Time, y = empirical_logit(Primary, Others)) + 
   geom_line(aes(group = ResearchID), alpha = .2) + 
   stat_smooth() +
-  facet_grid(. ~ Study)
+  theme_grey(base_size = 9) +
+  facet_grid(. ~ Study) + 
+  labs(x = "Time after target onset (smoothed to 50 ms bins)", 
+       y = "Emp. logit looking to target")
 ```
 
 Fit a maximum likelihood model as a first pass. We won't fit the model
@@ -89,6 +92,8 @@ And reload them here.
 ```{r cubic-model-fits}
 library(lme4)
 m <- readr::read_rds("./data/aim1_cubic_model.rds.gz")
+arm::display(m)
+
 d_m$cubic_fit <- fitted(m)
 
 ggplot(d_m) + 
@@ -97,58 +102,33 @@ ggplot(d_m) +
   stat_smooth() +
   facet_grid(. ~ Study) + 
     labs(y = "Proportion looks to target [model fits]", 
-       x = "Time afer noun onset [ms]")
+       x = "Time after target onset (smoothed to 50 ms bins)")
 
-top_10 <- m %>% 
-  ranef() %>% 
-  getElement("ResearchID") %>% 
-  tibble::rownames_to_column("ResearchID") %>% 
-  as_tibble() %>% 
-  top_n(20, ot1) %>% 
-  select(ResearchID, slope = ot1)
+d_m %>% 
+  group_by(Time, Study) %>% 
+  summarise(r = cor(Prop, cubic_fit)) %>% 
+  ggplot() + aes(x = Time, y = r, color = Study) + 
+  geom_point(alpha = .7, size = 3) + 
+  ylim(c(.8, 1)) + 
+  labs(
+    x = "Time after target onset (smoothed to 50 ms bins)",
+    y = "Correlation of fitted and observed") + 
+  theme_grey(base_size = 9) +
+  theme(
+    legend.position = c(0.025, 0.05), 
+    legend.justification = c(0, 0))
 
-bot_10 <- m %>% 
-  ranef() %>% 
-  getElement("ResearchID") %>% 
-  tibble::rownames_to_column("ResearchID") %>% 
-  as_tibble() %>% 
-  top_n(20, -ot1) %>% 
-  select(ResearchID, slope = ot1)
+  
+# ggplot(d_m) + 
+#   aes(x = Prop, y = cubic_fit) + 
+#   geom_point(shape = 1, alpha = .2) + 
+#   geom_abline(color = "blue", size = 2)
+#   geom_line(aes(group = ResearchID), alpha = .2) + 
+#   stat_smooth() +
+#   facet_grid(. ~ Study) + 
+#     labs(y = "Proportion looks to target [model fits]", 
+#        x = "Time after target onset (smoothed to 50 ms bins)")
 
-okay <- m %>% 
-  ranef() %>% 
-  getElement("Study:ResearchID") %>% 
-    tibble::rownames_to_column("ResearchID") %>% 
-  as_tibble() %>% 
-  tidyr::separate(ResearchID, c("Year", "ResearchID")) %>% 
-  select(Year, ResearchID, ot1) %>% 
-  tidyr::spread(Year, ot1) %>% 
-  na.omit() %>% 
-  mutate(y1 = rank(TimePoint1), 
-         y2 = rank(TimePoint2), 
-         y3 = rank(TimePoint3))
-cor(okay[, -1], method =  "spearman")
-summary(m)
-
-
-ggplot(d_m) + 
-  aes(x = Time, y = cubic_fit) + 
-  geom_line(aes(group = ResearchID), alpha = .2) +
-  geom_line(aes(group = ResearchID), data = semi_join(d_m, top_10), 
-            size = .7, color = "#0074D9") + 
-  geom_line(aes(group = ResearchID), data = semi_join(d_m, bot_10), 
-            size = .7, color = "#FF4136") + 
-  facet_grid(. ~ Study) + 
-  labs(y = "Proportion looks to target [model fits]", 
-       x = "Time afer noun onset [ms]")
-ggsave("test.png")
-ranks <- m %>% 
-  ranef() %>% 
-  getElement("ResearchID") %>% 
-  tibble::rownames_to_column("ResearchID") %>% 
-  as_tibble() %>% 
-  mutate(rank = rank(ot1)) %>% 
-  select(ResearchID, slope = rank)
 
 # ggplot(inner_join(d_m, ranks),) + 
 #   aes(x = Time, y = cubic_fit, color = -slope) + 
@@ -159,4 +139,49 @@ ranks <- m %>%
   # geom_line(aes(group = ResearchID), data = semi_join(d_m, bot_10), size = 1, color = "red") +
 ```
 
+Visualize the top and bottom 20 children (pooled over studies).
+
+```{r ranks-by-study}
+top_20 <- m %>% 
+  ranef() %>% 
+  getElement("ResearchID") %>% 
+  tibble::rownames_to_column("ResearchID") %>% 
+  as_tibble() %>% 
+  top_n(20, ot1) %>% 
+  select(ResearchID, slope = ot1)
+
+bot_20 <- m %>% 
+  ranef() %>% 
+  getElement("ResearchID") %>% 
+  tibble::rownames_to_column("ResearchID") %>% 
+  as_tibble() %>% 
+  top_n(20, -ot1) %>% 
+  select(ResearchID, slope = ot1)
+
+ggplot(d_m) + 
+  aes(x = Time, y = cubic_fit) + 
+  geom_line(aes(group = ResearchID), alpha = .2) +
+  geom_line(aes(group = ResearchID), data = semi_join(d_m, top_20), 
+            size = .7, color = "#0074D9") + 
+  geom_line(aes(group = ResearchID), data = semi_join(d_m, bot_20), 
+            size = .7, color = "#FF4136") + 
+  facet_grid(. ~ Study) + 
+  labs(y = "Proportion looks to target [model fits]", 
+       x = "Time after target onset (smoothed to 50 ms bins)")
+```
+
+Plot the ranks on the raw data.
+
+```{r}
+ggplot(d_m) + 
+  aes(x = Time, y = Prop) + 
+  geom_line(aes(group = ResearchID), alpha = .2) +
+  geom_line(aes(group = ResearchID), data = semi_join(d_m, top_20), 
+            size = .7, color = "#0074D9") + 
+  geom_line(aes(group = ResearchID), data = semi_join(d_m, bot_20), 
+            size = .7, color = "#FF4136") + 
+  facet_grid(. ~ Study) + 
+  labs(y = "Proportion looks to target", 
+       x = "Time after target onset (smoothed to 50 ms bins)")
+```
 

@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>My dissertation</title>
+  <meta name="description" content="My dissertation">
+  <meta name="generator" content="bookdown 0.5 and GitBook 2.6.7">
+
+  <meta property="og:title" content="My dissertation" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  <meta name="github-repo" content="tjmahr/dissertation" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="My dissertation" />
+  
+  
+  
+
+<meta name="author" content="Tristan Mahr">
+
+
+<meta name="date" content="2017-09-22">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="analysis.html">
+<link rel="next" href="analyze-familiar-word-recognition.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="assets\style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">My dissertation</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Development of word recognition in preschoolers</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#updates"><i class="fa fa-check"></i>Updates</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="scratch-paper.html"><a href="scratch-paper.html"><i class="fa fa-check"></i><b>1</b> Scratch paper</a><ul>
+<li class="chapter" data-level="1.1" data-path="scratch-paper.html"><a href="scratch-paper.html#bookdown-cheatsheet"><i class="fa fa-check"></i><b>1.1</b> Bookdown cheatsheet</a><ul>
+<li class="chapter" data-level="1.1.1" data-path="scratch-paper.html"><a href="scratch-paper.html#manual-section-label-demo"><i class="fa fa-check"></i><b>1.1.1</b> Cross-references to sections</a></li>
+<li class="chapter" data-level="1.1.2" data-path="scratch-paper.html"><a href="scratch-paper.html#cross-references-to-appendices"><i class="fa fa-check"></i><b>1.1.2</b> Cross-references to appendices</a></li>
+<li class="chapter" data-level="1.1.3" data-path="scratch-paper.html"><a href="scratch-paper.html#cross-references-to-tables"><i class="fa fa-check"></i><b>1.1.3</b> Cross-references to tables</a></li>
+<li class="chapter" data-level="1.1.4" data-path="scratch-paper.html"><a href="scratch-paper.html#figure-references-and-using-text-references-as-captions"><i class="fa fa-check"></i><b>1.1.4</b> Figure references and using text references as captions</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="scratch-paper.html"><a href="scratch-paper.html#debug-info"><i class="fa fa-check"></i><b>1.2</b> Debug info</a></li>
+</ul></li>
+<li class="part"><span><b>Prospectus</b></span></li>
+<li class="chapter" data-level="2" data-path="front-matter.html"><a href="front-matter.html"><i class="fa fa-check"></i><b>2</b> Front Matter</a><ul>
+<li class="chapter" data-level="" data-path="front-matter.html"><a href="front-matter.html#about-this-document"><i class="fa fa-check"></i>About This Document</a></li>
+<li class="chapter" data-level="" data-path="front-matter.html"><a href="front-matter.html#dissertation-committee-members"><i class="fa fa-check"></i>Dissertation Committee Members</a></li>
+<li class="chapter" data-level="" data-path="front-matter.html"><a href="front-matter.html#planned-dissertation-format"><i class="fa fa-check"></i>Planned Dissertation Format</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="specific-aims.html"><a href="specific-aims.html"><i class="fa fa-check"></i><b>3</b> Specific Aims</a><ul>
+<li class="chapter" data-level="3.1" data-path="specific-aims.html"><a href="specific-aims.html#specific-aim-1-familiar-word-recognition-and-lexical-competition"><i class="fa fa-check"></i><b>3.1</b> Specific Aim 1 (Familiar Word Recognition and Lexical Competition)</a></li>
+<li class="chapter" data-level="3.2" data-path="specific-aims.html"><a href="specific-aims.html#specific-aim-2-referent-selection-and-mispronunciations"><i class="fa fa-check"></i><b>3.2</b> Specific Aim 2 (Referent Selection and Mispronunciations)</a></li>
+<li class="chapter" data-level="3.3" data-path="specific-aims.html"><a href="specific-aims.html#specific-aim-3-computational-modeling"><i class="fa fa-check"></i><b>3.3</b> Specific Aim 3 (Computational Modeling)</a></li>
+<li class="chapter" data-level="3.4" data-path="specific-aims.html"><a href="specific-aims.html#summary"><i class="fa fa-check"></i><b>3.4</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="significance.html"><a href="significance.html"><i class="fa fa-check"></i><b>4</b> Significance</a><ul>
+<li class="chapter" data-level="4.1" data-path="significance.html"><a href="significance.html#public-health-significance"><i class="fa fa-check"></i><b>4.1</b> Public Health Significance</a></li>
+<li class="chapter" data-level="4.2" data-path="significance.html"><a href="significance.html#scientific-significance"><i class="fa fa-check"></i><b>4.2</b> Scientific Significance</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="significance.html"><a href="significance.html#lexical-processing-dynamics"><i class="fa fa-check"></i><b>4.2.1</b> Lexical Processing Dynamics</a></li>
+<li class="chapter" data-level="4.2.2" data-path="significance.html"><a href="significance.html#individual-differences-in-word-recognition"><i class="fa fa-check"></i><b>4.2.2</b> Individual Differences in Word Recognition</a></li>
+<li class="chapter" data-level="4.2.3" data-path="significance.html"><a href="significance.html#computational-modeling"><i class="fa fa-check"></i><b>4.2.3</b> Computational Modeling</a></li>
+<li class="chapter" data-level="4.2.4" data-path="significance.html"><a href="significance.html#summary-1"><i class="fa fa-check"></i><b>4.2.4</b> Summary</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="research-hypotheses.html"><a href="research-hypotheses.html"><i class="fa fa-check"></i><b>5</b> Research Hypotheses</a><ul>
+<li class="chapter" data-level="5.1" data-path="research-hypotheses.html"><a href="research-hypotheses.html#specific-aim-1-familiar-word-recognition-and-lexical-competition-1"><i class="fa fa-check"></i><b>5.1</b> Specific Aim 1 (Familiar Word Recognition and Lexical Competition)</a></li>
+<li class="chapter" data-level="5.2" data-path="research-hypotheses.html"><a href="research-hypotheses.html#specific-aim-2-referent-selection-and-mispronunciations-1"><i class="fa fa-check"></i><b>5.2</b> Specific Aim 2 (Referent Selection and Mispronunciations)</a></li>
+<li class="chapter" data-level="5.3" data-path="research-hypotheses.html"><a href="research-hypotheses.html#specific-aim-3-computational-modeling-1"><i class="fa fa-check"></i><b>5.3</b> Specific Aim 3 (Computational Modeling)</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="methods.html"><a href="methods.html"><i class="fa fa-check"></i><b>6</b> Methods</a><ul>
+<li class="chapter" data-level="6.1" data-path="methods.html"><a href="methods.html#general-research-design-participants"><i class="fa fa-check"></i><b>6.1</b> General Research Design: Participants</a></li>
+<li class="chapter" data-level="6.2" data-path="methods.html"><a href="methods.html#general-eyetracking-procedure"><i class="fa fa-check"></i><b>6.2</b> General Eyetracking Procedure</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="methods.html"><a href="methods.html#experiment-administration"><i class="fa fa-check"></i><b>6.2.1</b> Experiment Administration</a></li>
+<li class="chapter" data-level="6.2.2" data-path="methods.html"><a href="methods.html#stimuli"><i class="fa fa-check"></i><b>6.2.2</b> Stimuli</a></li>
+<li class="chapter" data-level="6.2.3" data-path="methods.html"><a href="methods.html#data-preparation"><i class="fa fa-check"></i><b>6.2.3</b> Data Preparation</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="methods.html"><a href="methods.html#specific-procedure-aim-1-familiar-word-recognition-and-lexical-competition"><i class="fa fa-check"></i><b>6.3</b> Specific Procedure: Aim 1 (Familiar Word Recognition and Lexical Competition)</a></li>
+<li class="chapter" data-level="6.4" data-path="methods.html"><a href="methods.html#specific-procedure-aim-2-referent-selection-and-mispronunciations"><i class="fa fa-check"></i><b>6.4</b> Specific Procedure: Aim 2 (Referent Selection and Mispronunciations)</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="outcome-measures.html"><a href="outcome-measures.html"><i class="fa fa-check"></i><b>7</b> Outcome Measures</a><ul>
+<li class="chapter" data-level="7.1" data-path="outcome-measures.html"><a href="outcome-measures.html#sample-data"><i class="fa fa-check"></i><b>7.1</b> Sample Data</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="analysis.html"><a href="analysis.html"><i class="fa fa-check"></i><b>8</b> Analysis</a><ul>
+<li class="chapter" data-level="8.1" data-path="analysis.html"><a href="analysis.html#growth-curve-analysis"><i class="fa fa-check"></i><b>8.1</b> Growth Curve Analysis</a></li>
+<li class="chapter" data-level="8.2" data-path="analysis.html"><a href="analysis.html#aim-1-familiar-word-recognition-and-lexical-competition"><i class="fa fa-check"></i><b>8.2</b> Aim 1 (Familiar Word Recognition and Lexical Competition)</a></li>
+<li class="chapter" data-level="8.3" data-path="analysis.html"><a href="analysis.html#aim-2-referent-selection-and-mispronunciations"><i class="fa fa-check"></i><b>8.3</b> Aim 2 (Referent Selection and Mispronunciations)</a></li>
+<li class="chapter" data-level="8.4" data-path="analysis.html"><a href="analysis.html#aim-3-computational-modeling"><i class="fa fa-check"></i><b>8.4</b> Aim 3 (Computational Modeling)</a><ul>
+<li class="chapter" data-level="8.4.1" data-path="analysis.html"><a href="analysis.html#trace-model-architecture"><i class="fa fa-check"></i><b>8.4.1</b> TRACE Model Architecture</a></li>
+<li class="chapter" data-level="8.4.2" data-path="analysis.html"><a href="analysis.html#modeling-looking-data"><i class="fa fa-check"></i><b>8.4.2</b> Modeling Looking Data</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>Aim 1: Familiar Word Recognition and Lexical Competition</b></span></li>
+<li class="chapter" data-level="9" data-path="prepare-and-explore-the-data.html"><a href="prepare-and-explore-the-data.html"><i class="fa fa-check"></i><b>9</b> Prepare and explore the data</a><ul>
+<li class="chapter" data-level="9.1" data-path="prepare-and-explore-the-data.html"><a href="prepare-and-explore-the-data.html#data-cleaning"><i class="fa fa-check"></i><b>9.1</b> Data cleaning</a><ul>
+<li class="chapter" data-level="9.1.1" data-path="prepare-and-explore-the-data.html"><a href="prepare-and-explore-the-data.html#add-a-note-about-the-bad-version-of-the-experiment"><i class="fa fa-check"></i><b>9.1.1</b> Add a note about the bad version of the experiment</a></li>
+<li class="chapter" data-level="9.1.2" data-path="prepare-and-explore-the-data.html"><a href="prepare-and-explore-the-data.html#special-case-data-screening"><i class="fa fa-check"></i><b>9.1.2</b> Special case data screening</a></li>
+<li class="chapter" data-level="9.1.3" data-path="prepare-and-explore-the-data.html"><a href="prepare-and-explore-the-data.html#interim-summary"><i class="fa fa-check"></i><b>9.1.3</b> Interim summary</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html"><i class="fa fa-check"></i><b>10</b> Analyze familiar word recognition</a></li>
+<li class="chapter" data-level="11" data-path="visualize-looks-to-each-image-type.html"><a href="visualize-looks-to-each-image-type.html"><i class="fa fa-check"></i><b>11</b> Visualize looks to each image type</a><ul>
+<li class="chapter" data-level="11.1" data-path="visualize-looks-to-each-image-type.html"><a href="visualize-looks-to-each-image-type.html#comparing-strong-versus-weak-foils"><i class="fa fa-check"></i><b>11.1</b> Comparing strong versus weak foils</a></li>
+<li class="chapter" data-level="11.2" data-path="visualize-looks-to-each-image-type.html"><a href="visualize-looks-to-each-image-type.html#look-for-individual-differences-in-competitor-sensitivity"><i class="fa fa-check"></i><b>11.2</b> Look for individual differences in competitor sensitivity</a></li>
+<li class="chapter" data-level="11.3" data-path="visualize-looks-to-each-image-type.html"><a href="visualize-looks-to-each-image-type.html#interim-summary-1"><i class="fa fa-check"></i><b>11.3</b> Interim summary</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="mp-experiment-items.html"><a href="mp-experiment-items.html"><i class="fa fa-check"></i><b>A</b> Items used in the mispronunciation experiment</a></li>
+<li class="chapter" data-level="B" data-path="vw-experiment-items.html"><a href="vw-experiment-items.html"><i class="fa fa-check"></i><b>B</b> Items used in the visual world experiment</a></li>
+<li class="chapter" data-level="C" data-path="related-work.html"><a href="related-work.html"><i class="fa fa-check"></i><b>C</b> Related Work</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Created with bookdown</a></li>
+<li><a href="https://tjmahr.github.io/" target="blank">Tristan Mahr</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">My dissertation</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="prepare-and-explore-the-data" class="section level1">
+<h1><span class="header-section-number">Chapter 9</span> Prepare and explore the data</h1>
+<p>First, let’s load in all the data and plot the data from each year.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)
+<span class="kw">library</span>(rlang)
+<span class="kw">library</span>(littlelisteners)
+<span class="kw">library</span>(ggplot2)
+
+<span class="co">#&#39; group `data` by some grouping variables (`...`),</span>
+<span class="co">#&#39; randomly select `size` of the groups</span>
+<span class="co">#&#39; keep just the data from those sampled groups</span>
+sample_n_of &lt;-<span class="st"> </span><span class="cf">function</span>(data, size, ...) {
+  dots &lt;-<span class="st"> </span><span class="kw">quos</span>(...)
+  rows &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">row =</span> <span class="kw">seq_len</span>(<span class="kw">nrow</span>(data)))
+  rows[, <span class="st">&quot;group&quot;</span>] &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">group_by</span>(<span class="op">!!!</span><span class="st"> </span>dots) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">group_indices</span>()
+
+  subset &lt;-<span class="st"> </span>rows <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">filter</span>(.data<span class="op">$</span>group <span class="op">%in%</span><span class="st"> </span><span class="kw">sample</span>(<span class="kw">unique</span>(.data<span class="op">$</span>group), size)) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">pull</span>(.data<span class="op">$</span>row)
+
+  data[subset, ]
+}</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">looks1 &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_csv</span>(<span class="st">&quot;./data-raw/rwl_timepoint1_looks.csv.gz&quot;</span>)
+looks2 &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_csv</span>(<span class="st">&quot;./data-raw/rwl_timepoint2_looks.csv.gz&quot;</span>)
+looks3 &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_csv</span>(<span class="st">&quot;./data-raw/rwl_timepoint3_looks.csv.gz&quot;</span>)
+looks &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(looks1, looks2, looks3) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(Version <span class="op">==</span><span class="st"> &quot;Standard&quot;</span>)
+
+resp_def &lt;-<span class="st"> </span><span class="kw">create_response_def</span>(
+  <span class="dt">primary =</span> <span class="st">&quot;Target&quot;</span>,
+  <span class="dt">others =</span> <span class="kw">c</span>(<span class="st">&quot;PhonologicalFoil&quot;</span>, <span class="st">&quot;SemanticFoil&quot;</span>, <span class="st">&quot;Unrelated&quot;</span>),
+  <span class="dt">elsewhere =</span> <span class="st">&quot;tracked&quot;</span>,
+  <span class="dt">missing =</span> <span class="ot">NA</span>
+)
+
+<span class="co"># Keep only frames from -500 to 2000 plus or minus any frames to make the </span>
+<span class="co"># number of frames divisible by 3 (for binning)</span>
+times_to_keep &lt;-<span class="st"> </span>looks <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">distinct</span>(Time) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">trim_to_bin_width</span>(<span class="dv">3</span>, <span class="dt">time_var =</span> Time, <span class="dt">key_time =</span> <span class="dv">0</span>, <span class="dt">key_position =</span> <span class="dv">2</span>, 
+                    <span class="dt">min_time =</span> <span class="op">-</span><span class="dv">500</span>, <span class="dt">max_time =</span> <span class="dv">2000</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">pull</span>(Time) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">range</span>()
+
+raw_data &lt;-<span class="st"> </span>looks <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(<span class="kw">between</span>(Time, times_to_keep[<span class="dv">1</span>], times_to_keep[<span class="dv">2</span>])) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">aggregate_looks</span>(resp_def, Study <span class="op">+</span><span class="st"> </span>ResearchID <span class="op">+</span><span class="st"> </span>Time <span class="op">~</span><span class="st"> </span>GazeByImageAOI)</code></pre></div>
+<p>Make some plots of overall averages.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(raw_data) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> Prop, <span class="dt">color =</span> Study) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">yintercept =</span> .<span class="dv">25</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">stat_summary</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Time after target onset [ms]&quot;</span>,
+       <span class="dt">y =</span> <span class="st">&quot;Proportion looks to target&quot;</span>,
+       <span class="dt">caption =</span> <span class="st">&quot;Mean +/- SE&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="kw">c</span>(<span class="fl">0.05</span>, <span class="fl">0.95</span>), 
+        <span class="dt">legend.justification =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))
+<span class="co">#&gt; Warning: Removed 22 rows containing non-finite values (stat_summary).</span>
+<span class="co">#&gt; No summary function supplied, defaulting to `mean_se()</span>
+
+<span class="kw">ggplot</span>(raw_data) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> Prop, <span class="dt">color =</span> Study) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">yintercept =</span> .<span class="dv">25</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">stat_smooth</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Time after target onset [ms]&quot;</span>,
+       <span class="dt">y =</span> <span class="st">&quot;Proportion looks to target&quot;</span>,
+       <span class="dt">caption =</span> <span class="st">&quot;GAM Smooth&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="kw">c</span>(<span class="fl">0.05</span>, <span class="fl">0.95</span>), 
+        <span class="dt">legend.justification =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))
+<span class="co">#&gt; `geom_smooth()` using method = &#39;gam&#39;</span>
+<span class="co">#&gt; Warning: Removed 22 rows containing non-finite values (stat_smooth).</span></code></pre></div>
+<p><img src="11_aim1_notebook_files/figure-html/raw-aim1-1.png" width="50%" /><img src="11_aim1_notebook_files/figure-html/raw-aim1-2.png" width="50%" /></p>
+<p>The raw data plainly confirm hypothesis 1:</p>
+<blockquote>
+<p>Children’s accuracy and efficiency of recognizing words will improve each year.</p>
+</blockquote>
+<p>Look at a spaghetti plot…</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(raw_data) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> Prop, <span class="dt">group =</span> ResearchID) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">yintercept =</span> .<span class="dv">25</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">alpha =</span> .<span class="dv">15</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_grid</span>(<span class="op">~</span><span class="st"> </span>Study) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Time after target onset [ms]&quot;</span>,
+       <span class="dt">y =</span> <span class="st">&quot;Proportion looks to target&quot;</span>,
+       <span class="dt">caption =</span> <span class="st">&quot;Lines: Individual participants&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="kw">c</span>(<span class="fl">0.05</span>, <span class="fl">0.95</span>), 
+        <span class="dt">legend.justification =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</code></pre></div>
+<p><img src="11_aim1_notebook_files/figure-html/spaghetti-aim1-1.png" width="100%" /></p>
+<div id="data-cleaning" class="section level2">
+<h2><span class="header-section-number">9.1</span> Data cleaning</h2>
+<p>We use the following options for data screening.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rules &lt;-<span class="st"> </span><span class="kw">list</span>(
+  <span class="dt">screening_window =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">2020</span>),
+  <span class="dt">missing_data_limit =</span> .<span class="dv">5</span>,
+  <span class="dt">min_trials =</span> <span class="dv">12</span>
+)</code></pre></div>
+<p>That is:</p>
+<ul>
+<li>Filter out bad trials. These have at least 50% missing data between 0 to 2020ms.</li>
+<li>Filter out bad blocks. These have fewer than 12 trials.</li>
+</ul>
+<p>These are the default conventions four lab on these eyetracking experiments.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># offset to catch frame before and after window </span>
+<span class="co"># (to reflect binning boundaries)</span>
+screening_times &lt;-<span class="st"> </span>looks <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">distinct</span>(Time) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">trim_to_bin_width</span>(<span class="dv">3</span>, <span class="dv">0</span>, <span class="dv">2</span>, Time, <span class="dt">min_time =</span> rules<span class="op">$</span>screening_window[<span class="dv">1</span>], 
+                    <span class="dt">max_time =</span> rules<span class="op">$</span>screening_window[<span class="dv">2</span>]) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">pull</span>(Time) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">range</span>()
+screening_times
+<span class="co">#&gt; [1]  -16.6546 2015.2100</span>
+
+missing_data_by_trial &lt;-<span class="st"> </span>looks <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(screening_times[<span class="dv">1</span>] <span class="op">&lt;=</span><span class="st"> </span>Time, Time <span class="op">&lt;=</span><span class="st"> </span>screening_times[<span class="dv">2</span>]) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">aggregate_looks</span>(
+    resp_def, 
+    Study <span class="op">+</span><span class="st"> </span>Version <span class="op">+</span><span class="st"> </span>ResearchID <span class="op">+</span><span class="st"> </span>Basename <span class="op">+</span><span class="st"> </span>TrialNo <span class="op">~</span><span class="st"> </span>GazeByImageAOI) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">BadTrial =</span> rules<span class="op">$</span>missing_data_limit <span class="op">&lt;=</span><span class="st"> </span>PropNA)
+
+bad_trial_counts &lt;-<span class="st"> </span>missing_data_by_trial <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">count</span>(Study, ResearchID, Basename, BadTrial) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>tidyr<span class="op">::</span><span class="kw">spread</span>(BadTrial, n) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">rename</span>(<span class="dt">n_bad =</span> <span class="st">`</span><span class="dt">TRUE</span><span class="st">`</span>, <span class="dt">n_good =</span> <span class="st">`</span><span class="dt">FALSE</span><span class="st">`</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="co"># Replace NAs with 0, in case there were 0 good trials in a block or </span>
+<span class="st">  </span><span class="co"># 0 bad trials in a block</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">n_bad =</span> <span class="kw">coalesce</span>(n_bad, 0L),
+         <span class="dt">n_good =</span> <span class="kw">coalesce</span>(n_good, 0L),
+         <span class="dt">trials =</span> n_good <span class="op">+</span><span class="st"> </span>n_bad,
+         <span class="dt">prop_bad =</span> <span class="kw">round</span>(n_bad <span class="op">/</span><span class="st"> </span>trials, <span class="dv">2</span>)) 
+
+blocks_to_drop &lt;-<span class="st"> </span>bad_trial_counts <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(.<span class="dv">5</span> <span class="op">&lt;=</span><span class="st"> </span>prop_bad)
+blocks_to_drop
+<span class="co">#&gt; # A tibble: 110 x 7</span>
+<span class="co">#&gt;         Study ResearchID             Basename n_good n_bad trials prop_bad</span>
+<span class="co">#&gt;         &lt;chr&gt;      &lt;chr&gt;                &lt;chr&gt;  &lt;int&gt; &lt;int&gt;  &lt;int&gt;    &lt;dbl&gt;</span>
+<span class="co">#&gt;  1 TimePoint1       013L RWL_Block2_013L32MA1     11    13     24     0.54</span>
+<span class="co">#&gt;  2 TimePoint1       023L RWL_Block1_023L29MA1     10    14     24     0.58</span>
+<span class="co">#&gt;  3 TimePoint1       027L RWL_Block2_027L38MS2      6    18     24     0.75</span>
+<span class="co">#&gt;  4 TimePoint1       033L RWL_Block1_033L35FS2      2    22     24     0.92</span>
+<span class="co">#&gt;  5 TimePoint1       033L RWL_Block2_033L35FS2      2    22     24     0.92</span>
+<span class="co">#&gt;  6 TimePoint1       035L RWL_Block1_035L32FA1      8    16     24     0.67</span>
+<span class="co">#&gt;  7 TimePoint1       079L RWL_Block1_079L37FS2     10    14     24     0.58</span>
+<span class="co">#&gt;  8 TimePoint1       109L RWL_Block1_109L34MS2      8    16     24     0.67</span>
+<span class="co">#&gt;  9 TimePoint1       114L RWL_Block1_114L30MS1      7    17     24     0.71</span>
+<span class="co">#&gt; 10 TimePoint1       114L RWL_Block2_114L30MS1      9    15     24     0.62</span>
+<span class="co">#&gt; # ... with 100 more rows</span>
+
+leftover_bad_trials &lt;-<span class="st"> </span>missing_data_by_trial <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">anti_join</span>(blocks_to_drop, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;Study&quot;</span>, <span class="st">&quot;ResearchID&quot;</span>, <span class="st">&quot;Basename&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(.<span class="dv">5</span> <span class="op">&lt;=</span><span class="st"> </span>PropNA)
+
+clean_looks &lt;-<span class="st"> </span>looks <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">anti_join</span>(blocks_to_drop, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;Study&quot;</span>, <span class="st">&quot;ResearchID&quot;</span>, <span class="st">&quot;Basename&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">anti_join</span>(leftover_bad_trials)
+<span class="co">#&gt; Joining, by = c(&quot;Study&quot;, &quot;ResearchID&quot;, &quot;Version&quot;, &quot;Basename&quot;, &quot;TrialNo&quot;)</span></code></pre></div>
+<p>Do some head counts.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">screening_results &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">Screened =</span> clean_looks, <span class="dt">Raw =</span> looks) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">bind_rows</span>(<span class="dt">.id =</span> <span class="st">&quot;Dataset&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">distinct</span>(Dataset, Study, ResearchID, TrialID) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(Dataset, Study) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">summarise</span>(
+    <span class="st">`</span><span class="dt">Num Children</span><span class="st">`</span> =<span class="st"> </span><span class="kw">n_distinct</span>(ResearchID),
+    <span class="st">`</span><span class="dt">Num Trials</span><span class="st">`</span> =<span class="st"> </span><span class="kw">n_distinct</span>(TrialID))
+
+screening_results <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="dt">caption =</span> <span class="st">&quot;Eyetracking data before and after data screening&quot;</span>)</code></pre></div>
+<table>
+<caption><span id="tab:unnamed-chunk-6">Table 9.1: </span>Eyetracking data before and after data screening</caption>
+<thead>
+<tr class="header">
+<th align="left">Dataset</th>
+<th align="left">Study</th>
+<th align="right">Num Children</th>
+<th align="right">Num Trials</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Raw</td>
+<td align="left">TimePoint1</td>
+<td align="right">178</td>
+<td align="right">7967</td>
+</tr>
+<tr class="even">
+<td align="left">Raw</td>
+<td align="left">TimePoint2</td>
+<td align="right">180</td>
+<td align="right">8327</td>
+</tr>
+<tr class="odd">
+<td align="left">Raw</td>
+<td align="left">TimePoint3</td>
+<td align="right">163</td>
+<td align="right">7724</td>
+</tr>
+<tr class="even">
+<td align="left">Screened</td>
+<td align="left">TimePoint1</td>
+<td align="right">163</td>
+<td align="right">5951</td>
+</tr>
+<tr class="odd">
+<td align="left">Screened</td>
+<td align="left">TimePoint2</td>
+<td align="right">165</td>
+<td align="right">6421</td>
+</tr>
+<tr class="even">
+<td align="left">Screened</td>
+<td align="left">TimePoint3</td>
+<td align="right">156</td>
+<td align="right">6483</td>
+</tr>
+</tbody>
+</table>
+<p>Plot the data after partial data screening.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data &lt;-<span class="st"> </span>clean_looks <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(<span class="kw">between</span>(Time, times_to_keep[<span class="dv">1</span>], times_to_keep[<span class="dv">2</span>])) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>readr<span class="op">::</span><span class="kw">write_csv</span>(<span class="st">&quot;./data/aim1-screened.csv.gz&quot;</span>) 
+
+agg_data &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">aggregate_looks</span>(resp_def, Study <span class="op">+</span><span class="st"> </span>ResearchID <span class="op">+</span><span class="st"> </span>Time <span class="op">~</span><span class="st"> </span>GazeByImageAOI)</code></pre></div>
+<p>We include the curves from the earlier plots in gray. The data-cleaning process slightly increases the average accuracy during the plateau-ed portion of the growth curve.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(agg_data) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> Prop, <span class="dt">color =</span> Study) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">yintercept =</span> .<span class="dv">25</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">stat_summary</span>(<span class="kw">aes</span>(<span class="dt">group =</span> Study), <span class="dt">data =</span> raw_data, 
+               <span class="dt">color =</span> <span class="st">&quot;gray70&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">stat_summary</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Time after target onset [ms]&quot;</span>,
+       <span class="dt">y =</span> <span class="st">&quot;Proportion looks to target&quot;</span>,
+       <span class="dt">caption =</span> <span class="st">&quot;Mean +/- SE&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="kw">c</span>(<span class="fl">0.05</span>, <span class="fl">0.95</span>), 
+        <span class="dt">legend.justification =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))
+<span class="co">#&gt; Warning: Removed 22 rows containing non-finite values (stat_summary).</span>
+<span class="co">#&gt; No summary function supplied, defaulting to `mean_se()</span>
+<span class="co">#&gt; No summary function supplied, defaulting to `mean_se()</span>
+
+<span class="kw">ggplot</span>(agg_data) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> Prop, <span class="dt">color =</span> Study) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">yintercept =</span> .<span class="dv">25</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">stat_smooth</span>(<span class="kw">aes</span>(<span class="dt">group =</span> Study), <span class="dt">data =</span> raw_data, 
+              <span class="dt">color =</span> <span class="st">&quot;gray70&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">stat_smooth</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Time after target onset [ms]&quot;</span>,
+       <span class="dt">y =</span> <span class="st">&quot;Proportion looks to target&quot;</span>,
+       <span class="dt">caption =</span> <span class="st">&quot;GAM smooth on partially screened data&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="kw">c</span>(<span class="fl">0.05</span>, <span class="fl">0.95</span>), 
+        <span class="dt">legend.justification =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))
+<span class="co">#&gt; `geom_smooth()` using method = &#39;gam&#39;</span>
+<span class="co">#&gt; Warning: Removed 22 rows containing non-finite values (stat_smooth).</span>
+<span class="co">#&gt; `geom_smooth()` using method = &#39;gam&#39;</span></code></pre></div>
+<p><img src="11_aim1_notebook_files/figure-html/clean-aim1-1.png" width="50%" /><img src="11_aim1_notebook_files/figure-html/clean-aim1-2.png" width="50%" /></p>
+<div id="add-a-note-about-the-bad-version-of-the-experiment" class="section level3">
+<h3><span class="header-section-number">9.1.1</span> Add a note about the bad version of the experiment</h3>
+<p>(<em>Skip for now.</em>)</p>
+</div>
+<div id="special-case-data-screening" class="section level3">
+<h3><span class="header-section-number">9.1.2</span> Special case data screening</h3>
+<p>(<em>Skip for now.</em> This is where I review the participant notes and will remove children who have to be excluded for other reasons, like being diagnosed with a language disorder at TimePoint 3.)</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># stub for saving the final-final data</span></code></pre></div>
+</div>
+<div id="interim-summary" class="section level3">
+<h3><span class="header-section-number">9.1.3</span> Interim summary</h3>
+<ul>
+<li>Visual evidence that group averages get faster and more reliable at looking to target each year.</li>
+</ul>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="analysis.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="analyze-familiar-word-recognition.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"download": ["dissertation.pdf", "dissertation.epub", "dissertation.docx"],
+"toc": {
+"collapse": "subsection"
+},
+"split_bib": false
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(script.src))
+      script.src  = script.src.replace(/^https?:/, '');
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
