@@ -25,7 +25,7 @@
 <meta name="author" content="Tristan Mahr">
 
 
-<meta name="date" content="2017-09-22">
+<meta name="date" content="2017-09-25">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -171,7 +171,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="9.1.3" data-path="prepare-and-explore-the-data.html"><a href="prepare-and-explore-the-data.html#interim-summary"><i class="fa fa-check"></i><b>9.1.3</b> Interim summary</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="10" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html"><i class="fa fa-check"></i><b>10</b> Analyze familiar word recognition</a></li>
+<li class="chapter" data-level="10" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html"><i class="fa fa-check"></i><b>10</b> Analyze familiar word recognition</a><ul>
+<li class="chapter" data-level="10.1" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#data-preparation-1"><i class="fa fa-check"></i><b>10.1</b> Data preparation</a></li>
+<li class="chapter" data-level="10.2" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#maximum-likelihood-results"><i class="fa fa-check"></i><b>10.2</b> Maximum likelihood results</a></li>
+</ul></li>
 <li class="chapter" data-level="11" data-path="visualize-looks-to-each-image-type.html"><a href="visualize-looks-to-each-image-type.html"><i class="fa fa-check"></i><b>11</b> Visualize looks to each image type</a><ul>
 <li class="chapter" data-level="11.1" data-path="visualize-looks-to-each-image-type.html"><a href="visualize-looks-to-each-image-type.html#comparing-strong-versus-weak-foils"><i class="fa fa-check"></i><b>11.1</b> Comparing strong versus weak foils</a></li>
 <li class="chapter" data-level="11.2" data-path="visualize-looks-to-each-image-type.html"><a href="visualize-looks-to-each-image-type.html#look-for-individual-differences-in-competitor-sensitivity"><i class="fa fa-check"></i><b>11.2</b> Look for individual differences in competitor sensitivity</a></li>
@@ -214,24 +217,24 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="co">#&#39; group `data` by some grouping variables (`...`),</span>
 <span class="co">#&#39; randomly select `size` of the groups</span>
 <span class="co">#&#39; keep just the data from those sampled groups</span>
-sample_n_of &lt;-<span class="st"> </span><span class="cf">function</span>(data, size, ...) {
+sample_n_of &lt;-<span class="st"> </span>function(data, size, ...) {
   dots &lt;-<span class="st"> </span><span class="kw">quos</span>(...)
   rows &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">row =</span> <span class="kw">seq_len</span>(<span class="kw">nrow</span>(data)))
-  rows[, <span class="st">&quot;group&quot;</span>] &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">group_by</span>(<span class="op">!!!</span><span class="st"> </span>dots) <span class="op">%&gt;%</span>
+  rows[, <span class="st">&quot;group&quot;</span>] &lt;-<span class="st"> </span>data %&gt;%
+<span class="st">    </span><span class="kw">group_by</span>(!!!<span class="st"> </span>dots) %&gt;%
 <span class="st">    </span><span class="kw">group_indices</span>()
 
-  subset &lt;-<span class="st"> </span>rows <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">filter</span>(.data<span class="op">$</span>group <span class="op">%in%</span><span class="st"> </span><span class="kw">sample</span>(<span class="kw">unique</span>(.data<span class="op">$</span>group), size)) <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">pull</span>(.data<span class="op">$</span>row)
+  subset &lt;-<span class="st"> </span>rows %&gt;%
+<span class="st">    </span><span class="kw">filter</span>(.data$group %in%<span class="st"> </span><span class="kw">sample</span>(<span class="kw">unique</span>(.data$group), size)) %&gt;%
+<span class="st">    </span><span class="kw">pull</span>(.data$row)
 
   data[subset, ]
 }</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">looks1 &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_csv</span>(<span class="st">&quot;./data-raw/rwl_timepoint1_looks.csv.gz&quot;</span>)
-looks2 &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_csv</span>(<span class="st">&quot;./data-raw/rwl_timepoint2_looks.csv.gz&quot;</span>)
-looks3 &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_csv</span>(<span class="st">&quot;./data-raw/rwl_timepoint3_looks.csv.gz&quot;</span>)
-looks &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(looks1, looks2, looks3) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">filter</span>(Version <span class="op">==</span><span class="st"> &quot;Standard&quot;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">looks1 &lt;-<span class="st"> </span>readr::<span class="kw">read_csv</span>(<span class="st">&quot;./data-raw/rwl_timepoint1_looks.csv.gz&quot;</span>)
+looks2 &lt;-<span class="st"> </span>readr::<span class="kw">read_csv</span>(<span class="st">&quot;./data-raw/rwl_timepoint2_looks.csv.gz&quot;</span>)
+looks3 &lt;-<span class="st"> </span>readr::<span class="kw">read_csv</span>(<span class="st">&quot;./data-raw/rwl_timepoint3_looks.csv.gz&quot;</span>)
+looks &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(looks1, looks2, looks3) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(Version ==<span class="st"> &quot;Standard&quot;</span>)
 
 resp_def &lt;-<span class="st"> </span><span class="kw">create_response_def</span>(
   <span class="dt">primary =</span> <span class="st">&quot;Target&quot;</span>,
@@ -242,38 +245,38 @@ resp_def &lt;-<span class="st"> </span><span class="kw">create_response_def</spa
 
 <span class="co"># Keep only frames from -500 to 2000 plus or minus any frames to make the </span>
 <span class="co"># number of frames divisible by 3 (for binning)</span>
-times_to_keep &lt;-<span class="st"> </span>looks <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">distinct</span>(Time) <span class="op">%&gt;%</span><span class="st"> </span>
+times_to_keep &lt;-<span class="st"> </span>looks %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">distinct</span>(Time) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">trim_to_bin_width</span>(<span class="dv">3</span>, <span class="dt">time_var =</span> Time, <span class="dt">key_time =</span> <span class="dv">0</span>, <span class="dt">key_position =</span> <span class="dv">2</span>, 
-                    <span class="dt">min_time =</span> <span class="op">-</span><span class="dv">500</span>, <span class="dt">max_time =</span> <span class="dv">2000</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">pull</span>(Time) <span class="op">%&gt;%</span><span class="st"> </span>
+                    <span class="dt">min_time =</span> -<span class="dv">500</span>, <span class="dt">max_time =</span> <span class="dv">2000</span>) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">pull</span>(Time) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">range</span>()
 
-raw_data &lt;-<span class="st"> </span>looks <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">filter</span>(<span class="kw">between</span>(Time, times_to_keep[<span class="dv">1</span>], times_to_keep[<span class="dv">2</span>])) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">aggregate_looks</span>(resp_def, Study <span class="op">+</span><span class="st"> </span>ResearchID <span class="op">+</span><span class="st"> </span>Time <span class="op">~</span><span class="st"> </span>GazeByImageAOI)</code></pre></div>
+raw_data &lt;-<span class="st"> </span>looks %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(<span class="kw">between</span>(Time, times_to_keep[<span class="dv">1</span>], times_to_keep[<span class="dv">2</span>])) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">aggregate_looks</span>(resp_def, Study +<span class="st"> </span>ResearchID +<span class="st"> </span>Time ~<span class="st"> </span>GazeByImageAOI)</code></pre></div>
 <p>Make some plots of overall averages.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(raw_data) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> Prop, <span class="dt">color =</span> Study) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">yintercept =</span> .<span class="dv">25</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">stat_summary</span>() <span class="op">+</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(raw_data) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> Prop, <span class="dt">color =</span> Study) +
+<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">yintercept =</span> .<span class="dv">25</span>) +
+<span class="st">  </span><span class="kw">stat_summary</span>() +
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Time after target onset [ms]&quot;</span>,
        <span class="dt">y =</span> <span class="st">&quot;Proportion looks to target&quot;</span>,
-       <span class="dt">caption =</span> <span class="st">&quot;Mean +/- SE&quot;</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) <span class="op">+</span>
+       <span class="dt">caption =</span> <span class="st">&quot;Mean +/- SE&quot;</span>) +
+<span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) +
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="kw">c</span>(<span class="fl">0.05</span>, <span class="fl">0.95</span>), 
         <span class="dt">legend.justification =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))
 <span class="co">#&gt; Warning: Removed 22 rows containing non-finite values (stat_summary).</span>
 <span class="co">#&gt; No summary function supplied, defaulting to `mean_se()</span>
 
-<span class="kw">ggplot</span>(raw_data) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> Prop, <span class="dt">color =</span> Study) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">yintercept =</span> .<span class="dv">25</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">stat_smooth</span>() <span class="op">+</span>
+<span class="kw">ggplot</span>(raw_data) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> Prop, <span class="dt">color =</span> Study) +
+<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">yintercept =</span> .<span class="dv">25</span>) +
+<span class="st">  </span><span class="kw">stat_smooth</span>() +
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Time after target onset [ms]&quot;</span>,
        <span class="dt">y =</span> <span class="st">&quot;Proportion looks to target&quot;</span>,
-       <span class="dt">caption =</span> <span class="st">&quot;GAM Smooth&quot;</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) <span class="op">+</span>
+       <span class="dt">caption =</span> <span class="st">&quot;GAM Smooth&quot;</span>) +
+<span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) +
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="kw">c</span>(<span class="fl">0.05</span>, <span class="fl">0.95</span>), 
         <span class="dt">legend.justification =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))
 <span class="co">#&gt; `geom_smooth()` using method = &#39;gam&#39;</span>
@@ -284,15 +287,15 @@ raw_data &lt;-<span class="st"> </span>looks <span class="op">%&gt;%</span><span
 <p>Children’s accuracy and efficiency of recognizing words will improve each year.</p>
 </blockquote>
 <p>Look at a spaghetti plot…</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(raw_data) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> Prop, <span class="dt">group =</span> ResearchID) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">yintercept =</span> .<span class="dv">25</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">alpha =</span> .<span class="dv">15</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">facet_grid</span>(<span class="op">~</span><span class="st"> </span>Study) <span class="op">+</span>
-<span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) <span class="op">+</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(raw_data) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> Prop, <span class="dt">group =</span> ResearchID) +
+<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">yintercept =</span> .<span class="dv">25</span>) +
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">alpha =</span> .<span class="dv">15</span>) +
+<span class="st">  </span><span class="kw">facet_grid</span>(~<span class="st"> </span>Study) +
+<span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) +
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Time after target onset [ms]&quot;</span>,
        <span class="dt">y =</span> <span class="st">&quot;Proportion looks to target&quot;</span>,
-       <span class="dt">caption =</span> <span class="st">&quot;Lines: Individual participants&quot;</span>) <span class="op">+</span>
+       <span class="dt">caption =</span> <span class="st">&quot;Lines: Individual participants&quot;</span>) +
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="kw">c</span>(<span class="fl">0.05</span>, <span class="fl">0.95</span>), 
         <span class="dt">legend.justification =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</code></pre></div>
 <p><img src="11_aim1_notebook_files/figure-html/spaghetti-aim1-1.png" width="100%" /></p>
@@ -312,35 +315,35 @@ raw_data &lt;-<span class="st"> </span>looks <span class="op">%&gt;%</span><span
 <p>These are the default conventions four lab on these eyetracking experiments.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># offset to catch frame before and after window </span>
 <span class="co"># (to reflect binning boundaries)</span>
-screening_times &lt;-<span class="st"> </span>looks <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">distinct</span>(Time) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">trim_to_bin_width</span>(<span class="dv">3</span>, <span class="dv">0</span>, <span class="dv">2</span>, Time, <span class="dt">min_time =</span> rules<span class="op">$</span>screening_window[<span class="dv">1</span>], 
-                    <span class="dt">max_time =</span> rules<span class="op">$</span>screening_window[<span class="dv">2</span>]) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">pull</span>(Time) <span class="op">%&gt;%</span><span class="st"> </span>
+screening_times &lt;-<span class="st"> </span>looks %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">distinct</span>(Time) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">trim_to_bin_width</span>(<span class="dv">3</span>, <span class="dv">0</span>, <span class="dv">2</span>, Time, <span class="dt">min_time =</span> rules$screening_window[<span class="dv">1</span>], 
+                    <span class="dt">max_time =</span> rules$screening_window[<span class="dv">2</span>]) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">pull</span>(Time) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">range</span>()
 screening_times
 <span class="co">#&gt; [1]  -16.6546 2015.2100</span>
 
-missing_data_by_trial &lt;-<span class="st"> </span>looks <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">filter</span>(screening_times[<span class="dv">1</span>] <span class="op">&lt;=</span><span class="st"> </span>Time, Time <span class="op">&lt;=</span><span class="st"> </span>screening_times[<span class="dv">2</span>]) <span class="op">%&gt;%</span><span class="st"> </span>
+missing_data_by_trial &lt;-<span class="st"> </span>looks %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(screening_times[<span class="dv">1</span>] &lt;=<span class="st"> </span>Time, Time &lt;=<span class="st"> </span>screening_times[<span class="dv">2</span>]) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">aggregate_looks</span>(
     resp_def, 
-    Study <span class="op">+</span><span class="st"> </span>Version <span class="op">+</span><span class="st"> </span>ResearchID <span class="op">+</span><span class="st"> </span>Basename <span class="op">+</span><span class="st"> </span>TrialNo <span class="op">~</span><span class="st"> </span>GazeByImageAOI) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">BadTrial =</span> rules<span class="op">$</span>missing_data_limit <span class="op">&lt;=</span><span class="st"> </span>PropNA)
+    Study +<span class="st"> </span>Version +<span class="st"> </span>ResearchID +<span class="st"> </span>Basename +<span class="st"> </span>TrialNo ~<span class="st"> </span>GazeByImageAOI) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">BadTrial =</span> rules$missing_data_limit &lt;=<span class="st"> </span>PropNA)
 
-bad_trial_counts &lt;-<span class="st"> </span>missing_data_by_trial <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">count</span>(Study, ResearchID, Basename, BadTrial) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>tidyr<span class="op">::</span><span class="kw">spread</span>(BadTrial, n) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">rename</span>(<span class="dt">n_bad =</span> <span class="st">`</span><span class="dt">TRUE</span><span class="st">`</span>, <span class="dt">n_good =</span> <span class="st">`</span><span class="dt">FALSE</span><span class="st">`</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+bad_trial_counts &lt;-<span class="st"> </span>missing_data_by_trial %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">count</span>(Study, ResearchID, Basename, BadTrial) %&gt;%<span class="st"> </span>
+<span class="st">  </span>tidyr::<span class="kw">spread</span>(BadTrial, n) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">rename</span>(<span class="dt">n_bad =</span> <span class="st">`</span><span class="dt">TRUE</span><span class="st">`</span>, <span class="dt">n_good =</span> <span class="st">`</span><span class="dt">FALSE</span><span class="st">`</span>) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="co"># Replace NAs with 0, in case there were 0 good trials in a block or </span>
 <span class="st">  </span><span class="co"># 0 bad trials in a block</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">n_bad =</span> <span class="kw">coalesce</span>(n_bad, 0L),
          <span class="dt">n_good =</span> <span class="kw">coalesce</span>(n_good, 0L),
-         <span class="dt">trials =</span> n_good <span class="op">+</span><span class="st"> </span>n_bad,
-         <span class="dt">prop_bad =</span> <span class="kw">round</span>(n_bad <span class="op">/</span><span class="st"> </span>trials, <span class="dv">2</span>)) 
+         <span class="dt">trials =</span> n_good +<span class="st"> </span>n_bad,
+         <span class="dt">prop_bad =</span> <span class="kw">round</span>(n_bad /<span class="st"> </span>trials, <span class="dv">2</span>)) 
 
-blocks_to_drop &lt;-<span class="st"> </span>bad_trial_counts <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">filter</span>(.<span class="dv">5</span> <span class="op">&lt;=</span><span class="st"> </span>prop_bad)
+blocks_to_drop &lt;-<span class="st"> </span>bad_trial_counts %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(.<span class="dv">5</span> &lt;=<span class="st"> </span>prop_bad)
 blocks_to_drop
 <span class="co">#&gt; # A tibble: 110 x 7</span>
 <span class="co">#&gt;         Study ResearchID             Basename n_good n_bad trials prop_bad</span>
@@ -357,25 +360,25 @@ blocks_to_drop
 <span class="co">#&gt; 10 TimePoint1       114L RWL_Block2_114L30MS1      9    15     24     0.62</span>
 <span class="co">#&gt; # ... with 100 more rows</span>
 
-leftover_bad_trials &lt;-<span class="st"> </span>missing_data_by_trial <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">anti_join</span>(blocks_to_drop, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;Study&quot;</span>, <span class="st">&quot;ResearchID&quot;</span>, <span class="st">&quot;Basename&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">filter</span>(.<span class="dv">5</span> <span class="op">&lt;=</span><span class="st"> </span>PropNA)
+leftover_bad_trials &lt;-<span class="st"> </span>missing_data_by_trial %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">anti_join</span>(blocks_to_drop, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;Study&quot;</span>, <span class="st">&quot;ResearchID&quot;</span>, <span class="st">&quot;Basename&quot;</span>)) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(.<span class="dv">5</span> &lt;=<span class="st"> </span>PropNA)
 
-clean_looks &lt;-<span class="st"> </span>looks <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">anti_join</span>(blocks_to_drop, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;Study&quot;</span>, <span class="st">&quot;ResearchID&quot;</span>, <span class="st">&quot;Basename&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+clean_looks &lt;-<span class="st"> </span>looks %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">anti_join</span>(blocks_to_drop, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;Study&quot;</span>, <span class="st">&quot;ResearchID&quot;</span>, <span class="st">&quot;Basename&quot;</span>)) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">anti_join</span>(leftover_bad_trials)
 <span class="co">#&gt; Joining, by = c(&quot;Study&quot;, &quot;ResearchID&quot;, &quot;Version&quot;, &quot;Basename&quot;, &quot;TrialNo&quot;)</span></code></pre></div>
 <p>Do some head counts.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">screening_results &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">Screened =</span> clean_looks, <span class="dt">Raw =</span> looks) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">bind_rows</span>(<span class="dt">.id =</span> <span class="st">&quot;Dataset&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">distinct</span>(Dataset, Study, ResearchID, TrialID) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">group_by</span>(Dataset, Study) <span class="op">%&gt;%</span><span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">screening_results &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">Screened =</span> clean_looks, <span class="dt">Raw =</span> looks) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">bind_rows</span>(<span class="dt">.id =</span> <span class="st">&quot;Dataset&quot;</span>) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">distinct</span>(Dataset, Study, ResearchID, TrialID) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(Dataset, Study) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">summarise</span>(
     <span class="st">`</span><span class="dt">Num Children</span><span class="st">`</span> =<span class="st"> </span><span class="kw">n_distinct</span>(ResearchID),
     <span class="st">`</span><span class="dt">Num Trials</span><span class="st">`</span> =<span class="st"> </span><span class="kw">n_distinct</span>(TrialID))
 
-screening_results <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="dt">caption =</span> <span class="st">&quot;Eyetracking data before and after data screening&quot;</span>)</code></pre></div>
+screening_results %&gt;%<span class="st"> </span>
+<span class="st">  </span>knitr::<span class="kw">kable</span>(<span class="dt">caption =</span> <span class="st">&quot;Eyetracking data before and after data screening&quot;</span>)</code></pre></div>
 <table>
 <caption><span id="tab:unnamed-chunk-6">Table 9.1: </span>Eyetracking data before and after data screening</caption>
 <thead>
@@ -426,39 +429,39 @@ screening_results <span class="op">%&gt;%</span><span class="st"> </span>
 </tbody>
 </table>
 <p>Plot the data after partial data screening.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data &lt;-<span class="st"> </span>clean_looks <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">filter</span>(<span class="kw">between</span>(Time, times_to_keep[<span class="dv">1</span>], times_to_keep[<span class="dv">2</span>])) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>readr<span class="op">::</span><span class="kw">write_csv</span>(<span class="st">&quot;./data/aim1-screened.csv.gz&quot;</span>) 
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data &lt;-<span class="st"> </span>clean_looks %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(<span class="kw">between</span>(Time, times_to_keep[<span class="dv">1</span>], times_to_keep[<span class="dv">2</span>])) %&gt;%<span class="st"> </span>
+<span class="st">  </span>readr::<span class="kw">write_csv</span>(<span class="st">&quot;./data/aim1-screened.csv.gz&quot;</span>) 
 
-agg_data &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">aggregate_looks</span>(resp_def, Study <span class="op">+</span><span class="st"> </span>ResearchID <span class="op">+</span><span class="st"> </span>Time <span class="op">~</span><span class="st"> </span>GazeByImageAOI)</code></pre></div>
+agg_data &lt;-<span class="st"> </span>data %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">aggregate_looks</span>(resp_def, Study +<span class="st"> </span>ResearchID +<span class="st"> </span>Time ~<span class="st"> </span>GazeByImageAOI)</code></pre></div>
 <p>We include the curves from the earlier plots in gray. The data-cleaning process slightly increases the average accuracy during the plateau-ed portion of the growth curve.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(agg_data) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> Prop, <span class="dt">color =</span> Study) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">yintercept =</span> .<span class="dv">25</span>) <span class="op">+</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(agg_data) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> Prop, <span class="dt">color =</span> Study) +
+<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">yintercept =</span> .<span class="dv">25</span>) +
 <span class="st">  </span><span class="kw">stat_summary</span>(<span class="kw">aes</span>(<span class="dt">group =</span> Study), <span class="dt">data =</span> raw_data, 
-               <span class="dt">color =</span> <span class="st">&quot;gray70&quot;</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">stat_summary</span>() <span class="op">+</span>
+               <span class="dt">color =</span> <span class="st">&quot;gray70&quot;</span>) +
+<span class="st">  </span><span class="kw">stat_summary</span>() +
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Time after target onset [ms]&quot;</span>,
        <span class="dt">y =</span> <span class="st">&quot;Proportion looks to target&quot;</span>,
-       <span class="dt">caption =</span> <span class="st">&quot;Mean +/- SE&quot;</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) <span class="op">+</span>
+       <span class="dt">caption =</span> <span class="st">&quot;Mean +/- SE&quot;</span>) +
+<span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) +
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="kw">c</span>(<span class="fl">0.05</span>, <span class="fl">0.95</span>), 
         <span class="dt">legend.justification =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))
 <span class="co">#&gt; Warning: Removed 22 rows containing non-finite values (stat_summary).</span>
 <span class="co">#&gt; No summary function supplied, defaulting to `mean_se()</span>
 <span class="co">#&gt; No summary function supplied, defaulting to `mean_se()</span>
 
-<span class="kw">ggplot</span>(agg_data) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> Prop, <span class="dt">color =</span> Study) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">yintercept =</span> .<span class="dv">25</span>) <span class="op">+</span>
+<span class="kw">ggplot</span>(agg_data) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> Prop, <span class="dt">color =</span> Study) +
+<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">yintercept =</span> .<span class="dv">25</span>) +
 <span class="st">  </span><span class="kw">stat_smooth</span>(<span class="kw">aes</span>(<span class="dt">group =</span> Study), <span class="dt">data =</span> raw_data, 
-              <span class="dt">color =</span> <span class="st">&quot;gray70&quot;</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">stat_smooth</span>() <span class="op">+</span>
+              <span class="dt">color =</span> <span class="st">&quot;gray70&quot;</span>) +
+<span class="st">  </span><span class="kw">stat_smooth</span>() +
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Time after target onset [ms]&quot;</span>,
        <span class="dt">y =</span> <span class="st">&quot;Proportion looks to target&quot;</span>,
-       <span class="dt">caption =</span> <span class="st">&quot;GAM smooth on partially screened data&quot;</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) <span class="op">+</span>
+       <span class="dt">caption =</span> <span class="st">&quot;GAM smooth on partially screened data&quot;</span>) +
+<span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) +
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="kw">c</span>(<span class="fl">0.05</span>, <span class="fl">0.95</span>), 
         <span class="dt">legend.justification =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))
 <span class="co">#&gt; `geom_smooth()` using method = &#39;gam&#39;</span>

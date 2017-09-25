@@ -25,7 +25,7 @@
 <meta name="author" content="Tristan Mahr">
 
 
-<meta name="date" content="2017-09-22">
+<meta name="date" content="2017-09-25">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -171,7 +171,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="9.1.3" data-path="prepare-and-explore-the-data.html"><a href="prepare-and-explore-the-data.html#interim-summary"><i class="fa fa-check"></i><b>9.1.3</b> Interim summary</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="10" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html"><i class="fa fa-check"></i><b>10</b> Analyze familiar word recognition</a></li>
+<li class="chapter" data-level="10" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html"><i class="fa fa-check"></i><b>10</b> Analyze familiar word recognition</a><ul>
+<li class="chapter" data-level="10.1" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#data-preparation-1"><i class="fa fa-check"></i><b>10.1</b> Data preparation</a></li>
+<li class="chapter" data-level="10.2" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#maximum-likelihood-results"><i class="fa fa-check"></i><b>10.2</b> Maximum likelihood results</a></li>
+</ul></li>
 <li class="chapter" data-level="11" data-path="visualize-looks-to-each-image-type.html"><a href="visualize-looks-to-each-image-type.html"><i class="fa fa-check"></i><b>11</b> Visualize looks to each image type</a><ul>
 <li class="chapter" data-level="11.1" data-path="visualize-looks-to-each-image-type.html"><a href="visualize-looks-to-each-image-type.html#comparing-strong-versus-weak-foils"><i class="fa fa-check"></i><b>11.1</b> Comparing strong versus weak foils</a></li>
 <li class="chapter" data-level="11.2" data-path="visualize-looks-to-each-image-type.html"><a href="visualize-looks-to-each-image-type.html#look-for-individual-differences-in-competitor-sensitivity"><i class="fa fa-check"></i><b>11.2</b> Look for individual differences in competitor sensitivity</a></li>
@@ -209,9 +212,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <hr />
 <p>This is <em>a book</em> written in <strong>Markdown</strong>. You can use anything that Pandoc’s Markdown supports, e.g., a math equation <span class="math inline">\(a^2 + b^2 = c^2\)</span>.</p>
 <p>For now, you have to install the development versions of <strong>bookdown</strong> from Github:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;rstudio/bookdown&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(<span class="st">&quot;rstudio/bookdown&quot;</span>)</code></pre></div>
 <p>Code settings:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span>opts_chunk<span class="op">$</span><span class="kw">set</span>(
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr::opts_chunk$<span class="kw">set</span>(
   <span class="dt">tidy =</span> <span class="ot">FALSE</span>,
   <span class="dt">collapse =</span> <span class="ot">TRUE</span>,
   <span class="dt">comment =</span> <span class="st">&quot;#&gt;&quot;</span>,
@@ -333,7 +336,7 @@ knitr::include_graphics(
 <!-- add `happy-` to the labels. -->
 <p>The caption for Figure <a href="scratch-paper.html#fig:happy-cat">1.1</a> is defined as a <em>text reference</em> below and passed to the <code>fig.cap</code> chunk option.</p>
 
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw">include_graphics</span>(
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr::<span class="kw">include_graphics</span>(
   <span class="kw">rep</span>(<span class="st">&quot;./misc/happy-cat-grooming-itself-vector-file.png&quot;</span>, <span class="dv">2</span>)
 )</code></pre></div>
 <div class="figure"><span id="fig:happy-cat"></span>
@@ -354,54 +357,51 @@ Figure 1.1: This is a happy cat.
 <span class="co">#&gt;  $ word : logi FALSE</span>
 <span class="co">#&gt;  $ width: int 80</span>
 
-devtools<span class="op">::</span><span class="kw">session_info</span>()
-<span class="co">#&gt; - Session info ---------------------------------------------------------------</span>
+devtools::<span class="kw">session_info</span>()
+<span class="co">#&gt; Session info ------------------------------------------------------------------</span>
 <span class="co">#&gt;  setting  value                       </span>
 <span class="co">#&gt;  version  R version 3.4.1 (2017-06-30)</span>
-<span class="co">#&gt;  os       Windows 7 x64 SP 1          </span>
 <span class="co">#&gt;  system   x86_64, mingw32             </span>
 <span class="co">#&gt;  ui       RTerm                       </span>
 <span class="co">#&gt;  language (EN)                        </span>
 <span class="co">#&gt;  collate  English_United States.1252  </span>
 <span class="co">#&gt;  tz       America/Chicago             </span>
-<span class="co">#&gt;  date     2017-09-22                  </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; - Packages -------------------------------------------------------------------</span>
-<span class="co">#&gt;  package     * version     date       source                                 </span>
-<span class="co">#&gt;  assertthat    0.2.0       2017-04-11 CRAN (R 3.3.2)                         </span>
-<span class="co">#&gt;  backports     1.1.0       2017-05-22 CRAN (R 3.4.0)                         </span>
-<span class="co">#&gt;  bookdown      0.5         2017-08-20 CRAN (R 3.4.1)                         </span>
-<span class="co">#&gt;  clisymbols    1.2.0       2017-08-04 Github (gaborcsardi/clisymbols@e49b4f5)</span>
-<span class="co">#&gt;  crayon        1.3.4       2017-09-16 CRAN (R 3.4.1)                         </span>
-<span class="co">#&gt;  desc          1.1.1       2017-08-03 CRAN (R 3.4.1)                         </span>
-<span class="co">#&gt;  devtools      1.13.3.9000 2017-09-13 Github (hadley/devtools@a0c8d73)       </span>
-<span class="co">#&gt;  digest        0.6.12      2017-01-27 CRAN (R 3.3.2)                         </span>
-<span class="co">#&gt;  evaluate      0.10.1      2017-06-24 CRAN (R 3.4.1)                         </span>
-<span class="co">#&gt;  highr         0.6         2016-05-09 CRAN (R 3.2.3)                         </span>
-<span class="co">#&gt;  htmltools     0.3.6       2017-04-28 CRAN (R 3.4.0)                         </span>
-<span class="co">#&gt;  knitr         1.17        2017-08-10 CRAN (R 3.4.0)                         </span>
-<span class="co">#&gt;  magrittr      1.5         2014-11-22 CRAN (R 3.1.2)                         </span>
-<span class="co">#&gt;  memoise       1.1.0       2017-04-21 CRAN (R 3.3.2)                         </span>
-<span class="co">#&gt;  pkgbuild      0.0.0.9000  2017-09-13 Github (r-lib/pkgbuild@6574561)        </span>
-<span class="co">#&gt;  pkgload       0.0.0.9000  2017-09-15 Github (r-lib/pkgload@7fd5f55)         </span>
-<span class="co">#&gt;  R6            2.2.2       2017-06-17 CRAN (R 3.4.0)                         </span>
-<span class="co">#&gt;  Rcpp          0.12.12     2017-07-15 CRAN (R 3.4.1)                         </span>
-<span class="co">#&gt;  rlang         0.1.2.9000  2017-09-20 Github (tidyverse/rlang@99105b6)       </span>
-<span class="co">#&gt;  rmarkdown     1.6         2017-06-15 CRAN (R 3.4.0)                         </span>
-<span class="co">#&gt;  rprojroot     1.2         2017-01-16 CRAN (R 3.3.2)                         </span>
-<span class="co">#&gt;  sessioninfo   1.0.1       2017-09-13 Github (r-lib/sessioninfo@e813de4)     </span>
-<span class="co">#&gt;  stringi       1.1.5       2017-04-07 CRAN (R 3.3.3)                         </span>
-<span class="co">#&gt;  stringr       1.2.0       2017-02-18 CRAN (R 3.3.2)                         </span>
-<span class="co">#&gt;  usethis       0.0.0.9000  2017-09-13 Github (r-lib/usethis@f2a6ac7)         </span>
-<span class="co">#&gt;  withr         2.0.0       2017-09-15 Github (jimhester/withr@d1f0957)       </span>
-<span class="co">#&gt;  yaml          2.1.14      2016-11-12 CRAN (R 3.3.2)</span>
+<span class="co">#&gt;  date     2017-09-25</span>
+<span class="co">#&gt; Packages ----------------------------------------------------------------------</span>
+<span class="co">#&gt;  package   * version date       source        </span>
+<span class="co">#&gt;  backports   1.1.0   2017-05-22 CRAN (R 3.4.0)</span>
+<span class="co">#&gt;  base      * 3.4.1   2017-06-30 local         </span>
+<span class="co">#&gt;  bookdown    0.5     2017-08-20 CRAN (R 3.4.1)</span>
+<span class="co">#&gt;  compiler    3.4.1   2017-06-30 local         </span>
+<span class="co">#&gt;  datasets  * 3.4.1   2017-06-30 local         </span>
+<span class="co">#&gt;  devtools    1.13.3  2017-08-02 CRAN (R 3.4.1)</span>
+<span class="co">#&gt;  digest      0.6.12  2017-01-27 CRAN (R 3.3.2)</span>
+<span class="co">#&gt;  evaluate    0.10.1  2017-06-24 CRAN (R 3.4.1)</span>
+<span class="co">#&gt;  graphics  * 3.4.1   2017-06-30 local         </span>
+<span class="co">#&gt;  grDevices * 3.4.1   2017-06-30 local         </span>
+<span class="co">#&gt;  highr       0.6     2016-05-09 CRAN (R 3.2.5)</span>
+<span class="co">#&gt;  htmltools   0.3.6   2017-04-28 CRAN (R 3.4.0)</span>
+<span class="co">#&gt;  knitr       1.17    2017-08-10 CRAN (R 3.4.1)</span>
+<span class="co">#&gt;  magrittr    1.5     2014-11-22 CRAN (R 3.2.2)</span>
+<span class="co">#&gt;  memoise     1.1.0   2017-04-21 CRAN (R 3.4.0)</span>
+<span class="co">#&gt;  methods     3.4.1   2017-06-30 local         </span>
+<span class="co">#&gt;  Rcpp        0.12.12 2017-07-15 CRAN (R 3.4.1)</span>
+<span class="co">#&gt;  rmarkdown   1.6     2017-06-15 CRAN (R 3.4.1)</span>
+<span class="co">#&gt;  rprojroot   1.2     2017-01-16 CRAN (R 3.3.2)</span>
+<span class="co">#&gt;  stats     * 3.4.1   2017-06-30 local         </span>
+<span class="co">#&gt;  stringi     1.1.5   2017-04-07 CRAN (R 3.3.3)</span>
+<span class="co">#&gt;  stringr     1.2.0   2017-02-18 CRAN (R 3.3.3)</span>
+<span class="co">#&gt;  tools       3.4.1   2017-06-30 local         </span>
+<span class="co">#&gt;  utils     * 3.4.1   2017-06-30 local         </span>
+<span class="co">#&gt;  withr       2.0.0   2017-07-28 CRAN (R 3.4.1)</span>
+<span class="co">#&gt;  yaml        2.1.14  2016-11-12 CRAN (R 3.3.2)</span>
 
-last_four_commits &lt;-<span class="st"> </span>git2r<span class="op">::</span><span class="kw">commits</span>(git2r<span class="op">::</span><span class="kw">repository</span>(<span class="st">&quot;.&quot;</span>), <span class="dt">n =</span> <span class="dv">4</span>)
-msgs &lt;-<span class="st"> </span><span class="kw">lapply</span>(last_four_commits, methods<span class="op">::</span>show)
+last_four_commits &lt;-<span class="st"> </span>git2r::<span class="kw">commits</span>(git2r::<span class="kw">repository</span>(<span class="st">&quot;.&quot;</span>), <span class="dt">n =</span> <span class="dv">4</span>)
+msgs &lt;-<span class="st"> </span><span class="kw">lapply</span>(last_four_commits, methods::show)
+<span class="co">#&gt; [4856b1e] 2017-09-22: update pages</span>
 <span class="co">#&gt; [c3c835e] 2017-09-22: split up notebook</span>
 <span class="co">#&gt; [a698e55] 2017-09-21: compile chapters in separate R sessions</span>
-<span class="co">#&gt; [3881a5d] 2017-09-20: use new bin-filtering rule</span>
-<span class="co">#&gt; [c240ebb] 2017-09-20: fix line break in menu</span></code></pre></div>
+<span class="co">#&gt; [3881a5d] 2017-09-20: use new bin-filtering rule</span></code></pre></div>
 
 </div>
 </div>

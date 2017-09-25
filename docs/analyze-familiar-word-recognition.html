@@ -25,7 +25,7 @@
 <meta name="author" content="Tristan Mahr">
 
 
-<meta name="date" content="2017-09-22">
+<meta name="date" content="2017-09-25">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -171,7 +171,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="9.1.3" data-path="prepare-and-explore-the-data.html"><a href="prepare-and-explore-the-data.html#interim-summary"><i class="fa fa-check"></i><b>9.1.3</b> Interim summary</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="10" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html"><i class="fa fa-check"></i><b>10</b> Analyze familiar word recognition</a></li>
+<li class="chapter" data-level="10" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html"><i class="fa fa-check"></i><b>10</b> Analyze familiar word recognition</a><ul>
+<li class="chapter" data-level="10.1" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#data-preparation-1"><i class="fa fa-check"></i><b>10.1</b> Data preparation</a></li>
+<li class="chapter" data-level="10.2" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#maximum-likelihood-results"><i class="fa fa-check"></i><b>10.2</b> Maximum likelihood results</a></li>
+</ul></li>
 <li class="chapter" data-level="11" data-path="visualize-looks-to-each-image-type.html"><a href="visualize-looks-to-each-image-type.html"><i class="fa fa-check"></i><b>11</b> Visualize looks to each image type</a><ul>
 <li class="chapter" data-level="11.1" data-path="visualize-looks-to-each-image-type.html"><a href="visualize-looks-to-each-image-type.html#comparing-strong-versus-weak-foils"><i class="fa fa-check"></i><b>11.1</b> Comparing strong versus weak foils</a></li>
 <li class="chapter" data-level="11.2" data-path="visualize-looks-to-each-image-type.html"><a href="visualize-looks-to-each-image-type.html#look-for-individual-differences-in-competitor-sensitivity"><i class="fa fa-check"></i><b>11.2</b> Look for individual differences in competitor sensitivity</a></li>
@@ -209,7 +212,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <ul>
 <li>Model year over year changes.</li>
 <li>Download test scores and individual differences.</li>
-<li>Model individual differences</li>
+<li>Analyze individual differences</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)
 <span class="kw">library</span>(rlang)
@@ -219,38 +222,40 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="co">#&#39; group `data` by some grouping variables (`...`),</span>
 <span class="co">#&#39; randomly select `size` of the groups</span>
 <span class="co">#&#39; keep just the data from those sampled groups</span>
-sample_n_of &lt;-<span class="st"> </span><span class="cf">function</span>(data, size, ...) {
+sample_n_of &lt;-<span class="st"> </span>function(data, size, ...) {
   dots &lt;-<span class="st"> </span><span class="kw">quos</span>(...)
   rows &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">row =</span> <span class="kw">seq_len</span>(<span class="kw">nrow</span>(data)))
-  rows[, <span class="st">&quot;group&quot;</span>] &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">group_by</span>(<span class="op">!!!</span><span class="st"> </span>dots) <span class="op">%&gt;%</span>
+  rows[, <span class="st">&quot;group&quot;</span>] &lt;-<span class="st"> </span>data %&gt;%
+<span class="st">    </span><span class="kw">group_by</span>(!!!<span class="st"> </span>dots) %&gt;%
 <span class="st">    </span><span class="kw">group_indices</span>()
 
-  subset &lt;-<span class="st"> </span>rows <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">filter</span>(.data<span class="op">$</span>group <span class="op">%in%</span><span class="st"> </span><span class="kw">sample</span>(<span class="kw">unique</span>(.data<span class="op">$</span>group), size)) <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">pull</span>(.data<span class="op">$</span>row)
+  subset &lt;-<span class="st"> </span>rows %&gt;%
+<span class="st">    </span><span class="kw">filter</span>(.data$group %in%<span class="st"> </span><span class="kw">sample</span>(<span class="kw">unique</span>(.data$group), size)) %&gt;%
+<span class="st">    </span><span class="kw">pull</span>(.data$row)
 
   data[subset, ]
 }</code></pre></div>
+<div id="data-preparation-1" class="section level2">
+<h2><span class="header-section-number">10.1</span> Data preparation</h2>
 <p>Earlier we cleaned the data to remove trials with excessive missing data and blocks of trials with too few trials. Read in that data.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_csv</span>(<span class="st">&quot;./data/aim1-screened.csv.gz&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data &lt;-<span class="st"> </span>readr::<span class="kw">read_csv</span>(<span class="st">&quot;./data/aim1-screened.csv.gz&quot;</span>)</code></pre></div>
 <p>Downsample into 50 ms bins.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">select</span>(Study, ResearchID, TrialID<span class="op">:</span>GazeByImageAOI) <span class="op">%&gt;%</span><span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data &lt;-<span class="st"> </span>data %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(Study, ResearchID, TrialID:GazeByImageAOI) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">assign_bins</span>(<span class="dt">bin_width =</span> <span class="dv">3</span>, Time, TrialID)
 
 <span class="co"># Compute time at center of each bin</span>
-bin_times &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">distinct</span>(Time, .bin) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">group_by</span>(.bin) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">BinTime =</span> <span class="kw">round</span>(<span class="kw">median</span>(Time), <span class="op">-</span><span class="dv">1</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+bin_times &lt;-<span class="st"> </span>data %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">distinct</span>(Time, .bin) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(.bin) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">BinTime =</span> <span class="kw">round</span>(<span class="kw">median</span>(Time), -<span class="dv">1</span>)) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">ungroup</span>()
 
 <span class="co"># Attach bin times</span>
-binned &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">left_join</span>(bin_times, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;Time&quot;</span>, <span class="st">&quot;.bin&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>Time) <span class="op">%&gt;%</span><span class="st"> </span>
+binned &lt;-<span class="st"> </span>data %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">left_join</span>(bin_times, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;Time&quot;</span>, <span class="st">&quot;.bin&quot;</span>)) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">ungroup</span>() %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(-Time) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">rename</span>(<span class="dt">Time =</span> BinTime) 
 
 resp_def &lt;-<span class="st"> </span><span class="kw">create_response_def</span>(
@@ -260,40 +265,42 @@ resp_def &lt;-<span class="st"> </span><span class="kw">create_response_def</spa
   <span class="dt">missing =</span> <span class="ot">NA</span>
 )  
   
-d &lt;-<span class="st"> </span>binned <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">aggregate_looks</span>(resp_def, Study <span class="op">+</span><span class="st"> </span>ResearchID <span class="op">+</span><span class="st"> </span>Time <span class="op">~</span><span class="st"> </span>GazeByImageAOI)
+d &lt;-<span class="st"> </span>binned %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">aggregate_looks</span>(resp_def, Study +<span class="st"> </span>ResearchID +<span class="st"> </span>Time ~<span class="st"> </span>GazeByImageAOI)
 
-d_m &lt;-<span class="st"> </span>d <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">filter</span>(<span class="dv">250</span> <span class="op">&lt;=</span><span class="st"> </span>Time, Time <span class="op">&lt;=</span><span class="st"> </span><span class="dv">1500</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>polypoly<span class="op">::</span><span class="kw">poly_add_columns</span>(Time, <span class="dt">degree =</span> <span class="dv">3</span>, 
+d_m &lt;-<span class="st"> </span>d %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(<span class="dv">250</span> &lt;=<span class="st"> </span>Time, Time &lt;=<span class="st"> </span><span class="dv">1500</span>) %&gt;%<span class="st"> </span>
+<span class="st">  </span>polypoly::<span class="kw">poly_add_columns</span>(Time, <span class="dt">degree =</span> <span class="dv">3</span>, 
                              <span class="dt">scale_width =</span> <span class="dv">1</span>, <span class="dt">prefix =</span> <span class="st">&quot;ot&quot;</span>)</code></pre></div>
 <p>Plot the model-ready data. Use empirical logit because straight log-odds has too high of values for plotting.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(d_m) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> <span class="kw">empirical_logit</span>(Primary, Others)) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">alpha =</span> .<span class="dv">2</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">stat_smooth</span>() <span class="op">+</span>
-<span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">facet_grid</span>(. <span class="op">~</span><span class="st"> </span>Study) <span class="op">+</span><span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(d_m) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> <span class="kw">empirical_logit</span>(Primary, Others)) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">alpha =</span> .<span class="dv">2</span>) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">stat_smooth</span>() +
+<span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) +
+<span class="st">  </span><span class="kw">facet_grid</span>(. ~<span class="st"> </span>Study) +<span class="st"> </span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Time after target onset (smoothed to 50 ms bins)&quot;</span>, 
        <span class="dt">y =</span> <span class="st">&quot;Emp. logit looking to target&quot;</span>)
 <span class="co">#&gt; `geom_smooth()` using method = &#39;gam&#39;</span></code></pre></div>
 <p><img src="12_aim1_notebook_files/figure-html/spaghetti-elogit-1.png" width="100%" /></p>
-<p>Fit a maximum likelihood model as a first pass. We won’t fit the model automatically. It’s too time consuming. We save the results.</p>
+</div>
+<div id="maximum-likelihood-results" class="section level2">
+<h2><span class="header-section-number">10.2</span> Maximum likelihood results</h2>
+<p>Fit a maximum likelihood model as a first pass for the analysis. (We won’t fit the model automatically (whenever this page is updated). It’s too time consuming. Instead, we do it manually and save the results.)</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(lme4)
 m &lt;-<span class="st"> </span><span class="kw">glmer</span>(
-    <span class="kw">cbind</span>(Primary, Others) <span class="op">~</span>
-<span class="st">      </span>(ot1 <span class="op">+</span><span class="st"> </span>ot2 <span class="op">+</span><span class="st"> </span>ot3) <span class="op">*</span><span class="st"> </span>Study <span class="op">+</span>
-<span class="st">      </span>(ot1 <span class="op">+</span><span class="st"> </span>ot2 <span class="op">+</span><span class="st"> </span>ot3 <span class="op">|</span><span class="st"> </span>ResearchID<span class="op">/</span>Study),
+    <span class="kw">cbind</span>(Primary, Others) ~
+<span class="st">      </span>(ot1 +<span class="st"> </span>ot2 +<span class="st"> </span>ot3) *<span class="st"> </span>Study +
+<span class="st">      </span>(ot1 +<span class="st"> </span>ot2 +<span class="st"> </span>ot3 |<span class="st"> </span>ResearchID/Study),
     <span class="dt">family =</span> binomial,
     <span class="dt">data =</span> d_m)
-<span class="kw">summary</span>(m)
-readr<span class="op">::</span><span class="kw">write_rds</span>(m, <span class="st">&quot;./data/aim1_cubic_model.rds.gz&quot;</span>)</code></pre></div>
-<p>And reload them here.</p>
+readr::<span class="kw">write_rds</span>(m, <span class="st">&quot;./data/aim1_cubic_model.rds.gz&quot;</span>)</code></pre></div>
+<p>And reload the saved model here.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(lme4)
 <span class="co">#&gt; Loading required package: Matrix</span>
 <span class="co">#&gt; Loading required package: methods</span>
-m &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_rds</span>(<span class="st">&quot;./data/aim1_cubic_model.rds.gz&quot;</span>)
-arm<span class="op">::</span><span class="kw">display</span>(m)
+m &lt;-<span class="st"> </span>readr::<span class="kw">read_rds</span>(<span class="st">&quot;./data/aim1_cubic_model.rds.gz&quot;</span>)
+arm::<span class="kw">display</span>(m)
 <span class="co">#&gt; glmer(formula = cbind(Primary, Others) ~ (ot1 + ot2 + ot3) * </span>
 <span class="co">#&gt;     Study + (ot1 + ot2 + ot3 | ResearchID/Study), data = d_m, </span>
 <span class="co">#&gt;     family = binomial)</span>
@@ -319,7 +326,7 @@ arm<span class="op">::</span><span class="kw">display</span>(m)
 <span class="co">#&gt;                   ot3         0.29     -0.09 -0.44 -0.05 </span>
 <span class="co">#&gt;  ResearchID       (Intercept) 0.27                       </span>
 <span class="co">#&gt;                   ot1         0.46      0.86             </span>
-<span class="co">#&gt;                   ot2         0.09     -0.99 -0.85       </span>
+<span class="co">#&gt;                   ot2         0.09     -0.98 -0.84       </span>
 <span class="co">#&gt;                   ot3         0.03     -0.92 -0.98  0.92 </span>
 <span class="co">#&gt;  Residual                     1.00                       </span>
 <span class="co">#&gt; ---</span>
@@ -327,32 +334,72 @@ arm<span class="op">::</span><span class="kw">display</span>(m)
 <span class="co">#&gt; AIC = 74467.3, DIC = -61745.9</span>
 <span class="co">#&gt; deviance = 6328.7</span>
 
-d_m<span class="op">$</span>cubic_fit &lt;-<span class="st"> </span><span class="kw">fitted</span>(m)
+<span class="co"># f1 &lt;- function(data) {</span>
+<span class="co">#   glmer(</span>
+<span class="co">#     cbind(Primary, Others) ~</span>
+<span class="co">#       (ot1 + ot2 + ot3) +</span>
+<span class="co">#       (ot1 + ot2 + ot3 | ResearchID),</span>
+<span class="co">#     family = binomial,</span>
+<span class="co">#     data = data)</span>
+<span class="co"># }</span>
+<span class="co"># </span>
+<span class="co"># separate_studies &lt;- d_m %&gt;% </span>
+<span class="co">#   tidyr::nest(-Study) %&gt;% </span>
+<span class="co">#   mutate(model = purrr::map(data, f1))</span>
 
-<span class="kw">ggplot</span>(d_m) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> cubic_fit) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">alpha =</span> .<span class="dv">2</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">stat_smooth</span>() <span class="op">+</span>
-<span class="st">  </span><span class="kw">facet_grid</span>(. <span class="op">~</span><span class="st"> </span>Study) <span class="op">+</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">&quot;Proportion looks to target [model fits]&quot;</span>, 
-       <span class="dt">x =</span> <span class="st">&quot;Time after target onset (smoothed to 50 ms bins)&quot;</span>)
-<span class="co">#&gt; `geom_smooth()` using method = &#39;gam&#39;</span></code></pre></div>
-<p><img src="12_aim1_notebook_files/figure-html/cubic-model-fits-1.png" width="80" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-d_m <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">group_by</span>(Time, Study) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">r =</span> <span class="kw">cor</span>(Prop, cubic_fit)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> r, <span class="dt">color =</span> Study) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> .<span class="dv">7</span>, <span class="dt">size =</span> <span class="dv">3</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">ylim</span>(<span class="kw">c</span>(.<span class="dv">8</span>, <span class="dv">1</span>)) <span class="op">+</span><span class="st"> </span>
+d_m$cubic_fit &lt;-<span class="st"> </span><span class="kw">fitted</span>(m)
+
+<span class="kw">ggplot</span>(d_m) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> cubic_fit) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">alpha =</span> .<span class="dv">2</span>) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">stat_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;gam&quot;</span>) +
+<span class="st">  </span><span class="kw">facet_grid</span>(. ~<span class="st"> </span>Study) +<span class="st"> </span>
+<span class="st">    </span><span class="kw">labs</span>(
+      <span class="dt">x =</span> <span class="st">&quot;Time after target onset (smoothed to 50 ms bins)&quot;</span>,
+      <span class="dt">y =</span> <span class="st">&quot;Proportion looks to target (fitted)&quot;</span>) +
+<span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) </code></pre></div>
+<p><img src="12_aim1_notebook_files/figure-html/cubic-model-fits-1.png" width="100%" /></p>
+<p>What’s being captured by the random effects?</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">predict_y &lt;-<span class="st"> </span>function(...) <span class="kw">predict</span>(..., <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>)
+d_m$subj_fit &lt;-<span class="st"> </span><span class="kw">predict_y</span>(m, <span class="dt">re.form =</span> ~<span class="st"> </span>(ot1 +<span class="st"> </span>ot2 +<span class="st"> </span>ot3 |<span class="st"> </span>ResearchID))
+
+<span class="kw">ggplot</span>(d_m) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> subj_fit) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">alpha =</span> .<span class="dv">2</span>) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">facet_grid</span>(. ~<span class="st"> </span>Study) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) +
 <span class="st">  </span><span class="kw">labs</span>(
     <span class="dt">x =</span> <span class="st">&quot;Time after target onset (smoothed to 50 ms bins)&quot;</span>,
-    <span class="dt">y =</span> <span class="st">&quot;Correlation of fitted and observed&quot;</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) <span class="op">+</span>
+    <span class="dt">y =</span> <span class="st">&quot;Proportion looks to target (fitted)&quot;</span>,
+    <span class="dt">caption =</span> <span class="st">&quot;Conditioned on Child effects&quot;</span>) </code></pre></div>
+<p><img src="12_aim1_notebook_files/figure-html/cubic-model-fits-ranefs-1.png" width="100%" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+<span class="co"># d_m$study_fit &lt;- predict_y(m, re.form = ~ (ot1 + ot2 + ot3 | Study:ResearchID))</span>
+<span class="co"># ggplot(d_m) + </span>
+<span class="co">#   aes(x = Time, y = study_fit) + </span>
+<span class="co">#   geom_line(aes(group = ResearchID), alpha = .2) + </span>
+<span class="co">#   facet_grid(. ~ Study) + </span>
+<span class="co">#   theme_grey(base_size = 9) +</span>
+<span class="co">#   labs(</span>
+<span class="co">#     x = &quot;Time after target onset (smoothed to 50 ms bins)&quot;,</span>
+<span class="co">#     y = &quot;Proportion looks to target (fitted)&quot;,</span>
+<span class="co">#     caption = &quot;Conditioned on Study x Child effects&quot;) </span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d_corr &lt;-<span class="st"> </span>d_m %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(Time, Study) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">r =</span> <span class="kw">cor</span>(Prop, cubic_fit)) 
+
+<span class="kw">ggplot</span>(d_corr) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> r, <span class="dt">color =</span> Study) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">shape =</span> <span class="dv">1</span>, <span class="dt">size =</span> <span class="dv">3</span>) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">ylim</span>(<span class="kw">c</span>(.<span class="dv">8</span>, <span class="dv">1</span>)) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">labs</span>(
+    <span class="dt">x =</span> <span class="st">&quot;Time after target onset (smoothed to 50 ms bins)&quot;</span>,
+    <span class="dt">y =</span> <span class="st">&quot;Correlation of fitted and observed&quot;</span>) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) +
 <span class="st">  </span><span class="kw">theme</span>(
     <span class="dt">legend.position =</span> <span class="kw">c</span>(<span class="fl">0.025</span>, <span class="fl">0.05</span>), 
-    <span class="dt">legend.justification =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>))</code></pre></div>
-<p><img src="12_aim1_notebook_files/figure-html/cubic-model-fits-2.png" width="80" /></p>
+    <span class="dt">legend.justification =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) </code></pre></div>
+<p><img src="12_aim1_notebook_files/figure-html/cubic-model-raw-fit-corr-1.png" width="50%" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
   
 <span class="co"># ggplot(d_m) + </span>
@@ -374,50 +421,48 @@ d_m <span class="op">%&gt;%</span><span class="st"> </span>
   <span class="co"># geom_line(aes(group = ResearchID), data = semi_join(d_m, top_10), size = 1, color = &quot;blue&quot;) + </span>
   <span class="co"># geom_line(aes(group = ResearchID), data = semi_join(d_m, bot_10), size = 1, color = &quot;red&quot;) +</span></code></pre></div>
 <p>Visualize the top and bottom 20 children (pooled over studies).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">top_<span class="dv">20</span> &lt;-<span class="st"> </span>m <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">ranef</span>() <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">getElement</span>(<span class="st">&quot;ResearchID&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>tibble<span class="op">::</span><span class="kw">rownames_to_column</span>(<span class="st">&quot;ResearchID&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">top_n</span>(<span class="dv">20</span>, ot1) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">select</span>(ResearchID, <span class="dt">slope =</span> ot1)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">xstudy_effects &lt;-<span class="st"> </span>m %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">ranef</span>() %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">getElement</span>(<span class="st">&quot;ResearchID&quot;</span>) %&gt;%<span class="st"> </span>
+<span class="st">  </span>tibble::<span class="kw">rownames_to_column</span>(<span class="st">&quot;ResearchID&quot;</span>) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">as_tibble</span>() %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(ResearchID, <span class="dt">intercept =</span> <span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, <span class="dt">slope =</span> ot1)
 
-bot_<span class="dv">20</span> &lt;-<span class="st"> </span>m <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">ranef</span>() <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">getElement</span>(<span class="st">&quot;ResearchID&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>tibble<span class="op">::</span><span class="kw">rownames_to_column</span>(<span class="st">&quot;ResearchID&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">top_n</span>(<span class="dv">20</span>, <span class="op">-</span>ot1) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">select</span>(ResearchID, <span class="dt">slope =</span> ot1)
+top_20 &lt;-<span class="st"> </span><span class="kw">top_n</span>(xstudy_effects, <span class="dv">20</span>, slope)
+bot_20 &lt;-<span class="st"> </span><span class="kw">top_n</span>(xstudy_effects, <span class="dv">20</span>, -slope)
 
-<span class="kw">ggplot</span>(d_m) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> cubic_fit) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">alpha =</span> .<span class="dv">2</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">data =</span> <span class="kw">semi_join</span>(d_m, top_<span class="dv">20</span>), 
-            <span class="dt">size =</span> .<span class="dv">7</span>, <span class="dt">color =</span> <span class="st">&quot;#0074D9&quot;</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">data =</span> <span class="kw">semi_join</span>(d_m, bot_<span class="dv">20</span>), 
-            <span class="dt">size =</span> .<span class="dv">7</span>, <span class="dt">color =</span> <span class="st">&quot;#FF4136&quot;</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">facet_grid</span>(. <span class="op">~</span><span class="st"> </span>Study) <span class="op">+</span><span class="st"> </span>
+<span class="kw">ggplot</span>(d_m) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> cubic_fit) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">alpha =</span> .<span class="dv">2</span>) +
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">data =</span> <span class="kw">semi_join</span>(d_m, top_20), 
+            <span class="dt">size =</span> .<span class="dv">7</span>, <span class="dt">color =</span> <span class="st">&quot;#0074D9&quot;</span>) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">data =</span> <span class="kw">semi_join</span>(d_m, bot_20), 
+            <span class="dt">size =</span> .<span class="dv">7</span>, <span class="dt">color =</span> <span class="st">&quot;#FF4136&quot;</span>) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">facet_grid</span>(. ~<span class="st"> </span>Study) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) +
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">&quot;Proportion looks to target [model fits]&quot;</span>, 
-       <span class="dt">x =</span> <span class="st">&quot;Time after target onset (smoothed to 50 ms bins)&quot;</span>)
+       <span class="dt">x =</span> <span class="st">&quot;Time after target onset (smoothed to 50 ms bins)&quot;</span>,
+       <span class="dt">caption =</span> <span class="st">&quot;Colors: Top 20 and bottom 20 children by linear time effect&quot;</span>)
 <span class="co">#&gt; Joining, by = &quot;ResearchID&quot;</span>
 <span class="co">#&gt; Joining, by = &quot;ResearchID&quot;</span></code></pre></div>
-<p><img src="12_aim1_notebook_files/figure-html/ranks-by-study-1.png" width="80" /></p>
+<p><img src="12_aim1_notebook_files/figure-html/ranks-1.png" width="100%" /></p>
 <p>Plot the ranks on the raw data.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(d_m) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> Prop) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">alpha =</span> .<span class="dv">2</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">data =</span> <span class="kw">semi_join</span>(d_m, top_<span class="dv">20</span>), 
-            <span class="dt">size =</span> .<span class="dv">7</span>, <span class="dt">color =</span> <span class="st">&quot;#0074D9&quot;</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">data =</span> <span class="kw">semi_join</span>(d_m, bot_<span class="dv">20</span>), 
-            <span class="dt">size =</span> .<span class="dv">7</span>, <span class="dt">color =</span> <span class="st">&quot;#FF4136&quot;</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">facet_grid</span>(. <span class="op">~</span><span class="st"> </span>Study) <span class="op">+</span><span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(d_m) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> Prop) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">alpha =</span> .<span class="dv">2</span>) +
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">data =</span> <span class="kw">semi_join</span>(d_m, top_20), 
+            <span class="dt">size =</span> .<span class="dv">7</span>, <span class="dt">color =</span> <span class="st">&quot;#0074D9&quot;</span>) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">data =</span> <span class="kw">semi_join</span>(d_m, bot_20), 
+            <span class="dt">size =</span> .<span class="dv">7</span>, <span class="dt">color =</span> <span class="st">&quot;#FF4136&quot;</span>) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">facet_grid</span>(. ~<span class="st"> </span>Study) +<span class="st"> </span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">&quot;Proportion looks to target&quot;</span>, 
-       <span class="dt">x =</span> <span class="st">&quot;Time after target onset (smoothed to 50 ms bins)&quot;</span>)
+       <span class="dt">x =</span> <span class="st">&quot;Time after target onset (smoothed to 50 ms bins)&quot;</span>,
+       <span class="dt">caption =</span> <span class="st">&quot;Colors: Top 20 and bottom 20 children by linear time effect&quot;</span>)
 <span class="co">#&gt; Joining, by = &quot;ResearchID&quot;</span>
 <span class="co">#&gt; Joining, by = &quot;ResearchID&quot;</span></code></pre></div>
-<p><img src="12_aim1_notebook_files/figure-html/unnamed-chunk-6-1.png" width="80" /></p>
+<p><img src="12_aim1_notebook_files/figure-html/ranks-on-raw-1.png" width="100%" /></p>
 
+</div>
 </div>
             </section>
 

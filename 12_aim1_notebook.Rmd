@@ -4,7 +4,7 @@ Next steps:
 
 - Model year over year changes.
 - Download test scores and individual differences. 
-- Model individual differences
+- Analyze individual differences
 
 ```{r include = FALSE}
 knitr::read_chunk("./helpers.R")
@@ -13,6 +13,8 @@ if (interactive()) source("./helpers.R")
 
 ```{r helpers, message = FALSE, warnings = FALSE}
 ```
+
+## Data preparation
 
 Earlier we cleaned the data to remove trials with excessive missing data 
 and blocks of trials with too few trials. Read in that data.
@@ -72,8 +74,11 @@ ggplot(d_m) +
        y = "Emp. logit looking to target")
 ```
 
-Fit a maximum likelihood model as a first pass. We won't fit the model
-automatically. It's too time consuming. We save the results.
+## Maximum likelihood results
+
+Fit a maximum likelihood model as a first pass for the analysis. (We won't fit
+the model automatically (whenever this page is updated). It's too time
+consuming. Instead, we do it manually and save the results.)
 
 ```{r, eval = FALSE}
 library(lme4)
@@ -83,32 +88,80 @@ m <- glmer(
       (ot1 + ot2 + ot3 | ResearchID/Study),
     family = binomial,
     data = d_m)
-summary(m)
 readr::write_rds(m, "./data/aim1_cubic_model.rds.gz")
 ```
 
-And reload them here.
+And reload the saved model here.
 
-```{r cubic-model-fits}
+```{r cubic-model-fits, out.width = "100%", fig.height=2.5, fig.width=6}
 library(lme4)
 m <- readr::read_rds("./data/aim1_cubic_model.rds.gz")
 arm::display(m)
+
+# f1 <- function(data) {
+#   glmer(
+#     cbind(Primary, Others) ~
+#       (ot1 + ot2 + ot3) +
+#       (ot1 + ot2 + ot3 | ResearchID),
+#     family = binomial,
+#     data = data)
+# }
+# 
+# separate_studies <- d_m %>% 
+#   tidyr::nest(-Study) %>% 
+#   mutate(model = purrr::map(data, f1))
 
 d_m$cubic_fit <- fitted(m)
 
 ggplot(d_m) + 
   aes(x = Time, y = cubic_fit) + 
   geom_line(aes(group = ResearchID), alpha = .2) + 
-  stat_smooth() +
+  stat_smooth(method = "gam") +
   facet_grid(. ~ Study) + 
-    labs(y = "Proportion looks to target [model fits]", 
-       x = "Time after target onset (smoothed to 50 ms bins)")
+    labs(
+      x = "Time after target onset (smoothed to 50 ms bins)",
+      y = "Proportion looks to target (fitted)") +
+  theme_grey(base_size = 9) 
+```
 
-d_m %>% 
+What's being captured by the random effects?
+
+```{r cubic-model-fits-ranefs, out.width = "100%", fig.height=2.5, fig.width=6}
+predict_y <- function(...) predict(..., type = "response")
+d_m$subj_fit <- predict_y(m, re.form = ~ (ot1 + ot2 + ot3 | ResearchID))
+
+ggplot(d_m) + 
+  aes(x = Time, y = subj_fit) + 
+  geom_line(aes(group = ResearchID), alpha = .2) + 
+  facet_grid(. ~ Study) + 
+  theme_grey(base_size = 9) +
+  labs(
+    x = "Time after target onset (smoothed to 50 ms bins)",
+    y = "Proportion looks to target (fitted)",
+    caption = "Conditioned on Child effects") 
+
+# d_m$study_fit <- predict_y(m, re.form = ~ (ot1 + ot2 + ot3 | Study:ResearchID))
+# ggplot(d_m) + 
+#   aes(x = Time, y = study_fit) + 
+#   geom_line(aes(group = ResearchID), alpha = .2) + 
+#   facet_grid(. ~ Study) + 
+#   theme_grey(base_size = 9) +
+#   labs(
+#     x = "Time after target onset (smoothed to 50 ms bins)",
+#     y = "Proportion looks to target (fitted)",
+#     caption = "Conditioned on Study x Child effects") 
+```
+
+
+
+```{r cubic-model-raw-fit-corr, out.width = "50%", fig.height=3, fig.width=4}
+d_corr <- d_m %>% 
   group_by(Time, Study) %>% 
-  summarise(r = cor(Prop, cubic_fit)) %>% 
-  ggplot() + aes(x = Time, y = r, color = Study) + 
-  geom_point(alpha = .7, size = 3) + 
+  summarise(r = cor(Prop, cubic_fit)) 
+
+ggplot(d_corr) + 
+  aes(x = Time, y = r, color = Study) + 
+  geom_point(shape = 1, size = 3) + 
   ylim(c(.8, 1)) + 
   labs(
     x = "Time after target onset (smoothed to 50 ms bins)",
@@ -116,7 +169,7 @@ d_m %>%
   theme_grey(base_size = 9) +
   theme(
     legend.position = c(0.025, 0.05), 
-    legend.justification = c(0, 0))
+    legend.justification = c(0, 0)) 
 
   
 # ggplot(d_m) + 
@@ -139,24 +192,19 @@ d_m %>%
   # geom_line(aes(group = ResearchID), data = semi_join(d_m, bot_10), size = 1, color = "red") +
 ```
 
+
 Visualize the top and bottom 20 children (pooled over studies).
 
-```{r ranks-by-study}
-top_20 <- m %>% 
+```{r ranks, out.width = "100%", fig.height=2.5, fig.width=6}
+xstudy_effects <- m %>% 
   ranef() %>% 
   getElement("ResearchID") %>% 
   tibble::rownames_to_column("ResearchID") %>% 
   as_tibble() %>% 
-  top_n(20, ot1) %>% 
-  select(ResearchID, slope = ot1)
+  select(ResearchID, intercept = `(Intercept)`, slope = ot1)
 
-bot_20 <- m %>% 
-  ranef() %>% 
-  getElement("ResearchID") %>% 
-  tibble::rownames_to_column("ResearchID") %>% 
-  as_tibble() %>% 
-  top_n(20, -ot1) %>% 
-  select(ResearchID, slope = ot1)
+top_20 <- top_n(xstudy_effects, 20, slope)
+bot_20 <- top_n(xstudy_effects, 20, -slope)
 
 ggplot(d_m) + 
   aes(x = Time, y = cubic_fit) + 
@@ -166,13 +214,15 @@ ggplot(d_m) +
   geom_line(aes(group = ResearchID), data = semi_join(d_m, bot_20), 
             size = .7, color = "#FF4136") + 
   facet_grid(. ~ Study) + 
+  theme_grey(base_size = 9) +
   labs(y = "Proportion looks to target [model fits]", 
-       x = "Time after target onset (smoothed to 50 ms bins)")
+       x = "Time after target onset (smoothed to 50 ms bins)",
+       caption = "Colors: Top 20 and bottom 20 children by linear time effect")
 ```
 
 Plot the ranks on the raw data.
 
-```{r}
+```{r ranks-on-raw, out.width = "100%", fig.height=2.5, fig.width=6}
 ggplot(d_m) + 
   aes(x = Time, y = Prop) + 
   geom_line(aes(group = ResearchID), alpha = .2) +
@@ -182,6 +232,7 @@ ggplot(d_m) +
             size = .7, color = "#FF4136") + 
   facet_grid(. ~ Study) + 
   labs(y = "Proportion looks to target", 
-       x = "Time after target onset (smoothed to 50 ms bins)")
+       x = "Time after target onset (smoothed to 50 ms bins)",
+       caption = "Colors: Top 20 and bottom 20 children by linear time effect")
 ```
 

@@ -25,7 +25,7 @@
 <meta name="author" content="Tristan Mahr">
 
 
-<meta name="date" content="2017-09-22">
+<meta name="date" content="2017-09-25">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -171,7 +171,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="9.1.3" data-path="prepare-and-explore-the-data.html"><a href="prepare-and-explore-the-data.html#interim-summary"><i class="fa fa-check"></i><b>9.1.3</b> Interim summary</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="10" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html"><i class="fa fa-check"></i><b>10</b> Analyze familiar word recognition</a></li>
+<li class="chapter" data-level="10" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html"><i class="fa fa-check"></i><b>10</b> Analyze familiar word recognition</a><ul>
+<li class="chapter" data-level="10.1" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#data-preparation-1"><i class="fa fa-check"></i><b>10.1</b> Data preparation</a></li>
+<li class="chapter" data-level="10.2" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#maximum-likelihood-results"><i class="fa fa-check"></i><b>10.2</b> Maximum likelihood results</a></li>
+</ul></li>
 <li class="chapter" data-level="11" data-path="visualize-looks-to-each-image-type.html"><a href="visualize-looks-to-each-image-type.html"><i class="fa fa-check"></i><b>11</b> Visualize looks to each image type</a><ul>
 <li class="chapter" data-level="11.1" data-path="visualize-looks-to-each-image-type.html"><a href="visualize-looks-to-each-image-type.html#comparing-strong-versus-weak-foils"><i class="fa fa-check"></i><b>11.1</b> Comparing strong versus weak foils</a></li>
 <li class="chapter" data-level="11.2" data-path="visualize-looks-to-each-image-type.html"><a href="visualize-looks-to-each-image-type.html#look-for-individual-differences-in-competitor-sensitivity"><i class="fa fa-check"></i><b>11.2</b> Look for individual differences in competitor sensitivity</a></li>
@@ -214,21 +217,21 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="co">#&#39; group `data` by some grouping variables (`...`),</span>
 <span class="co">#&#39; randomly select `size` of the groups</span>
 <span class="co">#&#39; keep just the data from those sampled groups</span>
-sample_n_of &lt;-<span class="st"> </span><span class="cf">function</span>(data, size, ...) {
+sample_n_of &lt;-<span class="st"> </span>function(data, size, ...) {
   dots &lt;-<span class="st"> </span><span class="kw">quos</span>(...)
   rows &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">row =</span> <span class="kw">seq_len</span>(<span class="kw">nrow</span>(data)))
-  rows[, <span class="st">&quot;group&quot;</span>] &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">group_by</span>(<span class="op">!!!</span><span class="st"> </span>dots) <span class="op">%&gt;%</span>
+  rows[, <span class="st">&quot;group&quot;</span>] &lt;-<span class="st"> </span>data %&gt;%
+<span class="st">    </span><span class="kw">group_by</span>(!!!<span class="st"> </span>dots) %&gt;%
 <span class="st">    </span><span class="kw">group_indices</span>()
 
-  subset &lt;-<span class="st"> </span>rows <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">filter</span>(.data<span class="op">$</span>group <span class="op">%in%</span><span class="st"> </span><span class="kw">sample</span>(<span class="kw">unique</span>(.data<span class="op">$</span>group), size)) <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">pull</span>(.data<span class="op">$</span>row)
+  subset &lt;-<span class="st"> </span>rows %&gt;%
+<span class="st">    </span><span class="kw">filter</span>(.data$group %in%<span class="st"> </span><span class="kw">sample</span>(<span class="kw">unique</span>(.data$group), size)) %&gt;%
+<span class="st">    </span><span class="kw">pull</span>(.data$row)
 
   data[subset, ]
 }</code></pre></div>
 <p>Earlier we cleaned the data to remove trials with excessive missing data and blocks of trials with too few trials. Read in that data.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_csv</span>(<span class="st">&quot;./data/aim1-screened.csv.gz&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data &lt;-<span class="st"> </span>readr::<span class="kw">read_csv</span>(<span class="st">&quot;./data/aim1-screened.csv.gz&quot;</span>)</code></pre></div>
 <p>Plot growth curves to each AOI.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resp_def &lt;-<span class="st"> </span><span class="kw">create_response_def</span>(
   <span class="dt">primary =</span> <span class="st">&quot;Target&quot;</span>,
@@ -240,42 +243,42 @@ sample_n_of &lt;-<span class="st"> </span><span class="cf">function</span>(data,
 defs &lt;-<span class="st"> </span><span class="kw">cycle_response_def</span>(resp_def)
 
 <span class="co"># We use this later on</span>
-semy_defs &lt;-<span class="st"> </span>defs <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>purrr<span class="op">::</span><span class="kw">keep</span>(<span class="op">~</span><span class="st"> </span>.x<span class="op">$</span>primary <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Target&quot;</span>, <span class="st">&quot;SemanticFoil&quot;</span>)) 
-phon_defs &lt;-<span class="st"> </span>defs <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>purrr<span class="op">::</span><span class="kw">keep</span>(<span class="op">~</span><span class="st"> </span>.x<span class="op">$</span>primary <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Target&quot;</span>, <span class="st">&quot;PhonologicalFoil&quot;</span>))
+semy_defs &lt;-<span class="st"> </span>defs %&gt;%<span class="st"> </span>
+<span class="st">  </span>purrr::<span class="kw">keep</span>(~<span class="st"> </span>.x$primary %in%<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Target&quot;</span>, <span class="st">&quot;SemanticFoil&quot;</span>)) 
+phon_defs &lt;-<span class="st"> </span>defs %&gt;%<span class="st"> </span>
+<span class="st">  </span>purrr::<span class="kw">keep</span>(~<span class="st"> </span>.x$primary %in%<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Target&quot;</span>, <span class="st">&quot;PhonologicalFoil&quot;</span>))
 
 <span class="co"># Aggregate looks using each rule</span>
-looks_by_aoi &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">aggregate_looks</span>(defs, Study <span class="op">+</span><span class="st"> </span>ResearchID <span class="op">+</span><span class="st"> </span>Time <span class="op">~</span><span class="st"> </span>GazeByImageAOI) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">rename</span>(<span class="dt">AOI =</span> .response_def) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">select</span>(AOI<span class="op">:</span>Time, Prop, Primary, Unrelated) <span class="op">%&gt;%</span><span class="st"> </span>
+looks_by_aoi &lt;-<span class="st"> </span>data %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">aggregate_looks</span>(defs, Study +<span class="st"> </span>ResearchID +<span class="st"> </span>Time ~<span class="st"> </span>GazeByImageAOI) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">rename</span>(<span class="dt">AOI =</span> .response_def) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(AOI:Time, Prop, Primary, Unrelated) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">AOI =</span> <span class="kw">factor</span>(AOI, <span class="kw">c</span>(<span class="st">&quot;Target&quot;</span>, <span class="st">&quot;PhonologicalFoil&quot;</span>, 
                              <span class="st">&quot;SemanticFoil&quot;</span>, <span class="st">&quot;Unrelated&quot;</span>)))
   
-<span class="kw">ggplot</span>(looks_by_aoi) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> Prop, <span class="dt">color =</span> Study) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">yintercept =</span> .<span class="dv">25</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">stat_smooth</span>() <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">facet_grid</span>( <span class="op">~</span><span class="st"> </span>AOI) <span class="op">+</span><span class="st"> </span>
+<span class="kw">ggplot</span>(looks_by_aoi) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> Prop, <span class="dt">color =</span> Study) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">yintercept =</span> .<span class="dv">25</span>) +
+<span class="st">  </span><span class="kw">stat_smooth</span>() +<span class="st"> </span>
+<span class="st">  </span><span class="kw">facet_grid</span>( ~<span class="st"> </span>AOI) +<span class="st"> </span>
 <span class="st">    </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Time after target onset [ms]&quot;</span>,
        <span class="dt">y =</span> <span class="st">&quot;Proportion looks&quot;</span>,
-       <span class="dt">caption =</span> <span class="st">&quot;GAM smooth on partially screened data&quot;</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) <span class="op">+</span>
+       <span class="dt">caption =</span> <span class="st">&quot;GAM smooth on partially screened data&quot;</span>) +
+<span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) +
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="kw">c</span>(<span class="fl">0.95</span>, <span class="fl">0.95</span>), 
         <span class="dt">legend.justification =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))
 <span class="co">#&gt; `geom_smooth()` using method = &#39;gam&#39;</span></code></pre></div>
 <p><img src="15_aim1_notebook_files/figure-html/by-aoi-prop-1.png" width="100%" /></p>
 <p>Normalize by using ratio of looks to each AOI versus the unrelated image.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(looks_by_aoi <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(AOI <span class="op">!=</span><span class="st"> &quot;Unrelated&quot;</span>)) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> <span class="kw">log</span>(Primary <span class="op">/</span><span class="st"> </span>Unrelated), <span class="dt">color =</span> Study) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">yintercept =</span> <span class="dv">0</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">stat_smooth</span>() <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">facet_grid</span>( <span class="op">~</span><span class="st"> </span>AOI) <span class="op">+</span><span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(looks_by_aoi %&gt;%<span class="st"> </span><span class="kw">filter</span>(AOI !=<span class="st"> &quot;Unrelated&quot;</span>)) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> <span class="kw">log</span>(Primary /<span class="st"> </span>Unrelated), <span class="dt">color =</span> Study) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">yintercept =</span> <span class="dv">0</span>) +
+<span class="st">  </span><span class="kw">stat_smooth</span>() +<span class="st"> </span>
+<span class="st">  </span><span class="kw">facet_grid</span>( ~<span class="st"> </span>AOI) +<span class="st"> </span>
 <span class="st">    </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Time after target onset [ms]&quot;</span>,
        <span class="dt">y =</span> <span class="st">&quot;Log odds looking to word vs. unrelated word&quot;</span>,
-       <span class="dt">caption =</span> <span class="st">&quot;GAM smooth on partially screened data&quot;</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) <span class="op">+</span>
+       <span class="dt">caption =</span> <span class="st">&quot;GAM smooth on partially screened data&quot;</span>) +
+<span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) +
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="kw">c</span>(<span class="fl">0.95</span>, <span class="fl">0.95</span>), 
         <span class="dt">legend.justification =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))
 <span class="co">#&gt; `geom_smooth()` using method = &#39;gam&#39;</span>
@@ -287,9 +290,9 @@ looks_by_aoi &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><s
 <h2><span class="header-section-number">11.1</span> Comparing strong versus weak foils</h2>
 <p>In <span class="citation">Law et al. (<a href="#ref-RWLPaper">2016</a>)</span>, we ignored trials for certain items where we didn’t think the phonological or semantic similarity was strong enough.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">trial_info &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(
-  readr<span class="op">::</span><span class="kw">read_csv</span>(<span class="st">&quot;data-raw/rwl_timepoint1_trials.csv.gz&quot;</span>),
-  readr<span class="op">::</span><span class="kw">read_csv</span>(<span class="st">&quot;data-raw/rwl_timepoint2_trials.csv.gz&quot;</span>),
-  readr<span class="op">::</span><span class="kw">read_csv</span>(<span class="st">&quot;data-raw/rwl_timepoint3_trials.csv.gz&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+  readr::<span class="kw">read_csv</span>(<span class="st">&quot;data-raw/rwl_timepoint1_trials.csv.gz&quot;</span>),
+  readr::<span class="kw">read_csv</span>(<span class="st">&quot;data-raw/rwl_timepoint2_trials.csv.gz&quot;</span>),
+  readr::<span class="kw">read_csv</span>(<span class="st">&quot;data-raw/rwl_timepoint3_trials.csv.gz&quot;</span>)) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">select</span>(TrialID, <span class="dt">Target =</span> WordTarget, 
          <span class="dt">PhonologicalFoil =</span> WordPhonologicalFoil,
          <span class="dt">SemanticFoil =</span> WordSemanticFoil, 
@@ -301,19 +304,19 @@ good_phono &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="
 good_semy &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;bear&quot;</span>, <span class="st">&quot;bee&quot;</span>, <span class="st">&quot;bell&quot;</span>, <span class="st">&quot;bread&quot;</span>, <span class="st">&quot;cheese&quot;</span>, <span class="st">&quot;dress&quot;</span>, 
                <span class="st">&quot;drum&quot;</span>, <span class="st">&quot;fly&quot;</span>, <span class="st">&quot;horse&quot;</span>, <span class="st">&quot;pan&quot;</span>, <span class="st">&quot;pear&quot;</span>, <span class="st">&quot;shirt&quot;</span>, <span class="st">&quot;spoon&quot;</span>)
 
-words &lt;-<span class="st"> </span>trial_info <span class="op">%&gt;%</span><span class="st"> </span>
+words &lt;-<span class="st"> </span>trial_info %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">distinct</span>(Target, PhonologicalFoil, SemanticFoil, Unrelated)
 
-phono_foils &lt;-<span class="st"> </span><span class="kw">split</span>(words, words<span class="op">$</span>Target <span class="op">%in%</span><span class="st"> </span>good_phono) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">lapply</span>(arrange, Target) <span class="op">%&gt;%</span><span class="st"> </span>
+phono_foils &lt;-<span class="st"> </span><span class="kw">split</span>(words, words$Target %in%<span class="st"> </span>good_phono) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">lapply</span>(arrange, Target) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">setNames</span>(<span class="kw">c</span>(<span class="st">&quot;weak_foil&quot;</span>, <span class="st">&quot;strong_foil&quot;</span>))
 
-semy_foils &lt;-<span class="st"> </span><span class="kw">split</span>(words, words<span class="op">$</span>Target <span class="op">%in%</span><span class="st"> </span>good_semy) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">lapply</span>(arrange, Target) <span class="op">%&gt;%</span><span class="st"> </span>
+semy_foils &lt;-<span class="st"> </span><span class="kw">split</span>(words, words$Target %in%<span class="st"> </span>good_semy) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">lapply</span>(arrange, Target) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">setNames</span>(<span class="kw">c</span>(<span class="st">&quot;weak_foil&quot;</span>, <span class="st">&quot;strong_foil&quot;</span>))
 
-phono_foils<span class="op">$</span>strong_foil <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="dt">caption =</span> <span class="st">&quot;Trials with strong phonological foils.&quot;</span>)</code></pre></div>
+phono_foils$strong_foil %&gt;%<span class="st"> </span>
+<span class="st">  </span>knitr::<span class="kw">kable</span>(<span class="dt">caption =</span> <span class="st">&quot;Trials with strong phonological foils.&quot;</span>)</code></pre></div>
 <table>
 <caption><span id="tab:print-foil-tables">Table 11.1: </span>Trials with strong phonological foils.</caption>
 <thead>
@@ -424,8 +427,8 @@ phono_foils<span class="op">$</span>strong_foil <span class="op">%&gt;%</span><s
 </tbody>
 </table>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-phono_foils<span class="op">$</span>weak_foil <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="dt">caption =</span> <span class="st">&quot;Trials with weak phonological foils.&quot;</span>)</code></pre></div>
+phono_foils$weak_foil %&gt;%<span class="st"> </span>
+<span class="st">  </span>knitr::<span class="kw">kable</span>(<span class="dt">caption =</span> <span class="st">&quot;Trials with weak phonological foils.&quot;</span>)</code></pre></div>
 <table>
 <caption><span id="tab:print-foil-tables">Table 11.1: </span>Trials with weak phonological foils.</caption>
 <thead>
@@ -512,8 +515,8 @@ phono_foils<span class="op">$</span>weak_foil <span class="op">%&gt;%</span><spa
 </tbody>
 </table>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-semy_foils<span class="op">$</span>strong_foil <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="dt">caption =</span> <span class="st">&quot;Trials with strong semantic foils.&quot;</span>)</code></pre></div>
+semy_foils$strong_foil %&gt;%<span class="st"> </span>
+<span class="st">  </span>knitr::<span class="kw">kable</span>(<span class="dt">caption =</span> <span class="st">&quot;Trials with strong semantic foils.&quot;</span>)</code></pre></div>
 <table>
 <caption><span id="tab:print-foil-tables">Table 11.1: </span>Trials with strong semantic foils.</caption>
 <thead>
@@ -618,8 +621,8 @@ semy_foils<span class="op">$</span>strong_foil <span class="op">%&gt;%</span><sp
 </tbody>
 </table>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-semy_foils<span class="op">$</span>weak_foil <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="dt">caption =</span> <span class="st">&quot;Trials with weak semantic foils.&quot;</span>)</code></pre></div>
+semy_foils$weak_foil %&gt;%<span class="st"> </span>
+<span class="st">  </span>knitr::<span class="kw">kable</span>(<span class="dt">caption =</span> <span class="st">&quot;Trials with weak semantic foils.&quot;</span>)</code></pre></div>
 <table>
 <caption><span id="tab:print-foil-tables">Table 11.1: </span>Trials with weak semantic foils.</caption>
 <thead>
@@ -712,32 +715,32 @@ semy_foils<span class="op">$</span>weak_foil <span class="op">%&gt;%</span><span
 </tbody>
 </table>
 <p>We should verify that the two sets of words behave differently.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">weak_phon_looks &lt;-<span class="st"> </span>trial_info <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">semi_join</span>(phono_foils<span class="op">$</span>weak_foil) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">inner_join</span>(data) <span class="op">%&gt;%</span><span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">weak_phon_looks &lt;-<span class="st"> </span>trial_info %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">semi_join</span>(phono_foils$weak_foil) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">inner_join</span>(data) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">PhonFoil =</span> <span class="st">&quot;Weak&quot;</span>)
 <span class="co">#&gt; Joining, by = c(&quot;Target&quot;, &quot;PhonologicalFoil&quot;, &quot;SemanticFoil&quot;, &quot;Unrelated&quot;)</span>
 <span class="co">#&gt; Joining, by = &quot;TrialID&quot;</span>
 
-strong_phon_looks &lt;-<span class="st"> </span>trial_info <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">semi_join</span>(phono_foils<span class="op">$</span>strong_foil) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">inner_join</span>(data) <span class="op">%&gt;%</span><span class="st"> </span>
+strong_phon_looks &lt;-<span class="st"> </span>trial_info %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">semi_join</span>(phono_foils$strong_foil) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">inner_join</span>(data) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">PhonFoil =</span> <span class="st">&quot;Strong&quot;</span>)
 <span class="co">#&gt; Joining, by = c(&quot;Target&quot;, &quot;PhonologicalFoil&quot;, &quot;SemanticFoil&quot;, &quot;Unrelated&quot;)</span>
 <span class="co">#&gt; Joining, by = &quot;TrialID&quot;</span>
 
 phon_data &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(strong_phon_looks, weak_phon_looks)
 
-weak_semy_looks &lt;-<span class="st"> </span>trial_info <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">semi_join</span>(semy_foils<span class="op">$</span>weak_foil) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">inner_join</span>(data) <span class="op">%&gt;%</span><span class="st"> </span>
+weak_semy_looks &lt;-<span class="st"> </span>trial_info %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">semi_join</span>(semy_foils$weak_foil) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">inner_join</span>(data) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">SemyFoil =</span> <span class="st">&quot;Weak&quot;</span>)
 <span class="co">#&gt; Joining, by = c(&quot;Target&quot;, &quot;PhonologicalFoil&quot;, &quot;SemanticFoil&quot;, &quot;Unrelated&quot;)</span>
 <span class="co">#&gt; Joining, by = &quot;TrialID&quot;</span>
 
-strong_semy_looks &lt;-<span class="st"> </span>trial_info <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">semi_join</span>(semy_foils<span class="op">$</span>strong_foil) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">inner_join</span>(data) <span class="op">%&gt;%</span><span class="st"> </span>
+strong_semy_looks &lt;-<span class="st"> </span>trial_info %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">semi_join</span>(semy_foils$strong_foil) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">inner_join</span>(data) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">SemyFoil =</span> <span class="st">&quot;Strong&quot;</span>)
 <span class="co">#&gt; Joining, by = c(&quot;Target&quot;, &quot;PhonologicalFoil&quot;, &quot;SemanticFoil&quot;, &quot;Unrelated&quot;)</span>
 <span class="co">#&gt; Joining, by = &quot;TrialID&quot;</span>
@@ -745,45 +748,45 @@ strong_semy_looks &lt;-<span class="st"> </span>trial_info <span class="op">%&gt
 phon_data &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(strong_phon_looks, weak_phon_looks)
 semy_data &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(weak_semy_looks, strong_semy_looks)
 
-looks_by_aoi2 &lt;-<span class="st"> </span>phon_data <span class="op">%&gt;%</span><span class="st"> </span>
+looks_by_aoi2 &lt;-<span class="st"> </span>phon_data %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">aggregate_looks</span>(phon_defs, 
-                  Study <span class="op">+</span><span class="st"> </span>ResearchID <span class="op">+</span><span class="st"> </span>PhonFoil <span class="op">+</span><span class="st"> </span>Time <span class="op">~</span><span class="st"> </span>GazeByImageAOI) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">rename</span>(<span class="dt">AOI =</span> .response_def) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">select</span>(AOI<span class="op">:</span>Time, PhonFoil, Prop, Primary, PhonologicalFoil, Unrelated) <span class="op">%&gt;%</span><span class="st"> </span>
+                  Study +<span class="st"> </span>ResearchID +<span class="st"> </span>PhonFoil +<span class="st"> </span>Time ~<span class="st"> </span>GazeByImageAOI) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">rename</span>(<span class="dt">AOI =</span> .response_def) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(AOI:Time, PhonFoil, Prop, Primary, PhonologicalFoil, Unrelated) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">AOI =</span> <span class="kw">factor</span>(AOI, <span class="kw">c</span>(<span class="st">&quot;Target&quot;</span>, <span class="st">&quot;PhonologicalFoil&quot;</span>, 
                              <span class="st">&quot;SemanticFoil&quot;</span>, <span class="st">&quot;Unrelated&quot;</span>)))
 
-looks_by_aoi3 &lt;-<span class="st"> </span>semy_data <span class="op">%&gt;%</span><span class="st"> </span>
+looks_by_aoi3 &lt;-<span class="st"> </span>semy_data %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">aggregate_looks</span>(semy_defs, 
-                  Study <span class="op">+</span><span class="st"> </span>ResearchID <span class="op">+</span><span class="st"> </span>SemyFoil <span class="op">+</span><span class="st"> </span>Time <span class="op">~</span><span class="st"> </span>GazeByImageAOI) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">rename</span>(<span class="dt">AOI =</span> .response_def) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">select</span>(AOI<span class="op">:</span>Time, SemyFoil, Prop, Primary, SemanticFoil, Unrelated) <span class="op">%&gt;%</span><span class="st"> </span>
+                  Study +<span class="st"> </span>ResearchID +<span class="st"> </span>SemyFoil +<span class="st"> </span>Time ~<span class="st"> </span>GazeByImageAOI) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">rename</span>(<span class="dt">AOI =</span> .response_def) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(AOI:Time, SemyFoil, Prop, Primary, SemanticFoil, Unrelated) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">AOI =</span> <span class="kw">factor</span>(AOI, <span class="kw">c</span>(<span class="st">&quot;Target&quot;</span>, <span class="st">&quot;PhonologicalFoil&quot;</span>, 
                              <span class="st">&quot;SemanticFoil&quot;</span>, <span class="st">&quot;Unrelated&quot;</span>)))
 
-<span class="kw">ggplot</span>(looks_by_aoi2 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(AOI <span class="op">!=</span><span class="st"> &quot;Unrelated&quot;</span>)) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> <span class="kw">log</span>(Primary <span class="op">/</span><span class="st"> </span>Unrelated), 
-      <span class="dt">color =</span> Study, <span class="dt">linetype =</span> PhonFoil) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">yintercept =</span> <span class="dv">0</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">stat_smooth</span>() <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">facet_grid</span>( <span class="op">~</span><span class="st"> </span>AOI) <span class="op">+</span><span class="st"> </span>
+<span class="kw">ggplot</span>(looks_by_aoi2 %&gt;%<span class="st"> </span><span class="kw">filter</span>(AOI !=<span class="st"> &quot;Unrelated&quot;</span>)) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> <span class="kw">log</span>(Primary /<span class="st"> </span>Unrelated), 
+      <span class="dt">color =</span> Study, <span class="dt">linetype =</span> PhonFoil) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">yintercept =</span> <span class="dv">0</span>) +
+<span class="st">  </span><span class="kw">stat_smooth</span>() +<span class="st"> </span>
+<span class="st">  </span><span class="kw">facet_grid</span>( ~<span class="st"> </span>AOI) +<span class="st"> </span>
 <span class="st">    </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Time after target onset [ms]&quot;</span>,
        <span class="dt">y =</span> <span class="st">&quot;Log odds looking to word vs. unrelated word&quot;</span>,
-       <span class="dt">caption =</span> <span class="st">&quot;GAM smooth on partially screened data&quot;</span>) <span class="op">+</span>
+       <span class="dt">caption =</span> <span class="st">&quot;GAM smooth on partially screened data&quot;</span>) +
 <span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) 
 <span class="co">#&gt; `geom_smooth()` using method = &#39;gam&#39;</span>
 <span class="co">#&gt; Warning: Removed 48304 rows containing non-finite values (stat_smooth).</span></code></pre></div>
 <p><img src="15_aim1_notebook_files/figure-html/by-aoi-logit-foils-1.png" width="100%" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-<span class="kw">ggplot</span>(looks_by_aoi3 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(AOI <span class="op">!=</span><span class="st"> &quot;Unrelated&quot;</span>)) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> <span class="kw">log</span>(Primary <span class="op">/</span><span class="st"> </span>Unrelated), 
-      <span class="dt">color =</span> Study, <span class="dt">linetype =</span> SemyFoil) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">yintercept =</span> <span class="dv">0</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">stat_smooth</span>() <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">facet_grid</span>( <span class="op">~</span><span class="st"> </span>AOI) <span class="op">+</span><span class="st"> </span>
+<span class="kw">ggplot</span>(looks_by_aoi3 %&gt;%<span class="st"> </span><span class="kw">filter</span>(AOI !=<span class="st"> &quot;Unrelated&quot;</span>)) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> <span class="kw">log</span>(Primary /<span class="st"> </span>Unrelated), 
+      <span class="dt">color =</span> Study, <span class="dt">linetype =</span> SemyFoil) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">yintercept =</span> <span class="dv">0</span>) +
+<span class="st">  </span><span class="kw">stat_smooth</span>() +<span class="st"> </span>
+<span class="st">  </span><span class="kw">facet_grid</span>( ~<span class="st"> </span>AOI) +<span class="st"> </span>
 <span class="st">    </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Time after target onset [ms]&quot;</span>,
        <span class="dt">y =</span> <span class="st">&quot;Log odds looking to word vs. unrelated word&quot;</span>,
-       <span class="dt">caption =</span> <span class="st">&quot;GAM smooth on partially screened data&quot;</span>) <span class="op">+</span>
+       <span class="dt">caption =</span> <span class="st">&quot;GAM smooth on partially screened data&quot;</span>) +
 <span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) 
 <span class="co">#&gt; `geom_smooth()` using method = &#39;gam&#39;</span>
 <span class="co">#&gt; Warning: Removed 43071 rows containing non-finite values (stat_smooth).</span></code></pre></div>
@@ -795,43 +798,43 @@ looks_by_aoi3 &lt;-<span class="st"> </span>semy_data <span class="op">%&gt;%</s
 <li>Children have a lower advantage for the target (vs unrelated) in weak foil trials because… why?</li>
 </ul>
 <p>Now let’s look at the target versus each foil and the unrelated.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">semantic_target_curves &lt;-<span class="st"> </span>looks_by_aoi3 <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">filter</span>(AOI <span class="op">==</span><span class="st"> &quot;Target&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="st">`</span><span class="dt">Target vs Semantic</span><span class="st">`</span> =<span class="st"> </span><span class="kw">log</span>(Primary <span class="op">/</span><span class="st"> </span>SemanticFoil), 
-         <span class="st">`</span><span class="dt">Target vs Unrelated</span><span class="st">`</span> =<span class="st"> </span><span class="kw">log</span>(Primary <span class="op">/</span><span class="st"> </span>Unrelated)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>tidyr<span class="op">::</span><span class="kw">gather</span>(<span class="st">&quot;Comparison&quot;</span>, <span class="st">&quot;LogOdds&quot;</span>, 
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">semantic_target_curves &lt;-<span class="st"> </span>looks_by_aoi3 %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(AOI ==<span class="st"> &quot;Target&quot;</span>) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="st">`</span><span class="dt">Target vs Semantic</span><span class="st">`</span> =<span class="st"> </span><span class="kw">log</span>(Primary /<span class="st"> </span>SemanticFoil), 
+         <span class="st">`</span><span class="dt">Target vs Unrelated</span><span class="st">`</span> =<span class="st"> </span><span class="kw">log</span>(Primary /<span class="st"> </span>Unrelated)) %&gt;%<span class="st"> </span>
+<span class="st">  </span>tidyr::<span class="kw">gather</span>(<span class="st">&quot;Comparison&quot;</span>, <span class="st">&quot;LogOdds&quot;</span>, 
                 <span class="st">`</span><span class="dt">Target vs Semantic</span><span class="st">`</span>, <span class="st">`</span><span class="dt">Target vs Unrelated</span><span class="st">`</span>) 
   
-phonological_target_curves &lt;-<span class="st"> </span>looks_by_aoi2 <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">filter</span>(AOI <span class="op">==</span><span class="st"> &quot;Target&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="st">`</span><span class="dt">Target vs Phonological</span><span class="st">`</span> =<span class="st"> </span><span class="kw">log</span>(Primary <span class="op">/</span><span class="st"> </span>PhonologicalFoil), 
-         <span class="st">`</span><span class="dt">Target vs Unrelated</span><span class="st">`</span> =<span class="st"> </span><span class="kw">log</span>(Primary <span class="op">/</span><span class="st"> </span>Unrelated)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>tidyr<span class="op">::</span><span class="kw">gather</span>(<span class="st">&quot;Comparison&quot;</span>, <span class="st">&quot;LogOdds&quot;</span>, 
+phonological_target_curves &lt;-<span class="st"> </span>looks_by_aoi2 %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(AOI ==<span class="st"> &quot;Target&quot;</span>) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="st">`</span><span class="dt">Target vs Phonological</span><span class="st">`</span> =<span class="st"> </span><span class="kw">log</span>(Primary /<span class="st"> </span>PhonologicalFoil), 
+         <span class="st">`</span><span class="dt">Target vs Unrelated</span><span class="st">`</span> =<span class="st"> </span><span class="kw">log</span>(Primary /<span class="st"> </span>Unrelated)) %&gt;%<span class="st"> </span>
+<span class="st">  </span>tidyr::<span class="kw">gather</span>(<span class="st">&quot;Comparison&quot;</span>, <span class="st">&quot;LogOdds&quot;</span>, 
                 <span class="st">`</span><span class="dt">Target vs Phonological</span><span class="st">`</span>, <span class="st">`</span><span class="dt">Target vs Unrelated</span><span class="st">`</span>) 
   
-<span class="kw">ggplot</span>(phonological_target_curves) <span class="op">+</span><span class="st"> </span>
+<span class="kw">ggplot</span>(phonological_target_curves) +<span class="st"> </span>
 <span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> LogOdds, 
-      <span class="dt">color =</span> Study, <span class="dt">linetype =</span> PhonFoil) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">yintercept =</span> <span class="dv">0</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">stat_smooth</span>() <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">facet_grid</span>( <span class="op">~</span><span class="st"> </span>Comparison) <span class="op">+</span><span class="st"> </span>
+      <span class="dt">color =</span> Study, <span class="dt">linetype =</span> PhonFoil) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">yintercept =</span> <span class="dv">0</span>) +
+<span class="st">  </span><span class="kw">stat_smooth</span>() +<span class="st"> </span>
+<span class="st">  </span><span class="kw">facet_grid</span>( ~<span class="st"> </span>Comparison) +<span class="st"> </span>
 <span class="st">    </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Time after target onset [ms]&quot;</span>,
        <span class="dt">y =</span> <span class="st">&quot;Log odds looking&quot;</span>,
-       <span class="dt">caption =</span> <span class="st">&quot;GAM smooth on partially screened data&quot;</span>) <span class="op">+</span>
+       <span class="dt">caption =</span> <span class="st">&quot;GAM smooth on partially screened data&quot;</span>) +
 <span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) 
 <span class="co">#&gt; `geom_smooth()` using method = &#39;gam&#39;</span>
 <span class="co">#&gt; Warning: Removed 37498 rows containing non-finite values (stat_smooth).</span></code></pre></div>
 <p><img src="15_aim1_notebook_files/figure-html/by-aoi-logit-target-phon-1.png" width="100%" /></p>
 <p>Both comparisons attain the same height, so phonological and unrelated foils affect processing equally later in the trial. The strong phonological foils curves in the Target vs Phonological comparison rise later than the weak foils, reflecting early looks to the phonological foils.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(semantic_target_curves) <span class="op">+</span><span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(semantic_target_curves) +<span class="st"> </span>
 <span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> LogOdds, 
-      <span class="dt">color =</span> Study, <span class="dt">linetype =</span> SemyFoil) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">yintercept =</span> <span class="dv">0</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">stat_smooth</span>() <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">facet_grid</span>( <span class="op">~</span><span class="st"> </span>Comparison) <span class="op">+</span><span class="st"> </span>
+      <span class="dt">color =</span> Study, <span class="dt">linetype =</span> SemyFoil) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">yintercept =</span> <span class="dv">0</span>) +
+<span class="st">  </span><span class="kw">stat_smooth</span>() +<span class="st"> </span>
+<span class="st">  </span><span class="kw">facet_grid</span>( ~<span class="st"> </span>Comparison) +<span class="st"> </span>
 <span class="st">    </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Time after target onset [ms]&quot;</span>,
        <span class="dt">y =</span> <span class="st">&quot;Log odds looking&quot;</span>,
-       <span class="dt">caption =</span> <span class="st">&quot;GAM smooth on partially screened data&quot;</span>) <span class="op">+</span>
+       <span class="dt">caption =</span> <span class="st">&quot;GAM smooth on partially screened data&quot;</span>) +
 <span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) 
 <span class="co">#&gt; `geom_smooth()` using method = &#39;gam&#39;</span>
 <span class="co">#&gt; Warning: Removed 29775 rows containing non-finite values (stat_smooth).</span></code></pre></div>
