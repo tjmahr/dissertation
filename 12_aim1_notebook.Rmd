@@ -236,3 +236,186 @@ ggplot(d_m) +
        caption = "Colors: Top 20 and bottom 20 children by linear time effect")
 ```
 
+## Bayesian model results
+
+Here is the code used to fit the model with Stan. It took about 24 hours to run
+the model.
+
+```{r, eval = FALSE}
+library(rstanarm)
+options(mc.cores = parallel::detectCores())
+
+m <- stan_glmer(
+  cbind(Primary, Others) ~
+    (ot1 + ot2 + ot3) * Study +
+    (ot1 + ot2 + ot3 | ResearchID/Study),
+  family = binomial,
+  prior = normal(0, 1),
+  prior_intercept = normal(0, 5),
+  prior_covariance = decov(2, 1, 1),
+  data = d_m)
+readr::write_rds(m, "./data/stan_aim1_cubic_model.rds.gz")
+```
+
+### Fixed effects plots
+
+First, let's plot the intervals for the fixed effects.
+
+```{r}
+library(rstanarm)
+library(bayesplot)
+theme_set(theme_grey())
+library(stringr)
+library(ggstance)
+parse_text <- function(x) parse(text = x)
+
+b <- readr::read_rds("./data/stan_aim1_cubic_model.rds.gz")
+b
+
+intervals <- mcmc_intervals_data(as.data.frame(b), pars = names(fixef(b)))
+
+# Rename to use mathematical formatting
+intervals$pname <- intervals$parameter %>%
+  str_replace("ot(2|3)", "Time^\\1") %>% 
+  str_replace("ot(1)", "Time") %>% 
+  str_replace(".Intercept.", "Intercept") %>% 
+  str_replace("Study", "") %>% 
+  str_replace(":", " %*% ") %>% 
+  factor(., levels = rev(.))
+
+```
+
+Only the Time^2^ effect is near 0, which is okay. We mostly care about the
+intercept and time terms. Here the TimePoint2, TimePoint3, Time x TimePoint2,
+and Time x TimePoint3 confirm that children get more reliable and faster each
+year of the study.
+
+```{r effects1, out.width = "80%", fig.height=4, fig.width=5}
+ggplot(intervals) + 
+  aes(y = pname) +
+  geom_vline(xintercept = 0, size = 2, color = "white") +
+  ggstance::geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
+  ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
+  geom_point(aes(x = m), size = 3, shape = 3) + 
+  scale_y_discrete(labels = parse_text) + 
+  labs(x = NULL, y = NULL) + 
+  ggtitle("Average effects")
+```
+
+Now, let's undo interactions by adding year 1 main effects to interaction
+effects and plot the effects for each year of the study.
+
+```{r effects2, out.width = "80%", fig.height=4, fig.width=5}
+# Column names will have mathematical formatting too
+draws <- as.data.frame(b) %>% 
+  as_tibble() %>% 
+  transmute(
+    `Intercept~~(TP1)` = `(Intercept)`,
+    `Intercept~~(TP2)` = `(Intercept)` + StudyTimePoint2,
+    `Intercept~~(TP3)` = `(Intercept)` + StudyTimePoint3,
+    `Time~~(TP1)` = ot1,
+    `Time~~(TP2)` = ot1 + `ot1:StudyTimePoint2`,
+    `Time~~(TP3)` = ot1 + `ot1:StudyTimePoint3`,
+    `Time^2~~(TP1)` = ot2,
+    `Time^2~~(TP2)` = ot2 + `ot2:StudyTimePoint2`,
+    `Time^2~~(TP3)` = ot2 + `ot2:StudyTimePoint3`,
+    `Time^3~~(TP1)` = ot3,
+    `Time^3~~(TP2)` = ot3 + `ot3:StudyTimePoint2`,
+    `Time^3~~(TP3)` = ot3 + `ot3:StudyTimePoint3`)
+
+intervals2 <- mcmc_intervals_data(draws) %>% 
+  mutate(parameter = factor(parameter, levels = rev(parameter)))
+
+ggplot(intervals2) + 
+  aes(y = parameter) +
+  geom_vline(xintercept = 0, size = 2, color = "white") +
+  ggstance::geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
+  ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
+  geom_point(aes(x = m), size = 3, shape = 3) + 
+  scale_y_discrete(labels = parse_text) + 
+  labs(x = NULL, y = NULL) + 
+  ggtitle("Average effects by study")
+```
+
+Bayesplot supports transformations so we could invert the log-odds measure to
+see the intercepts (area under curve/average accuracy) in proportion units.
+
+```{r intercepts, out.width = "80%", fig.height=2, fig.width=5}
+intervals3 <- mcmc_intervals_data(draws, regex_pars = "Intercept", 
+                                  transformations = "plogis") %>% 
+  mutate(parameter = factor(parameter, levels = rev(parameter)))
+
+intervals3 %>% 
+  mutate_if(is.numeric, round, 3) %>% 
+  select(-point_est) %>% 
+  rename(outer = outer_width, inner = inner_width) %>% 
+  knitr::kable()
+
+ggplot(intervals3) + 
+  aes(y = parameter) +
+  geom_vline(xintercept = .25, size = 2, color = "white") +
+  ggstance::geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
+  ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
+  geom_point(aes(x = m), size = 3, shape = 3) + 
+  scale_y_discrete(labels = parse_text) + 
+  labs(x = NULL, y = NULL) + 
+  ggtitle("Average accuracy by year")
+```
+
+### Posterior predicted checks
+
+
+```{r post-pred, out.width = "80%", fig.height=3, fig.width=5}
+rstanarm::pp_check(b, nreps = 200, seed = "09272017") + 
+  labs(
+    x = "Proportion of looks", 
+    title = "Observed data and 200 posterior simulations") +
+  guides(color = "none") +
+  coord_cartesian(xlim = c(0, 1))
+```
+
+
+### Play with the some predictions
+
+Plot the posterior predictions for 9 random participants. This is the model 
+simulating new data for these participants.
+
+```{r intercepts, out.width = "100%", fig.height=5, fig.width=5}
+set.seed(09272017)
+d4 <- d_m %>% 
+  sample_n_of(9, ResearchID) %>% 
+  tibble::rowid_to_column(".observation")
+
+d4_pred <- posterior_predict(b, d4, draws = 100) %>% 
+  reshape2::melt(
+    varnames = c(".draw", ".observation"),
+    value.name = ".posterior_value") %>% 
+  left_join(d4) %>% 
+  mutate(trials = Primary + Others)
+
+ggplot(d4_pred) + 
+  aes(x = Time, y = Prop, color = Study, group = Study) + 
+  geom_line(aes(y = .posterior_value / trials, 
+                group = interaction(.draw, Study)), 
+            alpha = .20, show.legend = FALSE) + 
+  geom_line(size = 1, color = "grey50") + 
+  facet_wrap("ResearchID") + 
+  labs(title = "Observed data and 100 posterior simulations",
+       y = "Proportion looks to target", 
+       x = "Time after target onset")
+```
+
+
+### Random effects
+
+```{r}
+names(coef(b))
+summary(b) %>% as.data.frame %>% tail(30)
+mcmc_intervals(as.data.frame(b), regex_pars = "Sigma.Study")
+mcmc_intervals(as.data.frame(b), regex_pars = "Sigma.Research")
+```
+
+
+
+
+
