@@ -282,7 +282,6 @@ intervals$pname <- intervals$parameter %>%
   str_replace("Study", "") %>% 
   str_replace(":", " %*% ") %>% 
   factor(., levels = rev(.))
-
 ```
 
 Only the Time^2^ effect is near 0, which is okay. We mostly care about the
@@ -406,16 +405,48 @@ ggplot(d4_pred) +
 ```
 
 
-### Random effects
-
 ```{r}
-names(coef(b))
-summary(b) %>% as.data.frame %>% tail(30)
-mcmc_intervals(as.data.frame(b), regex_pars = "Sigma.Study")
-mcmc_intervals(as.data.frame(b), regex_pars = "Sigma.Research")
+# d_m <- d_m %>% 
+#   tibble::rowid_to_column(".observation")
+# 
+# d_pred <- posterior_predict(b, draws = 100) %>% 
+#   reshape2::melt(
+#     varnames = c(".draw", ".observation"),
+#     value.name = ".posterior_value") %>% 
+#   left_join(d_m) %>% 
+#   mutate(trials = Primary + Others) %>% 
+#   as_tibble()
+# 
+# 
+# 
+# acc_ranks <- d_m %>% 
+#   group_by(Study, ResearchID) %>% 
+#   summarise(acc = sum(Primary) / sum(Primary + Others)) %>% 
+#   ungroup()
+# 
+# 
+# acc_ranks <- acc_ranks %>% 
+#   group_by(ResearchID) %>% 
+#   add_tally() %>% 
+#   ungroup() %>% 
+#   filter(n == 3) %>% 
+#   select(-n)
+# 
+# ranks <- acc_ranks %>% 
+#   tidyr::spread(Study, acc) %>% 
+#   mutate_at(c("TimePoint1", "TimePoint2", "TimePoint3"), ~ row_number(desc(.)))
+# 
+# 
+# cor(ranks[-1], use = "pairwise.complete.obs", method = "kendall") %>% round(2)
+# cor(ranks[-1], use = "pairwise.complete.obs", method = "spearman") %>% round(2)
+# 
+# ggplot(ranks %>% tidyr::gather(Study, Rank, -ResearchID)) + 
+#   aes(x = Study, y = Rank) + 
+#   geom_line(aes(group = ResearchID))
+# 
+# d_pred
 ```
 
 
-
-
+### Random effects
 
