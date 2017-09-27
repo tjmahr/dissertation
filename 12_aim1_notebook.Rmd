@@ -76,9 +76,9 @@ ggplot(d_m) +
 
 ## Maximum likelihood results
 
-Fit a maximum likelihood model as a first pass for the analysis. (We won't fit
+Fit a maximum likelihood model as a first pass for the analysis. We won't fit
 the model automatically (whenever this page is updated). It's too time
-consuming. Instead, we do it manually and save the results.)
+consuming. Instead, we do it manually here, and save the results.
 
 ```{r, eval = FALSE}
 library(lme4)
