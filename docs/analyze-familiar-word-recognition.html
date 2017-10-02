@@ -25,7 +25,7 @@
 <meta name="author" content="Tristan Mahr">
 
 
-<meta name="date" content="2017-09-25">
+<meta name="date" content="2017-10-02">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -174,6 +174,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="10" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html"><i class="fa fa-check"></i><b>10</b> Analyze familiar word recognition</a><ul>
 <li class="chapter" data-level="10.1" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#data-preparation-1"><i class="fa fa-check"></i><b>10.1</b> Data preparation</a></li>
 <li class="chapter" data-level="10.2" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#maximum-likelihood-results"><i class="fa fa-check"></i><b>10.2</b> Maximum likelihood results</a></li>
+<li class="chapter" data-level="10.3" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#bayesian-model-results"><i class="fa fa-check"></i><b>10.3</b> Bayesian model results</a><ul>
+<li class="chapter" data-level="10.3.1" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#fixed-effects-plots"><i class="fa fa-check"></i><b>10.3.1</b> Fixed effects plots</a></li>
+<li class="chapter" data-level="10.3.2" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#posterior-predictive-checks"><i class="fa fa-check"></i><b>10.3.2</b> Posterior predictive checks</a></li>
+<li class="chapter" data-level="10.3.3" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#play-with-the-some-predictions"><i class="fa fa-check"></i><b>10.3.3</b> Play with the some predictions</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="11" data-path="visualize-looks-to-each-image-type.html"><a href="visualize-looks-to-each-image-type.html"><i class="fa fa-check"></i><b>11</b> Visualize looks to each image type</a><ul>
 <li class="chapter" data-level="11.1" data-path="visualize-looks-to-each-image-type.html"><a href="visualize-looks-to-each-image-type.html#comparing-strong-versus-weak-foils"><i class="fa fa-check"></i><b>11.1</b> Comparing strong versus weak foils</a></li>
@@ -215,6 +220,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>Analyze individual differences</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)
+<span class="co">#&gt; Warning: package &#39;dplyr&#39; was built under R version 3.4.2</span>
 <span class="kw">library</span>(rlang)
 <span class="kw">library</span>(littlelisteners)
 <span class="kw">library</span>(ggplot2)
@@ -286,7 +292,7 @@ d_m &lt;-<span class="st"> </span>d %&gt;%<span class="st"> </span>
 </div>
 <div id="maximum-likelihood-results" class="section level2">
 <h2><span class="header-section-number">10.2</span> Maximum likelihood results</h2>
-<p>Fit a maximum likelihood model as a first pass for the analysis. (We won’t fit the model automatically (whenever this page is updated). It’s too time consuming. Instead, we do it manually and save the results.)</p>
+<p>Fit a maximum likelihood model as a first pass for the analysis. We won’t fit the model automatically (whenever this page is updated). It’s too time consuming. Instead, we do it manually here, and save the results.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(lme4)
 m &lt;-<span class="st"> </span><span class="kw">glmer</span>(
     <span class="kw">cbind</span>(Primary, Others) ~
@@ -461,7 +467,272 @@ bot_20 &lt;-<span class="st"> </span><span class="kw">top_n</span>(xstudy_effect
 <span class="co">#&gt; Joining, by = &quot;ResearchID&quot;</span>
 <span class="co">#&gt; Joining, by = &quot;ResearchID&quot;</span></code></pre></div>
 <p><img src="12_aim1_notebook_files/figure-html/ranks-on-raw-1.png" width="100%" /></p>
+</div>
+<div id="bayesian-model-results" class="section level2">
+<h2><span class="header-section-number">10.3</span> Bayesian model results</h2>
+<p>Here is the code used to fit the model with Stan. It took about 24 hours to run the model.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(rstanarm)
+<span class="kw">options</span>(<span class="dt">mc.cores =</span> parallel::<span class="kw">detectCores</span>())
 
+m &lt;-<span class="st"> </span><span class="kw">stan_glmer</span>(
+  <span class="kw">cbind</span>(Primary, Others) ~
+<span class="st">    </span>(ot1 +<span class="st"> </span>ot2 +<span class="st"> </span>ot3) *<span class="st"> </span>Study +
+<span class="st">    </span>(ot1 +<span class="st"> </span>ot2 +<span class="st"> </span>ot3 |<span class="st"> </span>ResearchID/Study),
+  <span class="dt">family =</span> binomial,
+  <span class="dt">prior =</span> <span class="kw">normal</span>(<span class="dv">0</span>, <span class="dv">1</span>),
+  <span class="dt">prior_intercept =</span> <span class="kw">normal</span>(<span class="dv">0</span>, <span class="dv">5</span>),
+  <span class="dt">prior_covariance =</span> <span class="kw">decov</span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">1</span>),
+  <span class="dt">data =</span> d_m)
+readr::<span class="kw">write_rds</span>(m, <span class="st">&quot;./data/stan_aim1_cubic_model.rds.gz&quot;</span>)</code></pre></div>
+<p>Let’s try to understand our model by making some plots.</p>
+<div id="fixed-effects-plots" class="section level3">
+<h3><span class="header-section-number">10.3.1</span> Fixed effects plots</h3>
+<p>First, let’s prepare to plot the intervals for the fixed effects.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(rstanarm)
+<span class="co">#&gt; Loading required package: Rcpp</span>
+<span class="co">#&gt; rstanarm (Version 2.15.3, packaged: 2017-04-29 06:18:44 UTC)</span>
+<span class="co">#&gt; - Do not expect the default priors to remain the same in future rstanarm versions.</span>
+<span class="co">#&gt; Thus, R scripts should specify priors explicitly, even if they are just the defaults.</span>
+<span class="co">#&gt; - For execution on a local, multicore CPU with excess RAM we recommend calling</span>
+<span class="co">#&gt; options(mc.cores = parallel::detectCores())</span>
+<span class="kw">library</span>(bayesplot)
+<span class="co">#&gt; This is bayesplot version 1.4.0.9000</span>
+<span class="co">#&gt; - Plotting theme set to bayesplot::theme_default()</span>
+<span class="co">#&gt; - Online documentation at mc-stan.org/bayesplot</span>
+<span class="kw">theme_set</span>(<span class="kw">theme_grey</span>())
+<span class="kw">library</span>(stringr)
+<span class="kw">library</span>(ggstance)
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Attaching package: &#39;ggstance&#39;</span>
+<span class="co">#&gt; The following objects are masked from &#39;package:ggplot2&#39;:</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     geom_errorbarh, GeomErrorbarh</span>
+parse_text &lt;-<span class="st"> </span>function(x) <span class="kw">parse</span>(<span class="dt">text =</span> x)
+
+b &lt;-<span class="st"> </span>readr::<span class="kw">read_rds</span>(<span class="st">&quot;./data/stan_aim1_cubic_model.rds.gz&quot;</span>)
+b
+<span class="co">#&gt; stan_glmer</span>
+<span class="co">#&gt;  family:  binomial [logit]</span>
+<span class="co">#&gt;  formula: cbind(Primary, Others) ~ (ot1 + ot2 + ot3) * Study + (ot1 + ot2 + </span>
+<span class="co">#&gt;     ot3 | ResearchID/Study)</span>
+<span class="co">#&gt; ------</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Estimates:</span>
+<span class="co">#&gt;                     Median MAD_SD</span>
+<span class="co">#&gt; (Intercept)         -0.5    0.0  </span>
+<span class="co">#&gt; ot1                  1.6    0.1  </span>
+<span class="co">#&gt; ot2                  0.0    0.0  </span>
+<span class="co">#&gt; ot3                 -0.2    0.0  </span>
+<span class="co">#&gt; StudyTimePoint2      0.4    0.0  </span>
+<span class="co">#&gt; StudyTimePoint3      0.7    0.0  </span>
+<span class="co">#&gt; ot1:StudyTimePoint2  0.6    0.1  </span>
+<span class="co">#&gt; ot1:StudyTimePoint3  1.1    0.1  </span>
+<span class="co">#&gt; ot2:StudyTimePoint2 -0.2    0.0  </span>
+<span class="co">#&gt; ot2:StudyTimePoint3 -0.4    0.1  </span>
+<span class="co">#&gt; ot3:StudyTimePoint2 -0.1    0.0  </span>
+<span class="co">#&gt; ot3:StudyTimePoint3 -0.2    0.0  </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Error terms:</span>
+<span class="co">#&gt;  Groups           Name        Std.Dev. Corr             </span>
+<span class="co">#&gt;  Study:ResearchID (Intercept) 0.305                     </span>
+<span class="co">#&gt;                   ot1         0.691     0.20            </span>
+<span class="co">#&gt;                   ot2         0.437    -0.11  0.02      </span>
+<span class="co">#&gt;                   ot3         0.294    -0.11 -0.44 -0.06</span>
+<span class="co">#&gt;  ResearchID       (Intercept) 0.264                     </span>
+<span class="co">#&gt;                   ot1         0.423     0.78            </span>
+<span class="co">#&gt;                   ot2         0.125    -0.75 -0.56      </span>
+<span class="co">#&gt;                   ot3         0.058    -0.23 -0.31  0.19</span>
+<span class="co">#&gt; Num. levels: Study:ResearchID 484, ResearchID 195 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Sample avg. posterior predictive </span>
+<span class="co">#&gt; distribution of y (X = xbar):</span>
+<span class="co">#&gt;          Median MAD_SD</span>
+<span class="co">#&gt; mean_PPD 49.9    0.1  </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; ------</span>
+<span class="co">#&gt; For info on the priors used see help(&#39;prior_summary.stanreg&#39;).</span>
+
+intervals &lt;-<span class="st"> </span><span class="kw">mcmc_intervals_data</span>(<span class="kw">as.data.frame</span>(b), <span class="dt">pars =</span> <span class="kw">names</span>(<span class="kw">fixef</span>(b)))
+
+<span class="co"># Rename to use mathematical formatting</span>
+intervals$pname &lt;-<span class="st"> </span>intervals$parameter %&gt;%
+<span class="st">  </span><span class="kw">str_replace</span>(<span class="st">&quot;ot(2|3)&quot;</span>, <span class="st">&quot;Time^</span><span class="ch">\\</span><span class="st">1&quot;</span>) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">str_replace</span>(<span class="st">&quot;ot(1)&quot;</span>, <span class="st">&quot;Time&quot;</span>) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">str_replace</span>(<span class="st">&quot;.Intercept.&quot;</span>, <span class="st">&quot;Intercept&quot;</span>) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">str_replace</span>(<span class="st">&quot;Study&quot;</span>, <span class="st">&quot;&quot;</span>) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">str_replace</span>(<span class="st">&quot;:&quot;</span>, <span class="st">&quot; %*% &quot;</span>) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">factor</span>(., <span class="dt">levels =</span> <span class="kw">rev</span>(.))</code></pre></div>
+<p>Below the TimePoint2, TimePoint3, Time x TimePoint2, and Time x TimePoint3 effects confirm that children get more reliable and faster each year of the study. Only the Time<sup>2</sup> effect is near 0, which does not matter. We mostly care about the intercept and time terms.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(intervals) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">y =</span> pname) +
+<span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>) +
+<span class="st">  </span>ggstance::<span class="kw">geom_linerangeh</span>(<span class="kw">aes</span>(<span class="dt">xmin =</span> ll, <span class="dt">xmax =</span> hh)) +<span class="st"> </span>
+<span class="st">  </span>ggstance::<span class="kw">geom_linerangeh</span>(<span class="kw">aes</span>(<span class="dt">xmin =</span> l, <span class="dt">xmax =</span> h), <span class="dt">size =</span> <span class="dv">2</span>) +
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> m), <span class="dt">size =</span> <span class="dv">3</span>, <span class="dt">shape =</span> <span class="dv">3</span>) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">scale_y_discrete</span>(<span class="dt">labels =</span> parse_text) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="ot">NULL</span>, <span class="dt">y =</span> <span class="ot">NULL</span>, <span class="dt">caption =</span> <span class="st">&quot;90% and 50% intervals&quot;</span>) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Average effects&quot;</span>)</code></pre></div>
+<p><img src="12_aim1_notebook_files/figure-html/effects1-1.png" width="80%" /></p>
+<p>Now, let’s undo interactions by adding year 1 main effects to interaction effects and plot the effects for each year of the study. For each effect, there appears to be a linear trend in the change from TP1 to TP2 and from TP2 to TP3.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Column names will have mathematical formatting too</span>
+draws &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(b) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">as_tibble</span>() %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">transmute</span>(
+    <span class="st">`</span><span class="dt">Intercept~~(TP1)</span><span class="st">`</span> =<span class="st"> `</span><span class="dt">(Intercept)</span><span class="st">`</span>,
+    <span class="st">`</span><span class="dt">Intercept~~(TP2)</span><span class="st">`</span> =<span class="st"> `</span><span class="dt">(Intercept)</span><span class="st">`</span> +<span class="st"> </span>StudyTimePoint2,
+    <span class="st">`</span><span class="dt">Intercept~~(TP3)</span><span class="st">`</span> =<span class="st"> `</span><span class="dt">(Intercept)</span><span class="st">`</span> +<span class="st"> </span>StudyTimePoint3,
+    <span class="st">`</span><span class="dt">Time~~(TP1)</span><span class="st">`</span> =<span class="st"> </span>ot1,
+    <span class="st">`</span><span class="dt">Time~~(TP2)</span><span class="st">`</span> =<span class="st"> </span>ot1 +<span class="st"> `</span><span class="dt">ot1:StudyTimePoint2</span><span class="st">`</span>,
+    <span class="st">`</span><span class="dt">Time~~(TP3)</span><span class="st">`</span> =<span class="st"> </span>ot1 +<span class="st"> `</span><span class="dt">ot1:StudyTimePoint3</span><span class="st">`</span>,
+    <span class="st">`</span><span class="dt">Time^2~~(TP1)</span><span class="st">`</span> =<span class="st"> </span>ot2,
+    <span class="st">`</span><span class="dt">Time^2~~(TP2)</span><span class="st">`</span> =<span class="st"> </span>ot2 +<span class="st"> `</span><span class="dt">ot2:StudyTimePoint2</span><span class="st">`</span>,
+    <span class="st">`</span><span class="dt">Time^2~~(TP3)</span><span class="st">`</span> =<span class="st"> </span>ot2 +<span class="st"> `</span><span class="dt">ot2:StudyTimePoint3</span><span class="st">`</span>,
+    <span class="st">`</span><span class="dt">Time^3~~(TP1)</span><span class="st">`</span> =<span class="st"> </span>ot3,
+    <span class="st">`</span><span class="dt">Time^3~~(TP2)</span><span class="st">`</span> =<span class="st"> </span>ot3 +<span class="st"> `</span><span class="dt">ot3:StudyTimePoint2</span><span class="st">`</span>,
+    <span class="st">`</span><span class="dt">Time^3~~(TP3)</span><span class="st">`</span> =<span class="st"> </span>ot3 +<span class="st"> `</span><span class="dt">ot3:StudyTimePoint3</span><span class="st">`</span>)
+
+intervals2 &lt;-<span class="st"> </span><span class="kw">mcmc_intervals_data</span>(draws) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">parameter =</span> <span class="kw">factor</span>(parameter, <span class="dt">levels =</span> <span class="kw">rev</span>(parameter)))
+
+<span class="kw">ggplot</span>(intervals2) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">y =</span> parameter) +
+<span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>) +
+<span class="st">  </span>ggstance::<span class="kw">geom_linerangeh</span>(<span class="kw">aes</span>(<span class="dt">xmin =</span> ll, <span class="dt">xmax =</span> hh)) +<span class="st"> </span>
+<span class="st">  </span>ggstance::<span class="kw">geom_linerangeh</span>(<span class="kw">aes</span>(<span class="dt">xmin =</span> l, <span class="dt">xmax =</span> h), <span class="dt">size =</span> <span class="dv">2</span>) +
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> m), <span class="dt">size =</span> <span class="dv">3</span>, <span class="dt">shape =</span> <span class="dv">3</span>) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">scale_y_discrete</span>(<span class="dt">labels =</span> parse_text) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="ot">NULL</span>, <span class="dt">y =</span> <span class="ot">NULL</span>, <span class="dt">caption =</span> <span class="st">&quot;90% and 50% intervals&quot;</span>) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Average effects by study&quot;</span>)</code></pre></div>
+<p><img src="12_aim1_notebook_files/figure-html/effects2-1.png" width="80%" /></p>
+<p>Bayesplot supports transformations so we could invert the log-odds measure to see the intercepts (area under curve/average accuracy) in proportion units.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">intervals3 &lt;-<span class="st"> </span><span class="kw">mcmc_intervals_data</span>(draws, <span class="dt">regex_pars =</span> <span class="st">&quot;Intercept&quot;</span>, 
+                                  <span class="dt">transformations =</span> <span class="st">&quot;plogis&quot;</span>) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">parameter =</span> <span class="kw">factor</span>(parameter, <span class="dt">levels =</span> <span class="kw">rev</span>(parameter)))
+
+intervals3 %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate_if</span>(is.numeric, round, <span class="dv">3</span>) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(-point_est) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">rename</span>(<span class="dt">outer =</span> outer_width, <span class="dt">inner =</span> inner_width) %&gt;%<span class="st"> </span>
+<span class="st">  </span>knitr::<span class="kw">kable</span>()</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">parameter</th>
+<th align="right">outer</th>
+<th align="right">inner</th>
+<th align="right">ll</th>
+<th align="right">l</th>
+<th align="right">m</th>
+<th align="right">h</th>
+<th align="right">hh</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">plogis(Intercept~~(TP1))</td>
+<td align="right">0.9</td>
+<td align="right">0.5</td>
+<td align="right">0.372</td>
+<td align="right">0.380</td>
+<td align="right">0.385</td>
+<td align="right">0.390</td>
+<td align="right">0.397</td>
+</tr>
+<tr class="even">
+<td align="left">plogis(Intercept~~(TP2))</td>
+<td align="right">0.9</td>
+<td align="right">0.5</td>
+<td align="right">0.473</td>
+<td align="right">0.480</td>
+<td align="right">0.485</td>
+<td align="right">0.490</td>
+<td align="right">0.498</td>
+</tr>
+<tr class="odd">
+<td align="left">plogis(Intercept~~(TP3))</td>
+<td align="right">0.9</td>
+<td align="right">0.5</td>
+<td align="right">0.544</td>
+<td align="right">0.551</td>
+<td align="right">0.557</td>
+<td align="right">0.562</td>
+<td align="right">0.569</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+<span class="kw">ggplot</span>(intervals3) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">y =</span> parameter) +
+<span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> .<span class="dv">25</span>, <span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>) +
+<span class="st">  </span>ggstance::<span class="kw">geom_linerangeh</span>(<span class="kw">aes</span>(<span class="dt">xmin =</span> ll, <span class="dt">xmax =</span> hh)) +<span class="st"> </span>
+<span class="st">  </span>ggstance::<span class="kw">geom_linerangeh</span>(<span class="kw">aes</span>(<span class="dt">xmin =</span> l, <span class="dt">xmax =</span> h), <span class="dt">size =</span> <span class="dv">2</span>) +
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> m), <span class="dt">size =</span> <span class="dv">3</span>, <span class="dt">shape =</span> <span class="dv">3</span>) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">scale_y_discrete</span>(<span class="dt">labels =</span> parse_text) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="ot">NULL</span>, <span class="dt">y =</span> <span class="ot">NULL</span>, <span class="dt">caption =</span> <span class="st">&quot;90% and 50% intervals&quot;</span>) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Average accuracy by year&quot;</span>)</code></pre></div>
+<p><img src="12_aim1_notebook_files/figure-html/intercepts-1.png" width="60%" /></p>
+</div>
+<div id="posterior-predictive-checks" class="section level3">
+<h3><span class="header-section-number">10.3.2</span> Posterior predictive checks</h3>
+<p>Next, we let’s check how well the model can simulate the observed data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rstanarm::<span class="kw">pp_check</span>(b, <span class="dt">nreps =</span> <span class="dv">200</span>, <span class="dt">seed =</span> <span class="st">&quot;09272017&quot;</span>) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">labs</span>(
+    <span class="dt">x =</span> <span class="st">&quot;Proportion of looks&quot;</span>, 
+    <span class="dt">title =</span> <span class="st">&quot;Observed data and 200 posterior simulations&quot;</span>) +
+<span class="st">  </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="st">&quot;none&quot;</span>) +
+<span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</code></pre></div>
+<p><img src="12_aim1_notebook_files/figure-html/post-pred-1.png" width="80%" /></p>
+</div>
+<div id="play-with-the-some-predictions" class="section level3">
+<h3><span class="header-section-number">10.3.3</span> Play with the some predictions</h3>
+<p>Plot the posterior predictions for random participants. This is the model simulating new data for these participants.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">09272017</span>)
+
+ppred &lt;-<span class="st"> </span>d_m %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">sample_n_of</span>(<span class="dv">8</span>, ResearchID) %&gt;%<span class="st"> </span>
+<span class="st">  </span>tristan::<span class="kw">augment_posterior_predict</span>(b, <span class="dt">newdata =</span> ., <span class="dt">nsamples =</span> <span class="dv">100</span>) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">trials =</span> Primary +<span class="st"> </span>Others)
+
+<span class="kw">ggplot</span>(ppred) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> Prop, <span class="dt">color =</span> Study, <span class="dt">group =</span> Study) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> .posterior_value /<span class="st"> </span>trials, 
+                <span class="dt">group =</span> <span class="kw">interaction</span>(.draw, Study)), 
+            <span class="dt">alpha =</span> .<span class="dv">20</span>) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">color =</span> <span class="st">&quot;grey50&quot;</span>) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="st">&quot;ResearchID&quot;</span>) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">theme</span>(
+    <span class="dt">legend.position =</span> <span class="kw">c</span>(.<span class="dv">95</span>, <span class="dv">0</span>), 
+    <span class="dt">legend.justification =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">0</span>),
+    <span class="dt">legend.margin =</span> <span class="kw">margin</span>(<span class="dv">0</span>)) +
+<span class="st">  </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="kw">guide_legend</span>(<span class="dt">title =</span> <span class="ot">NULL</span>, <span class="dt">override.aes =</span> <span class="kw">list</span>(<span class="dt">alpha =</span> <span class="dv">1</span>))) +
+<span class="st">  </span><span class="kw">labs</span>(
+    <span class="dt">title =</span> <span class="st">&quot;Observed means and 100 simulations of new data&quot;</span>,
+    <span class="dt">x =</span> <span class="st">&quot;Time after target onset&quot;</span>,
+    <span class="dt">y =</span> <span class="st">&quot;Proportion looks to target&quot;</span>) </code></pre></div>
+<p><img src="12_aim1_notebook_files/figure-html/posterior-lines-1.png" width="100%" /></p>
+<p>Or we can plot the linear predictions. These are posterior predictions of the log-odds of looking to target before adding binomial noise.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lpred &lt;-<span class="st"> </span>d_m %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">sample_n_of</span>(<span class="dv">8</span>, ResearchID) %&gt;%<span class="st"> </span>
+<span class="st">  </span>tristan::<span class="kw">augment_posterior_linpred</span>(b, <span class="dt">newdata =</span> ., <span class="dt">nsamples =</span> <span class="dv">100</span>)
+
+<span class="kw">ggplot</span>(lpred) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> .posterior_value, <span class="dt">color =</span> Study) +
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> <span class="kw">interaction</span>(Study, ResearchID, .draw)), 
+            <span class="dt">alpha =</span> .<span class="dv">1</span>) +
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="st">&quot;ResearchID&quot;</span>) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw">qlogis</span>(Prop)), <span class="dt">shape =</span> <span class="dv">1</span>) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">theme</span>(
+    <span class="dt">legend.position =</span> <span class="kw">c</span>(.<span class="dv">95</span>, <span class="dv">0</span>), 
+    <span class="dt">legend.justification =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">0</span>),
+    <span class="dt">legend.margin =</span> <span class="kw">margin</span>(<span class="dv">0</span>)) +
+<span class="st">  </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="kw">guide_legend</span>(<span class="dt">title =</span> <span class="ot">NULL</span>, <span class="dt">override.aes =</span> <span class="kw">list</span>(<span class="dt">alpha =</span> <span class="dv">1</span>))) +
+<span class="st">  </span><span class="kw">labs</span>(
+    <span class="dt">title =</span> <span class="st">&quot;Observed data and 100 posterior simulations&quot;</span>,
+    <span class="dt">x =</span> <span class="st">&quot;Time after target onset&quot;</span>,
+    <span class="dt">y =</span> <span class="st">&quot;Posterior log-odds&quot;</span>)</code></pre></div>
+<p><img src="12_aim1_notebook_files/figure-html/posterior-mean-lines-1.png" width="100%" /></p>
+
+</div>
 </div>
 </div>
             </section>

@@ -257,9 +257,11 @@ m <- stan_glmer(
 readr::write_rds(m, "./data/stan_aim1_cubic_model.rds.gz")
 ```
 
+Let's try to understand our model by making some plots.
+
 ### Fixed effects plots
 
-First, let's plot the intervals for the fixed effects.
+First, let's prepare to plot the intervals for the fixed effects.
 
 ```{r}
 library(rstanarm)
@@ -284,10 +286,10 @@ intervals$pname <- intervals$parameter %>%
   factor(., levels = rev(.))
 ```
 
-Only the Time^2^ effect is near 0, which is okay. We mostly care about the
-intercept and time terms. Here the TimePoint2, TimePoint3, Time x TimePoint2,
-and Time x TimePoint3 confirm that children get more reliable and faster each
-year of the study.
+Below the TimePoint2, TimePoint3, Time x TimePoint2, and Time x TimePoint3 
+effects confirm that children get more reliable and faster each year of the 
+study. Only the Time^2^ effect is near 0, which does not matter. We mostly care
+about the intercept and time terms.
 
 ```{r effects1, out.width = "80%", fig.height=4, fig.width=5}
 ggplot(intervals) + 
@@ -297,12 +299,13 @@ ggplot(intervals) +
   ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
   geom_point(aes(x = m), size = 3, shape = 3) + 
   scale_y_discrete(labels = parse_text) + 
-  labs(x = NULL, y = NULL) + 
+  labs(x = NULL, y = NULL, caption = "90% and 50% intervals") + 
   ggtitle("Average effects")
 ```
 
-Now, let's undo interactions by adding year 1 main effects to interaction
-effects and plot the effects for each year of the study.
+Now, let's undo interactions by adding year 1 main effects to interaction 
+effects and plot the effects for each year of the study. For each effect, there
+appears to be a linear trend in the change from TP1 to TP2 and from TP2 to TP3.
 
 ```{r effects2, out.width = "80%", fig.height=4, fig.width=5}
 # Column names will have mathematical formatting too
@@ -332,14 +335,14 @@ ggplot(intervals2) +
   ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
   geom_point(aes(x = m), size = 3, shape = 3) + 
   scale_y_discrete(labels = parse_text) + 
-  labs(x = NULL, y = NULL) + 
+  labs(x = NULL, y = NULL, caption = "90% and 50% intervals") + 
   ggtitle("Average effects by study")
 ```
 
 Bayesplot supports transformations so we could invert the log-odds measure to
 see the intercepts (area under curve/average accuracy) in proportion units.
 
-```{r intercepts, out.width = "80%", fig.height=2, fig.width=5}
+```{r intercepts, out.width = "60%", fig.height=2.5, fig.width=4}
 intervals3 <- mcmc_intervals_data(draws, regex_pars = "Intercept", 
                                   transformations = "plogis") %>% 
   mutate(parameter = factor(parameter, levels = rev(parameter)))
@@ -357,12 +360,13 @@ ggplot(intervals3) +
   ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
   geom_point(aes(x = m), size = 3, shape = 3) + 
   scale_y_discrete(labels = parse_text) + 
-  labs(x = NULL, y = NULL) + 
+  labs(x = NULL, y = NULL, caption = "90% and 50% intervals") + 
   ggtitle("Average accuracy by year")
 ```
 
-### Posterior predicted checks
+### Posterior predictive checks
 
+Next, we let's check how well the model can simulate the observed data.
 
 ```{r post-pred, out.width = "80%", fig.height=3, fig.width=5}
 rstanarm::pp_check(b, nreps = 200, seed = "09272017") + 
@@ -376,77 +380,57 @@ rstanarm::pp_check(b, nreps = 200, seed = "09272017") +
 
 ### Play with the some predictions
 
-Plot the posterior predictions for 9 random participants. This is the model 
+Plot the posterior predictions for random participants. This is the model 
 simulating new data for these participants.
 
-```{r intercepts, out.width = "100%", fig.height=5, fig.width=5}
+```{r posterior-lines, out.width = "100%", fig.height=4, fig.width=5}
 set.seed(09272017)
-d4 <- d_m %>% 
-  sample_n_of(9, ResearchID) %>% 
-  tibble::rowid_to_column(".observation")
 
-d4_pred <- posterior_predict(b, d4, draws = 100) %>% 
-  reshape2::melt(
-    varnames = c(".draw", ".observation"),
-    value.name = ".posterior_value") %>% 
-  left_join(d4) %>% 
+ppred <- d_m %>% 
+  sample_n_of(8, ResearchID) %>% 
+  tristan::augment_posterior_predict(b, newdata = ., nsamples = 100) %>% 
   mutate(trials = Primary + Others)
 
-ggplot(d4_pred) + 
+ggplot(ppred) + 
   aes(x = Time, y = Prop, color = Study, group = Study) + 
   geom_line(aes(y = .posterior_value / trials, 
                 group = interaction(.draw, Study)), 
-            alpha = .20, show.legend = FALSE) + 
+            alpha = .20) + 
   geom_line(size = 1, color = "grey50") + 
   facet_wrap("ResearchID") + 
-  labs(title = "Observed data and 100 posterior simulations",
-       y = "Proportion looks to target", 
-       x = "Time after target onset")
+  theme(
+    legend.position = c(.95, 0), 
+    legend.justification = c(1, 0),
+    legend.margin = margin(0)) +
+  guides(color = guide_legend(title = NULL, override.aes = list(alpha = 1))) +
+  labs(
+    title = "Observed means and 100 simulations of new data",
+    x = "Time after target onset",
+    y = "Proportion looks to target") 
 ```
 
+Or we can plot the linear predictions. These are posterior predictions of the
+log-odds of looking to target before adding binomial noise.
 
-```{r}
-# d_m <- d_m %>% 
-#   tibble::rowid_to_column(".observation")
-# 
-# d_pred <- posterior_predict(b, draws = 100) %>% 
-#   reshape2::melt(
-#     varnames = c(".draw", ".observation"),
-#     value.name = ".posterior_value") %>% 
-#   left_join(d_m) %>% 
-#   mutate(trials = Primary + Others) %>% 
-#   as_tibble()
-# 
-# 
-# 
-# acc_ranks <- d_m %>% 
-#   group_by(Study, ResearchID) %>% 
-#   summarise(acc = sum(Primary) / sum(Primary + Others)) %>% 
-#   ungroup()
-# 
-# 
-# acc_ranks <- acc_ranks %>% 
-#   group_by(ResearchID) %>% 
-#   add_tally() %>% 
-#   ungroup() %>% 
-#   filter(n == 3) %>% 
-#   select(-n)
-# 
-# ranks <- acc_ranks %>% 
-#   tidyr::spread(Study, acc) %>% 
-#   mutate_at(c("TimePoint1", "TimePoint2", "TimePoint3"), ~ row_number(desc(.)))
-# 
-# 
-# cor(ranks[-1], use = "pairwise.complete.obs", method = "kendall") %>% round(2)
-# cor(ranks[-1], use = "pairwise.complete.obs", method = "spearman") %>% round(2)
-# 
-# ggplot(ranks %>% tidyr::gather(Study, Rank, -ResearchID)) + 
-#   aes(x = Study, y = Rank) + 
-#   geom_line(aes(group = ResearchID))
-# 
-# d_pred
+```{r posterior-mean-lines, out.width = "100%", fig.height=4, fig.width=5}
+lpred <- d_m %>% 
+  sample_n_of(8, ResearchID) %>% 
+  tristan::augment_posterior_linpred(b, newdata = ., nsamples = 100)
+
+ggplot(lpred) + 
+  aes(x = Time, y = .posterior_value, color = Study) +
+  geom_line(aes(group = interaction(Study, ResearchID, .draw)), 
+            alpha = .1) +
+  facet_wrap("ResearchID") + 
+  geom_point(aes(y = qlogis(Prop)), shape = 1) + 
+  theme(
+    legend.position = c(.95, 0), 
+    legend.justification = c(1, 0),
+    legend.margin = margin(0)) +
+  guides(color = guide_legend(title = NULL, override.aes = list(alpha = 1))) +
+  labs(
+    title = "Observed data and 100 posterior simulations",
+    x = "Time after target onset",
+    y = "Posterior log-odds")
 ```
-
-
-### Random effects
 

@@ -22,3 +22,15 @@ sample_n_of <- function(data, size, ...) {
 
   data[subset, ]
 }
+
+
+# ---- other helpers ----
+
+# preview a file that would be created by ggsave()
+ggpreview <- function(...) {
+  fname <- tempfile(fileext = ".png")
+  ggsave(filename = fname, ...)
+  system2("open", fname)
+  invisible(NULL)
+}
+

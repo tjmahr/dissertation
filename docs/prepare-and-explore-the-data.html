@@ -25,7 +25,7 @@
 <meta name="author" content="Tristan Mahr">
 
 
-<meta name="date" content="2017-09-25">
+<meta name="date" content="2017-10-02">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -174,6 +174,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="10" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html"><i class="fa fa-check"></i><b>10</b> Analyze familiar word recognition</a><ul>
 <li class="chapter" data-level="10.1" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#data-preparation-1"><i class="fa fa-check"></i><b>10.1</b> Data preparation</a></li>
 <li class="chapter" data-level="10.2" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#maximum-likelihood-results"><i class="fa fa-check"></i><b>10.2</b> Maximum likelihood results</a></li>
+<li class="chapter" data-level="10.3" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#bayesian-model-results"><i class="fa fa-check"></i><b>10.3</b> Bayesian model results</a><ul>
+<li class="chapter" data-level="10.3.1" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#fixed-effects-plots"><i class="fa fa-check"></i><b>10.3.1</b> Fixed effects plots</a></li>
+<li class="chapter" data-level="10.3.2" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#posterior-predictive-checks"><i class="fa fa-check"></i><b>10.3.2</b> Posterior predictive checks</a></li>
+<li class="chapter" data-level="10.3.3" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#play-with-the-some-predictions"><i class="fa fa-check"></i><b>10.3.3</b> Play with the some predictions</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="11" data-path="visualize-looks-to-each-image-type.html"><a href="visualize-looks-to-each-image-type.html"><i class="fa fa-check"></i><b>11</b> Visualize looks to each image type</a><ul>
 <li class="chapter" data-level="11.1" data-path="visualize-looks-to-each-image-type.html"><a href="visualize-looks-to-each-image-type.html#comparing-strong-versus-weak-foils"><i class="fa fa-check"></i><b>11.1</b> Comparing strong versus weak foils</a></li>
@@ -210,6 +215,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h1><span class="header-section-number">Chapter 9</span> Prepare and explore the data</h1>
 <p>First, let’s load in all the data and plot the data from each year.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)
+<span class="co">#&gt; Warning: package &#39;dplyr&#39; was built under R version 3.4.2</span>
 <span class="kw">library</span>(rlang)
 <span class="kw">library</span>(littlelisteners)
 <span class="kw">library</span>(ggplot2)
