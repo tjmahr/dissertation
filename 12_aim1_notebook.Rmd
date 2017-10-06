@@ -435,9 +435,10 @@ ggplot(lpred) +
 ```
 
 
-### Plot the intervals for the covariances
+### Plot the intervals for the random effect parameters
 
-These are the parameters governing the random effect distributions.
+These are the parameters governing the random effect distributions. First, we
+plot the standard deviations.
 
 ```{r posterior-sds, out.width = "80%", fig.height=2.5, fig.width=5}
 sdcors <- tristan::draw_var_corr(b)
@@ -488,6 +489,8 @@ ggplot(intervals %>% filter(class == "scale")) +
        caption = "90% and 50% intervals")
 ```
 
+Then the correlations.
+
 ```{r posterior-cors, out.width = "80%", fig.height=3, fig.width=5}
 ggplot(intervals %>% filter(class == "correlation")) + 
   aes(y = math) +
@@ -507,4 +510,3 @@ ggplot(intervals %>% filter(class == "correlation")) +
        x = NULL, y = NULL, 
        caption = "90% and 50% intervals")
 ```
-
