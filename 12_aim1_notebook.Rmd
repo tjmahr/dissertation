@@ -295,8 +295,8 @@ about the intercept and time terms.
 ggplot(intervals) + 
   aes(y = pname) +
   geom_vline(xintercept = 0, size = 2, color = "white") +
-  ggstance::geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
-  ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
+  geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
+  geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
   geom_point(aes(x = m), size = 3, shape = 3) + 
   scale_y_discrete(labels = parse_text) + 
   labs(x = NULL, y = NULL, caption = "90% and 50% intervals") + 
@@ -378,7 +378,7 @@ rstanarm::pp_check(b, nreps = 200, seed = "09272017") +
 ```
 
 
-### Play with the some predictions
+### Look at some predictions
 
 Plot the posterior predictions for random participants. This is the model 
 simulating new data for these participants.
@@ -432,5 +432,100 @@ ggplot(lpred) +
     title = "Observed data and 100 posterior simulations",
     x = "Time after target onset",
     y = "Posterior log-odds")
+```
+
+
+### Plot the intervals for the covariances
+
+These are the parameters governing the random effect distributions.
+
+```{r}
+intervals <- as.data.frame(b) %>% 
+  mcmc_intervals_data(regex_pars = "Sigma")
+
+intervals$group <- intervals$parameter %>% 
+  stringr::str_detect("Sigma\\[Study:ResearchID") %>% 
+  ifelse(., "Child", "Child-Study")
+
+terms <- intervals$parameter %>% 
+  stringr::str_extract("ResearchID.+") %>% 
+  stringr::str_replace("ResearchID:", "") %>% 
+  stringr::str_replace_all("[()]|\\]", "") %>% 
+  stringr::str_split(",", n = 2)
+
+intervals$term1 <- terms %>% lapply(getElement, 1) %>% unlist()
+intervals$term2 <- terms %>% lapply(getElement, 2) %>% unlist()
+
+facet_data <- intervals 
+facet_data$parameter <-
+  facet_data$parameter %>%
+  str_replace("\\[.+ID:", "[") %>% 
+  str_replace_all("[()]", "") %>%
+  str_replace_all("\\[", "[list(") %>%
+  str_replace_all("\\]", ")]") %>%
+  str_replace_all("Sigma", "sigma") %>% 
+  factor(., levels = rev(unique(.)))
+
+
+# Wait these are not scales/correlations!!
+facet_data$class <- ifelse(facet_data$term1 == facet_data$term2, 
+                           "scale", "correlation")
+
+ggplot(facet_data %>% filter(class == "scale")) + 
+  aes(y = parameter) +
+  geom_vline(xintercept = 0, size = 2, color = "white") +
+  # Draw medians with + then draw white horizontal lines over the horizontal 
+  # parts of the + symbols
+  geom_point(aes(x = m), size = 3, shape = 3) +
+  geom_hline(aes(yintercept = as.numeric(parameter)), color = "white") +
+  geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
+  geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
+  scale_y_discrete(labels = parse_text) +
+  labs(x = NULL, y = NULL, caption = "90% and 50% intervals") + 
+  ggtitle("Random effect scales") + 
+  facet_wrap("group", ncol = 1, scales = "free_y", strip.position = "left") + 
+  theme(strip.placement = "outside", 
+        strip.background = element_rect(fill = NA)) 
+        # strip.text.y = element_text(angle = 180, hjust = 1, vjust = 1, 
+        #                             margin = margin(r = -50)))
+```
+
+```{r}
+ggplot(facet_data %>% filter(class == "correlation")) + 
+  aes(y = parameter) +
+  geom_vline(xintercept = 0, size = 2, color = "white") +
+  # Draw medians with + then draw white horizontal lines over the horizontal 
+  # parts of the + symbols
+  geom_point(aes(x = m), size = 3, shape = 3) +
+  geom_hline(aes(yintercept = as.numeric(parameter)), color = "white") +
+  geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
+  geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
+  scale_y_discrete(labels = parse_text) +
+  labs(x = NULL, y = NULL, caption = "90% and 50% intervals") + 
+  ggtitle("Random effect correlations") + 
+  facet_wrap("group", ncol = 1, scales = "free_y", strip.position = "left") + 
+  theme(strip.placement = "outside", 
+        strip.background = element_rect(fill = NA)) 
+```
+
+
+Focus on the area under the curve and linear time components.
+
+```{r}
+facet_data %>% 
+  filter(term1 %in% c("Intercept", "ot1")) %>% 
+  ggplot() + 
+  aes(y = parameter) +
+  geom_vline(xintercept = 0, size = 2, color = "white") +
+  # Draw medians with + then draw white horizontal lines over the horizontal 
+  # parts of the + symbols
+  geom_point(aes(x = m), size = 3, shape = 3) +
+  geom_hline(aes(yintercept = as.numeric(parameter)), color = "white") +
+  geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
+  geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
+  scale_y_discrete(labels = parse_text) +
+  labs(x = NULL, y = NULL, caption = "90% and 50% intervals") + 
+  ggtitle("Random effect scales and correlations") + 
+  facet_wrap("group", ncol = 1, scales = "free_y")
 ```
 
