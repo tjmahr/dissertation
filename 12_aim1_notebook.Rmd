@@ -429,7 +429,7 @@ ggplot(lpred) +
     legend.margin = margin(0)) +
   guides(color = guide_legend(title = NULL, override.aes = list(alpha = 1))) +
   labs(
-    title = "Observed data and 100 posterior simulations",
+    title = "Observed data and 100 posterior predictions",
     x = "Time after target onset",
     y = "Posterior log-odds")
 ```
@@ -439,41 +439,39 @@ ggplot(lpred) +
 
 These are the parameters governing the random effect distributions.
 
-```{r}
-intervals <- as.data.frame(b) %>% 
-  mcmc_intervals_data(regex_pars = "Sigma")
+```{r posterior-sds, out.width = "80%", fig.height=2.5, fig.width=5}
+sdcors <- tristan::draw_var_corr(b)
+sdcors_wide <- sdcors %>% 
+  select(.draw, .parameter, sdcor) %>% 
+  tidyr::spread(.parameter, sdcor) %>% 
+  select(-.draw)
 
-intervals$group <- intervals$parameter %>% 
-  stringr::str_detect("Sigma\\[Study:ResearchID") %>% 
-  ifelse(., "Child", "Child-Study")
+# Create the mathematical labels for parameters
+group_info <- sdcors %>% 
+  select(.parameter:var2) %>% 
+  distinct()
+group_info$group <- group_info$grp %>% 
+  stringr::str_replace("Study:ResearchID", "Child-Study") %>% 
+  stringr::str_replace("ResearchID", "Child") 
+group_info$r <- ifelse(is.na(group_info$var2), "", 
+                       paste0(",", group_info$var2))
+group_info$sym <- ifelse(is.na(group_info$var2), "sigma", "rho")
+group_info$var1 <- ifelse(group_info$var1 == "(Intercept)", "Intercept", 
+                          group_info$var1)
+group_info$math <- sprintf("%s[list(%s%s)]", group_info$sym, 
+                           group_info$var1, group_info$r)
+group_info$class <- ifelse(is.na(group_info$var2), "scale", "correlation")
+group_info <- group_info %>% 
+  select(group, class, var1, var2, parameter = .parameter, math) %>% 
+  mutate(parameter = as.factor(parameter))
 
-terms <- intervals$parameter %>% 
-  stringr::str_extract("ResearchID.+") %>% 
-  stringr::str_replace("ResearchID:", "") %>% 
-  stringr::str_replace_all("[()]|\\]", "") %>% 
-  stringr::str_split(",", n = 2)
+intervals <- as.data.frame(sdcors_wide) %>% 
+  mcmc_intervals_data() %>% 
+  left_join(group_info, by = "parameter") %>% 
+  mutate(math = forcats::fct_rev(math))
 
-intervals$term1 <- terms %>% lapply(getElement, 1) %>% unlist()
-intervals$term2 <- terms %>% lapply(getElement, 2) %>% unlist()
-
-facet_data <- intervals 
-facet_data$parameter <-
-  facet_data$parameter %>%
-  str_replace("\\[.+ID:", "[") %>% 
-  str_replace_all("[()]", "") %>%
-  str_replace_all("\\[", "[list(") %>%
-  str_replace_all("\\]", ")]") %>%
-  str_replace_all("Sigma", "sigma") %>% 
-  factor(., levels = rev(unique(.)))
-
-
-# Wait these are not scales/correlations!!
-facet_data$class <- ifelse(facet_data$term1 == facet_data$term2, 
-                           "scale", "correlation")
-
-ggplot(facet_data %>% filter(class == "scale")) + 
-  aes(y = parameter) +
-  geom_vline(xintercept = 0, size = 2, color = "white") +
+ggplot(intervals %>% filter(class == "scale")) + 
+  aes(y = math) +
   # Draw medians with + then draw white horizontal lines over the horizontal 
   # parts of the + symbols
   geom_point(aes(x = m), size = 3, shape = 3) +
@@ -481,18 +479,18 @@ ggplot(facet_data %>% filter(class == "scale")) +
   geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
   geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
   scale_y_discrete(labels = parse_text) +
-  labs(x = NULL, y = NULL, caption = "90% and 50% intervals") + 
-  ggtitle("Random effect scales") + 
-  facet_wrap("group", ncol = 1, scales = "free_y", strip.position = "left") + 
+  facet_wrap("group", ncol = 1, strip.position = "left") + 
   theme(strip.placement = "outside", 
-        strip.background = element_rect(fill = NA)) 
-        # strip.text.y = element_text(angle = 180, hjust = 1, vjust = 1, 
-        #                             margin = margin(r = -50)))
+        strip.background = element_rect(fill = NA),
+        axis.text.y = element_text(size = rel(1.2))) +
+  labs(title = "Random effect scales", 
+       x = NULL, y = NULL, 
+       caption = "90% and 50% intervals")
 ```
 
-```{r}
-ggplot(facet_data %>% filter(class == "correlation")) + 
-  aes(y = parameter) +
+```{r posterior-cors, out.width = "80%", fig.height=3, fig.width=5}
+ggplot(intervals %>% filter(class == "correlation")) + 
+  aes(y = math) +
   geom_vline(xintercept = 0, size = 2, color = "white") +
   # Draw medians with + then draw white horizontal lines over the horizontal 
   # parts of the + symbols
@@ -501,31 +499,12 @@ ggplot(facet_data %>% filter(class == "correlation")) +
   geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
   geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
   scale_y_discrete(labels = parse_text) +
-  labs(x = NULL, y = NULL, caption = "90% and 50% intervals") + 
-  ggtitle("Random effect correlations") + 
-  facet_wrap("group", ncol = 1, scales = "free_y", strip.position = "left") + 
+  facet_wrap("group", ncol = 1, strip.position = "left") + 
   theme(strip.placement = "outside", 
-        strip.background = element_rect(fill = NA)) 
-```
-
-
-Focus on the area under the curve and linear time components.
-
-```{r}
-facet_data %>% 
-  filter(term1 %in% c("Intercept", "ot1")) %>% 
-  ggplot() + 
-  aes(y = parameter) +
-  geom_vline(xintercept = 0, size = 2, color = "white") +
-  # Draw medians with + then draw white horizontal lines over the horizontal 
-  # parts of the + symbols
-  geom_point(aes(x = m), size = 3, shape = 3) +
-  geom_hline(aes(yintercept = as.numeric(parameter)), color = "white") +
-  geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
-  geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
-  scale_y_discrete(labels = parse_text) +
-  labs(x = NULL, y = NULL, caption = "90% and 50% intervals") + 
-  ggtitle("Random effect scales and correlations") + 
-  facet_wrap("group", ncol = 1, scales = "free_y")
+        strip.background = element_rect(fill = NA),
+        axis.text.y = element_text(size = rel(1.2))) +
+  labs(title = "Random effect correlations", 
+       x = NULL, y = NULL, 
+       caption = "90% and 50% intervals")
 ```
 
