@@ -98,19 +98,6 @@ library(lme4)
 m <- readr::read_rds("./data/aim1_cubic_model.rds.gz")
 arm::display(m)
 
-# f1 <- function(data) {
-#   glmer(
-#     cbind(Primary, Others) ~
-#       (ot1 + ot2 + ot3) +
-#       (ot1 + ot2 + ot3 | ResearchID),
-#     family = binomial,
-#     data = data)
-# }
-# 
-# separate_studies <- d_m %>% 
-#   tidyr::nest(-Study) %>% 
-#   mutate(model = purrr::map(data, f1))
-
 d_m$cubic_fit <- fitted(m)
 
 ggplot(d_m) + 
@@ -507,13 +494,54 @@ ggplot(lpred) +
     y = "Posterior log-odds")
 ```
 
+We can consider predictions for hypothetical, new children as well.
+
+```{r new-participants, fig.width=6, fig.height=3, out.width="80%"}
+dummy_data <- d_m %>% 
+  distinct(Study, Time, ot1, ot2, ot3) %>% 
+  mutate(ResearchID = "NEW",
+         Primary = 0, 
+         Others = 0)
+
+lpred <- dummy_data %>% 
+  tristan::augment_posterior_linpred(b, newdata = ., nsamples = 1000)
+
+ggplot(lpred) + 
+  aes(x = Time, y = plogis(.posterior_value), color = Study) +
+  geom_hline(yintercept = .25, size = 2, color = "white") +
+  geom_line(aes(group = interaction(Study, .draw)), 
+            alpha = .1, show.legend = FALSE) +
+  facet_wrap("Study") + 
+  guides(color = guide_legend("none")) +
+  labs(
+    title = "Posterior predictions for 1000 new participants",
+    x = "Time after target onset",
+    y = "Proportion looks to target")
+
+
+ggplot(lpred) + 
+  aes(x = Time, y = plogis(.posterior_value), color = Study) +
+  geom_hline(yintercept = .25, size = 2, color = "white") +
+  stat_summary(fun.data = median_hilow, fun.args = list(conf.int = .9),
+               size = 1, geom = "linerange") + 
+  stat_summary(fun.data = median_hilow, fun.args = list(conf.int = .5), 
+               size = 1.5, geom = "linerange") + 
+  stat_summary(fun.y = median, fun.args = list(conf.int = .5), 
+               size = 2.5, geom = "point") + 
+  facet_wrap("Study") + 
+  guides(color = guide_legend("none")) +
+  labs(
+    title = "Posterior predictions for 1000 new participants",
+    x = "Time after target onset",
+    y = "Proportion looks to target")
+```
 
 ### Plot the intervals for the random effect parameters
 
 These are the parameters governing the random effect distributions. First, we
 plot the standard deviations.
 
-```{r posterior-sds, out.width = "80%", fig.height=2.5, fig.width=5}
+```{r posterior-sds, out.width = "80%", fig.height = 2.5, fig.width = 5}
 sdcors <- tristan::draw_var_corr(b)
 sdcors_wide <- sdcors %>% 
   select(.draw, .parameter, sdcor) %>% 
@@ -564,7 +592,7 @@ ggplot(intervals %>% filter(class == "scale")) +
 
 Then the correlations.
 
-```{r posterior-cors, out.width = "80%", fig.height=3, fig.width=5}
+```{r posterior-cors, out.width = "80%", fig.height = 3, fig.width = 5}
 ggplot(intervals %>% filter(class == "correlation")) + 
   aes(y = math) +
   geom_vline(xintercept = 0, size = 2, color = "white") +
@@ -583,3 +611,117 @@ ggplot(intervals %>% filter(class == "correlation")) +
        x = NULL, y = NULL, 
        caption = "90% and 50% intervals")
 ```
+
+
+
+
+
+
+
+
+
+
+
+### Relationship with child-level variables
+
+> Vocabulary size and lexical processing will be tightly correlated such that
+large year-over-year gains in one measure will predict large year-over-years
+gains in the other measure.
+
+```{r, eval = FALSE}
+scores <- readr::read_csv("./data-raw/scores_for_participant_summary.csv") %>% 
+  select(Study, ResearchID, Age, EVT_Standard, PPVT_Standard)
+
+ppvt_tp2_changes <- scores %>% 
+  select(-EVT_Standard, -Age) %>% 
+  tidyr::spread(Study, PPVT_Standard) %>% 
+  mutate(PPVT_Std_Growth_TP2 =  TimePoint2 - TimePoint1) %>% 
+  select(ResearchID, PPVT_Std_Growth_TP2) %>% 
+  filter(!is.na(PPVT_Std_Growth_TP2))
+
+changes <- scores %>% 
+  tidyr::gather("Score", "Value", -Study, -ResearchID) %>% 
+  tidyr::spread(Study, Value) %>% 
+  mutate(TP3_Change = TimePoint3 - TimePoint2, 
+         TP2_Change = TimePoint2 - TimePoint1) %>% 
+  select(-TimePoint1, -TimePoint2, -TimePoint3) %>% 
+  tidyr::gather("Change", "Value", TP3_Change, TP2_Change) %>% 
+  tidyr::unite(Col, Change, Score) %>% 
+  tidyr::spread(Col, Value)
+
+ggplot(changes) + 
+  aes(x = TP2_Change_PPVT_Standard) + 
+  geom_histogram()
+
+bot_20_ppvt_changes <- changes %>% top_n(20, TP2_Change_PPVT_Standard)
+bot_20_ppvt_changes <- changes %>% top_n(20, -TP2_Change_PPVT_Standard)
+
+
+d_avg <- binned %>% 
+  filter(250 <= Time, Time <= 1500) %>% 
+  aggregate_looks(resp_def, Study + ResearchID ~ GazeByImageAOI)
+
+with_prop_changes <- d_avg %>% 
+  select(Study, ResearchID, Prop) %>% 
+  tidyr::spread(Study, Prop) %>% 
+  mutate(TP2_Change_Prop = TimePoint2 - TimePoint1, 
+         TP3_Change_Prop = TimePoint3 - TimePoint2) %>% 
+  select(ResearchID, TP2_Change_Prop, TP3_Change_Prop) %>% 
+  inner_join(changes, by = "ResearchID")
+
+
+ggplot(with_prop_changes) + 
+  aes(x = TP2_Change_PPVT_Standard, y = TP2_Change_Prop) + 
+  geom_point() + 
+  stat_smooth(method = "lm")
+
+ggplot(with_prop_changes) + 
+  aes(x = TP2_Change_EVT_Standard, y = TP2_Change_Prop) + 
+  geom_point() + 
+  stat_smooth(method = "lm") 
+
+ggplot(with_prop_changes) + 
+  aes(x = TP3_Change_EVT_Standard, y = TP3_Change_Prop) + 
+  geom_point() + 
+  stat_smooth(method = "lm") 
+
+ggplot(with_prop_changes) + 
+  aes(x = TP2_Change_Age, y = TP2_Change_Prop) + 
+  geom_point() + 
+  stat_smooth(method = "lm") 
+
+ggplot(with_prop_changes) + 
+  aes(x = TP3_Change_Age, y = TP3_Change_Prop) + 
+  geom_point() + 
+  stat_smooth(method = "lm") 
+
+
+cor(with_prop_changes$TP2_Change_PPVT_Standard,
+    with_prop_changes$TP2_Change_Prop,
+    use = "pairwise.complete.obs")
+
+cor(with_prop_changes$TP3_Change_Age,
+    with_prop_changes$TP3_Change_Prop,
+    use = "pairwise.complete.obs")
+
+cor(with_prop_changes$TP2_Change_Age,
+    with_prop_changes$TP2_Change_Prop,
+    use = "pairwise.complete.obs")
+
+cor(with_prop_changes$TP2_Change_EVT_Standard,
+    with_prop_changes$TP2_Change_Prop,
+    use = "pairwise.complete.obs")
+
+cor(with_prop_changes$TP3_Change_EVT_Standard,
+    with_prop_changes$TP3_Change_Prop,
+    use = "pairwise.complete.obs")
+
+
+
+
+
+
+```
+
+
+
