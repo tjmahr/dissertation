@@ -123,6 +123,7 @@ get_et_looks <- function(...) {
 get_child_info <- function(...) {
   source("./R/database-helpers.R")
   suppressWarnings(get_scores_for_participant_summary())
+  suppressWarnings(get_scores())
 }
 
 #' report unnamed-chunk files

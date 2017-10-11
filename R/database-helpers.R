@@ -71,6 +71,51 @@ get_scores_for_participant_summary <- function() {
     verbosely_write_csv("./data-raw/scores_for_participant_summary.csv")
 }
 
+get_scores <- function() {
+  l2t <- l2t_connect(find_database_config())
+  on.exit(DBI::dbDisconnect(l2t$con))
+
+  t1 <- l2t %>%
+    tbl("Scores_TimePoint1") %>%
+    filter(!is.na(VerbalFluency_Raw), !is.na(FruitStroop_Score),
+           !is.na(PPVT_GSV), !CImplant) %>%
+    collect()
+
+  t2 <- l2t %>%
+    tbl("Scores_TimePoint2") %>%
+    filter(!is.na(VerbalFluency_Raw), !CImplant) %>%
+    collect()
+
+  t3 <- l2t %>%
+    tbl("Scores_TimePoint3") %>%
+    filter(!CImplant) %>%
+    collect()
+
+  medu_scheme <- data_frame(
+    Maternal_Education_LMH = c("Low", "Low", "Low", "Mid",
+                               "Mid", "Mid", "High", NA),
+    Maternal_Education_Level = c(1:7, NA))
+
+  df_all_three <- bind_rows(t1, t2, t3) %>%
+    left_join(medu_scheme, by = "Maternal_Education_Level") %>%
+    mutate(
+      AAE = as.logical(AAE),
+      Female = as.logical(Female),
+      MAE = !AAE,
+      Male = !Female,
+      Age = ifelse(is.na(PPVT_Age), EVT_Age, PPVT_Age)) %>%
+    select(Study, ResearchID, Female, Male, MAE, AAE, LateTalker, Age,
+           Maternal_Education_LMH,
+           EVT_Age, EVT_GSV, EVT_Standard,
+           PPVT_Age, PPVT_GSV, PPVT_Standard,
+           MinPair_Age, MinPair_NumTestTrials, MinPair_ProportionCorrect,
+           SAILS_Age, SAILS_NumTestTrials, SAILS_ProportionTestCorrect)
+
+  df_all_three %>%
+    verbosely_write_csv("./data-raw/test_scores.csv")
+}
+
+
 
 # Download block info from database
 get_eyetracking_block_attributes <- function() {
