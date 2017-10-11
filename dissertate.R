@@ -143,6 +143,21 @@ clean_site <- function(...) {
     message(" dissertation.Rmd")
     invisible(file.remove("./dissertation.Rmd"))
   }
+
+  # clean up artifacts of individual chapters in root folder
+  chapters <- list.files(".", pattern = "Rmd")
+  possible_mds <- str_replace_ext(chapters, "Rmd", "md")
+  possible_utf_mds <- str_replace_ext(chapters, "Rmd", "utf8.md")
+  to_remove <- Filter(file.exists, c(possible_mds, possible_utf_mds))
+
+  for (file in to_remove) {
+    message(" ", file)
+    invisible(file.remove(file))
+  }
+}
+
+str_replace_ext <- function(x, ext, new_ext) {
+  paste0(tools::file_path_sans_ext(x), ".", new_ext)
 }
 
 #' reset bookdown files to last git commit
