@@ -325,7 +325,8 @@ draws <- as.data.frame(b) %>%
     `Time^3~~(TP2)` = ot3 + `ot3:StudyTimePoint2`,
     `Time^3~~(TP3)` = ot3 + `ot3:StudyTimePoint3`)
 
-intervals2 <- mcmc_intervals_data(draws) %>% 
+intervals2 <- draws %>% 
+  mcmc_intervals_data(prob = 0.5, prob_outer = 0.9) %>% 
   mutate(parameter = factor(parameter, levels = rev(parameter)))
 
 ggplot(intervals2) + 
@@ -339,12 +340,50 @@ ggplot(intervals2) +
   ggtitle("Average effects by study")
 ```
 
+Compute pairwise comparisons.
+
+```{r pairwise-effects, out.width = "80%", fig.height=4, fig.width=5}
+clean_names <- . %>% 
+  stringr::str_replace_all("[()]", "") %>% 
+  stringr::str_replace("~~", "_")
+
+pairwise <- draws %>% 
+  tibble::rowid_to_column(".draw") %>% 
+  set_names(clean_names) %>% 
+  tidyr::gather(parameter, value, -.draw) %>% 
+  tidyr::separate(parameter, c("parameter", "year"), sep = "_") %>% 
+  compare_pairs(year, value) %>% 
+  tidyr::spread(pair, value) %>% 
+  split(.$parameter) %>% 
+  lapply(. %>% 
+           select(-.draw, -parameter) %>% 
+           mcmc_intervals_data(prob = 0.5, prob_outer = 0.9) %>% 
+           rename(pair = parameter)) %>% 
+  bind_rows(.id = "parameter")
+
+ggplot(pairwise) + 
+  aes(y = forcats::fct_rev(pair)) +
+  geom_vline(xintercept = 0, size = 2, color = "white") +
+  ggstance::geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
+  ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
+  geom_point(aes(x = m), size = 3, shape = 3) + 
+  labs(x = NULL, y = NULL, caption = "90% and 50% intervals") + 
+  facet_wrap("parameter", ncol = 1, strip.position = "left", 
+             labeller = label_parsed) + 
+  theme(strip.placement = "outside", 
+        strip.background = element_rect(fill = NA),
+        axis.text.y = element_text(size = rel(1.2))) +
+  ggtitle("Differences in average effects")
+```
+
+
 Bayesplot supports transformations so we could invert the log-odds measure to
 see the intercepts (area under curve/average accuracy) in proportion units.
 
 ```{r intercepts, out.width = "60%", fig.height=2.5, fig.width=4}
-intervals3 <- mcmc_intervals_data(draws, regex_pars = "Intercept", 
-                                  transformations = "plogis") %>% 
+intervals3 <- draws %>% 
+  mcmc_intervals_data(regex_pars = "Intercept", transformations = "plogis", 
+                      prob = 0.5, prob_outer = 0.9) %>% 
   mutate(parameter = factor(parameter, levels = rev(parameter)))
 
 intervals3 %>% 
@@ -363,6 +402,40 @@ ggplot(intervals3) +
   labs(x = NULL, y = NULL, caption = "90% and 50% intervals") + 
   ggtitle("Average accuracy by year")
 ```
+
+We can compute differences in average accuracy as well.
+
+```{r intercept-differences, out.width = "60%", fig.height=2.5, fig.width=4}
+proportions <- b %>% 
+  as.data.frame() %>%
+  transmute(
+    `TP1` = `(Intercept)`,
+    `TP2` = `(Intercept)` + StudyTimePoint2,
+    `TP3` = `(Intercept)` + StudyTimePoint3) %>% 
+  tibble::rowid_to_column(".draw") %>% 
+  tidyr::gather(parameter, estimate, -.draw) %>% 
+  mutate(estimate = plogis(estimate)) %>% 
+  as_tibble()
+
+prop_diffs <- proportions %>% 
+  compare_pairs(parameter, estimate) %>% 
+  tidyr::spread(pair, value) %>% 
+  select(-.draw) %>% 
+  mcmc_intervals_data(prob = 0.5, prob_outer = 0.9)
+
+ggplot(prop_diffs) + 
+  aes(y = forcats::fct_rev(parameter)) +
+  geom_vline(xintercept = 0, size = 2, color = "white") +
+  ggstance::geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
+  ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
+  geom_point(aes(x = m), size = 3, shape = 3) + 
+  scale_y_discrete(labels = parse_text) + 
+  labs(x = NULL, y = NULL, caption = "90% and 50% intervals") + 
+  ggtitle("Differences in average accuracy")
+```
+
+
+
 
 ### Posterior predictive checks
 
