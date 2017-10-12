@@ -422,6 +422,86 @@ ggplot(prop_diffs) +
 ```
 
 
+### Plot the intervals for the random effect parameters
+
+These are the parameters governing the random effect distributions. First, we
+plot the standard deviations.
+
+```{r posterior-sds, out.width = "80%", fig.height = 2.5, fig.width = 5}
+sdcors <- tristan::draw_var_corr(b)
+sdcors_wide <- sdcors %>% 
+  select(.draw, .parameter, sdcor) %>% 
+  tidyr::spread(.parameter, sdcor) %>% 
+  select(-.draw)
+
+# Create the mathematical labels for parameters
+group_info <- sdcors %>% 
+  select(.parameter:var2) %>% 
+  distinct()
+group_info$group <- group_info$grp %>% 
+  stringr::str_replace("Study:ResearchID", "Child-Study") %>% 
+  stringr::str_replace("ResearchID", "Child") 
+group_info$r <- ifelse(is.na(group_info$var2), "", 
+                       paste0(",", group_info$var2))
+group_info$sym <- ifelse(is.na(group_info$var2), "sigma", "rho")
+group_info$var1 <- ifelse(group_info$var1 == "(Intercept)", "Intercept", 
+                          group_info$var1)
+group_info$math <- sprintf("%s[list(%s%s)]", group_info$sym, 
+                           group_info$var1, group_info$r)
+group_info$class <- ifelse(is.na(group_info$var2), "scale", "correlation")
+group_info <- group_info %>% 
+  select(group, class, var1, var2, parameter = .parameter, math) %>% 
+  mutate(parameter = as.factor(parameter))
+
+intervals <- as.data.frame(sdcors_wide) %>% 
+  mcmc_intervals_data() %>% 
+  left_join(group_info, by = "parameter") %>% 
+  mutate(math = forcats::fct_rev(math))
+
+ggplot(intervals %>% filter(class == "scale")) + 
+  aes(y = math) +
+  # Draw medians with + then draw white horizontal lines over the horizontal 
+  # parts of the + symbols
+  geom_point(aes(x = m), size = 3, shape = 3) +
+  geom_hline(aes(yintercept = as.numeric(parameter)), color = "white") +
+  geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
+  geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
+  scale_y_discrete(labels = parse_text) +
+  facet_wrap("group", ncol = 1, strip.position = "left") + 
+  theme(strip.placement = "outside", 
+        strip.background = element_rect(fill = NA),
+        axis.text.y = element_text(size = rel(1.2))) +
+  labs(title = "Random effect scales", 
+       x = NULL, y = NULL, 
+       caption = "90% and 50% intervals")
+```
+
+Then the correlations.
+
+```{r posterior-cors, out.width = "80%", fig.height = 3, fig.width = 5}
+ggplot(intervals %>% filter(class == "correlation")) + 
+  aes(y = math) +
+  geom_vline(xintercept = 0, size = 2, color = "white") +
+  # Draw medians with + then draw white horizontal lines over the horizontal 
+  # parts of the + symbols
+  geom_point(aes(x = m), size = 3, shape = 3) +
+  geom_hline(aes(yintercept = as.numeric(parameter)), color = "white") +
+  geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
+  geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
+  scale_y_discrete(labels = parse_text) +
+  facet_wrap("group", ncol = 1, strip.position = "left") + 
+  theme(strip.placement = "outside", 
+        strip.background = element_rect(fill = NA),
+        axis.text.y = element_text(size = rel(1.2))) +
+  labs(title = "Random effect correlations", 
+       x = NULL, y = NULL, 
+       caption = "90% and 50% intervals")
+```
+
+
+
+
+
 
 
 ### Posterior predictive checks
@@ -518,7 +598,6 @@ ggplot(lpred) +
     x = "Time after target onset",
     y = "Proportion looks to target")
 
-
 ggplot(lpred) + 
   aes(x = Time, y = plogis(.posterior_value), color = Study) +
   geom_hline(yintercept = .25, size = 2, color = "white") +
@@ -536,85 +615,24 @@ ggplot(lpred) +
     y = "Proportion looks to target")
 ```
 
-### Plot the intervals for the random effect parameters
 
-These are the parameters governing the random effect distributions. First, we
-plot the standard deviations.
 
-```{r posterior-sds, out.width = "80%", fig.height = 2.5, fig.width = 5}
-sdcors <- tristan::draw_var_corr(b)
-sdcors_wide <- sdcors %>% 
-  select(.draw, .parameter, sdcor) %>% 
-  tidyr::spread(.parameter, sdcor) %>% 
-  select(-.draw)
+### Predicting the future
 
-# Create the mathematical labels for parameters
-group_info <- sdcors %>% 
-  select(.parameter:var2) %>% 
-  distinct()
-group_info$group <- group_info$grp %>% 
-  stringr::str_replace("Study:ResearchID", "Child-Study") %>% 
-  stringr::str_replace("ResearchID", "Child") 
-group_info$r <- ifelse(is.na(group_info$var2), "", 
-                       paste0(",", group_info$var2))
-group_info$sym <- ifelse(is.na(group_info$var2), "sigma", "rho")
-group_info$var1 <- ifelse(group_info$var1 == "(Intercept)", "Intercept", 
-                          group_info$var1)
-group_info$math <- sprintf("%s[list(%s%s)]", group_info$sym, 
-                           group_info$var1, group_info$r)
-group_info$class <- ifelse(is.na(group_info$var2), "scale", "correlation")
-group_info <- group_info %>% 
-  select(group, class, var1, var2, parameter = .parameter, math) %>% 
-  mutate(parameter = as.factor(parameter))
+> As a consequence, individual differences in word recognition at age 3, for example, will be more discriminating and predictive of age 5 language outcomes than differences at age 4.
 
-intervals <- as.data.frame(sdcors_wide) %>% 
-  mcmc_intervals_data() %>% 
-  left_join(group_info, by = "parameter") %>% 
-  mutate(math = forcats::fct_rev(math))
 
-ggplot(intervals %>% filter(class == "scale")) + 
-  aes(y = math) +
-  # Draw medians with + then draw white horizontal lines over the horizontal 
-  # parts of the + symbols
-  geom_point(aes(x = m), size = 3, shape = 3) +
-  geom_hline(aes(yintercept = as.numeric(parameter)), color = "white") +
-  geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
-  geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
-  scale_y_discrete(labels = parse_text) +
-  facet_wrap("group", ncol = 1, strip.position = "left") + 
-  theme(strip.placement = "outside", 
-        strip.background = element_rect(fill = NA),
-        axis.text.y = element_text(size = rel(1.2))) +
-  labs(title = "Random effect scales", 
-       x = NULL, y = NULL, 
-       caption = "90% and 50% intervals")
+```{r}
+scores <- readr::read_csv("./data-raw/test_scores.csv") %>% 
+  select(Study, ResearchID, Age, EVT_GSV, EVT_Standard, 
+         PPVT_GSV, PPVT_Standard)
+
+
+
+
+
+
 ```
-
-Then the correlations.
-
-```{r posterior-cors, out.width = "80%", fig.height = 3, fig.width = 5}
-ggplot(intervals %>% filter(class == "correlation")) + 
-  aes(y = math) +
-  geom_vline(xintercept = 0, size = 2, color = "white") +
-  # Draw medians with + then draw white horizontal lines over the horizontal 
-  # parts of the + symbols
-  geom_point(aes(x = m), size = 3, shape = 3) +
-  geom_hline(aes(yintercept = as.numeric(parameter)), color = "white") +
-  geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
-  geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
-  scale_y_discrete(labels = parse_text) +
-  facet_wrap("group", ncol = 1, strip.position = "left") + 
-  theme(strip.placement = "outside", 
-        strip.background = element_rect(fill = NA),
-        axis.text.y = element_text(size = rel(1.2))) +
-  labs(title = "Random effect correlations", 
-       x = NULL, y = NULL, 
-       caption = "90% and 50% intervals")
-```
-
-
-
-
 
 
 
@@ -629,15 +647,9 @@ large year-over-year gains in one measure will predict large year-over-years
 gains in the other measure.
 
 ```{r, eval = FALSE}
-scores <- readr::read_csv("./data-raw/scores_for_participant_summary.csv") %>% 
-  select(Study, ResearchID, Age, EVT_Standard, PPVT_Standard)
-
-ppvt_tp2_changes <- scores %>% 
-  select(-EVT_Standard, -Age) %>% 
-  tidyr::spread(Study, PPVT_Standard) %>% 
-  mutate(PPVT_Std_Growth_TP2 =  TimePoint2 - TimePoint1) %>% 
-  select(ResearchID, PPVT_Std_Growth_TP2) %>% 
-  filter(!is.na(PPVT_Std_Growth_TP2))
+scores <- readr::read_csv("./data-raw/test_scores.csv") %>% 
+  select(Study, ResearchID, Age, EVT_GSV, EVT_Standard, 
+         PPVT_GSV, PPVT_Standard)
 
 changes <- scores %>% 
   tidyr::gather("Score", "Value", -Study, -ResearchID) %>% 
@@ -670,31 +682,23 @@ with_prop_changes <- d_avg %>%
   inner_join(changes, by = "ResearchID")
 
 
-ggplot(with_prop_changes) + 
-  aes(x = TP2_Change_PPVT_Standard, y = TP2_Change_Prop) + 
+long_changes <- with_prop_changes %>% 
+  tidyr::gather("Var", "Value", -ResearchID) %>% 
+  mutate(when = ifelse(str_detect(Var, "TP2_Change"), "TP2", "TP3"),
+         Var = str_replace(Var, "TP._Change_", "")) %>% 
+  tidyr::spread(Var, Value) %>% 
+  tidyr::gather("Var", "Change", -ResearchID, -when, -Prop)
+
+ggplot(long_changes %>% filter(when == "TP2")) + 
+  aes(x = Change, y = Prop) + 
   geom_point() + 
+  facet_wrap("Var", scales = "free_x") +
   stat_smooth(method = "lm")
-
-ggplot(with_prop_changes) + 
-  aes(x = TP2_Change_EVT_Standard, y = TP2_Change_Prop) + 
+ggplot(long_changes %>% filter(when == "TP3")) + 
+  aes(x = Change, y = Prop) + 
   geom_point() + 
-  stat_smooth(method = "lm") 
-
-ggplot(with_prop_changes) + 
-  aes(x = TP3_Change_EVT_Standard, y = TP3_Change_Prop) + 
-  geom_point() + 
-  stat_smooth(method = "lm") 
-
-ggplot(with_prop_changes) + 
-  aes(x = TP2_Change_Age, y = TP2_Change_Prop) + 
-  geom_point() + 
-  stat_smooth(method = "lm") 
-
-ggplot(with_prop_changes) + 
-  aes(x = TP3_Change_Age, y = TP3_Change_Prop) + 
-  geom_point() + 
-  stat_smooth(method = "lm") 
-
+  facet_wrap("Var", scales = "free_x") +
+  stat_smooth(method = "lm")
 
 cor(with_prop_changes$TP2_Change_PPVT_Standard,
     with_prop_changes$TP2_Change_Prop,
@@ -715,12 +719,6 @@ cor(with_prop_changes$TP2_Change_EVT_Standard,
 cor(with_prop_changes$TP3_Change_EVT_Standard,
     with_prop_changes$TP3_Change_Prop,
     use = "pairwise.complete.obs")
-
-
-
-
-
-
 ```
 
 
