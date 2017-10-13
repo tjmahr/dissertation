@@ -50,6 +50,8 @@ remove_intercept_effects <- function(predictions) {
     select(-one_of(".focus"))
 }
 
+b <- readr::read_rds("./data/stan_aim1_cubic_model.rds.gz")
+
 done <- fixef_pred_grid(b) %>%
   tidyr::crossing(Primary = 0, Others = 0, ResearchID = "DUMMY") %>%
   tristan::augment_posterior_linpred(b, ., re.form = ~ 0) %>%
@@ -67,8 +69,7 @@ done %>%
   summarise(effect = median(.posterior_value)) %>%
   tibble::add_column(fixef(b)[1:4])
 
-b <- readr::read_rds("./data/stan_aim1_cubic_model.rds.gz")
-
+d_m <- b$data
 df <- sample_n_of(d_m, 5, ResearchID) %>%
   distinct(ResearchID)
 
@@ -114,6 +115,14 @@ readr::write_rds(all, "./data/fits.csv.gz")
 
 
 
+
+
+
+
+
+
+
+# Other code to test the high-level stuff above
 draws <- as.data.frame(b) %>%
   as_tibble() %>%
   mutate(
