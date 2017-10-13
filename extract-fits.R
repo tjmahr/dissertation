@@ -111,7 +111,7 @@ for (sub_group_i in seq_along(sub_groups)) {
 }
 all <- bind_rows(output) %>%
   select(-Primary, -Others)
-readr::write_rds(all, "./data/fits.csv.gz")
+readr::write_csv(all, "./data/fits.csv.gz")
 
 
 
