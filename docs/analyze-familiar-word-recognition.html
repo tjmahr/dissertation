@@ -25,7 +25,7 @@
 <meta name="author" content="Tristan Mahr">
 
 
-<meta name="date" content="2017-10-12">
+<meta name="date" content="2017-10-13">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -173,7 +173,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="10" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html"><i class="fa fa-check"></i><b>10</b> Analyze familiar word recognition</a><ul>
 <li class="chapter" data-level="10.1" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#data-preparation-1"><i class="fa fa-check"></i><b>10.1</b> Data preparation</a></li>
-<li class="chapter" data-level="10.2" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#maximum-likelihood-results"><i class="fa fa-check"></i><b>10.2</b> Maximum likelihood results</a></li>
+<li class="chapter" data-level="10.2" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#maximum-likelihood-results"><i class="fa fa-check"></i><b>10.2</b> Maximum likelihood results</a><ul>
+<li class="chapter" data-level="10.2.1" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#whats-being-captured-by-the-random-effects"><i class="fa fa-check"></i><b>10.2.1</b> What’s being captured by the random effects?</a></li>
+</ul></li>
 <li class="chapter" data-level="10.3" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#bayesian-model-results"><i class="fa fa-check"></i><b>10.3</b> Bayesian model results</a><ul>
 <li class="chapter" data-level="10.3.1" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#fixed-effects-plots"><i class="fa fa-check"></i><b>10.3.1</b> Fixed effects plots</a></li>
 <li class="chapter" data-level="10.3.2" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#plot-the-intervals-for-the-random-effect-parameters"><i class="fa fa-check"></i><b>10.3.2</b> Plot the intervals for the random effect parameters</a></li>
@@ -222,59 +224,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>Download test scores and individual differences.</li>
 <li>Analyze individual differences</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)
-<span class="co">#&gt; Warning: package &#39;dplyr&#39; was built under R version 3.4.2</span>
-<span class="kw">library</span>(rlang)
-<span class="kw">library</span>(littlelisteners)
-<span class="kw">library</span>(ggplot2)
-
-<span class="co">#&#39; group `data` by some grouping variables (`...`),</span>
-<span class="co">#&#39; randomly select `size` of the groups</span>
-<span class="co">#&#39; keep just the data from those sampled groups</span>
-sample_n_of &lt;-<span class="st"> </span><span class="cf">function</span>(data, size, ...) {
-  dots &lt;-<span class="st"> </span><span class="kw">quos</span>(...)
-  rows &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">row =</span> <span class="kw">seq_len</span>(<span class="kw">nrow</span>(data)))
-  rows[, <span class="st">&quot;group&quot;</span>] &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">group_by</span>(<span class="op">!!!</span><span class="st"> </span>dots) <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">group_indices</span>()
-
-  subset &lt;-<span class="st"> </span>rows <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">filter</span>(.data<span class="op">$</span>group <span class="op">%in%</span><span class="st"> </span><span class="kw">sample</span>(<span class="kw">unique</span>(.data<span class="op">$</span>group), size)) <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">pull</span>(.data<span class="op">$</span>row)
-
-  data[subset, ]
-}
-
-create_pairs &lt;-<span class="st"> </span><span class="cf">function</span>(xs) {
-  <span class="cf">if</span> (<span class="op">!</span><span class="kw">is.factor</span>(xs)) xs &lt;-<span class="st"> </span><span class="kw">ordered</span>(xs)
-  xs <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">levels</span>() <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">rev</span>() <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">combn</span>(<span class="dv">2</span>) <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">t</span>() <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">as.data.frame</span>() <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">set_names</span>(<span class="st">&quot;x1&quot;</span>, <span class="st">&quot;x2&quot;</span>) <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">name =</span> <span class="kw">paste0</span>(.data<span class="op">$</span>x1, <span class="st">&quot;-&quot;</span>, .data<span class="op">$</span>x2)) <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">mutate_all</span>(as.character) <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">arrange</span>(x1, <span class="kw">desc</span>(x2))
-}
-
-compare_pairs &lt;-<span class="st"> </span><span class="cf">function</span>(data, levels, values, <span class="dt">f =</span> <span class="st">`</span><span class="dt">-</span><span class="st">`</span>) {
-  levels &lt;-<span class="st"> </span><span class="kw">enquo</span>(levels)
-  values &lt;-<span class="st"> </span><span class="kw">enquo</span>(values)
-
-  pairs &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(<span class="op">!!</span><span class="st"> </span>levels) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">create_pairs</span>()
-  wide &lt;-<span class="st"> </span>tidyr<span class="op">::</span><span class="kw">spread</span>(data, <span class="op">!!</span><span class="st"> </span>levels, <span class="op">!!</span><span class="st"> </span>values)
-  <span class="cf">for</span> (row_i <span class="cf">in</span> <span class="kw">seq_len</span>(<span class="kw">nrow</span>(pairs))) {
-    pair_i &lt;-<span class="st"> </span>pairs[row_i, ]
-    wide[, pair_i<span class="op">$</span>name] &lt;-<span class="st"> </span><span class="kw">f</span>(wide[[pair_i<span class="op">$</span>x1]], wide[[pair_i<span class="op">$</span>x2]])
-  }
-
-  wide <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">one_of</span>(<span class="kw">c</span>(pairs<span class="op">$</span>x1), <span class="kw">c</span>(pairs<span class="op">$</span>x2))) <span class="op">%&gt;%</span>
-<span class="st">    </span>tidyr<span class="op">::</span><span class="kw">gather</span>(<span class="st">&quot;pair&quot;</span>, <span class="st">&quot;value&quot;</span>, <span class="kw">one_of</span>(<span class="kw">c</span>(pairs<span class="op">$</span>name))) <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">pair =</span> <span class="kw">factor</span>(.data<span class="op">$</span>pair, <span class="dt">levels =</span> pairs<span class="op">$</span>name))
-}</code></pre></div>
 <div id="data-preparation-1" class="section level2">
 <h2><span class="header-section-number">10.1</span> Data preparation</h2>
 <p>Earlier we cleaned the data to remove trials with excessive missing data and blocks of trials with too few trials. Read in that data.</p>
@@ -366,7 +315,7 @@ arm<span class="op">::</span><span class="kw">display</span>(m)
 <span class="co">#&gt;                   ot3         0.29     -0.09 -0.44 -0.05 </span>
 <span class="co">#&gt;  ResearchID       (Intercept) 0.27                       </span>
 <span class="co">#&gt;                   ot1         0.46      0.86             </span>
-<span class="co">#&gt;                   ot2         0.09     -0.98 -0.84       </span>
+<span class="co">#&gt;                   ot2         0.09     -0.99 -0.85       </span>
 <span class="co">#&gt;                   ot3         0.03     -0.92 -0.98  0.92 </span>
 <span class="co">#&gt;  Residual                     1.00                       </span>
 <span class="co">#&gt; ---</span>
@@ -379,18 +328,34 @@ d_m<span class="op">$</span>cubic_fit &lt;-<span class="st"> </span><span class=
 <span class="kw">ggplot</span>(d_m) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> cubic_fit) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">alpha =</span> .<span class="dv">2</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">stat_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;gam&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">facet_grid</span>(. <span class="op">~</span><span class="st"> </span>Study) <span class="op">+</span><span class="st"> </span>
 <span class="st">    </span><span class="kw">labs</span>(
       <span class="dt">x =</span> <span class="st">&quot;Time after target onset (smoothed to 50 ms bins)&quot;</span>,
       <span class="dt">y =</span> <span class="st">&quot;Proportion looks to target (fitted)&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) </code></pre></div>
 <p><img src="12_aim1_notebook_files/figure-html/cubic-model-fits-1.png" width="100%" /></p>
-<p>What’s being captured by the random effects?</p>
+<div id="whats-being-captured-by-the-random-effects" class="section level3">
+<h3><span class="header-section-number">10.2.1</span> What’s being captured by the random effects?</h3>
+<p>First, let’s plot just the fixed effect predictions.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">predict_y &lt;-<span class="st"> </span><span class="cf">function</span>(...) <span class="kw">predict</span>(..., <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>)
-d_m<span class="op">$</span>subj_fit &lt;-<span class="st"> </span><span class="kw">predict_y</span>(m, <span class="dt">re.form =</span> <span class="op">~</span><span class="st"> </span>(ot1 <span class="op">+</span><span class="st"> </span>ot2 <span class="op">+</span><span class="st"> </span>ot3 <span class="op">|</span><span class="st"> </span>ResearchID))
+d_m<span class="op">$</span>fixef_fit &lt;-<span class="st"> </span><span class="kw">predict_y</span>(m, <span class="dt">re.form =</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span>)
+d_m<span class="op">$</span>subj_fit  &lt;-<span class="st"> </span><span class="kw">predict_y</span>(m, <span class="dt">re.form =</span> <span class="op">~</span><span class="st"> </span>(ot1 <span class="op">+</span><span class="st"> </span>ot2 <span class="op">+</span><span class="st"> </span>ot3 <span class="op">|</span><span class="st"> </span>ResearchID))
+d_m<span class="op">$</span>study_fit &lt;-<span class="st"> </span><span class="kw">predict_y</span>(m, <span class="dt">re.form =</span> <span class="op">~</span><span class="st"> </span>(ot1 <span class="op">+</span><span class="st"> </span>ot2 <span class="op">+</span><span class="st"> </span>ot3 <span class="op">|</span><span class="st"> </span>Study<span class="op">:</span>ResearchID))
+d_m<span class="op">$</span>full_fit  &lt;-<span class="st"> </span><span class="kw">predict_y</span>(m, <span class="dt">re.form =</span> <span class="op">~</span><span class="st"> </span>(ot1 <span class="op">+</span><span class="st"> </span>ot2 <span class="op">+</span><span class="st"> </span>ot3 <span class="op">|</span><span class="st"> </span>Study<span class="op">:</span>ResearchID) <span class="op">+</span><span class="st"> </span>
+<span class="st">                            </span>(ot1 <span class="op">+</span><span class="st"> </span>ot2 <span class="op">+</span><span class="st"> </span>ot3 <span class="op">|</span><span class="st"> </span>ResearchID))
 
 <span class="kw">ggplot</span>(d_m) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> fixef_fit) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">alpha =</span> .<span class="dv">2</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">facet_grid</span>(. <span class="op">~</span><span class="st"> </span>Study) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(
+    <span class="dt">x =</span> <span class="st">&quot;Time after target onset (smoothed to 50 ms bins)&quot;</span>,
+    <span class="dt">y =</span> <span class="st">&quot;Proportion looks to target (fitted)&quot;</span>,
+    <span class="dt">caption =</span> <span class="st">&quot;Conditioned on no random effects&quot;</span>) </code></pre></div>
+<p><img src="12_aim1_notebook_files/figure-html/cubic-model-fits-fixes-1.png" width="100%" /></p>
+<p>Now, we condition on child level effects.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(d_m) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> subj_fit) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">alpha =</span> .<span class="dv">2</span>) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">facet_grid</span>(. <span class="op">~</span><span class="st"> </span>Study) <span class="op">+</span><span class="st"> </span>
@@ -399,18 +364,67 @@ d_m<span class="op">$</span>subj_fit &lt;-<span class="st"> </span><span class="
     <span class="dt">x =</span> <span class="st">&quot;Time after target onset (smoothed to 50 ms bins)&quot;</span>,
     <span class="dt">y =</span> <span class="st">&quot;Proportion looks to target (fitted)&quot;</span>,
     <span class="dt">caption =</span> <span class="st">&quot;Conditioned on Child effects&quot;</span>) </code></pre></div>
+<p><img src="12_aim1_notebook_files/figure-html/cubic-model-fits-child-efs-1.png" width="100%" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+<span class="kw">ggplot</span>(d_m) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> subj_fit <span class="op">-</span><span class="st"> </span>fixef_fit) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">alpha =</span> .<span class="dv">2</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">facet_grid</span>(. <span class="op">~</span><span class="st"> </span>Study) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(
+    <span class="dt">x =</span> <span class="st">&quot;Time after target onset (smoothed to 50 ms bins)&quot;</span>,
+    <span class="dt">y =</span> <span class="st">&quot;Child-conditioned minus study means&quot;</span>) </code></pre></div>
+<p><img src="12_aim1_notebook_files/figure-html/cubic-model-fits-child-efs-2.png" width="100%" /></p>
+<p>It looks like the range of y values is smaller in TimePoint2 and TimePoint3, but could that just be the different numbers of participants who contribute to each study?</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d_m <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">distinct</span>(ResearchID, Study) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">count</span>(Study) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">rename</span>(<span class="st">`</span><span class="dt">Num children in model</span><span class="st">`</span> =<span class="st"> </span>n) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>knitr<span class="op">::</span><span class="kw">kable</span>()</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Study</th>
+<th align="right">Num children in model</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">TimePoint1</td>
+<td align="right">163</td>
+</tr>
+<tr class="even">
+<td align="left">TimePoint2</td>
+<td align="right">165</td>
+</tr>
+<tr class="odd">
+<td align="left">TimePoint3</td>
+<td align="right">156</td>
+</tr>
+</tbody>
+</table>
+<p>Now we condition on Study x Child effects. These would be capturing the subject-x-study variability.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(d_m) <span class="op">+</span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> study_fit) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">alpha =</span> .<span class="dv">2</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_grid</span>(. <span class="op">~</span><span class="st"> </span>Study) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(
+    <span class="dt">x =</span> <span class="st">&quot;Time after target onset (smoothed to 50 ms bins)&quot;</span>,
+    <span class="dt">y =</span> <span class="st">&quot;Proportion looks to target (fitted)&quot;</span>,
+    <span class="dt">caption =</span> <span class="st">&quot;Conditioned on Study x Child effects&quot;</span>)</code></pre></div>
 <p><img src="12_aim1_notebook_files/figure-html/cubic-model-fits-ranefs-1.png" width="100%" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-<span class="co"># d_m$study_fit &lt;- predict_y(m, re.form = ~ (ot1 + ot2 + ot3 | Study:ResearchID))</span>
-<span class="co"># ggplot(d_m) + </span>
-<span class="co">#   aes(x = Time, y = study_fit) + </span>
-<span class="co">#   geom_line(aes(group = ResearchID), alpha = .2) + </span>
-<span class="co">#   facet_grid(. ~ Study) + </span>
-<span class="co">#   theme_grey(base_size = 9) +</span>
-<span class="co">#   labs(</span>
-<span class="co">#     x = &quot;Time after target onset (smoothed to 50 ms bins)&quot;,</span>
-<span class="co">#     y = &quot;Proportion looks to target (fitted)&quot;,</span>
-<span class="co">#     caption = &quot;Conditioned on Study x Child effects&quot;) </span></code></pre></div>
+<span class="kw">ggplot</span>(d_m) <span class="op">+</span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> study_fit <span class="op">-</span><span class="st"> </span>fixef_fit) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">alpha =</span> .<span class="dv">2</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_grid</span>(. <span class="op">~</span><span class="st"> </span>Study) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(
+    <span class="dt">x =</span> <span class="st">&quot;Time after target onset (smoothed to 50 ms bins)&quot;</span>,
+    <span class="dt">y =</span> <span class="st">&quot;Child-x-Study-conditioned minus study means&quot;</span>)</code></pre></div>
+<p><img src="12_aim1_notebook_files/figure-html/cubic-model-fits-ranefs-2.png" width="100%" /></p>
+<p>Look for weak spots in the time series.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d_corr &lt;-<span class="st"> </span>d_m <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">group_by</span>(Time, Study) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">r =</span> <span class="kw">cor</span>(Prop, cubic_fit)) 
@@ -427,27 +441,7 @@ d_m<span class="op">$</span>subj_fit &lt;-<span class="st"> </span><span class="
     <span class="dt">legend.position =</span> <span class="kw">c</span>(<span class="fl">0.025</span>, <span class="fl">0.05</span>), 
     <span class="dt">legend.justification =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) </code></pre></div>
 <p><img src="12_aim1_notebook_files/figure-html/cubic-model-raw-fit-corr-1.png" width="50%" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-  
-<span class="co"># ggplot(d_m) + </span>
-<span class="co">#   aes(x = Prop, y = cubic_fit) + </span>
-<span class="co">#   geom_point(shape = 1, alpha = .2) + </span>
-<span class="co">#   geom_abline(color = &quot;blue&quot;, size = 2)</span>
-<span class="co">#   geom_line(aes(group = ResearchID), alpha = .2) + </span>
-<span class="co">#   stat_smooth() +</span>
-<span class="co">#   facet_grid(. ~ Study) + </span>
-<span class="co">#     labs(y = &quot;Proportion looks to target [model fits]&quot;, </span>
-<span class="co">#        x = &quot;Time after target onset (smoothed to 50 ms bins)&quot;)</span>
-
-
-<span class="co"># ggplot(inner_join(d_m, ranks),) + </span>
-<span class="co">#   aes(x = Time, y = cubic_fit, color = -slope) + </span>
-<span class="co">#   geom_line(aes(group = ResearchID), alpha = .4) +</span>
-<span class="co">#   viridis::scale_color_viridis() + </span>
-<span class="co">#   facet_grid(. ~ Study)</span>
-  <span class="co"># geom_line(aes(group = ResearchID), data = semi_join(d_m, top_10), size = 1, color = &quot;blue&quot;) + </span>
-  <span class="co"># geom_line(aes(group = ResearchID), data = semi_join(d_m, bot_10), size = 1, color = &quot;red&quot;) +</span></code></pre></div>
-<p>Visualize the top and bottom 20 children (pooled over studies).</p>
+<p>Rank the participants by their growth curve parameters—that is, the growth curve features when condition on child ID.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">xstudy_effects &lt;-<span class="st"> </span>m <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">ranef</span>() <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">getElement</span>(<span class="st">&quot;ResearchID&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
@@ -456,9 +450,25 @@ d_m<span class="op">$</span>subj_fit &lt;-<span class="st"> </span><span class="
 <span class="st">  </span><span class="kw">select</span>(ResearchID, <span class="dt">intercept =</span> <span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>, <span class="dt">slope =</span> ot1)
 
 top_<span class="dv">20</span> &lt;-<span class="st"> </span><span class="kw">top_n</span>(xstudy_effects, <span class="dv">20</span>, slope)
-bot_<span class="dv">20</span> &lt;-<span class="st"> </span><span class="kw">top_n</span>(xstudy_effects, <span class="dv">20</span>, <span class="op">-</span>slope)
-
-<span class="kw">ggplot</span>(d_m) <span class="op">+</span><span class="st"> </span>
+bot_<span class="dv">20</span> &lt;-<span class="st"> </span><span class="kw">top_n</span>(xstudy_effects, <span class="dv">20</span>, <span class="op">-</span>slope)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(d_m <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(Study <span class="op">==</span><span class="st"> &quot;TimePoint2&quot;</span>)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> subj_fit) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">alpha =</span> .<span class="dv">2</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), 
+            <span class="dt">data =</span> <span class="kw">semi_join</span>(d_m, top_<span class="dv">20</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(Study <span class="op">==</span><span class="st"> &quot;TimePoint2&quot;</span>), 
+            <span class="dt">size =</span> .<span class="dv">7</span>, <span class="dt">color =</span> <span class="st">&quot;#0074D9&quot;</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), 
+            <span class="dt">data =</span> <span class="kw">semi_join</span>(d_m, bot_<span class="dv">20</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(Study <span class="op">==</span><span class="st"> &quot;TimePoint2&quot;</span>), 
+            <span class="dt">size =</span> .<span class="dv">7</span>, <span class="dt">color =</span> <span class="st">&quot;#FF4136&quot;</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">9</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">&quot;TP2 fits conditioned on Child effects&quot;</span>, 
+       <span class="dt">x =</span> <span class="st">&quot;Time after target onset (smoothed to 50 ms bins)&quot;</span>,
+       <span class="dt">caption =</span> <span class="st">&quot;Colors: Top 20 and bottom 20 children by linear time effect&quot;</span>)
+<span class="co">#&gt; Joining, by = &quot;ResearchID&quot;</span>
+<span class="co">#&gt; Joining, by = &quot;ResearchID&quot;</span></code></pre></div>
+<p><img src="12_aim1_notebook_files/figure-html/cubic-model-fits-child-efs-ranks-1.png" width="50%" /></p>
+<p>Visualize the model fits for the top and bottom 20 children. This plot illustrates that the children with strongest and weakest linear time components overall stay clustered away from each other when looking study level predictions. That is, the top 20 in general perform bunch together in all three studies.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(d_m) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> cubic_fit) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">alpha =</span> .<span class="dv">2</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">data =</span> <span class="kw">semi_join</span>(d_m, top_<span class="dv">20</span>), 
@@ -473,7 +483,7 @@ bot_<span class="dv">20</span> &lt;-<span class="st"> </span><span class="kw">to
 <span class="co">#&gt; Joining, by = &quot;ResearchID&quot;</span>
 <span class="co">#&gt; Joining, by = &quot;ResearchID&quot;</span></code></pre></div>
 <p><img src="12_aim1_notebook_files/figure-html/ranks-1.png" width="100%" /></p>
-<p>Plot the ranks on the raw data.</p>
+<p>To confirm that this differences are not just an artifact of modeling, visualize the ranks on the observed data.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(d_m) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> Prop) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">alpha =</span> .<span class="dv">2</span>) <span class="op">+</span>
@@ -488,6 +498,12 @@ bot_<span class="dv">20</span> &lt;-<span class="st"> </span><span class="kw">to
 <span class="co">#&gt; Joining, by = &quot;ResearchID&quot;</span>
 <span class="co">#&gt; Joining, by = &quot;ResearchID&quot;</span></code></pre></div>
 <p><img src="12_aim1_notebook_files/figure-html/ranks-on-raw-1.png" width="100%" /></p>
+<p>Open questions:</p>
+<ul>
+<li>How to test for stability of individual differences over time?</li>
+<li>Intuitively, I would say that the differences are unstable if the red and blue lines got shuffled in each study. What stats formalize this intuition?</li>
+</ul>
+</div>
 </div>
 <div id="bayesian-model-results" class="section level2">
 <h2><span class="header-section-number">10.3</span> Bayesian model results</h2>
@@ -756,6 +772,7 @@ prop_diffs &lt;-<span class="st"> </span>proportions <span class="op">%&gt;%</sp
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="ot">NULL</span>, <span class="dt">y =</span> <span class="ot">NULL</span>, <span class="dt">caption =</span> <span class="st">&quot;90% and 50% intervals&quot;</span>) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Differences in average accuracy&quot;</span>)</code></pre></div>
 <p><img src="12_aim1_notebook_files/figure-html/intercept-differences-1.png" width="60%" /></p>
+<p>The average accuracy was 0.385 [90% UI: 0.372–0.397] for timepoint 1, 0.485 [0.473–0.498] for timepoint 2, and 0.557 [0.544–0.569] for timepoint 3. The average accuracy increased by 0.1 [0.087–0.114] from timepoint 1 to timepoint 2 and by 0.072 [0.058–0.085] from timepoint 2 to timepoint 3.</p>
 </div>
 <div id="plot-the-intervals-for-the-random-effect-parameters" class="section level3">
 <h3><span class="header-section-number">10.3.2</span> Plot the intervals for the random effect parameters</h3>
@@ -925,24 +942,110 @@ lpred &lt;-<span class="st"> </span>dummy_data <span class="op">%&gt;%</span><sp
     <span class="dt">x =</span> <span class="st">&quot;Time after target onset&quot;</span>,
     <span class="dt">y =</span> <span class="st">&quot;Proportion looks to target&quot;</span>)</code></pre></div>
 <p><img src="12_aim1_notebook_files/figure-html/new-participants-2.png" width="80%" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">by_draw &lt;-<span class="st"> </span>lpred <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(Study, Time) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">summarise</span>(
+    <span class="dt">iqr =</span> <span class="kw">IQR</span>(<span class="kw">plogis</span>(.posterior_value)),
+    <span class="dt">min =</span> <span class="kw">min</span>(<span class="kw">plogis</span>(.posterior_value)),
+    <span class="dt">max =</span> <span class="kw">max</span>(<span class="kw">plogis</span>(.posterior_value)),
+    <span class="dt">range =</span> max <span class="op">-</span><span class="st"> </span>min)
+
+<span class="kw">ggplot</span>(by_draw) <span class="op">+</span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> range, <span class="dt">color =</span> Study) <span class="op">+</span>
+<span class="st">  </span><span class="kw">stat_summary</span>(<span class="dt">fun.data =</span> median_hilow, <span class="dt">fun.args =</span> <span class="kw">list</span>(<span class="dt">conf.int =</span> .<span class="dv">9</span>),
+               <span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">geom =</span> <span class="st">&quot;linerange&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">stat_summary</span>(<span class="dt">fun.data =</span> median_hilow, <span class="dt">fun.args =</span> <span class="kw">list</span>(<span class="dt">conf.int =</span> .<span class="dv">5</span>),
+               <span class="dt">size =</span> <span class="fl">1.5</span>, <span class="dt">geom =</span> <span class="st">&quot;linerange&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">stat_summary</span>(<span class="dt">fun.y =</span> median, <span class="dt">fun.args =</span> <span class="kw">list</span>(<span class="dt">conf.int =</span> .<span class="dv">5</span>),
+               <span class="dt">size =</span> <span class="fl">2.5</span>, <span class="dt">geom =</span> <span class="st">&quot;point&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(
+    <span class="dt">title =</span> <span class="st">&quot;Ranges of predictions for 1000 new participants&quot;</span>,
+    <span class="dt">x =</span> <span class="st">&quot;Time after target onset&quot;</span>,
+    <span class="dt">y =</span> <span class="st">&quot;Max - min predicted value&quot;</span>) </code></pre></div>
+<p><img src="12_aim1_notebook_files/figure-html/hmmm-new-participants-1.png" width="80%" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+<span class="kw">ggplot</span>(by_draw) <span class="op">+</span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> iqr, <span class="dt">color =</span> Study) <span class="op">+</span>
+<span class="st">  </span><span class="kw">stat_summary</span>(<span class="dt">fun.data =</span> median_hilow, <span class="dt">fun.args =</span> <span class="kw">list</span>(<span class="dt">conf.int =</span> .<span class="dv">9</span>),
+               <span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">geom =</span> <span class="st">&quot;linerange&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">stat_summary</span>(<span class="dt">fun.data =</span> median_hilow, <span class="dt">fun.args =</span> <span class="kw">list</span>(<span class="dt">conf.int =</span> .<span class="dv">5</span>),
+               <span class="dt">size =</span> <span class="fl">1.5</span>, <span class="dt">geom =</span> <span class="st">&quot;linerange&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">stat_summary</span>(<span class="dt">fun.y =</span> median, <span class="dt">fun.args =</span> <span class="kw">list</span>(<span class="dt">conf.int =</span> .<span class="dv">5</span>),
+               <span class="dt">size =</span> <span class="fl">2.5</span>, <span class="dt">geom =</span> <span class="st">&quot;point&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(
+    <span class="dt">title =</span> <span class="st">&quot;25%-75% ranges of predictions&quot;</span>,
+    <span class="dt">x =</span> <span class="st">&quot;Time after target onset&quot;</span>,
+    <span class="dt">y =</span> <span class="st">&quot;Interquartile range of predictions&quot;</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ylim</span>(<span class="dv">0</span>, .<span class="dv">25</span>)</code></pre></div>
+<p><img src="12_aim1_notebook_files/figure-html/hmmm-new-participants-2.png" width="80%" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+
+<span class="co"># in_every_study &lt;- d_m %&gt;% </span>
+<span class="co">#   distinct(Study, ResearchID) %&gt;% </span>
+<span class="co">#   split(.$Study) %&gt;% </span>
+<span class="co">#   lapply(getElement, &quot;ResearchID&quot;) %&gt;% </span>
+<span class="co">#   Reduce(intersect, .)</span>
+<span class="co"># </span>
+<span class="co"># d_m_every &lt;- d_m %&gt;% </span>
+<span class="co">#   filter(ResearchID %in% in_every_study)</span>
+<span class="co"># </span>
+<span class="co"># sims &lt;- tristan::augment_posterior_linpred(b, d_m_every, nsamples = 1000)</span>
+<span class="co"># </span>
+<span class="co"># ggplot(sims) + </span>
+<span class="co">#   aes(x = Time, y = plogis(.posterior_value, color = Study) +</span>
+<span class="co">#   geom_hline(yintercept = .25, size = 2, color = &quot;white&quot;) +</span>
+<span class="co">#   stat_summary(fun.data = median_hilow, fun.args = list(conf.int = .9),</span>
+<span class="co">#                size = 1, geom = &quot;linerange&quot;) + </span>
+<span class="co">#   stat_summary(fun.data = median_hilow, fun.args = list(conf.int = .5), </span>
+<span class="co">#                size = 1.5, geom = &quot;linerange&quot;) + </span>
+<span class="co">#   stat_summary(fun.y = median, fun.args = list(conf.int = .5), </span>
+<span class="co">#                size = 2.5, geom = &quot;point&quot;) + </span>
+<span class="co">#   # geom_line(aes(group = interaction(Study, ResearchID, .draw)), </span>
+<span class="co">#   #           alpha = .1) +</span>
+<span class="co">#   # facet_wrap(&quot;ResearchID&quot;) + </span>
+<span class="co">#   geom_point(aes(y = qlogis(Prop)), shape = 1) + </span>
+<span class="co">#   theme(</span>
+<span class="co">#     legend.position = c(.95, 0), </span>
+<span class="co">#     legend.justification = c(1, 0),</span>
+<span class="co">#     legend.margin = margin(0)) +</span>
+<span class="co">#   guides(color = guide_legend(title = NULL, override.aes = list(alpha = 1))) +</span>
+<span class="co">#   labs(</span>
+<span class="co">#     title = &quot;Observed data and 100 posterior predictions&quot;,</span>
+<span class="co">#     x = &quot;Time after target onset&quot;,</span>
+<span class="co">#     y = &quot;Posterior log-odds&quot;)</span>
+<span class="co"># sds &lt;- fits %&gt;% </span>
+<span class="co">#   group_by(Study, coef, .draw) %&gt;% </span>
+<span class="co">#   summarise(</span>
+<span class="co">#     mean = mean(.posterior_value),</span>
+<span class="co">#     min = min(.posterior_value),</span>
+<span class="co">#     max = max(.posterior_value),</span>
+<span class="co">#     range = max - min,</span>
+<span class="co">#     sd = sd(.posterior_value)) %&gt;%</span>
+<span class="co">#   group_by(Study, coef) %&gt;% </span>
+<span class="co">#   select(-.draw) %&gt;% </span>
+<span class="co">#   do(bayesplot::mcmc_intervals_data(select(., mean:sd))) %&gt;% </span>
+<span class="co">#   ungroup()</span>
+<span class="co"># </span>
+<span class="co"># ggplot(sds %&gt;% filter(coef %in% c(&quot;intercept&quot;, &quot;ot1&quot;))) + </span>
+<span class="co">#   aes(y = forcats::fct_rev(Study)) +</span>
+<span class="co">#   geom_vline(xintercept = 0, size = 2, color = &quot;white&quot;) +</span>
+<span class="co">#   ggstance::geom_linerangeh(aes(xmin = ll, xmax = hh)) + </span>
+<span class="co">#   ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +</span>
+<span class="co">#   geom_point(aes(x = m), size = 3, shape = 3) + </span>
+<span class="co">#   labs(x = NULL, y = NULL, caption = &quot;90% and 50% intervals&quot;) + </span>
+<span class="co">#   facet_grid(parameter ~ coef, scales = &quot;free&quot;)</span>
+<span class="co">#   facet_gird(&quot;coef&quot;, ncol = 1, strip.position = &quot;left&quot;, </span>
+<span class="co">#              labeller = label_parsed, scales = &quot;free&quot;) + </span>
+<span class="co">#   theme(strip.placement = &quot;outside&quot;, </span>
+<span class="co">#         strip.background = element_rect(fill = NA),</span>
+<span class="co">#         axis.text.y = element_text(size = rel(1.2))) </span></code></pre></div>
 </div>
 <div id="predicting-the-future" class="section level3">
 <h3><span class="header-section-number">10.3.5</span> Predicting the future</h3>
 <blockquote>
 <p>As a consequence, individual differences in word recognition at age 3, for example, will be more discriminating and predictive of age 5 language outcomes than differences at age 4.</p>
 </blockquote>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tidy_corr &lt;-<span class="st"> </span><span class="cf">function</span>(df, ..., <span class="dt">.type =</span> <span class="kw">c</span>(<span class="st">&quot;pearson&quot;</span>, <span class="st">&quot;spearman&quot;</span>)) {
-  vars &lt;-<span class="st"> </span><span class="kw">quos</span>(...)
-  <span class="kw">select</span>(df, <span class="op">!!!</span><span class="st"> </span>vars) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">as.matrix</span>() <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">    </span>Hmisc<span class="op">::</span><span class="kw">rcorr</span>(<span class="dt">type =</span> .type) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">    </span>broom<span class="op">::</span><span class="kw">tidy</span>() <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">    </span>tibble<span class="op">::</span><span class="kw">remove_rownames</span>() <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">arrange</span>(.data<span class="op">$</span>column1, .data<span class="op">$</span>column2)
-}
-
-
-fits &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_csv</span>(<span class="st">&quot;./data/fits.csv.gz&quot;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fits &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_csv</span>(<span class="st">&quot;./data/fits.csv.gz&quot;</span>)
 <span class="co">#&gt; Parsed with column specification:</span>
 <span class="co">#&gt; cols(</span>
 <span class="co">#&gt;   .draw = col_integer(),</span>
@@ -978,7 +1081,6 @@ scores &lt;-<span class="st"> </span>readr<span class="op">::</span><span class=
 <span class="co">#&gt; )</span>
 <span class="co">#&gt; See spec(...) for full column specifications.</span>
 
-
 with_ests &lt;-<span class="st"> </span>scores <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">inner_join</span>(point_ests)
 <span class="co">#&gt; Joining, by = c(&quot;Study&quot;, &quot;ResearchID&quot;)</span>
@@ -989,7 +1091,7 @@ with_ests &lt;-<span class="st"> </span>scores <span class="op">%&gt;%</span><sp
 <span class="st">  </span><span class="kw">stat_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>)
 <span class="co">#&gt; Warning: Removed 2 rows containing non-finite values (stat_smooth).</span>
 <span class="co">#&gt; Warning: Removed 2 rows containing missing values (geom_point).</span></code></pre></div>
-<p><img src="12_aim1_notebook_files/figure-html/bunch-of-plots-1.png" width="80" /></p>
+<p><img src="12_aim1_notebook_files/figure-html/bunch-of-plots-1.png" width="80%" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="kw">ggplot</span>(with_ests) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> ot1, <span class="dt">y =</span> EVT_GSV, <span class="dt">color =</span> Study) <span class="op">+</span><span class="st"> </span>
@@ -998,19 +1100,19 @@ with_ests &lt;-<span class="st"> </span>scores <span class="op">%&gt;%</span><sp
 <span class="co">#&gt; Warning: Removed 2 rows containing non-finite values (stat_smooth).</span>
 
 <span class="co">#&gt; Warning: Removed 2 rows containing missing values (geom_point).</span></code></pre></div>
-<p><img src="12_aim1_notebook_files/figure-html/bunch-of-plots-2.png" width="80" /></p>
+<p><img src="12_aim1_notebook_files/figure-html/bunch-of-plots-2.png" width="80%" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="kw">ggplot</span>(with_ests) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Age, <span class="dt">y =</span> intercept, <span class="dt">color =</span> Study) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">stat_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>)</code></pre></div>
-<p><img src="12_aim1_notebook_files/figure-html/bunch-of-plots-3.png" width="80" /></p>
+<p><img src="12_aim1_notebook_files/figure-html/bunch-of-plots-3.png" width="80%" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="kw">ggplot</span>(with_ests) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Age, <span class="dt">y =</span> ot1, <span class="dt">color =</span> Study) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">stat_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>)</code></pre></div>
-<p><img src="12_aim1_notebook_files/figure-html/bunch-of-plots-4.png" width="80" /></p>
+<p><img src="12_aim1_notebook_files/figure-html/bunch-of-plots-4.png" width="80%" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 widely &lt;-<span class="st"> </span>with_ests <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>tidyr<span class="op">::</span><span class="kw">gather</span>(<span class="st">&quot;Test&quot;</span>, <span class="st">&quot;Value&quot;</span>, <span class="op">-</span>ResearchID, <span class="op">-</span>Study) <span class="op">%&gt;%</span><span class="st"> </span>
@@ -1024,7 +1126,7 @@ widely &lt;-<span class="st"> </span>with_ests <span class="op">%&gt;%</span><sp
 <span class="st">  </span><span class="kw">stat_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>)
 <span class="co">#&gt; Warning: Removed 67 rows containing non-finite values (stat_smooth).</span>
 <span class="co">#&gt; Warning: Removed 67 rows containing missing values (geom_point).</span></code></pre></div>
-<p><img src="12_aim1_notebook_files/figure-html/bunch-of-plots-5.png" width="80" /></p>
+<p><img src="12_aim1_notebook_files/figure-html/bunch-of-plots-5.png" width="80%" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="kw">ggplot</span>(widely) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> TimePoint2_intercept, <span class="dt">y =</span> TimePoint3_EVT_GSV) <span class="op">+</span><span class="st"> </span>
@@ -1032,7 +1134,7 @@ widely &lt;-<span class="st"> </span>with_ests <span class="op">%&gt;%</span><sp
 <span class="st">  </span><span class="kw">stat_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>)
 <span class="co">#&gt; Warning: Removed 45 rows containing non-finite values (stat_smooth).</span>
 <span class="co">#&gt; Warning: Removed 45 rows containing missing values (geom_point).</span></code></pre></div>
-<p><img src="12_aim1_notebook_files/figure-html/bunch-of-plots-6.png" width="80" /></p>
+<p><img src="12_aim1_notebook_files/figure-html/bunch-of-plots-6.png" width="80%" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="kw">ggplot</span>(widely) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> TimePoint1_ot1, <span class="dt">y =</span> TimePoint3_EVT_GSV) <span class="op">+</span><span class="st"> </span>
@@ -1040,7 +1142,7 @@ widely &lt;-<span class="st"> </span>with_ests <span class="op">%&gt;%</span><sp
 <span class="st">  </span><span class="kw">stat_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>)
 <span class="co">#&gt; Warning: Removed 67 rows containing non-finite values (stat_smooth).</span>
 <span class="co">#&gt; Warning: Removed 67 rows containing missing values (geom_point).</span></code></pre></div>
-<p><img src="12_aim1_notebook_files/figure-html/bunch-of-plots-7.png" width="80" /></p>
+<p><img src="12_aim1_notebook_files/figure-html/bunch-of-plots-7.png" width="80%" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="kw">ggplot</span>(widely) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> TimePoint2_ot1, <span class="dt">y =</span> TimePoint3_EVT_GSV) <span class="op">+</span><span class="st"> </span>
@@ -1048,7 +1150,7 @@ widely &lt;-<span class="st"> </span>with_ests <span class="op">%&gt;%</span><sp
 <span class="st">  </span><span class="kw">stat_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>)
 <span class="co">#&gt; Warning: Removed 45 rows containing non-finite values (stat_smooth).</span>
 <span class="co">#&gt; Warning: Removed 45 rows containing missing values (geom_point).</span></code></pre></div>
-<p><img src="12_aim1_notebook_files/figure-html/bunch-of-plots-8.png" width="80" /></p>
+<p><img src="12_aim1_notebook_files/figure-html/bunch-of-plots-8.png" width="80%" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="kw">ggplot</span>(widely) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> TimePoint3_ot1, <span class="dt">y =</span> TimePoint3_EVT_GSV) <span class="op">+</span><span class="st"> </span>
@@ -1056,47 +1158,83 @@ widely &lt;-<span class="st"> </span>with_ests <span class="op">%&gt;%</span><sp
 <span class="st">  </span><span class="kw">stat_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>)
 <span class="co">#&gt; Warning: Removed 35 rows containing non-finite values (stat_smooth).</span>
 <span class="co">#&gt; Warning: Removed 35 rows containing missing values (geom_point).</span></code></pre></div>
-<p><img src="12_aim1_notebook_files/figure-html/bunch-of-plots-9.png" width="80" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+<p><img src="12_aim1_notebook_files/figure-html/bunch-of-plots-9.png" width="80%" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cor_complete &lt;-<span class="st"> </span><span class="cf">function</span>(...) <span class="kw">cor</span>(..., <span class="dt">use =</span> <span class="st">&quot;pairwise.complete&quot;</span>)
+
 test &lt;-<span class="st"> </span>fits <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">left_join</span>(widely) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">group_by</span>(Study, coef, .draw) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">c1 =</span> <span class="kw">cor</span>(.posterior_value, TimePoint3_EVT_Standard, <span class="dt">use =</span> <span class="st">&quot;pairwise.complete&quot;</span>))
+<span class="st">  </span><span class="kw">summarise</span>(
+    <span class="dt">r_TimePoint3_EVT_Standard =</span> <span class="kw">cor_complete</span>(.posterior_value, 
+                                             TimePoint3_EVT_Standard),
+    <span class="dt">r_TimePoint3_EVT_GSV =</span> <span class="kw">cor_complete</span>(.posterior_value, 
+                                        TimePoint3_EVT_GSV),
+    <span class="dt">r_TimePoint2_PPVT_GSV =</span> <span class="kw">cor_complete</span>(.posterior_value, 
+                                         TimePoint2_PPVT_GSV),
+    <span class="dt">r_TimePoint2_PPVT_Standard =</span> <span class="kw">cor_complete</span>(.posterior_value, 
+                                              TimePoint2_PPVT_Standard))
 <span class="co">#&gt; Joining, by = &quot;ResearchID&quot;</span>
 
-test <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">filter</span>(coef <span class="op">==</span><span class="st"> &quot;intercept&quot;</span>) <span class="op">%&gt;%</span>
+c_intervals &lt;-<span class="st"> </span>test <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">do</span>(bayesplot<span class="op">::</span><span class="kw">mcmc_intervals_data</span>(
+    <span class="kw">select</span>(., r_TimePoint3_EVT_Standard<span class="op">:</span>r_TimePoint2_PPVT_Standard))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ungroup</span>()
+
+c_intervals <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(parameter <span class="op">==</span><span class="st"> &quot;r_TimePoint3_EVT_Standard&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(coef <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;intercept&quot;</span>, <span class="st">&quot;ot1&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> c1) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">geom_histogram</span>() <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">facet_grid</span>(Study <span class="op">~</span><span class="st"> </span>coef)
-<span class="co">#&gt; `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></code></pre></div>
-<p><img src="12_aim1_notebook_files/figure-html/bunch-of-plots-10.png" width="80" /></p>
+<span class="st">    </span><span class="kw">aes</span>(<span class="dt">y =</span> forcats<span class="op">::</span><span class="kw">fct_rev</span>(Study)) <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>) <span class="op">+</span>
+<span class="st">    </span>ggstance<span class="op">::</span><span class="kw">geom_linerangeh</span>(<span class="kw">aes</span>(<span class="dt">xmin =</span> ll, <span class="dt">xmax =</span> hh)) <span class="op">+</span><span class="st"> </span>
+<span class="st">    </span>ggstance<span class="op">::</span><span class="kw">geom_linerangeh</span>(<span class="kw">aes</span>(<span class="dt">xmin =</span> l, <span class="dt">xmax =</span> h), <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> m), <span class="dt">size =</span> <span class="dv">3</span>, <span class="dt">shape =</span> <span class="dv">3</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">facet_wrap</span>(<span class="st">&quot;coef&quot;</span>) <span class="op">+</span>
+<span class="st">    </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="ot">NULL</span>, <span class="dt">y =</span> <span class="ot">NULL</span>, <span class="dt">caption =</span> <span class="st">&quot;90% and 50% intervals&quot;</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">&quot;Correlation of curve features and TP3 EVT Standard&quot;</span>)</code></pre></div>
+<p><img src="12_aim1_notebook_files/figure-html/bunch-of-plots2-1.png" width="80%" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-test <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">filter</span>(coef <span class="op">==</span><span class="st"> &quot;ot1&quot;</span>) <span class="op">%&gt;%</span>
+c_intervals <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(parameter <span class="op">==</span><span class="st"> &quot;r_TimePoint2_PPVT_Standard&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(coef <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;intercept&quot;</span>, <span class="st">&quot;ot1&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(Study <span class="op">!=</span><span class="st"> &quot;TimePoint3&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> c1) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">geom_histogram</span>() <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">facet_grid</span>(Study <span class="op">~</span><span class="st"> </span>coef)
-<span class="co">#&gt; `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></code></pre></div>
-<p><img src="12_aim1_notebook_files/figure-html/bunch-of-plots-11.png" width="80" /></p>
+<span class="st">    </span><span class="kw">aes</span>(<span class="dt">y =</span> forcats<span class="op">::</span><span class="kw">fct_rev</span>(Study)) <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>) <span class="op">+</span>
+<span class="st">    </span>ggstance<span class="op">::</span><span class="kw">geom_linerangeh</span>(<span class="kw">aes</span>(<span class="dt">xmin =</span> ll, <span class="dt">xmax =</span> hh)) <span class="op">+</span><span class="st"> </span>
+<span class="st">    </span>ggstance<span class="op">::</span><span class="kw">geom_linerangeh</span>(<span class="kw">aes</span>(<span class="dt">xmin =</span> l, <span class="dt">xmax =</span> h), <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> m), <span class="dt">size =</span> <span class="dv">3</span>, <span class="dt">shape =</span> <span class="dv">3</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">facet_wrap</span>(<span class="st">&quot;coef&quot;</span>) <span class="op">+</span>
+<span class="st">    </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="ot">NULL</span>, <span class="dt">y =</span> <span class="ot">NULL</span>, <span class="dt">caption =</span> <span class="st">&quot;90% and 50% intervals&quot;</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">&quot;Correlation of curve features and TP2 PPVT Standard&quot;</span>)</code></pre></div>
+<p><img src="12_aim1_notebook_files/figure-html/bunch-of-plots2-2.png" width="80%" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-test <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">filter</span>(coef <span class="op">==</span><span class="st"> &quot;ot2&quot;</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> c1) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">geom_histogram</span>() <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">facet_grid</span>(Study <span class="op">~</span><span class="st"> </span>coef)
-<span class="co">#&gt; `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></code></pre></div>
-<p><img src="12_aim1_notebook_files/figure-html/bunch-of-plots-12.png" width="80" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+<span class="co"># test %&gt;% </span>
+<span class="co">#   filter(coef == &quot;intercept&quot;) %&gt;%</span>
+<span class="co">#   ggplot() + </span>
+<span class="co">#   aes(x = c1) + </span>
+<span class="co">#   geom_histogram() + </span>
+<span class="co">#   facet_grid(Study ~ coef)</span>
+<span class="co"># </span>
+<span class="co"># test %&gt;% </span>
+<span class="co">#   filter(coef == &quot;ot1&quot;) %&gt;%</span>
+<span class="co">#   ggplot() + </span>
+<span class="co">#   aes(x = c1) + </span>
+<span class="co">#   geom_histogram() + </span>
+<span class="co">#   facet_grid(Study ~ coef)</span>
+<span class="co"># </span>
+<span class="co"># test %&gt;% </span>
+<span class="co">#   filter(coef == &quot;ot2&quot;) %&gt;%</span>
+<span class="co">#   ggplot() + </span>
+<span class="co">#   aes(x = c1) + </span>
+<span class="co">#   geom_histogram() + </span>
+<span class="co">#   facet_grid(Study ~ coef)</span>
+
 widely <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">tidy_corr</span>(<span class="kw">ends_with</span>(<span class="st">&quot;EVT_GSV&quot;</span>))
 <span class="co">#&gt;              column1            column2  estimate   n p.value</span>
 <span class="co">#&gt; 1 TimePoint1_EVT_GSV TimePoint2_EVT_GSV 0.7087281 128       0</span>
 <span class="co">#&gt; 2 TimePoint1_EVT_GSV TimePoint3_EVT_GSV 0.6874591 121       0</span>
 <span class="co">#&gt; 3 TimePoint2_EVT_GSV TimePoint3_EVT_GSV 0.8511192 143       0</span>
-
 
 widely <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">tidy_corr</span>(TimePoint3_EVT_GSV, <span class="kw">ends_with</span>(<span class="st">&quot;intercept&quot;</span>), <span class="kw">ends_with</span>(<span class="st">&quot;ot1&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>

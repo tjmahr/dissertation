@@ -11,7 +11,7 @@ knitr::read_chunk("./helpers.R")
 if (interactive()) source("./helpers.R")
 ```
 
-```{r helpers, message = FALSE, warnings = FALSE}
+```{r helpers, include = FALSE}
 ```
 
 ## Data preparation
@@ -103,7 +103,6 @@ d_m$cubic_fit <- fitted(m)
 ggplot(d_m) + 
   aes(x = Time, y = cubic_fit) + 
   geom_line(aes(group = ResearchID), alpha = .2) + 
-  stat_smooth(method = "gam") +
   facet_grid(. ~ Study) + 
     labs(
       x = "Time after target onset (smoothed to 50 ms bins)",
@@ -111,12 +110,32 @@ ggplot(d_m) +
   theme_grey(base_size = 9) 
 ```
 
-What's being captured by the random effects?
+### What's being captured by the random effects? 
 
-```{r cubic-model-fits-ranefs, out.width = "100%", fig.height=2.5, fig.width=6}
+First, let's plot just the fixed effect predictions.
+
+```{r cubic-model-fits-fixes, out.width = "100%", fig.height=2.5, fig.width=6}
 predict_y <- function(...) predict(..., type = "response")
-d_m$subj_fit <- predict_y(m, re.form = ~ (ot1 + ot2 + ot3 | ResearchID))
+d_m$fixef_fit <- predict_y(m, re.form = ~ 0)
+d_m$subj_fit  <- predict_y(m, re.form = ~ (ot1 + ot2 + ot3 | ResearchID))
+d_m$study_fit <- predict_y(m, re.form = ~ (ot1 + ot2 + ot3 | Study:ResearchID))
+d_m$full_fit  <- predict_y(m, re.form = ~ (ot1 + ot2 + ot3 | Study:ResearchID) + 
+                            (ot1 + ot2 + ot3 | ResearchID))
 
+ggplot(d_m) + 
+  aes(x = Time, y = fixef_fit) + 
+  geom_line(aes(group = ResearchID), alpha = .2) + 
+  facet_grid(. ~ Study) + 
+  theme_grey(base_size = 9) +
+  labs(
+    x = "Time after target onset (smoothed to 50 ms bins)",
+    y = "Proportion looks to target (fitted)",
+    caption = "Conditioned on no random effects") 
+```
+
+Now, we condition on child level effects. 
+
+```{r cubic-model-fits-child-efs, out.width = "100%", fig.height=2.5, fig.width=6}
 ggplot(d_m) + 
   aes(x = Time, y = subj_fit) + 
   geom_line(aes(group = ResearchID), alpha = .2) + 
@@ -127,19 +146,53 @@ ggplot(d_m) +
     y = "Proportion looks to target (fitted)",
     caption = "Conditioned on Child effects") 
 
-# d_m$study_fit <- predict_y(m, re.form = ~ (ot1 + ot2 + ot3 | Study:ResearchID))
-# ggplot(d_m) + 
-#   aes(x = Time, y = study_fit) + 
-#   geom_line(aes(group = ResearchID), alpha = .2) + 
-#   facet_grid(. ~ Study) + 
-#   theme_grey(base_size = 9) +
-#   labs(
-#     x = "Time after target onset (smoothed to 50 ms bins)",
-#     y = "Proportion looks to target (fitted)",
-#     caption = "Conditioned on Study x Child effects") 
+ggplot(d_m) + 
+  aes(x = Time, y = subj_fit - fixef_fit) + 
+  geom_line(aes(group = ResearchID), alpha = .2) + 
+  facet_grid(. ~ Study) + 
+  theme_grey(base_size = 9) +
+  labs(
+    x = "Time after target onset (smoothed to 50 ms bins)",
+    y = "Child-conditioned minus study means") 
 ```
 
+It looks like the range of y values is
+smaller in TimePoint2 and TimePoint3, but could that just be the different
+numbers of participants who contribute to each study?
 
+```{r}
+d_m %>% 
+  distinct(ResearchID, Study) %>% 
+  count(Study) %>% 
+  rename(`Num children in model` = n) %>% 
+  knitr::kable()
+```
+
+Now we condition on Study x Child effects. These would be capturing the
+subject-x-study variability.
+
+```{r cubic-model-fits-ranefs, out.width = "100%", fig.height=2.5, fig.width=6}
+ggplot(d_m) +
+  aes(x = Time, y = study_fit) +
+  geom_line(aes(group = ResearchID), alpha = .2) +
+  facet_grid(. ~ Study) +
+  theme_grey(base_size = 9) +
+  labs(
+    x = "Time after target onset (smoothed to 50 ms bins)",
+    y = "Proportion looks to target (fitted)",
+    caption = "Conditioned on Study x Child effects")
+
+ggplot(d_m) +
+  aes(x = Time, y = study_fit - fixef_fit) +
+  geom_line(aes(group = ResearchID), alpha = .2) +
+  facet_grid(. ~ Study) +
+  theme_grey(base_size = 9) +
+  labs(
+    x = "Time after target onset (smoothed to 50 ms bins)",
+    y = "Child-x-Study-conditioned minus study means")
+```
+
+Look for weak spots in the time series.
 
 ```{r cubic-model-raw-fit-corr, out.width = "50%", fig.height=3, fig.width=4}
 d_corr <- d_m %>% 
@@ -157,32 +210,12 @@ ggplot(d_corr) +
   theme(
     legend.position = c(0.025, 0.05), 
     legend.justification = c(0, 0)) 
-
-  
-# ggplot(d_m) + 
-#   aes(x = Prop, y = cubic_fit) + 
-#   geom_point(shape = 1, alpha = .2) + 
-#   geom_abline(color = "blue", size = 2)
-#   geom_line(aes(group = ResearchID), alpha = .2) + 
-#   stat_smooth() +
-#   facet_grid(. ~ Study) + 
-#     labs(y = "Proportion looks to target [model fits]", 
-#        x = "Time after target onset (smoothed to 50 ms bins)")
-
-
-# ggplot(inner_join(d_m, ranks),) + 
-#   aes(x = Time, y = cubic_fit, color = -slope) + 
-#   geom_line(aes(group = ResearchID), alpha = .4) +
-#   viridis::scale_color_viridis() + 
-#   facet_grid(. ~ Study)
-  # geom_line(aes(group = ResearchID), data = semi_join(d_m, top_10), size = 1, color = "blue") + 
-  # geom_line(aes(group = ResearchID), data = semi_join(d_m, bot_10), size = 1, color = "red") +
 ```
 
+Rank the participants by their growth curve parameters---that is, the growth
+curve features when condition on child ID.
 
-Visualize the top and bottom 20 children (pooled over studies).
-
-```{r ranks, out.width = "100%", fig.height=2.5, fig.width=6}
+```{r}
 xstudy_effects <- m %>% 
   ranef() %>% 
   getElement("ResearchID") %>% 
@@ -192,7 +225,31 @@ xstudy_effects <- m %>%
 
 top_20 <- top_n(xstudy_effects, 20, slope)
 bot_20 <- top_n(xstudy_effects, 20, -slope)
+```
 
+```{r cubic-model-fits-child-efs-ranks, out.width = "50%", fig.height=3, fig.width=3}
+ggplot(d_m %>% filter(Study == "TimePoint2")) + 
+  aes(x = Time, y = subj_fit) + 
+  geom_line(aes(group = ResearchID), alpha = .2) +
+  geom_line(aes(group = ResearchID), 
+            data = semi_join(d_m, top_20) %>% filter(Study == "TimePoint2"), 
+            size = .7, color = "#0074D9") + 
+  geom_line(aes(group = ResearchID), 
+            data = semi_join(d_m, bot_20) %>% filter(Study == "TimePoint2"), 
+            size = .7, color = "#FF4136") + 
+  theme_grey(base_size = 9) +
+  labs(y = "TP2 fits conditioned on Child effects", 
+       x = "Time after target onset (smoothed to 50 ms bins)",
+       caption = "Colors: Top 20 and bottom 20 children by linear time effect")
+```
+
+Visualize the model fits for the top and bottom 20 children. This plot
+illustrates that the children with strongest and weakest linear time components
+overall stay clustered away from each other when looking study level
+predictions. That is, the top 20 in general perform bunch together in all three
+studies.
+
+```{r ranks, out.width = "100%", fig.height=2.5, fig.width=6}
 ggplot(d_m) + 
   aes(x = Time, y = cubic_fit) + 
   geom_line(aes(group = ResearchID), alpha = .2) +
@@ -207,7 +264,8 @@ ggplot(d_m) +
        caption = "Colors: Top 20 and bottom 20 children by linear time effect")
 ```
 
-Plot the ranks on the raw data.
+To confirm that this differences are not just an artifact of modeling, visualize
+the ranks on the observed data.
 
 ```{r ranks-on-raw, out.width = "100%", fig.height=2.5, fig.width=6}
 ggplot(d_m) + 
@@ -222,6 +280,14 @@ ggplot(d_m) +
        x = "Time after target onset (smoothed to 50 ms bins)",
        caption = "Colors: Top 20 and bottom 20 children by linear time effect")
 ```
+
+Open questions:
+
+* How to test for stability of individual differences over time? 
+  + Intuitively, I would say that the differences are unstable if the red and 
+    blue lines got shuffled in each study. What stats formalize this intuition?
+
+
 
 ## Bayesian model results
 
@@ -364,6 +430,8 @@ ggplot(pairwise) +
 ```
 
 
+
+
 Bayesplot supports transformations so we could invert the log-odds measure to
 see the intercepts (area under curve/average accuracy) in proportion units.
 
@@ -421,6 +489,32 @@ ggplot(prop_diffs) +
   ggtitle("Differences in average accuracy")
 ```
 
+```{r, include = FALSE}
+pluck <- purrr::pluck
+
+prop_list <- intervals3 %>% 
+  split(.$parameter) %>% 
+  set_names(str_extract, "TP.")
+
+get_pts <- . %>% lapply(. %>% pluck("m") %>% round(3)) 
+get_uis <- . %>% lapply(. %>% glue::glue_data("{round(ll,3)}--{round(hh,3)}")) 
+
+pts <- get_pts(prop_list)
+uis <- get_uis(prop_list)
+
+diff_list <- prop_diffs %>% 
+  split(.$parameter) %>% 
+  set_names(str_replace, "-", "_")
+
+d_pts <- get_pts(diff_list)
+d_uis <- get_uis(diff_list)
+```
+
+The average accuracy was `r pts$TP1` [90% UI: `r uis$TP1`] for timepoint
+1, `r pts$TP2` [`r uis$TP2`] for timepoint 2, and `r pts$TP3` [`r uis$TP3`]
+for timepoint 3. The average accuracy increased by `r d_pts$TP2_TP1`
+[`r d_uis$TP2_TP1`] from timepoint 1 to timepoint 2 and by `r d_pts$TP3_TP2`
+[`r d_uis$TP3_TP2`] from timepoint 2 to timepoint 3.
 
 ### Plot the intervals for the random effect parameters
 
@@ -616,24 +710,113 @@ ggplot(lpred) +
 ```
 
 
+```{r hmmm-new-participants, fig.width=6, fig.height=3, out.width="80%"}
+by_draw <- lpred %>%
+  group_by(Study, Time) %>%
+  summarise(
+    iqr = IQR(plogis(.posterior_value)),
+    min = min(plogis(.posterior_value)),
+    max = max(plogis(.posterior_value)),
+    range = max - min)
+
+ggplot(by_draw) +
+  aes(x = Time, y = range, color = Study) +
+  stat_summary(fun.data = median_hilow, fun.args = list(conf.int = .9),
+               size = 1, geom = "linerange") +
+  stat_summary(fun.data = median_hilow, fun.args = list(conf.int = .5),
+               size = 1.5, geom = "linerange") +
+  stat_summary(fun.y = median, fun.args = list(conf.int = .5),
+               size = 2.5, geom = "point") +
+  labs(
+    title = "Ranges of predictions for 1000 new participants",
+    x = "Time after target onset",
+    y = "Max - min predicted value") 
+
+ggplot(by_draw) +
+  aes(x = Time, y = iqr, color = Study) +
+  stat_summary(fun.data = median_hilow, fun.args = list(conf.int = .9),
+               size = 1, geom = "linerange") +
+  stat_summary(fun.data = median_hilow, fun.args = list(conf.int = .5),
+               size = 1.5, geom = "linerange") +
+  stat_summary(fun.y = median, fun.args = list(conf.int = .5),
+               size = 2.5, geom = "point") +
+  labs(
+    title = "25%-75% ranges of predictions",
+    x = "Time after target onset",
+    y = "Interquartile range of predictions") + 
+  ylim(0, .25)
+
+
+# in_every_study <- d_m %>% 
+#   distinct(Study, ResearchID) %>% 
+#   split(.$Study) %>% 
+#   lapply(getElement, "ResearchID") %>% 
+#   Reduce(intersect, .)
+# 
+# d_m_every <- d_m %>% 
+#   filter(ResearchID %in% in_every_study)
+# 
+# sims <- tristan::augment_posterior_linpred(b, d_m_every, nsamples = 1000)
+# 
+# ggplot(sims) + 
+#   aes(x = Time, y = plogis(.posterior_value, color = Study) +
+#   geom_hline(yintercept = .25, size = 2, color = "white") +
+#   stat_summary(fun.data = median_hilow, fun.args = list(conf.int = .9),
+#                size = 1, geom = "linerange") + 
+#   stat_summary(fun.data = median_hilow, fun.args = list(conf.int = .5), 
+#                size = 1.5, geom = "linerange") + 
+#   stat_summary(fun.y = median, fun.args = list(conf.int = .5), 
+#                size = 2.5, geom = "point") + 
+#   # geom_line(aes(group = interaction(Study, ResearchID, .draw)), 
+#   #           alpha = .1) +
+#   # facet_wrap("ResearchID") + 
+#   geom_point(aes(y = qlogis(Prop)), shape = 1) + 
+#   theme(
+#     legend.position = c(.95, 0), 
+#     legend.justification = c(1, 0),
+#     legend.margin = margin(0)) +
+#   guides(color = guide_legend(title = NULL, override.aes = list(alpha = 1))) +
+#   labs(
+#     title = "Observed data and 100 posterior predictions",
+#     x = "Time after target onset",
+#     y = "Posterior log-odds")
+# sds <- fits %>% 
+#   group_by(Study, coef, .draw) %>% 
+#   summarise(
+#     mean = mean(.posterior_value),
+#     min = min(.posterior_value),
+#     max = max(.posterior_value),
+#     range = max - min,
+#     sd = sd(.posterior_value)) %>%
+#   group_by(Study, coef) %>% 
+#   select(-.draw) %>% 
+#   do(bayesplot::mcmc_intervals_data(select(., mean:sd))) %>% 
+#   ungroup()
+# 
+# ggplot(sds %>% filter(coef %in% c("intercept", "ot1"))) + 
+#   aes(y = forcats::fct_rev(Study)) +
+#   geom_vline(xintercept = 0, size = 2, color = "white") +
+#   ggstance::geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
+#   ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
+#   geom_point(aes(x = m), size = 3, shape = 3) + 
+#   labs(x = NULL, y = NULL, caption = "90% and 50% intervals") + 
+#   facet_grid(parameter ~ coef, scales = "free")
+#   facet_gird("coef", ncol = 1, strip.position = "left", 
+#              labeller = label_parsed, scales = "free") + 
+#   theme(strip.placement = "outside", 
+#         strip.background = element_rect(fill = NA),
+#         axis.text.y = element_text(size = rel(1.2))) 
+```
+
 
 ### Predicting the future
 
-> As a consequence, individual differences in word recognition at age 3, for example, will be more discriminating and predictive of age 5 language outcomes than differences at age 4.
+> As a consequence, individual differences in word recognition at age 3, for
+example, will be more discriminating and predictive of age 5 language outcomes
+than differences at age 4.
 
 
-```{r bunch-of-plots}
-tidy_corr <- function(df, ..., .type = c("pearson", "spearman")) {
-  vars <- quos(...)
-  select(df, !!! vars) %>% 
-    as.matrix() %>% 
-    Hmisc::rcorr(type = .type) %>% 
-    broom::tidy() %>% 
-    tibble::remove_rownames() %>% 
-    arrange(.data$column1, .data$column2)
-}
-
-
+```{r bunch-of-plots, out.width = "80%", fig.height=4, fig.width=5}
 fits <- readr::read_csv("./data/fits.csv.gz")
 fits <- fits %>% semi_join(d_m)
 
@@ -646,7 +829,6 @@ point_ests <- fits %>%
 scores <- readr::read_csv("./data-raw/test_scores.csv") %>% 
   select(Study, ResearchID, Age, EVT_GSV, EVT_Standard, 
          PPVT_GSV, PPVT_Standard)
-
 
 with_ests <- scores %>% 
   inner_join(point_ests)
@@ -702,34 +884,78 @@ ggplot(widely) +
   geom_point() + 
   stat_smooth(method = "lm")
 
+```
+
+```{r bunch-of-plots2, out.width = "80%", fig.height=4, fig.width=6}
+cor_complete <- function(...) cor(..., use = "pairwise.complete")
+
 test <- fits %>% 
   left_join(widely) %>% 
   group_by(Study, coef, .draw) %>% 
-  summarise(c1 = cor(.posterior_value, TimePoint3_EVT_Standard, use = "pairwise.complete"))
+  summarise(
+    r_TimePoint3_EVT_Standard = cor_complete(.posterior_value, 
+                                             TimePoint3_EVT_Standard),
+    r_TimePoint3_EVT_GSV = cor_complete(.posterior_value, 
+                                        TimePoint3_EVT_GSV),
+    r_TimePoint2_PPVT_GSV = cor_complete(.posterior_value, 
+                                         TimePoint2_PPVT_GSV),
+    r_TimePoint2_PPVT_Standard = cor_complete(.posterior_value, 
+                                              TimePoint2_PPVT_Standard))
 
-test %>% 
-  filter(coef == "intercept") %>%
-  ggplot() + 
-  aes(x = c1) + 
-  geom_histogram() + 
-  facet_grid(Study ~ coef)
+c_intervals <- test %>% 
+  do(bayesplot::mcmc_intervals_data(
+    select(., r_TimePoint3_EVT_Standard:r_TimePoint2_PPVT_Standard))) %>% 
+  ungroup()
 
-test %>% 
-  filter(coef == "ot1") %>%
+c_intervals %>% 
+  filter(parameter == "r_TimePoint3_EVT_Standard") %>% 
+  filter(coef %in% c("intercept", "ot1")) %>% 
   ggplot() + 
-  aes(x = c1) + 
-  geom_histogram() + 
-  facet_grid(Study ~ coef)
+    aes(y = forcats::fct_rev(Study)) +
+    geom_vline(xintercept = 0, size = 2, color = "white") +
+    ggstance::geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
+    ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
+    geom_point(aes(x = m), size = 3, shape = 3) + 
+    facet_wrap("coef") +
+    labs(x = NULL, y = NULL, caption = "90% and 50% intervals") + 
+    ggtitle("Correlation of curve features and TP3 EVT Standard")
 
-test %>% 
-  filter(coef == "ot2") %>%
+c_intervals %>% 
+  filter(parameter == "r_TimePoint2_PPVT_Standard") %>% 
+  filter(coef %in% c("intercept", "ot1")) %>% 
+  filter(Study != "TimePoint3") %>% 
   ggplot() + 
-  aes(x = c1) + 
-  geom_histogram() + 
-  facet_grid(Study ~ coef)
+    aes(y = forcats::fct_rev(Study)) +
+    geom_vline(xintercept = 0, size = 2, color = "white") +
+    ggstance::geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
+    ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
+    geom_point(aes(x = m), size = 3, shape = 3) + 
+    facet_wrap("coef") +
+    labs(x = NULL, y = NULL, caption = "90% and 50% intervals") + 
+    ggtitle("Correlation of curve features and TP2 PPVT Standard")
+
+# test %>% 
+#   filter(coef == "intercept") %>%
+#   ggplot() + 
+#   aes(x = c1) + 
+#   geom_histogram() + 
+#   facet_grid(Study ~ coef)
+# 
+# test %>% 
+#   filter(coef == "ot1") %>%
+#   ggplot() + 
+#   aes(x = c1) + 
+#   geom_histogram() + 
+#   facet_grid(Study ~ coef)
+# 
+# test %>% 
+#   filter(coef == "ot2") %>%
+#   ggplot() + 
+#   aes(x = c1) + 
+#   geom_histogram() + 
+#   facet_grid(Study ~ coef)
 
 widely %>% tidy_corr(ends_with("EVT_GSV"))
-
 
 widely %>% 
   tidy_corr(TimePoint3_EVT_GSV, ends_with("intercept"), ends_with("ot1")) %>% 

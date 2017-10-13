@@ -25,7 +25,7 @@
 <meta name="author" content="Tristan Mahr">
 
 
-<meta name="date" content="2017-10-12">
+<meta name="date" content="2017-10-13">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -173,7 +173,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="10" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html"><i class="fa fa-check"></i><b>10</b> Analyze familiar word recognition</a><ul>
 <li class="chapter" data-level="10.1" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#data-preparation-1"><i class="fa fa-check"></i><b>10.1</b> Data preparation</a></li>
-<li class="chapter" data-level="10.2" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#maximum-likelihood-results"><i class="fa fa-check"></i><b>10.2</b> Maximum likelihood results</a></li>
+<li class="chapter" data-level="10.2" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#maximum-likelihood-results"><i class="fa fa-check"></i><b>10.2</b> Maximum likelihood results</a><ul>
+<li class="chapter" data-level="10.2.1" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#whats-being-captured-by-the-random-effects"><i class="fa fa-check"></i><b>10.2.1</b> What’s being captured by the random effects?</a></li>
+</ul></li>
 <li class="chapter" data-level="10.3" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#bayesian-model-results"><i class="fa fa-check"></i><b>10.3</b> Bayesian model results</a><ul>
 <li class="chapter" data-level="10.3.1" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#fixed-effects-plots"><i class="fa fa-check"></i><b>10.3.1</b> Fixed effects plots</a></li>
 <li class="chapter" data-level="10.3.2" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#plot-the-intervals-for-the-random-effect-parameters"><i class="fa fa-check"></i><b>10.3.2</b> Plot the intervals for the random effect parameters</a></li>
@@ -269,6 +271,16 @@ compare_pairs &lt;-<span class="st"> </span><span class="cf">function</span>(dat
 <span class="st">    </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">one_of</span>(<span class="kw">c</span>(pairs<span class="op">$</span>x1), <span class="kw">c</span>(pairs<span class="op">$</span>x2))) <span class="op">%&gt;%</span>
 <span class="st">    </span>tidyr<span class="op">::</span><span class="kw">gather</span>(<span class="st">&quot;pair&quot;</span>, <span class="st">&quot;value&quot;</span>, <span class="kw">one_of</span>(<span class="kw">c</span>(pairs<span class="op">$</span>name))) <span class="op">%&gt;%</span>
 <span class="st">    </span><span class="kw">mutate</span>(<span class="dt">pair =</span> <span class="kw">factor</span>(.data<span class="op">$</span>pair, <span class="dt">levels =</span> pairs<span class="op">$</span>name))
+}
+
+tidy_corr &lt;-<span class="st"> </span><span class="cf">function</span>(df, ..., <span class="dt">.type =</span> <span class="kw">c</span>(<span class="st">&quot;pearson&quot;</span>, <span class="st">&quot;spearman&quot;</span>)) {
+  vars &lt;-<span class="st"> </span><span class="kw">quos</span>(...)
+  <span class="kw">select</span>(df, <span class="op">!!!</span><span class="st"> </span>vars) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">as.matrix</span>() <span class="op">%&gt;%</span>
+<span class="st">    </span>Hmisc<span class="op">::</span><span class="kw">rcorr</span>(<span class="dt">type =</span> .type) <span class="op">%&gt;%</span>
+<span class="st">    </span>broom<span class="op">::</span><span class="kw">tidy</span>() <span class="op">%&gt;%</span>
+<span class="st">    </span>tibble<span class="op">::</span><span class="kw">remove_rownames</span>() <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">arrange</span>(.data<span class="op">$</span>column1, .data<span class="op">$</span>column2)
 }</code></pre></div>
 <p>Earlier we cleaned the data to remove trials with excessive missing data and blocks of trials with too few trials. Read in that data.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_csv</span>(<span class="st">&quot;./data/aim1-screened.csv.gz&quot;</span>)</code></pre></div>

@@ -54,6 +54,17 @@ compare_pairs <- function(data, levels, values, f = `-`) {
     mutate(pair = factor(.data$pair, levels = pairs$name))
 }
 
+tidy_corr <- function(df, ..., .type = c("pearson", "spearman")) {
+  vars <- quos(...)
+  select(df, !!! vars) %>%
+    as.matrix() %>%
+    Hmisc::rcorr(type = .type) %>%
+    broom::tidy() %>%
+    tibble::remove_rownames() %>%
+    arrange(.data$column1, .data$column2)
+}
+
+
 # ---- other helpers ----
 
 # preview a file that would be created by ggsave()
