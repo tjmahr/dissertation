@@ -622,16 +622,127 @@ ggplot(lpred) +
 > As a consequence, individual differences in word recognition at age 3, for example, will be more discriminating and predictive of age 5 language outcomes than differences at age 4.
 
 
-```{r}
+```{r bunch-of-plots}
+tidy_corr <- function(df, ..., .type = c("pearson", "spearman")) {
+  vars <- quos(...)
+  select(df, !!! vars) %>% 
+    as.matrix() %>% 
+    Hmisc::rcorr(type = .type) %>% 
+    broom::tidy() %>% 
+    tibble::remove_rownames() %>% 
+    arrange(.data$column1, .data$column2)
+}
+
+
+fits <- readr::read_csv("./data/fits.csv.gz")
+fits <- fits %>% semi_join(d_m)
+
+point_ests <- fits %>% 
+  group_by(Study, ResearchID, coef) %>% 
+  summarise(point = median(.posterior_value)) %>% 
+  ungroup() %>% 
+  tidyr::spread(coef, point)
+
 scores <- readr::read_csv("./data-raw/test_scores.csv") %>% 
   select(Study, ResearchID, Age, EVT_GSV, EVT_Standard, 
          PPVT_GSV, PPVT_Standard)
 
 
+with_ests <- scores %>% 
+  inner_join(point_ests)
+
+ggplot(with_ests) + 
+  aes(x = intercept, y = EVT_GSV, color = Study) + 
+  geom_point() + 
+  stat_smooth(method = "lm")
+
+ggplot(with_ests) + 
+  aes(x = ot1, y = EVT_GSV, color = Study) + 
+  geom_point() + 
+  stat_smooth(method = "lm")
+
+ggplot(with_ests) + 
+  aes(x = Age, y = intercept, color = Study) + 
+  geom_point() + 
+  stat_smooth(method = "lm")
+
+ggplot(with_ests) + 
+  aes(x = Age, y = ot1, color = Study) + 
+  geom_point() + 
+  stat_smooth(method = "lm")
+
+widely <- with_ests %>% 
+  tidyr::gather("Test", "Value", -ResearchID, -Study) %>% 
+  tidyr::unite("Col", Study, Test) %>% 
+  tidyr::spread(Col, Value)
 
 
+ggplot(widely) + 
+  aes(x = TimePoint1_intercept, y = TimePoint3_EVT_GSV) + 
+  geom_point() + 
+  stat_smooth(method = "lm")
+
+ggplot(widely) + 
+  aes(x = TimePoint2_intercept, y = TimePoint3_EVT_GSV) + 
+  geom_point() + 
+  stat_smooth(method = "lm")
+
+ggplot(widely) + 
+  aes(x = TimePoint1_ot1, y = TimePoint3_EVT_GSV) + 
+  geom_point() + 
+  stat_smooth(method = "lm")
+
+ggplot(widely) + 
+  aes(x = TimePoint2_ot1, y = TimePoint3_EVT_GSV) + 
+  geom_point() + 
+  stat_smooth(method = "lm")
+
+ggplot(widely) + 
+  aes(x = TimePoint3_ot1, y = TimePoint3_EVT_GSV) + 
+  geom_point() + 
+  stat_smooth(method = "lm")
+
+test <- fits %>% 
+  left_join(widely) %>% 
+  group_by(Study, coef, .draw) %>% 
+  summarise(c1 = cor(.posterior_value, TimePoint3_EVT_Standard, use = "pairwise.complete"))
+
+test %>% 
+  filter(coef == "intercept") %>%
+  ggplot() + 
+  aes(x = c1) + 
+  geom_histogram() + 
+  facet_grid(Study ~ coef)
+
+test %>% 
+  filter(coef == "ot1") %>%
+  ggplot() + 
+  aes(x = c1) + 
+  geom_histogram() + 
+  facet_grid(Study ~ coef)
+
+test %>% 
+  filter(coef == "ot2") %>%
+  ggplot() + 
+  aes(x = c1) + 
+  geom_histogram() + 
+  facet_grid(Study ~ coef)
+
+widely %>% tidy_corr(ends_with("EVT_GSV"))
 
 
+widely %>% 
+  tidy_corr(TimePoint3_EVT_GSV, ends_with("intercept"), ends_with("ot1")) %>% 
+  filter(column1 == "TimePoint3_EVT_GSV")
+
+widely %>% 
+  tidy_corr(TimePoint2_PPVT_GSV, TimePoint1_ot1, TimePoint2_ot1) %>% 
+  filter(column1 == "TimePoint2_PPVT_GSV")
+
+widely %>% 
+  tidy_corr(TimePoint2_PPVT_GSV, TimePoint1_ot1, TimePoint2_ot1,
+            TimePoint1_intercept, TimePoint2_intercept) %>% 
+  filter(column1 == "TimePoint2_PPVT_GSV")
 ```
 
 
@@ -646,7 +757,7 @@ scores <- readr::read_csv("./data-raw/test_scores.csv") %>%
 large year-over-year gains in one measure will predict large year-over-years
 gains in the other measure.
 
-```{r, eval = FALSE}
+```{r, eval = FALSE, include = FALSE}
 scores <- readr::read_csv("./data-raw/test_scores.csv") %>% 
   select(Study, ResearchID, Age, EVT_GSV, EVT_Standard, 
          PPVT_GSV, PPVT_Standard)
