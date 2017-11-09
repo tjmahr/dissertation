@@ -1,14 +1,47 @@
+```{r include=FALSE, cache=FALSE}
+# ---- set-options ----
+knitr::opts_chunk$set(
+  tidy = FALSE,
+  collapse = TRUE,
+  comment = "#>",
+  out.width = 80
+)
+
+options(width = 80)
+
+
+# ---- knitr-helper-functions ----
+is_word_output <- function() {
+  knitr::opts_knit$get("rmarkdown.pandoc.to") == "docx"
+}
+is_html_output <- knitr:::is_html_output
+is_latex_output <- knitr:::is_latex_output
+
+# Make a function that prints a string of characters if the output is pdf
+make_latex_decorator <- function(output, otherwise) {
+  function() {
+    if (is_latex_output()) output else otherwise
+  }
+}
+
+# insert_pause <- make_latex_decorator(". . .", "\n")
+# insert_slide_break <- make_latex_decorator("----", "\n")
+# insert_inc_bullet <- make_latex_decorator("> *", "*")
+insert_html_math <- make_latex_decorator("", "$$")
+```
 Prepare and explore the data
 ===========================================================================
 
-First, let's load in all the data and plot the data from each year.
+_Notebook status: Code is hidden. Now, the results and figures can be fleshed
+out and finalized._
 
 ```{r include = FALSE}
 knitr::read_chunk("./helpers.R")
 if (interactive()) source("./helpers.R")
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 ```
 
-```{r helpers, message = FALSE, warnings = FALSE}
+```{r helpers, message = FALSE, warning = FALSE}
 ```
 
 ```{r, message = FALSE, warnings = FALSE}
@@ -39,16 +72,18 @@ raw_data <- looks %>%
   aggregate_looks(resp_def, Study + ResearchID + Time ~ GazeByImageAOI)
 ```
 
-Make some plots of overall averages.
+## Raw data visualization
+
+First, let's plot the overall averages from each year.
 
 ```{r raw-aim1, out.width = "50%", fig.show='hold', fig.height=3, fig.width=3}
 ggplot(raw_data) + 
   aes(x = Time, y = Prop, color = Study) +
   geom_hline(size = 2, color = "white", yintercept = .25) +
-  stat_summary() +
+  stat_summary(fun.data = mean_se) +
   labs(x = "Time after target onset [ms]",
        y = "Proportion looks to target",
-       caption = "Mean +/- SE") +
+       caption = "Mean ± SE") +
   theme_grey(base_size = 9) +
   theme(legend.position = c(0.05, 0.95), 
         legend.justification = c(0, 1))
@@ -59,7 +94,7 @@ ggplot(raw_data) +
   stat_smooth() +
   labs(x = "Time after target onset [ms]",
        y = "Proportion looks to target",
-       caption = "GAM Smooth") +
+       caption = "GAM smooth") +
   theme_grey(base_size = 9) +
   theme(legend.position = c(0.05, 0.95), 
         legend.justification = c(0, 1))
@@ -69,7 +104,8 @@ The raw data plainly confirm hypothesis 1:
 
 > Children’s accuracy and efficiency of recognizing words will improve each year.
 
-Look at a spaghetti plot...
+We can also plot a spaghetti plot to invidual lines for each participant. We see
+that they tighten from year to year.
 
 ```{r spaghetti-aim1, out.width = "100%", fig.height=2.5, fig.width=6}
 ggplot(raw_data) + 
@@ -87,34 +123,33 @@ ggplot(raw_data) +
 
 
 
-## Data cleaning
+## Data screening
 
-We use the following options for data screening.
-
-```{r}
+```{r, exclude = FALSE}
+# We use the following options for data screening.
 rules <- list(
-  screening_window = c(0, 2020),
+  screening_window = c(0, 2000),
   missing_data_limit = .5,
   min_trials = 12
 )
 ```
 
-That is:
+After mapping the gaze coordinates onto the onscreen images, we performed data
+screening. We considered the time window from `r rules$screening_window[1]` to
+`r rules$screening_window[2]` ms after target noun onset. We identified a trial
+as _unreliable_ if at least `r rules$missing_data_limit * 100`% of the looks
+were missing during the time window. We excluded an entire block of trials if it
+had fewer than `r rules$min_trials` reliable trials. 
 
-* Filter out bad trials. These have at least 
-  `r rules$missing_data_limit * 100`% missing data between 
-  `r rules$screening_window[1]` to `r rules$screening_window[2]`ms. 
-* Filter out bad blocks. These have fewer than `r rules$min_trials` trials.
-
-These are the default conventions four lab on these eyetracking experiments.
-
-```{r}
-# offset to catch frame before and after window 
-# (to reflect binning boundaries)
+```{r, echo = FALSE, results = 'hide'}
+# The first and last times are offset by 20 ms because we downsample our data
+# into 50-ms (3-frame) bins. The frames at -16.65, 0, +16.65 ms make up the
+# frames in the bin at time 0, so we need to capture the frame at -16.65. The
+# same reasoning applies to the frame at 2016.65.
 screening_times <- looks %>% 
   distinct(Time) %>% 
-  trim_to_bin_width(3, 0, 2, Time, min_time = rules$screening_window[1], 
-                    max_time = rules$screening_window[2]) %>% 
+  trim_to_bin_width(3, 0, 2, Time, min_time = rules$screening_window[1] - 20, 
+                    max_time = rules$screening_window[2] + 20) %>% 
   pull(Time) %>% 
   range()
 screening_times
@@ -150,9 +185,10 @@ clean_looks <- looks %>%
   anti_join(leftover_bad_trials)
 ```
 
-Do some head counts.
+Table \@ref(tab:screening-counts) shows the numbers of participants and trials
+excluded at each time point due to unreliable data.
 
-```{r}
+```{r screening-counts, echo = FALSE}
 screening_results <- list(Screened = clean_looks, Raw = looks) %>% 
   bind_rows(.id = "Dataset") %>% 
   distinct(Dataset, Study, ResearchID, TrialID) %>% 
@@ -161,13 +197,42 @@ screening_results <- list(Screened = clean_looks, Raw = looks) %>%
     `Num Children` = n_distinct(ResearchID),
     `Num Trials` = n_distinct(TrialID))
 
-screening_results %>% 
-  knitr::kable(caption = "Eyetracking data before and after data screening")
+screening_results <- list(Screened = clean_looks, Raw = looks) %>% 
+  bind_rows(.id = "Dataset") %>% 
+  distinct(Dataset, Study, ResearchID, Basename, TrialID) %>% 
+  group_by(Dataset, Study) %>% 
+  summarise(
+    `N Children` = n_distinct(ResearchID),
+    `N Blocks` = n_distinct(Basename),
+    `N Trials` = n_distinct(TrialID)) %>% 
+  ungroup()
+
+# Add an extra set of rows computing difference
+screening_results2 <- screening_results %>% 
+  tidyr::gather("Stat", "Value", -Study, -Dataset) %>% 
+  tidyr::spread(Dataset, Value) %>% 
+  mutate(`Raw &minus; Screened` = Raw - Screened) %>% 
+  tidyr::gather(Dataset, "Count", -Study, -Stat) %>% 
+  tidyr::spread(Stat, Count) %>% 
+  mutate(Dataset = Dataset %>% 
+           factor(c("Raw", "Screened", "Raw &minus; Screened"))) %>% 
+  select(Dataset, Study, `N Children`, `N Blocks`, `N Trials`) %>% 
+  arrange(Dataset, Study) %>% 
+  mutate(Dataset = Dataset %>% as.character() %>% replace_if_same_as_last(""))
+
+knitr::kable(
+  screening_results2,
+  caption = "Eyetracking data before and after data screening.", 
+  booktabs = TRUE)
 ```
 
-Plot the data after partial data screening.
 
-```{r}
+
+Plot the data after partial data screening. We include the curves from the
+earlier plots in gray. The data-cleaning process slightly increases the average
+accuracy during the plateau-ed portion of the growth curve.
+
+```{r, include = FALSE}
 data <- clean_looks %>% 
   filter(between(Time, times_to_keep[1], times_to_keep[2])) %>% 
   readr::write_csv("./data/aim1-screened.csv.gz") 
@@ -176,11 +241,7 @@ agg_data <- data %>%
   aggregate_looks(resp_def, Study + ResearchID + Time ~ GazeByImageAOI)
 ```
 
-We include the curves from the earlier plots in gray. The data-cleaning process 
-slightly increases the average accuracy during the plateau-ed portion of the
-growth curve.
-
-```{r clean-aim1, out.width = "50%", fig.show='hold', fig.height=3, fig.width=3}
+```{r clean-aim1, echo = FALSE, message = FALSE, warning = FALSE, out.width = "50%", fig.show='hold', fig.height=3, fig.width=3}
 ggplot(agg_data) + 
   aes(x = Time, y = Prop, color = Study) +
   geom_hline(size = 2, color = "white", yintercept = .25) +
@@ -189,7 +250,7 @@ ggplot(agg_data) +
   stat_summary() +
   labs(x = "Time after target onset [ms]",
        y = "Proportion looks to target",
-       caption = "Mean +/- SE") +
+       caption = "Mean ± SE. Screened data drawn over raw data (gray).") +
   theme_grey(base_size = 9) +
   theme(legend.position = c(0.05, 0.95), 
         legend.justification = c(0, 1))
@@ -202,7 +263,8 @@ ggplot(agg_data) +
   stat_smooth() +
   labs(x = "Time after target onset [ms]",
        y = "Proportion looks to target",
-       caption = "GAM smooth on partially screened data") +
+       caption = "GAM smooth. Screened data drawn over raw data (gray).") +
+  guides(colour = guide_legend(override.aes = list(fill = NA))) + 
   theme_grey(base_size = 9) +
   theme(legend.position = c(0.05, 0.95), 
         legend.justification = c(0, 1))
@@ -220,7 +282,7 @@ language disorder at TimePoint 3.)
 
 
 ```{r}
-# stub for saving the final-final data
+# code stub for saving the final-final data
 ```
 
 

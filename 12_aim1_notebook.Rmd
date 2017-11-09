@@ -1,3 +1,34 @@
+```{r include=FALSE, cache=FALSE}
+# ---- set-options ----
+knitr::opts_chunk$set(
+  tidy = FALSE,
+  collapse = TRUE,
+  comment = "#>",
+  out.width = 80
+)
+
+options(width = 80)
+
+
+# ---- knitr-helper-functions ----
+is_word_output <- function() {
+  knitr::opts_knit$get("rmarkdown.pandoc.to") == "docx"
+}
+is_html_output <- knitr:::is_html_output
+is_latex_output <- knitr:::is_latex_output
+
+# Make a function that prints a string of characters if the output is pdf
+make_latex_decorator <- function(output, otherwise) {
+  function() {
+    if (is_latex_output()) output else otherwise
+  }
+}
+
+# insert_pause <- make_latex_decorator(". . .", "\n")
+# insert_slide_break <- make_latex_decorator("----", "\n")
+# insert_inc_bullet <- make_latex_decorator("> *", "*")
+insert_html_math <- make_latex_decorator("", "$$")
+```
 # Analyze familiar word recognition
 
 Next steps:
@@ -60,8 +91,8 @@ d_m <- d %>%
                              scale_width = 1, prefix = "ot")
 ```
 
-Plot the model-ready data. Use empirical logit because straight log-odds has too
-high of values for plotting.
+Plot the model-ready data. For this plot, we use the so-called empirical logit
+because straight log-odds generates too extreme of values for plotting.
 
 ```{r spaghetti-elogit, out.width = "100%", fig.height=2.5, fig.width=6}
 ggplot(d_m) + 
@@ -73,6 +104,7 @@ ggplot(d_m) +
   labs(x = "Time after target onset (smoothed to 50 ms bins)", 
        y = "Emp. logit looking to target")
 ```
+
 
 ## Maximum likelihood results
 
@@ -213,7 +245,7 @@ ggplot(d_corr) +
 ```
 
 Rank the participants by their growth curve parameters---that is, the growth
-curve features when condition on child ID.
+curve features when conditioned on child ID.
 
 ```{r}
 xstudy_effects <- m %>% 
@@ -292,7 +324,7 @@ Open questions:
 ## Bayesian model results
 
 Here is the code used to fit the model with Stan. It took about 24 hours to run
-the model.
+the model. The regression terms have the prior Normal(0, 1)
 
 ```{r, eval = FALSE}
 library(rstanarm)
@@ -327,6 +359,8 @@ parse_text <- function(x) parse(text = x)
 b <- readr::read_rds("./data/stan_aim1_cubic_model.rds.gz")
 b
 
+prior_summary(b)
+
 intervals <- mcmc_intervals_data(as.data.frame(b), pars = names(fixef(b)))
 
 # Rename to use mathematical formatting
@@ -344,7 +378,7 @@ effects confirm that children get more reliable and faster each year of the
 study. Only the Time^2^ effect is near 0, which does not matter. We mostly care
 about the intercept and time terms.
 
-```{r effects1, out.width = "80%", fig.height=4, fig.width=5}
+```{r effects1, echo = FALSE, out.width = "80%", fig.height=4, fig.width=5}
 ggplot(intervals) + 
   aes(y = pname) +
   geom_vline(xintercept = 0, size = 2, color = "white") +
@@ -352,15 +386,17 @@ ggplot(intervals) +
   geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
   geom_point(aes(x = m), size = 3, shape = 3) + 
   scale_y_discrete(labels = parse_text) + 
-  labs(x = NULL, y = NULL, caption = "90% and 50% intervals") + 
-  ggtitle("Average effects")
+  labs(x = NULL, y = NULL, 
+       caption = "Posterior median with 90% and 50% intervals") + 
+  ggtitle("Average effects", 
+          subtitle = "Dummy-coded effects with Timepoint1 as reference level")
 ```
 
 Now, let's undo interactions by adding year 1 main effects to interaction 
 effects and plot the effects for each year of the study. For each effect, there
 appears to be a linear trend in the change from TP1 to TP2 and from TP2 to TP3.
 
-```{r effects2, out.width = "80%", fig.height=4, fig.width=5}
+```{r effects2, echo = FALSE, out.width = "80%", fig.height=4, fig.width=5}
 # Column names will have mathematical formatting too
 draws <- as.data.frame(b) %>% 
   as_tibble() %>% 
@@ -389,13 +425,14 @@ ggplot(intervals2) +
   ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
   geom_point(aes(x = m), size = 3, shape = 3) + 
   scale_y_discrete(labels = parse_text) + 
-  labs(x = NULL, y = NULL, caption = "90% and 50% intervals") + 
+  labs(x = NULL, y = NULL, 
+       caption = "Posterior median with 90% and 50% intervals") + 
   ggtitle("Average effects by study")
 ```
 
 Compute pairwise comparisons.
 
-```{r pairwise-effects, out.width = "80%", fig.height=4, fig.width=5}
+```{r pairwise-effects, echo = FALSE, out.width = "80%", fig.height=4, fig.width=5}
 clean_names <- . %>% 
   stringr::str_replace_all("[()]", "") %>% 
   stringr::str_replace("~~", "_")
@@ -420,7 +457,8 @@ ggplot(pairwise) +
   ggstance::geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
   ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
   geom_point(aes(x = m), size = 3, shape = 3) + 
-  labs(x = NULL, y = NULL, caption = "90% and 50% intervals") + 
+  labs(x = NULL, y = NULL, 
+       caption = "Posterior median with 90% and 50% intervals") + 
   facet_wrap("parameter", ncol = 1, strip.position = "left", 
              labeller = label_parsed) + 
   theme(strip.placement = "outside", 
@@ -435,7 +473,7 @@ ggplot(pairwise) +
 Bayesplot supports transformations so we could invert the log-odds measure to
 see the intercepts (area under curve/average accuracy) in proportion units.
 
-```{r intercepts, out.width = "60%", fig.height=2.5, fig.width=4}
+```{r intercepts, echo = FALSE,  out.width = "60%", fig.height=2.5, fig.width=4}
 intervals3 <- draws %>% 
   mcmc_intervals_data(regex_pars = "Intercept", transformations = "plogis", 
                       prob = 0.5, prob_outer = 0.9) %>% 
@@ -454,13 +492,14 @@ ggplot(intervals3) +
   ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
   geom_point(aes(x = m), size = 3, shape = 3) + 
   scale_y_discrete(labels = parse_text) + 
-  labs(x = NULL, y = NULL, caption = "90% and 50% intervals") + 
+  labs(x = NULL, y = NULL, 
+       caption = "Posterior median with 90% and 50% intervals") + 
   ggtitle("Average accuracy by year")
 ```
 
 We can compute differences in average accuracy as well.
 
-```{r intercept-differences, out.width = "60%", fig.height=2.5, fig.width=4}
+```{r intercept-differences, echo = FALSE, out.width = "60%", fig.height=2.5, fig.width=4}
 proportions <- b %>% 
   as.data.frame() %>%
   transmute(
@@ -485,7 +524,8 @@ ggplot(prop_diffs) +
   ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
   geom_point(aes(x = m), size = 3, shape = 3) + 
   scale_y_discrete(labels = parse_text) + 
-  labs(x = NULL, y = NULL, caption = "90% and 50% intervals") + 
+  labs(x = NULL, y = NULL, 
+       caption = "Posterior median with 90% and 50% intervals") + 
   ggtitle("Differences in average accuracy")
 ```
 
@@ -515,6 +555,7 @@ The average accuracy was `r pts$TP1` [90% UI: `r uis$TP1`] for timepoint
 for timepoint 3. The average accuracy increased by `r d_pts$TP2_TP1`
 [`r d_uis$TP2_TP1`] from timepoint 1 to timepoint 2 and by `r d_pts$TP3_TP2`
 [`r d_uis$TP3_TP2`] from timepoint 2 to timepoint 3.
+
 
 ### Plot the intervals for the random effect parameters
 
@@ -567,7 +608,7 @@ ggplot(intervals %>% filter(class == "scale")) +
         axis.text.y = element_text(size = rel(1.2))) +
   labs(title = "Random effect scales", 
        x = NULL, y = NULL, 
-       caption = "90% and 50% intervals")
+       caption = "Posterior median with 90% and 50% intervals")
 ```
 
 Then the correlations.
@@ -589,7 +630,7 @@ ggplot(intervals %>% filter(class == "correlation")) +
         axis.text.y = element_text(size = rel(1.2))) +
   labs(title = "Random effect correlations", 
        x = NULL, y = NULL, 
-       caption = "90% and 50% intervals")
+       caption = "Posterior median with 90% and 50% intervals")
 ```
 
 
@@ -955,18 +996,18 @@ c_intervals %>%
 #   geom_histogram() + 
 #   facet_grid(Study ~ coef)
 
-widely %>% tidy_corr(ends_with("EVT_GSV"))
+widely %>% tidy_correlation(ends_with("EVT_GSV"))
 
 widely %>% 
-  tidy_corr(TimePoint3_EVT_GSV, ends_with("intercept"), ends_with("ot1")) %>% 
+  tidy_correlation(TimePoint3_EVT_GSV, ends_with("intercept"), ends_with("ot1")) %>% 
   filter(column1 == "TimePoint3_EVT_GSV")
 
 widely %>% 
-  tidy_corr(TimePoint2_PPVT_GSV, TimePoint1_ot1, TimePoint2_ot1) %>% 
+  tidy_correlation(TimePoint2_PPVT_GSV, TimePoint1_ot1, TimePoint2_ot1) %>% 
   filter(column1 == "TimePoint2_PPVT_GSV")
 
 widely %>% 
-  tidy_corr(TimePoint2_PPVT_GSV, TimePoint1_ot1, TimePoint2_ot1,
+  tidy_correlation(TimePoint2_PPVT_GSV, TimePoint1_ot1, TimePoint2_ot1,
             TimePoint1_intercept, TimePoint2_intercept) %>% 
   filter(column1 == "TimePoint2_PPVT_GSV")
 ```
