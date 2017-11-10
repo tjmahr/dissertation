@@ -113,15 +113,6 @@ all <- bind_rows(output) %>%
   select(-Primary, -Others)
 readr::write_csv(all, "./data/fits.csv.gz")
 
-
-
-
-
-
-
-
-
-
 # Other code to test the high-level stuff above
 draws <- as.data.frame(b) %>%
   as_tibble() %>%
@@ -177,3 +168,21 @@ x <- all %>%
 all.equal((draws[["010L_TimePoint3_ot3"]] %>% sort), x)
 data_frame(x, (draws[["010L_TimePoint3_ot3"]] %>% sort))
 
+terms <- names(draws) %>%
+  stringr::str_subset("\\d{3}L_TimePoint\\d_") %>%
+  stringr::str_split_fixed("_", 3) %>%
+  as.data.frame(stringsAsFactors = FALSE) %>%
+  as_tibble() %>%
+  set_names("ResearchID", "Study", "coef") %>%
+  mutate(row = paste0(ResearchID, "_", Study, "_", coef),
+         coef = ifelse(coef == "int", "intercept", coef))
+
+for (row_i in tjmisc::seq_along_rows(terms)) {
+  row <- terms[row_i, ]
+  samples1 <- semi_join(all, row, by = c("Study", "ResearchID", "coef")) %>%
+    pull(.posterior_value) %>%
+    sort()
+  samples2 <- draws[[row$row]] %>% sort()
+
+  stopifnot(all.equal(samples1, samples2))
+}
