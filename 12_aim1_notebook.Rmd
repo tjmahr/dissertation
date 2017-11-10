@@ -356,6 +356,8 @@ parse_text <- function(x) parse(text = x)
 b <- readr::read_rds("./data/stan_aim1_cubic_model.rds.gz")
 b
 
+summary(b, pars = names(fixef(b)))
+
 prior_summary(b)
 ```
 
@@ -559,7 +561,7 @@ for timepoint 3. The average accuracy increased by `r d_pts$TP2_TP1`
 These are the parameters governing the random effect distributions. First, we
 plot the standard deviations.
 
-```{r posterior-sds, out.width = "80%", fig.height = 2.5, fig.width = 5}
+```{r posterior-sds, echo = FALSE, out.width = "80%", fig.height = 2.5, fig.width = 5}
 sdcors <- tristan::draw_var_corr(b)
 sdcors_wide <- sdcors %>% 
   select(.draw, .parameter, sdcor) %>% 
@@ -610,7 +612,7 @@ ggplot(intervals %>% filter(class == "scale")) +
 
 Then the correlations.
 
-```{r posterior-cors, out.width = "80%", fig.height = 3, fig.width = 5}
+```{r posterior-cors, echo = FALSE, out.width = "80%", fig.height = 3, fig.width = 5}
 ggplot(intervals %>% filter(class == "correlation")) + 
   aes(y = math) +
   geom_vline(xintercept = 0, size = 2, color = "white") +
@@ -631,6 +633,13 @@ ggplot(intervals %>% filter(class == "correlation")) +
 ```
 
 
+### Check for stable individual differences
+
+```{r}
+sdcors <- tristan::draw_co
+
+
+```
 
 
 
