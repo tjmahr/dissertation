@@ -3,7 +3,9 @@ fits <- fits %>% semi_join(d_m)
 
 
 # Compute Kendall's coefficient of correspondence
-tidy_kendall <- . %>% unclass() %>% as.data.frame(stringsAsFactors = FALSE)
+tidy_kendall <- . %>%
+  unclass() %>%
+  as.data.frame(stringsAsFactors = FALSE)
 
 new_coef <- fits %>%
   filter(coef == "intercept") %>%
@@ -13,7 +15,6 @@ new_coef <- fits %>%
 w <- fits %>%
   bind_rows(new_coef) %>%
   tidyr::spread(Study, .posterior_value) %>%
-  # group_by(.draw) %>%
   tidyr::drop_na(TimePoint1:TimePoint3) %>%
   select(-ResearchID) %>%
   tidyr::nest(TimePoint1:TimePoint3) %>%

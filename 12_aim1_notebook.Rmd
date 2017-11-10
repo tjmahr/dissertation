@@ -18,18 +18,28 @@ if (interactive()) source("./helpers.R")
 ## Data preparation
 
 Earlier we cleaned the data to remove trials with excessive missing data 
-and blocks of trials with too few trials. Read in that data.
+and blocks of trials with too few trials. Now we prepare the data for modelling.
 
-```{r, message = FALSE, warnings = FALSE}
-data <- readr::read_csv("./data/aim1-screened.csv.gz")
+```{r}
+opts_model <- list(
+  bin_width = 3,
+  start_time = 250,
+  end_time = 1500
+)
+opts_model$bin_length <- round(opts_model$bin_width * 16.67, -1)
+opts_model
 ```
 
-Downsample into 50 ms bins.
+We next downsample the data into `r opts_model$bin_length` ms (`r
+opts_model$bin_width`-frame) bins in order to smooth the data. We will model the
+looks from `r opts_model$start_time` to `r opts_model$end_time` ms, so we filter
+down to that time window. Lastly, we aggregate looks by child, study and time,
+and create orthogonal polynomials to use as time features for the model
 
-```{r, eval = TRUE}
-data <- data %>% 
+```{r, message = FALSE, warnings = FALSE}
+data <- readr::read_csv("./data/aim1-screened.csv.gz") %>% 
   select(Study, ResearchID, TrialID:GazeByImageAOI) %>% 
-  assign_bins(bin_width = 3, Time, TrialID)
+  assign_bins(bin_width = opts_model$bin_width, Time, TrialID)
 
 # Compute time at center of each bin
 bin_times <- data %>% 
@@ -56,15 +66,17 @@ d <- binned %>%
   aggregate_looks(resp_def, Study + ResearchID + Time ~ GazeByImageAOI)
 
 d_m <- d %>% 
-  filter(250 <= Time, Time <= 1500) %>% 
+  filter(opts_model$start_time <= Time, 
+         Time <= opts_model$end_time) %>% 
   polypoly::poly_add_columns(Time, degree = 3, 
                              scale_width = 1, prefix = "ot")
 ```
 
-Plot the model-ready data. For this plot, we use the so-called empirical logit
-because straight log-odds generates too extreme of values for plotting.
+Plot the model-ready data. For this plot, we use the so-called _empirical logit_
+transformation because the regular logit (log-odds) generates too extreme of
+values for plotting. 
 
-```{r spaghetti-elogit, out.width = "100%", fig.height=2.5, fig.width=6}
+```{r spaghetti-elogit, echo = FALSE, message = FALSE, out.width = "100%", fig.height=2.5, fig.width=6}
 ggplot(d_m) + 
   aes(x = Time, y = empirical_logit(Primary, Others)) + 
   geom_line(aes(group = ResearchID), alpha = .2) + 
@@ -73,6 +85,21 @@ ggplot(d_m) +
   facet_grid(. ~ Study) + 
   labs(x = "Time after target onset (smoothed to 50 ms bins)", 
        y = "Emp. logit looking to target")
+```
+
+Those extreme lines indicate sparse data where there are zero-to-few looks to
+the distractors compared to the target. These are the 20 most extreme bins, to 
+illustrate how empirical logit tames infinite values.
+
+```{r, echo = FALSE}
+d_m %>% 
+  select(Study:Time, Primary, Others) %>% 
+  arrange(desc(log(Primary / Others))) %>% 
+  mutate(
+    logit = log(Primary / Others) %>% round(2),
+    elogit = empirical_logit(Primary, Others) %>% round(2)) %>% 
+  head(20) %>% 
+  knitr::kable()
 ```
 
 
@@ -330,7 +357,14 @@ b <- readr::read_rds("./data/stan_aim1_cubic_model.rds.gz")
 b
 
 prior_summary(b)
+```
 
+Below the TimePoint2, TimePoint3, Time x TimePoint2, and Time x TimePoint3 
+effects confirm that children get more reliable and faster each year of the 
+study. Only the Time^2^ effect is near 0, which does not matter. We mostly care
+about the intercept and time terms.
+
+```{r effects1, echo = FALSE, out.width = "80%", fig.height=4, fig.width=5}
 intervals <- mcmc_intervals_data(as.data.frame(b), pars = names(fixef(b)))
 
 # Rename to use mathematical formatting
@@ -341,14 +375,7 @@ intervals$pname <- intervals$parameter %>%
   str_replace("Study", "") %>% 
   str_replace(":", " %*% ") %>% 
   factor(., levels = rev(.))
-```
 
-Below the TimePoint2, TimePoint3, Time x TimePoint2, and Time x TimePoint3 
-effects confirm that children get more reliable and faster each year of the 
-study. Only the Time^2^ effect is near 0, which does not matter. We mostly care
-about the intercept and time terms.
-
-```{r effects1, echo = FALSE, out.width = "80%", fig.height=4, fig.width=5}
 ggplot(intervals) + 
   aes(y = pname) +
   geom_vline(xintercept = 0, size = 2, color = "white") +
