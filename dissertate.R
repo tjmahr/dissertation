@@ -161,6 +161,44 @@ str_replace_ext <- function(x, ext, new_ext) {
   paste0(tools::file_path_sans_ext(x), ".", new_ext)
 }
 
+#' count words in rmd files
+wc_rmd <- function() {
+  library(magrittr)
+  now <- Sys.time()
+  outfile <- file.path("./misc/wcs", paste0(as.integer(now), ".csv"))
+
+  list.files("./", "\\d\\d.+.Rmd") %>%
+    rlang::set_names(., .) %>%
+    purrr::map_df(tjmisc::count_words_in_rmd_file, .id = "File") %>%
+    tibble::add_column(Date = Sys.time(), .before = 1) %>%
+    readr::write_csv(outfile) %>%
+    print()
+
+}
+
+#' clean up the rmd word count files
+wc_rmd_clean <- function() {
+  library(magrittr)
+  counts <- list.files("./misc/wcs", full.names = TRUE) %>%
+    rlang::set_names(., .) %>%
+    purrr::map(readr::read_csv, col_types = "Tciii")
+
+  no_dates <- counts %>%
+    lapply(modifyList, val = list(Date = NULL)) %>%
+    unname()
+
+  to_drop <- names(counts)[tjmisc::is_same_as_last(no_dates)]
+
+  if (length(to_drop) != 0) {
+    cat("Removing files: \n")
+    for (file in to_drop) {
+      message(" ", file)
+      invisible(file.remove(file))
+    }
+  }
+
+}
+
 #' reset bookdown files to last git commit
 reset_site <- function(...) {
   clean_site()
