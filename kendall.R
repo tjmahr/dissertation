@@ -1,5 +1,5 @@
-fits <- readr::read_csv("./data/fits.csv.gz")
-fits <- fits %>% semi_join(d_m)
+fits <- readr::read_csv("./data/fits.csv.gz") %>%
+  semi_join(d_m)
 
 
 # Compute Kendall's coefficient of correspondence
@@ -28,10 +28,15 @@ posterior_w <- w %>%
   rename(`random numbers` = `random values`) %>%
   select(-.draw)
 
-mcmc_areas_ridges(posterior_w) + theme_bw() +
-  ggtitle("Kendall's W for child-level effects") +
+mcmc_areas_ridges(posterior_w) +
+  theme_bw() +
+  ggtitle("Kendall's W for growth curve features",
+          subtitle = "Raters: 3 time points. Items: 123 children") +
   labs(caption = "random numbers used to illustrate null Ws")
-ggsave("w.png")
+
+# ggpreview(width = 5, height = 4)
+# ggsave("w.png")
+
 w %>%
   rename(parameter = coef) %>%
   ggplot() +

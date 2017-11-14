@@ -636,7 +636,7 @@ ggplot(intervals %>% filter(class == "correlation")) +
 ### Check for stable individual differences
 
 ```{r}
-sdcors <- tristan::draw_co
+
 
 
 ```
