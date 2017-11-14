@@ -30,11 +30,11 @@ opts_model$bin_length <- round(opts_model$bin_width * 16.67, -1)
 opts_model
 ```
 
-We next downsample the data into `r opts_model$bin_length` ms (`r
-opts_model$bin_width`-frame) bins in order to smooth the data. We will model the
-looks from `r opts_model$start_time` to `r opts_model$end_time` ms, so we filter
-down to that time window. Lastly, we aggregate looks by child, study and time,
-and create orthogonal polynomials to use as time features for the model
+We next downsample the data into `r opts_model$bin_length` ms
+(`r opts_model$bin_width`-frame) bins in order to smooth the data. We will model
+the looks from `r opts_model$start_time` to `r opts_model$end_time` ms, so we
+filter down to that time window. Lastly, we aggregate looks by child, study and
+time, and create orthogonal polynomials to use as time features for the model
 
 ```{r, message = FALSE, warnings = FALSE}
 data <- readr::read_csv("./data/aim1-screened.csv.gz") %>% 
@@ -472,7 +472,7 @@ ggplot(pairwise) +
 Bayesplot supports transformations so we could invert the log-odds measure to
 see the intercepts (area under curve/average accuracy) in proportion units.
 
-```{r intercepts, echo = FALSE,  out.width = "60%", fig.height=2.5, fig.width=4}
+```{r intercepts, echo = FALSE, out.width = "60%", fig.height=2.5, fig.width=4}
 intervals3 <- draws %>% 
   mcmc_intervals_data(regex_pars = "Intercept", transformations = "plogis", 
                       prob = 0.5, prob_outer = 0.9) %>% 
@@ -635,11 +635,148 @@ ggplot(intervals %>% filter(class == "correlation")) +
 
 ### Check for stable individual differences
 
-```{r}
+```{r, include = FALSE}
+fits <- readr::read_csv("./data/fits.csv.gz") %>%
+  semi_join(d_m)
 
+# Compute Kendall's coefficient of correspondence
+tidy_kendall <- . %>%
+  unclass() %>%
+  as.data.frame(stringsAsFactors = FALSE)
 
+new_coef <- fits %>%
+  filter(coef == "intercept") %>%
+  mutate(.posterior_value = runif(length(.posterior_value)),
+         coef = "random values")
 
+reduced_data <- fits %>%
+  bind_rows(new_coef) %>%
+  tidyr::spread(Study, .posterior_value) %>%
+  tidyr::drop_na(TimePoint1:TimePoint3) 
+
+n_rated <- n_distinct(reduced_data$ResearchID)
+
+ws <- reduced_data %>%
+  select(-ResearchID) %>%
+  tidyr::nest(TimePoint1:TimePoint3) %>%
+  mutate(ws = purrr::map(data, irr::kendall) %>% purrr::map(tidy_kendall)) %>%
+  select(-data) %>%
+  tidyr::unnest(ws)
+
+posterior_w <- ws %>%
+  select(.draw, coef, value) %>%
+  tidyr::spread(coef, value) %>%
+  rename(`random numbers` = `random values`) %>%
+  select(-.draw)
 ```
+
+
+We predicted that children would show stable longitudinal differences such that
+children who are faster and more accurate at recognizing words at age 3 remain
+relatively faster and more accurate at age 5. To evaluate this hypothesis,
+we used Kendall's _W_ (the coefficient of correspondence or concordance). This
+nonparametric statistic measures the degree of agreement among _J_ judges who
+are rating _I_ items. For our purposes, the items are the `r n_rated`
+children who provided reliable eyetracking for all three years of the study.
+(That is, we excluded children who only had reliable eyetracking data for one or
+two years.) The judges are the sets of growth curve parameters from each year of 
+study. For example, the intercept term provides three sets of ratings: The 
+participants' intercept terms from year 1 are one set of ratings and the 
+terms from years 2 and 3 provide two more sets of ratings. These three ratings
+are the "judges" used to compute the intercept's _W_. Thus, we compute four sets
+of _W_ coefficients, one for each set of growth curve features: Intercept,
+Time^1^, Time^2^, and Time^3^.
+
+(Maybe: Table X illustrates 
+some sample ratings of these participants.)
+
+```{r, echo = FALSE}
+zero_pad_int <- function (xs) {
+    formatter <- paste0("%0", max(nchar(xs)), "d")
+    sprintf(formatter, xs)
+}
+
+mean_rank <- function(xs) {
+  glue::glue("{printy::fmt_minus_sign(printy::fmt_fix_digits(xs, 2))} ({zero_pad_int(rank(-xs))})")
+}
+reduced_data %>% 
+  filter(coef == "intercept") %>% 
+  group_by(ResearchID, coef) %>% 
+  summarise_at(vars(starts_with("TimePoint")), median) %>% 
+  ungroup() %>% 
+  arrange(desc(TimePoint3)) %>% 
+  mutate(
+    TimePoint1 = mean_rank(TimePoint1), 
+    TimePoint2 = mean_rank(TimePoint2), 
+    TimePoint3 = mean_rank(TimePoint3)) %>% 
+  rename(
+    `Participant ID` = ResearchID,
+    `Growth curve feature` = coef,
+    `Year 1` = `TimePoint1`,
+    `Year 2` = `TimePoint2`,
+    `Year 3` = `TimePoint3`) %>% 
+  head(10) %>% 
+  knitr::kable(align = c("l", "l", "r", "r", "r"))
+
+nsamples <- nrow(as.data.frame(b))
+```
+
+Because we used a Bayesian model, we have a distribution of ratings and thus a
+distribution of concordance statistics. Each sample of the posterior
+distribution fits a growth curve for each child in each study, so each sample
+provides a set of ratings for concordance coefficients. The distribution of
+_W_'s lets us quantify our uncertainty because we can compute _W_'s for each of 
+the `r nsamples` samples from the posterior distribution.
+
+One final matter is how do we assess whether a concordance statistic is 
+meaningful. To tackle this question, we also included a "null rater", a fake 
+parameter that assigned each child in each year a random number. We can use the 
+distribution of _W_'s generated by randomly rating children as a benchmark for 
+assessing whether the other concordance statistics differ meaningfully from 
+chance.
+
+We used the `kendall()` function in the `irr` package (vers.
+`r packageVersion("irr")`, CITATION) to compute concordance statistics.
+
+Figure \@ref(fig:kendall-stats) depicts uncertainty intervals for the Kendall
+_W_'s for these growth curve features.
+
+(ref:kendall-stats) Uncertainty intervals for the Kendall's coefficient of
+concordance. Random ratings provide a baseline of null _W_
+statistics. The intercept and linear time features are decisively
+non-null, indicating a significant degree of correspondence in children's
+relative word recognition reliability and efficiency over three years of study.
+
+```{r kendall-stats, fig.cap = "(ref:kendall-stats)", echo = FALSE, out.width = "80%", fig.height = 3, fig.width = 6}
+posterior_w %>% 
+  rename(Intercept = `intercept`,
+         `Time` = ot1, 
+         `Time^2` = ot2, 
+         `Time^3` = ot3,
+         `Random~ratings` = `random numbers`) %>% 
+  mcmc_intervals_data() %>% 
+  mutate(parameter = forcats::fct_rev(parameter)) %>% 
+  ggplot() + 
+    aes(y = parameter) +
+    geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
+    geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
+    geom_point(aes(x = m), size = 3, shape = 3) + 
+    scale_y_discrete(labels = parse_text) + 
+    labs(
+      x = NULL, 
+      y = NULL, 
+      title = "Concordance coefficients for growth curve features",
+      caption = "Posterior median with 90% and 50% intervals",
+      subtitle = "Kendall's W. Raters: 3 time points. Items: 123 children.")
+```
+
+
+
+Growth curve features reflect individual differences in word recognition
+efficiency and accuracy. By using Kendall's _W_ to measure the degree of
+concordance among growth curve features over time, we can measure whether
+individual differences in lexical processing are stable over time.
+
 
 
 

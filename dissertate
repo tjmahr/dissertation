@@ -137,19 +137,47 @@ check_fig_names <- function(...) {
   invisible(TRUE)
 }
 
-#' count words in rmd files
 wc_rmd <- function() {
   library(magrittr)
   now <- Sys.time()
-  outfile <- file.path("./misc/wcs", paste0(as.integer(now), ".csv"))
-
   list.files("./", "\\d\\d.+.Rmd") %>%
     rlang::set_names(., .) %>%
     purrr::map_df(tjmisc::count_words_in_rmd_file, .id = "File") %>%
-    tibble::add_column(Date = Sys.time(), .before = 1) %>%
-    readr::write_csv(outfile) %>%
-    print()
+    tibble::add_column(Date = now, .before = 1)
+}
 
+#' view current word counts
+wc_rmd_peek <- function() {
+  results <- wc_rmd()
+  print(results)
+}
+
+#' check word count changes
+wc_rmd_diff <- function() {
+  suppressWarnings(suppressMessages(library(dplyr, warn.conflicts = FALSE)))
+
+  counts <- list.files("./misc/wcs", full.names = TRUE) %>%
+    rlang::set_names(., .) %>%
+    purrr::map(readr::read_csv, col_types = "Tciii")
+
+  most_recent <- counts[[length(counts)]] %>%
+    select(File, CurrentWords = Words)
+
+  wc_rmd() %>%
+    left_join(most_recent, by = c("File")) %>%
+    select(File, Words, CurrentWords) %>%
+    mutate(Change = sprintf("%+i", Words - CurrentWords),
+           Change = ifelse(Change == "+0", "", Change)) %>%
+    select(File, Words, Change) %>%
+    print()
+}
+
+#' count words in rmd files and save
+wc_rmd_save <- function() {
+  results <- wc_rmd_peek()
+  outfile <- file.path("./misc/wcs",
+                       paste0(as.integer(unique(results$Date)), ".csv"))
+  readr::write_csv(results, outfile)
 }
 
 #' clean up the rmd word count files

@@ -51,6 +51,7 @@ remove_intercept_effects <- function(predictions) {
 }
 
 b <- readr::read_rds("./data/stan_aim1_cubic_model.rds.gz")
+d_m <- b$data
 
 done <- fixef_pred_grid(b) %>%
   tidyr::crossing(Primary = 0, Others = 0, ResearchID = "DUMMY") %>%
@@ -69,7 +70,6 @@ done %>%
   summarise(effect = median(.posterior_value)) %>%
   tibble::add_column(fixef(b)[1:4])
 
-d_m <- b$data
 df <- sample_n_of(d_m, 5, ResearchID) %>%
   distinct(ResearchID)
 
@@ -85,9 +85,6 @@ ggplot(done) +
   coord_flip() +
   facet_wrap("ResearchID")
 
-as.data.frame(b) %>%
-  transmute(int = `(Intercept)` + `b[(Intercept) Study:ResearchID:TimePoint1:085L]` + `b[(Intercept) ResearchID:085L]`) %>%
-  lapply(median)
 
 done %>%
   filter(Study == "TimePoint1") %>%
@@ -112,6 +109,26 @@ for (sub_group_i in seq_along(sub_groups)) {
 all <- bind_rows(output) %>%
   select(-Primary, -Others)
 readr::write_csv(all, "./data/fits.csv.gz")
+
+
+as.data.frame(b) %>%
+  transmute(int = `(Intercept)` + `b[(Intercept) Study:ResearchID:TimePoint1:085L]` + `b[(Intercept) ResearchID:085L]`) %>%
+  lapply(median)
+
+all %>%
+  filter(Study == "TimePoint1", ResearchID == "085L", coef == "intercept") %>%
+  pull(.posterior_value) %>%
+  median()
+
+as.data.frame(b) %>%
+  transmute(int = `ot1` + `b[ot1 Study:ResearchID:TimePoint1:085L]` + `b[ot1 ResearchID:085L]`) %>%
+  lapply(median)
+
+all %>%
+  filter(Study == "TimePoint1", ResearchID == "085L", coef == "ot1") %>%
+  pull(.posterior_value) %>%
+  median()
+
 
 # Other code to test the high-level stuff above
 draws <- as.data.frame(b) %>%
