@@ -5,7 +5,7 @@ install_github_packages <- function() {
   devtools::install_github("LearningToTalk/L2TDatabase")
   devtools::install_github("tjmahr/littlelisteners")
   devtools::install_github("tjmahr/lookr")
-  devtools::install_github("stan-dev/bayesplot")
+  devtools::install_github("tjmahr/bayesplot")
   devtools::install_github("tjmahr/tristan")
   devtools::install_github("tjmahr/tjmisc")
   devtools::install_github("klutometis/roxygen")

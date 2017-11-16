@@ -361,12 +361,7 @@ summary(b, pars = names(fixef(b)))
 prior_summary(b)
 ```
 
-Below the TimePoint2, TimePoint3, Time x TimePoint2, and Time x TimePoint3 
-effects confirm that children get more reliable and faster each year of the 
-study. Only the Time^2^ effect is near 0, which does not matter. We mostly care
-about the intercept and time terms.
-
-```{r effects1, echo = FALSE, out.width = "80%", fig.height=4, fig.width=5}
+```{r effects1, eval = FALSE, echo = FALSE, out.width = "80%", fig.height=4, fig.width=5}
 intervals <- mcmc_intervals_data(as.data.frame(b), pars = names(fixef(b)))
 
 # Rename to use mathematical formatting
@@ -377,6 +372,14 @@ intervals$pname <- intervals$parameter %>%
   str_replace("Study", "") %>% 
   str_replace(":", " %*% ") %>% 
   factor(., levels = rev(.))
+
+order <- c("Intercept", "TimePoint2", "TimePoint3", 
+  "Time", "Time %*% TimePoint2", "Time %*% TimePoint3",
+  "Time^2", "Time^2 %*% TimePoint2", "Time^2 %*% TimePoint3",
+  "Time^3", "Time^3 %*% TimePoint2", "Time^3 %*% TimePoint3")
+   
+intervals$pname <- intervals$pname %>% 
+  forcats::fct_relevel(rev(order))
 
 ggplot(intervals) + 
   aes(y = pname) +
@@ -391,9 +394,10 @@ ggplot(intervals) +
           subtitle = "Dummy-coded effects with Timepoint1 as reference level")
 ```
 
-Now, let's undo interactions by adding year 1 main effects to interaction 
-effects and plot the effects for each year of the study. For each effect, there
-appears to be a linear trend in the change from TP1 to TP2 and from TP2 to TP3.
+Below the intercept and time effects increase each year, confirming that
+children get more reliable and faster at recognizing words as they grow older.
+For each effect, there appears to be a linear trend in the change from TP1 to
+TP2 and from TP2 to TP3. 
 
 ```{r effects2, echo = FALSE, out.width = "80%", fig.height=4, fig.width=5}
 # Column names will have mathematical formatting too
@@ -428,8 +432,6 @@ ggplot(intervals2) +
        caption = "Posterior median with 90% and 50% intervals") + 
   ggtitle("Average effects by study")
 ```
-
-Compute pairwise comparisons.
 
 ```{r pairwise-effects, echo = FALSE, out.width = "80%", fig.height=4, fig.width=5}
 clean_names <- . %>% 
@@ -554,6 +556,10 @@ The average accuracy was `r pts$TP1` [90% UI: `r uis$TP1`] for timepoint
 for timepoint 3. The average accuracy increased by `r d_pts$TP2_TP1`
 [`r d_uis$TP2_TP1`] from timepoint 1 to timepoint 2 and by `r d_pts$TP3_TP2`
 [`r d_uis$TP3_TP2`] from timepoint 2 to timepoint 3.
+
+
+
+
 
 
 ### Plot the intervals for the random effect parameters
@@ -812,53 +818,56 @@ that the intercept and linear time terms were stable over time.
 
 
 
+
 ### Posterior predictive checks
 
-Next, we let's check how well the model can simulate the observed data.
+Bayesian models are generative; they describe how the data could have been
+generated. One way to evaluate the model is to have it simulate new
+observations. If the simulated data closely resembles the observed data, then we
+have some confidence that our model has learned an approximation of how the data
+could have been generated.
 
-```{r post-pred, out.width = "80%", fig.height=3, fig.width=5}
+
+Figure \@ref(fig:post-pred) 
+
+(ref:post-pred) Posterior predictive density for the observed data from each
+year of the study. The _x_-axis represents the outcome measure---the proportion
+of looks to the target image---and the _y_-axis is the density of those values
+at year. At age 3, there is a large density of looks around chance performance
+(.25) with a rightward skew (above-chance looks are common). At age 4 and age 5,
+a bimodal distribution emerges, reflecting how looks start at chance and
+reliably increase to above-chance performance. Each light line is a simulation
+of the observed data from the model, and the thick lines are the observed data.
+Because the thick line is surrounded by light lines, we visually infer that the
+the model faithfully approximates the observed data.
+
+```{r post-pred, fig.cap = "(ref:post-pred)", out.width = "80%", fig.height=3, fig.width=6}
 sims <- rstanarm::posterior_predict(b, draws = 200, seed = "09272017")
-test <- bayesplot::ppc_data(b$y[, 1], sims) %>% 
-  left_join(data_frame(y_id = seq_along(b$y[, 1]),
-                       n_trials = rowSums(b$y)), by = "y_id")
+n_trials <- data_frame(y_id = seq_along(b$y[, 1]), n_trials = rowSums(b$y))
 
-ggplot(test) +
-  aes(x = value / n_trials) +
-  stat_density(
-    aes_(group = ~ rep_id),
-    data = function(x) dplyr::filter(x, !.data$is_y),
-    geom = "line", position = "identity", size = .25, alpha = .1) +
-  stat_density(
-    data = function(x) dplyr::filter(x, .data$is_y),
-    geom = "line", position = "identity", size = 1,
-    color = "blue") + 
-   labs(
-     x = "Proportion of looks", 
-     title = "Observed data and 200 posterior simulations") + 
-  coord_cartesian(xlim = c(0, 1), expand = FALSE)
-    # scale_color_ppc_dist() +
-    # xlab(y_label()) +
-    # bayesplot:::dont_expand_axes +
-    # yaxis_title(FALSE) +
-    # xaxis_title(FALSE) +
-    # yaxis_text(FALSE) +
-    # yaxis_ticks(FALSE)
-
-
-ggplot(test) + 
-  aes()
-rstanarm::pp_check(b, nreps = 200, seed = "09272017") + 
-  labs(
-    x = "Proportion of looks", 
-    title = "Observed data and 200 posterior simulations") +
-  guides(color = "none") +
-  coord_cartesian(xlim = c(0, 1))
+bayesplot:::ppc_data(b$y[, 1], sims, group = d_m$Study) %>% 
+  left_join(n_trials, by = "y_id") %>% 
+  mutate(prop = value / n_trials) %>% 
+  ggplot(dd) +
+    aes(x = prop) +
+    stat_density(
+      aes_(group = ~ rep_id),
+      data = function(x) dplyr::filter(x, !.data$is_y),
+      geom = "line", position = "identity", size = .25, alpha = .1, 
+      color = "#0074D9") +
+    stat_density(
+      data = function(x) dplyr::filter(x, .data$is_y),
+      geom = "line", position = "identity", size = 1) + 
+    labs(x = "Proportion of looks", 
+         title = "Observed data and 200 posterior simulations") + 
+    coord_cartesian(xlim = c(0, 1), expand = FALSE) + 
+    facet_wrap("group")
 ```
 
+The model can simulated observations that looks like the observed data. 
 
-### Look at some predictions
-
-Plot the posterior predictions for random participants. This is the model 
+We can ask the model make even more specific posterior predictions. Below we
+plot the posterior predictions for random participants. This is the model
 simulating new data for these participants.
 
 ```{r posterior-lines, out.width = "100%", fig.height=4, fig.width=5}
@@ -912,6 +921,10 @@ ggplot(lpred) +
     y = "Posterior log-odds")
 ```
 
+The next
+step is to ask how the model to simulate data for unobserved data---that is,
+have the model simulate data for new unobserved children.
+
 We can also consider predictions for hypothetical, new children as well. This
 procedure lets us explore the range of variability in performance at each age.
 In this case, the model has learned to predict less accurate and more spread out
@@ -959,6 +972,14 @@ ggplot(lpred) +
     y = "Proportion looks to target")
 ```
 
+One of the predictions was that children would become less variable as they grew
+older, as they converge on a mature level of performance. We can tackle this
+question by simulating data from new participants and looking at the ranges of
+predictions. The claim that children become less variable would imply that the
+range of predictions should be narrower age 5 than for age 4 than age 3. Below
+we plot the range of the predictions, both in terms of the full range (the
+difference between minimum and maximum values) and in terms of the interquartile
+range (the difference between the 75th percentile and the 25th percentile).
 
 ```{r hmmm-new-participants, fig.width=6, fig.height=3, out.width="80%"}
 by_draw <- lpred %>%
