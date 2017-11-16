@@ -164,11 +164,13 @@ wc_rmd_diff <- function() {
     select(File, CurrentWords = Words)
 
   wc_rmd() %>%
-    left_join(most_recent, by = c("File")) %>%
+    full_join(most_recent, by = c("File")) %>%
     select(File, Words, CurrentWords) %>%
+    mutate_at(c("Words", "CurrentWords"), coalesce, 0L) %>%
     mutate(Change = sprintf("%+i", Words - CurrentWords),
            Change = ifelse(Change == "+0", "", Change)) %>%
     select(File, Words, Change) %>%
+    arrange(File) %>%
     print()
 }
 
@@ -178,6 +180,26 @@ wc_rmd_save <- function() {
   outfile <- file.path("./misc/wcs",
                        paste0(as.integer(unique(results$Date)), ".csv"))
   readr::write_csv(results, outfile)
+}
+
+#' report daily wordcount totals
+wc_rmd_trend <- function() {
+  suppressWarnings(suppressMessages(library(dplyr, warn.conflicts = FALSE)))
+
+  counts <- list.files("./misc/wcs", full.names = TRUE) %>%
+    rlang::set_names(., .) %>%
+    purrr::map_df(readr::read_csv, col_types = "Tciii")
+
+  counts %>%
+    mutate(Date = format(Date, tz = "America/Chicago")) %>%
+    group_by(Date) %>%
+    summarise(Words = sum(Words)) %>%
+    mutate(Diff = Words - lag(Words),
+           Diff = coalesce(Diff, 0L),
+           Diff = sprintf("%+i", Diff),
+           Diff = ifelse(Diff == "+0", "", Diff)) %>%
+    tail(10) %>%
+    print()
 }
 
 #' clean up the rmd word count files

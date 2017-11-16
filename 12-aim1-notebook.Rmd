@@ -670,8 +670,7 @@ posterior_w <- ws %>%
   select(-.draw)
 ```
 
-
-We predicted that children would show stable longitudinal differences such that
+We predicted that children would show stable individual differences such that
 children who are faster and more accurate at recognizing words at age 3 remain
 relatively faster and more accurate at age 5. To evaluate this hypothesis,
 we used Kendall's _W_ (the coefficient of correspondence or concordance). This
@@ -691,14 +690,17 @@ Time^1^, Time^2^, and Time^3^.
 some sample ratings of these participants.)
 
 ```{r, echo = FALSE}
-zero_pad_int <- function (xs) {
+zero_pad_int <- function(xs) {
     formatter <- paste0("%0", max(nchar(xs)), "d")
     sprintf(formatter, xs)
 }
 
-mean_rank <- function(xs) {
-  glue::glue("{printy::fmt_minus_sign(printy::fmt_fix_digits(xs, 2))} ({zero_pad_int(rank(-xs))})")
+val_rank <- function(xs) {
+  a <- printy::fmt_minus_sign(printy::fmt_fix_digits(xs, 2))
+  b <- zero_pad_int(rank(-xs))
+  glue::glue("{a} ({b})")
 }
+
 reduced_data %>% 
   filter(coef == "intercept") %>% 
   group_by(ResearchID, coef) %>% 
@@ -706,9 +708,9 @@ reduced_data %>%
   ungroup() %>% 
   arrange(desc(TimePoint3)) %>% 
   mutate(
-    TimePoint1 = mean_rank(TimePoint1), 
-    TimePoint2 = mean_rank(TimePoint2), 
-    TimePoint3 = mean_rank(TimePoint3)) %>% 
+    TimePoint1 = val_rank(TimePoint1), 
+    TimePoint2 = val_rank(TimePoint2), 
+    TimePoint3 = val_rank(TimePoint3)) %>% 
   rename(
     `Participant ID` = ResearchID,
     `Growth curve feature` = coef,
@@ -738,44 +740,70 @@ chance.
 We used the `kendall()` function in the `irr` package (vers.
 `r packageVersion("irr")`, CITATION) to compute concordance statistics.
 
-Figure \@ref(fig:kendall-stats) depicts uncertainty intervals for the Kendall
-_W_'s for these growth curve features.
-
 (ref:kendall-stats) Uncertainty intervals for the Kendall's coefficient of
-concordance. Random ratings provide a baseline of null _W_
-statistics. The intercept and linear time features are decisively
-non-null, indicating a significant degree of correspondence in children's
-relative word recognition reliability and efficiency over three years of study.
+concordance. Random ratings provide a baseline of null _W_ statistics. The
+intercept and linear time features are decisively non-null, indicating a
+significant degree of correspondence in children's relative word recognition
+reliability and efficiency over three years of study.
 
 ```{r kendall-stats, fig.cap = "(ref:kendall-stats)", echo = FALSE, out.width = "80%", fig.height = 3, fig.width = 6}
-posterior_w %>% 
+subtitle <- glue::glue(
+  "Kendall's W. Raters: 3 time points. Items: {n_rated} children.")
+
+w_intervals <- posterior_w %>% 
   rename(Intercept = `intercept`,
          `Time` = ot1, 
          `Time^2` = ot2, 
          `Time^3` = ot3,
          `Random~ratings` = `random numbers`) %>% 
-  mcmc_intervals_data() %>% 
-  mutate(parameter = forcats::fct_rev(parameter)) %>% 
-  ggplot() + 
-    aes(y = parameter) +
-    geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
-    geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
-    geom_point(aes(x = m), size = 3, shape = 3) + 
-    scale_y_discrete(labels = parse_text) + 
-    labs(
-      x = NULL, 
-      y = NULL, 
-      title = "Concordance coefficients for growth curve features",
-      caption = "Posterior median with 90% and 50% intervals",
-      subtitle = "Kendall's W. Raters: 3 time points. Items: 123 children.")
+  mcmc_intervals_data(prob_outer = .9, prob = .5) %>% 
+  mutate(parameter = forcats::fct_rev(parameter)) 
+
+ggplot(w_intervals) + 
+  aes(y = parameter) +
+  geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
+  geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
+  geom_point(aes(x = m), size = 3, shape = 3) + 
+  scale_y_discrete(labels = parse_text) + 
+  labs(
+    x = NULL, 
+    y = NULL, 
+    title = "Concordance coefficients for growth curve features",
+    caption = "Posterior median with 90% and 50% intervals",
+    subtitle = subtitle)
+
+# TODO format as correlations
+w_pts <- w_intervals %>% split(.$parameter) %>% get_pts()
+w_uis <- w_intervals %>% split(.$parameter) %>% get_uis()
 ```
 
 
+Figure \@ref(fig:kendall-stats) depicts uncertainty intervals for the Kendall
+_W_'s for these growth curve features. The 90% uncertainty interval of _W_
+statistics from random ratings [`r w_uis[["Random~ratings"]]`] subsumes the
+intervals for the Time^2^ effect [`r w_uis[["Time^2"]]`] and the Time^3^ effect
+[`r w_uis[["Time^3"]]`], indicating that these values do not differentiate
+children in a longitudinally stable way. That is, the Time^2^ and Time^3^
+features differentiate children across studies as well as random numbers.
+Earlier, we stated that only the intercept and linear terms have psychologically
+meaningful interpretations and that the higher-order terms of these models serve
+to capture the shape of the growth curve data. These statistics support that
+assertion.
+
+Concordance is strongest for the intercept term, _W_\ = `r w_pts[["Intercept"]]`
+[`r w_uis[["Intercept"]]`] followed by the linear time term, _W_\ = `r
+w_pts[["Time"]]` [`r w_uis[["Time"]]`]. Because these values are from the
+statistics for random ratings, we conclude that there is a credible degree of
+correspondence across studies when we rank children using their average accuracy
+(the intercept) or their growth curve slope (linear time).
+
+#### Summary of this section 
 
 Growth curve features reflect individual differences in word recognition
 efficiency and accuracy. By using Kendall's _W_ to measure the degree of
 concordance among growth curve features over time, we can measure whether
-individual differences in lexical processing are stable over time.
+individual differences in lexical processing are stable over time. We found 
+that the intercept and linear time terms were stable over time.
 
 
 
@@ -852,7 +880,13 @@ ggplot(lpred) +
     y = "Posterior log-odds")
 ```
 
-We can consider predictions for hypothetical, new children as well.
+We can also consider predictions for hypothetical, new children as well. This
+procedure lets us explore the range of variability in performance at each age.
+In this case, the model has learned to predict less accurate and more spread out
+performance at age 3, and improved accuaracy and decreased variability at age 4
+and moreso at age 5.
+
+
 
 ```{r new-participants, fig.width=6, fig.height=3, out.width="80%"}
 dummy_data <- d_m %>% 
@@ -872,7 +906,7 @@ ggplot(lpred) +
   facet_wrap("Study") + 
   guides(color = guide_legend("none")) +
   labs(
-    title = "Posterior predictions for 1000 new participants",
+    title = "Posterior predictions for 1,000 new participants",
     x = "Time after target onset",
     y = "Proportion looks to target")
 
@@ -888,7 +922,7 @@ ggplot(lpred) +
   facet_wrap("Study") + 
   guides(color = guide_legend("none")) +
   labs(
-    title = "Posterior predictions for 1000 new participants",
+    title = "Posterior predictions for 1,000 new participants",
     x = "Time after target onset",
     y = "Proportion looks to target")
 ```
