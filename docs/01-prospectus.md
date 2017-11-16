@@ -1,0 +1,34 @@
+
+(PART\*) Prospectus {#part-prospectus .unnumbered}
+===================
+
+Front Matter
+============
+
+### About This Document {#about-this-document .unnumbered}
+
+This document outlines the research questions, data, and methods for my
+dissertation. This proposal started out as a grant-writing project, so
+it has some of the touchstones of NIH F31 grant (Specific Aims,
+Significance, Approach), but these sections have been expanded
+considerably.
+
+Date of oral presentation of dissertation proposal: April 3, 2017.
+
+### Dissertation Committee Members {#dissertation-committee-members .unnumbered}
+
+-   Jan Edwards, primary mentor and chair, Department of Hearing and
+    Speech Sciences, University of Maryland
+-   Susan Ellis Weismer, official advisor at UW-Madison, Department of
+    Communication Sciences and Disorders
+-   Margarita Kaushanskaya, Department of Communication Sciences and
+    Disorders
+-   Audra Sterling, Department of Communication Sciences and Disorders
+-   David Kaplan, Department of Educational Psychology
+-   Bob McMurray, Department of Psychological and Brain Sciences,
+    University of Iowa
+
+### Planned Dissertation Format {#planned-dissertation-format .unnumbered}
+
+Three thematically related manuscripts, one for each specific aim, to be
+completed by Summer 2018.
