@@ -633,9 +633,11 @@ ggplot(intervals %>% filter(class == "correlation")) +
 ```
 
 
+
+
 ### Check for stable individual differences
 
-```{r, include = FALSE}
+```{r compute-kendalls, include = FALSE}
 fits <- readr::read_csv("./data/fits.csv.gz") %>%
   semi_join(d_m)
 
@@ -689,7 +691,7 @@ Time^1^, Time^2^, and Time^3^.
 (Maybe: Table X illustrates 
 some sample ratings of these participants.)
 
-```{r, echo = FALSE}
+```{r table-example-of-feature-ranks, echo = FALSE}
 zero_pad_int <- function(xs) {
     formatter <- paste0("%0", max(nchar(xs)), "d")
     sprintf(formatter, xs)
@@ -791,8 +793,8 @@ to capture the shape of the growth curve data. These statistics support that
 assertion.
 
 Concordance is strongest for the intercept term, _W_\ = `r w_pts[["Intercept"]]`
-[`r w_uis[["Intercept"]]`] followed by the linear time term, _W_\ = `r
-w_pts[["Time"]]` [`r w_uis[["Time"]]`]. Because these values are from the
+[`r w_uis[["Intercept"]]`], followed by the linear time term, _W_\ =
+`r w_pts[["Time"]]` [`r w_uis[["Time"]]`]. Because these values are from the
 statistics for random ratings, we conclude that there is a credible degree of
 correspondence across studies when we rank children using their average accuracy
 (the intercept) or their growth curve slope (linear time).
@@ -815,6 +817,36 @@ that the intercept and linear time terms were stable over time.
 Next, we let's check how well the model can simulate the observed data.
 
 ```{r post-pred, out.width = "80%", fig.height=3, fig.width=5}
+sims <- rstanarm::posterior_predict(b, draws = 200, seed = "09272017")
+test <- bayesplot::ppc_data(b$y[, 1], sims) %>% 
+  left_join(data_frame(y_id = seq_along(b$y[, 1]),
+                       n_trials = rowSums(b$y)), by = "y_id")
+
+ggplot(test) +
+  aes(x = value / n_trials) +
+  stat_density(
+    aes_(group = ~ rep_id),
+    data = function(x) dplyr::filter(x, !.data$is_y),
+    geom = "line", position = "identity", size = .25, alpha = .1) +
+  stat_density(
+    data = function(x) dplyr::filter(x, .data$is_y),
+    geom = "line", position = "identity", size = 1,
+    color = "blue") + 
+   labs(
+     x = "Proportion of looks", 
+     title = "Observed data and 200 posterior simulations") + 
+  coord_cartesian(xlim = c(0, 1), expand = FALSE)
+    # scale_color_ppc_dist() +
+    # xlab(y_label()) +
+    # bayesplot:::dont_expand_axes +
+    # yaxis_title(FALSE) +
+    # xaxis_title(FALSE) +
+    # yaxis_text(FALSE) +
+    # yaxis_ticks(FALSE)
+
+
+ggplot(test) + 
+  aes()
 rstanarm::pp_check(b, nreps = 200, seed = "09272017") + 
   labs(
     x = "Proportion of looks", 

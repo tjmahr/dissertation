@@ -182,7 +182,7 @@ wc_rmd_save <- function() {
   readr::write_csv(results, outfile)
 }
 
-#' report daily wordcount totals
+#' report changes in total word counts
 wc_rmd_trend <- function() {
   suppressWarnings(suppressMessages(library(dplyr, warn.conflicts = FALSE)))
 
