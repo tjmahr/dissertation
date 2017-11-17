@@ -232,6 +232,11 @@ clean_site <- function(...) {
     invisible(file.remove("./dissertation.Rmd"))
   }
 
+  if (file.exists("./dissertation.md")) {
+    message(" dissertation.md")
+    invisible(file.remove("./dissertation.md"))
+  }
+
   # clean up artifacts of individual chapters in root folder
   chapters <- list.files(".", pattern = "Rmd")
   possible_mds <- str_replace_ext(chapters, "Rmd", "md")
