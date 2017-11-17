@@ -1,3 +1,5 @@
+options(Ncpus = parallel::detectCores() - 1)
+
 list_bibcodes <- function(sort = TRUE) {
   refs <- bibtex::read.bib("./assets/refs.bib")
 

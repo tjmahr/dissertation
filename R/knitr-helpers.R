@@ -1,4 +1,5 @@
 # ---- set-options ----
+library(methods)
 knitr::opts_chunk$set(
   tidy = FALSE,
   collapse = TRUE,

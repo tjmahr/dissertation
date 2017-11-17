@@ -157,8 +157,9 @@ msgs <- lapply(last_four_commits, methods::show)
 ```{r include = FALSE}
 # automatically create a bib database for R packages
 knitr::write_bib(c(
-  .packages(), 'bookdown', 'knitr', 'rmarkdown'
-), './assets/packages.bib')
+  .packages(), 'bookdown', 'knitr', 'rmarkdown', "lme4", 
+  "rstanarm", "dplyr", "ggplot2", "littlelisteners", "tristan", 
+  "bayesplot", "tjmisc", "rlang"), './assets/packages.bib')
 
 # dir.create("./docs/")
 # dir.create("./docs/assets/")
@@ -168,3 +169,4 @@ knitr::write_bib(c(
 #   overwrite = TRUE)
 ```
 
+Built with love using `r papaja::cite_r("./assets/packages.bib")`.
