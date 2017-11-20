@@ -26,6 +26,7 @@ Code settings:
 
 
 ```r
+library(methods)
 knitr::opts_chunk$set(
   tidy = FALSE,
   collapse = TRUE,
@@ -176,7 +177,7 @@ devtools::session_info()
 #>  language (EN)                        
 #>  collate  English_United States.1252  
 #>  tz       America/Chicago             
-#>  date     2017-11-15
+#>  date     2017-11-20
 #> Packages ----------------------------------------------------------------------
 #>  package   * version date       source        
 #>  backports   1.1.1   2017-09-25 CRAN (R 3.4.1)
@@ -194,7 +195,8 @@ devtools::session_info()
 #>  knitr       1.17    2017-08-10 CRAN (R 3.4.1)
 #>  magrittr    1.5     2014-11-22 CRAN (R 3.2.2)
 #>  memoise     1.1.0   2017-04-21 CRAN (R 3.4.0)
-#>  methods     3.4.2   2017-09-28 local         
+#>  methods   * 3.4.2   2017-09-28 local         
+#>  parallel    3.4.2   2017-09-28 local         
 #>  Rcpp        0.12.13 2017-09-28 CRAN (R 3.4.2)
 #>  rmarkdown   1.7     2017-11-10 CRAN (R 3.4.2)
 #>  rprojroot   1.2     2017-01-16 CRAN (R 3.3.2)
@@ -208,13 +210,14 @@ devtools::session_info()
 
 last_four_commits <- git2r::commits(git2r::repository("."), n = 4)
 msgs <- lapply(last_four_commits, methods::show)
-#> [4f0e21a] 2017-11-14: add most recent count
-#> [e07c61c] 2017-11-14: add to kendall section
-#> [a95bf89] 2017-11-14: add first word-count
-#> [504c362] 2017-11-14: add wordcount commands
+#> [5ddd2ce] 2017-11-17: word count
+#> [2f516e9] 2017-11-17: add more words
+#> [82c3565] 2017-11-17: add package citations
+#> [74ecf92] 2017-11-16: write about predictions
 ```
 
 
 
 
 
+Built with love using R [3.4.2, @R-base] and the R-packages *bayesplot* [1.4.0.9000, @R-bayesplot], *bookdown* [0.5, @R-bookdown], *dplyr* [0.7.4, @R-dplyr], *ggplot2* [2.2.1, @R-ggplot2], *knitr* [1.17, @R-knitr], *littlelisteners* [0.0.0.9000, @R-littlelisteners], *lme4* [1.1.14, @R-lme4], *rlang* [0.1.4.9000, @R-rlang], *rmarkdown* [1.7, @R-rmarkdown], *rstanarm* [2.15.3, @R-rstanarm], *tjmisc* [0.0.0.9000, @R-tjmisc], and *tristan* [0.0.0.9000, @R-tristan].

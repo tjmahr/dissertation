@@ -25,7 +25,7 @@
 <meta name="author" content="Tristan Mahr">
 
 
-<meta name="date" content="2017-11-15">
+<meta name="date" content="2017-11-20">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -181,10 +181,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="10.3.1" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#fixed-effects-plots"><i class="fa fa-check"></i><b>10.3.1</b> Fixed effects plots</a></li>
 <li class="chapter" data-level="10.3.2" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#plot-the-intervals-for-the-random-effect-parameters"><i class="fa fa-check"></i><b>10.3.2</b> Plot the intervals for the random effect parameters</a></li>
 <li class="chapter" data-level="10.3.3" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#check-for-stable-individual-differences"><i class="fa fa-check"></i><b>10.3.3</b> Check for stable individual differences</a></li>
-<li class="chapter" data-level="10.3.4" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#posterior-predictive-checks"><i class="fa fa-check"></i><b>10.3.4</b> Posterior predictive checks</a></li>
-<li class="chapter" data-level="10.3.5" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#look-at-some-predictions"><i class="fa fa-check"></i><b>10.3.5</b> Look at some predictions</a></li>
-<li class="chapter" data-level="10.3.6" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#predicting-the-future"><i class="fa fa-check"></i><b>10.3.6</b> Predicting the future</a></li>
-<li class="chapter" data-level="10.3.7" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#relationship-with-child-level-variables"><i class="fa fa-check"></i><b>10.3.7</b> Relationship with child-level variables</a></li>
+<li class="chapter" data-level="10.3.4" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#summary-of-this-section"><i class="fa fa-check"></i><b>10.3.4</b> Summary of this section</a></li>
+<li class="chapter" data-level="10.3.5" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#posterior-predictive-checks"><i class="fa fa-check"></i><b>10.3.5</b> Posterior predictive checks</a></li>
+<li class="chapter" data-level="10.3.6" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#simulating-data-from-new-participants"><i class="fa fa-check"></i><b>10.3.6</b> Simulating data from new participants</a></li>
+<li class="chapter" data-level="10.3.7" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#predicting-the-future"><i class="fa fa-check"></i><b>10.3.7</b> Predicting the future</a></li>
+<li class="chapter" data-level="10.3.8" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#relationship-with-child-level-variables"><i class="fa fa-check"></i><b>10.3.8</b> Relationship with child-level variables</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="11" data-path="visualize-looks-to-each-image-type.html"><a href="visualize-looks-to-each-image-type.html"><i class="fa fa-check"></i><b>11</b> Visualize looks to each image type</a><ul>
@@ -226,7 +227,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>For now, you have to install the development versions of <strong>bookdown</strong> from Github:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;rstudio/bookdown&quot;</span>)</code></pre></div>
 <p>Code settings:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span>opts_chunk<span class="op">$</span><span class="kw">set</span>(
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(methods)
+knitr<span class="op">::</span>opts_chunk<span class="op">$</span><span class="kw">set</span>(
   <span class="dt">tidy =</span> <span class="ot">FALSE</span>,
   <span class="dt">collapse =</span> <span class="ot">TRUE</span>,
   <span class="dt">comment =</span> <span class="st">&quot;#&gt;&quot;</span>,
@@ -378,7 +380,7 @@ devtools<span class="op">::</span><span class="kw">session_info</span>()
 <span class="co">#&gt;  language (EN)                        </span>
 <span class="co">#&gt;  collate  English_United States.1252  </span>
 <span class="co">#&gt;  tz       America/Chicago             </span>
-<span class="co">#&gt;  date     2017-11-15</span>
+<span class="co">#&gt;  date     2017-11-20</span>
 <span class="co">#&gt; Packages ----------------------------------------------------------------------</span>
 <span class="co">#&gt;  package   * version date       source        </span>
 <span class="co">#&gt;  backports   1.1.1   2017-09-25 CRAN (R 3.4.1)</span>
@@ -396,7 +398,8 @@ devtools<span class="op">::</span><span class="kw">session_info</span>()
 <span class="co">#&gt;  knitr       1.17    2017-08-10 CRAN (R 3.4.1)</span>
 <span class="co">#&gt;  magrittr    1.5     2014-11-22 CRAN (R 3.2.2)</span>
 <span class="co">#&gt;  memoise     1.1.0   2017-04-21 CRAN (R 3.4.0)</span>
-<span class="co">#&gt;  methods     3.4.2   2017-09-28 local         </span>
+<span class="co">#&gt;  methods   * 3.4.2   2017-09-28 local         </span>
+<span class="co">#&gt;  parallel    3.4.2   2017-09-28 local         </span>
 <span class="co">#&gt;  Rcpp        0.12.13 2017-09-28 CRAN (R 3.4.2)</span>
 <span class="co">#&gt;  rmarkdown   1.7     2017-11-10 CRAN (R 3.4.2)</span>
 <span class="co">#&gt;  rprojroot   1.2     2017-01-16 CRAN (R 3.3.2)</span>
@@ -410,16 +413,59 @@ devtools<span class="op">::</span><span class="kw">session_info</span>()
 
 last_four_commits &lt;-<span class="st"> </span>git2r<span class="op">::</span><span class="kw">commits</span>(git2r<span class="op">::</span><span class="kw">repository</span>(<span class="st">&quot;.&quot;</span>), <span class="dt">n =</span> <span class="dv">4</span>)
 msgs &lt;-<span class="st"> </span><span class="kw">lapply</span>(last_four_commits, methods<span class="op">::</span>show)
-<span class="co">#&gt; [4f0e21a] 2017-11-14: add most recent count</span>
-<span class="co">#&gt; [e07c61c] 2017-11-14: add to kendall section</span>
-<span class="co">#&gt; [a95bf89] 2017-11-14: add first word-count</span>
-<span class="co">#&gt; [504c362] 2017-11-14: add wordcount commands</span></code></pre></div>
+<span class="co">#&gt; [5ddd2ce] 2017-11-17: word count</span>
+<span class="co">#&gt; [2f516e9] 2017-11-17: add more words</span>
+<span class="co">#&gt; [82c3565] 2017-11-17: add package citations</span>
+<span class="co">#&gt; [74ecf92] 2017-11-16: write about predictions</span></code></pre></div>
+<p>Built with love using R <span class="citation">(3.4.2, R Core Team, <a href="#ref-R-base">2017</a>)</span> and the R-packages <em>bayesplot</em> <span class="citation">(1.4.0.9000, Gabry &amp; Mahr, <a href="#ref-R-bayesplot">2017</a>)</span>, <em>bookdown</em> <span class="citation">(0.5, Xie, <a href="#ref-R-bookdown">2017</a><a href="#ref-R-bookdown">a</a>)</span>, <em>dplyr</em> <span class="citation">(0.7.4, Wickham, Francois, Henry, &amp; Müller, <a href="#ref-R-dplyr">2017</a>)</span>, <em>ggplot2</em> <span class="citation">(2.2.1, Wickham &amp; Chang, <a href="#ref-R-ggplot2">2016</a>)</span>, <em>knitr</em> <span class="citation">(1.17, Xie, <a href="#ref-R-knitr">2017</a><a href="#ref-R-knitr">b</a>)</span>, <em>littlelisteners</em> <span class="citation">(0.0.0.9000, Mahr, <a href="#ref-R-littlelisteners">2017</a>)</span>, <em>lme4</em> <span class="citation">(1.1.14, Bates, Maechler, Bolker, &amp; Walker, <a href="#ref-R-lme4">2017</a>)</span>, <em>rlang</em> <span class="citation">(0.1.4.9000, Henry &amp; Wickham, <a href="#ref-R-rlang">2017</a>)</span>, <em>rmarkdown</em> <span class="citation">(1.7, Allaire et al., <a href="#ref-R-rmarkdown">2017</a>)</span>, <em>rstanarm</em> <span class="citation">(2.15.3, Gabry &amp; Goodrich, <a href="#ref-R-rstanarm">2017</a>)</span>, <em>tjmisc</em> <span class="citation">(0.0.0.9000, T. Mahr, <a href="#ref-R-tjmisc">2017</a><a href="#ref-R-tjmisc">a</a>)</span>, and <em>tristan</em> <span class="citation">(0.0.0.9000, T. Mahr, <a href="#ref-R-tristan">2017</a><a href="#ref-R-tristan">b</a>)</span>.</p>
 
 </div>
 </div>
 
 
 
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-R-base">
+<p>R Core Team. (2017). <em>R: A language and environment for statistical computing</em>. Vienna, Austria: R Foundation for Statistical Computing. Retrieved from <a href="https://www.R-project.org/" class="uri">https://www.R-project.org/</a></p>
+</div>
+<div id="ref-R-bayesplot">
+<p>Gabry, J., &amp; Mahr, T. (2017). <em>Bayesplot: Plotting for bayesian models</em>. Retrieved from <a href="http://mc-stan.org/bayesplot" class="uri">http://mc-stan.org/bayesplot</a></p>
+</div>
+<div id="ref-R-bookdown">
+<p>Xie, Y. (2017a). <em>Bookdown: Authoring books and technical documents with r markdown</em>. Retrieved from <a href="https://CRAN.R-project.org/package=bookdown" class="uri">https://CRAN.R-project.org/package=bookdown</a></p>
+</div>
+<div id="ref-R-dplyr">
+<p>Wickham, H., Francois, R., Henry, L., &amp; Müller, K. (2017). <em>Dplyr: A grammar of data manipulation</em>. Retrieved from <a href="https://CRAN.R-project.org/package=dplyr" class="uri">https://CRAN.R-project.org/package=dplyr</a></p>
+</div>
+<div id="ref-R-ggplot2">
+<p>Wickham, H., &amp; Chang, W. (2016). <em>Ggplot2: Create elegant data visualisations using the grammar of graphics</em>. Retrieved from <a href="https://CRAN.R-project.org/package=ggplot2" class="uri">https://CRAN.R-project.org/package=ggplot2</a></p>
+</div>
+<div id="ref-R-knitr">
+<p>Xie, Y. (2017b). <em>Knitr: A general-purpose package for dynamic report generation in r</em>. Retrieved from <a href="https://CRAN.R-project.org/package=knitr" class="uri">https://CRAN.R-project.org/package=knitr</a></p>
+</div>
+<div id="ref-R-littlelisteners">
+<p>Mahr, T. (2017). <em>Littlelisteners: Helper functions for hand-coded eyetracking data</em>.</p>
+</div>
+<div id="ref-R-lme4">
+<p>Bates, D., Maechler, M., Bolker, B., &amp; Walker, S. (2017). <em>Lme4: Linear mixed-effects models using ’eigen’ and s4</em>. Retrieved from <a href="https://CRAN.R-project.org/package=lme4" class="uri">https://CRAN.R-project.org/package=lme4</a></p>
+</div>
+<div id="ref-R-rlang">
+<p>Henry, L., &amp; Wickham, H. (2017). <em>Rlang: Functions for base types and core r and ’tidyverse’ features</em>.</p>
+</div>
+<div id="ref-R-rmarkdown">
+<p>Allaire, J., Xie, Y., McPherson, J., Luraschi, J., Ushey, K., Atkins, A., … Chang, W. (2017). <em>Rmarkdown: Dynamic documents for r</em>. Retrieved from <a href="https://CRAN.R-project.org/package=rmarkdown" class="uri">https://CRAN.R-project.org/package=rmarkdown</a></p>
+</div>
+<div id="ref-R-rstanarm">
+<p>Gabry, J., &amp; Goodrich, B. (2017). <em>Rstanarm: Bayesian applied regression modeling via stan</em>. Retrieved from <a href="https://CRAN.R-project.org/package=rstanarm" class="uri">https://CRAN.R-project.org/package=rstanarm</a></p>
+</div>
+<div id="ref-R-tjmisc">
+<p>Mahr, T. (2017a). <em>Tjmisc: TJ’s miscellany</em>. Retrieved from <a href="https://github.com/tjmahr/tjmisc" class="uri">https://github.com/tjmahr/tjmisc</a></p>
+</div>
+<div id="ref-R-tristan">
+<p>Mahr, T. (2017b). <em>Tristan: Tristan’s helper functions for rstanarm models and mcmc samples</em>.</p>
+</div>
+</div>
             </section>
 
           </div>

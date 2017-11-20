@@ -825,10 +825,11 @@ Bayesian models are generative; they describe how the data could have been
 generated. One way to evaluate the model is to have it simulate new
 observations. If the simulated data closely resembles the observed data, then we
 have some confidence that our model has learned an approximation of how the data
-could have been generated.
-
-
-Figure \@ref(fig:post-pred) 
+could have been generated. Figure \@ref(fig:post-pred) depicts the density of
+the observed data from each year of the study versus 200 posterior simulations.
+Because the simulations closely track the density of the observed data, we can
+infer that the model has learned how to generate data from each year of the
+study.
 
 (ref:post-pred) Posterior predictive density for the observed data from each
 year of the study. The _x_-axis represents the outcome measure---the proportion
@@ -864,7 +865,6 @@ bayesplot:::ppc_data(b$y[, 1], sims, group = d_m$Study) %>%
     facet_wrap("group")
 ```
 
-The model can simulated observations that looks like the observed data. 
 
 We can ask the model make even more specific posterior predictions. Below we
 plot the posterior predictions for random participants. This is the model
@@ -1003,18 +1003,20 @@ ggplot(lpred) +
 
 
 One of the predictions was that children would become less variable as they
-grew older, as they converge on a mature level of performance. We can tackle
+grew older and converge on a mature level of performance. We can tackle
 this question by inspecting the ranges of predictions for the simulated
 participants. The claim that children become less variable would imply that the
 range of predictions should be narrower age 5 than for age 4 than age 3. Figure
-\@ref(fig:new-ranges depicts the range of the predictions, both in terms of the
+\@ref(fig:new-ranges) depicts the range of the predictions, both in terms of the
 90 percentile range (i.e., the range of the middle 90% of the data) and in terms
-of the 50 percentile (interquartile) range.
+of the 50 percentile (interquartile) range. The ranges of performance decrease
+from age 3 to age 4 to age 5, consistent with the hypothesized reduction in
+variability.
 
-(ref:new-participants-intervals) Ranges of predictions for simulated
+(ref:new-ranges) Ranges of predictions for simulated
 participants over the course of a trial. The ranges are most similar during the
 first half of the trial when participants are at chance performance, and the
-ranges are most different at the end of the trial as children begin to fixate on
+ranges are most different at the end of the trial as children reliably fixate on
 the target image. The ranges of performance decreases with each year of the
 study as children show less variability.
 

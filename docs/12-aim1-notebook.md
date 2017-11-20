@@ -141,7 +141,6 @@ And reload the saved model here.
 ```r
 library(lme4)
 #> Loading required package: Matrix
-#> Loading required package: methods
 m <- readr::read_rds("./data/aim1_cubic_model.rds.gz")
 arm::display(m)
 #> glmer(formula = cbind(Primary, Others) ~ (ot1 + ot2 + ot3) * 
@@ -573,20 +572,14 @@ prior_summary(b)
 #> See help('prior_summary.stanreg') for more details
 ```
 
-Below the TimePoint2, TimePoint3, Time x TimePoint2, and Time x TimePoint3 
-effects confirm that children get more reliable and faster each year of the 
-study. Only the Time^2^ effect is near 0, which does not matter. We mostly care
-about the intercept and time terms.
 
-<img src="12-aim1-notebook_files/figure-html/effects1-1.png" width="80%" />
 
-Now, let's undo interactions by adding year 1 main effects to interaction 
-effects and plot the effects for each year of the study. For each effect, there
-appears to be a linear trend in the change from TP1 to TP2 and from TP2 to TP3.
+Below the intercept and time effects increase each year, confirming that
+children get more reliable and faster at recognizing words as they grow older.
+For each effect, there appears to be a linear trend in the change from TP1 to
+TP2 and from TP2 to TP3. 
 
 <img src="12-aim1-notebook_files/figure-html/effects2-1.png" width="80%" />
-
-Compute pairwise comparisons.
 
 <img src="12-aim1-notebook_files/figure-html/pairwise-effects-1.png" width="80%" />
 
@@ -618,6 +611,10 @@ for timepoint 3. The average accuracy increased by 0.1
 [0.058--0.085] from timepoint 2 to timepoint 3.
 
 
+
+
+
+
 ### Plot the intervals for the random effect parameters
 
 These are the parameters governing the random effect distributions. First, we
@@ -628,6 +625,8 @@ plot the standard deviations.
 Then the correlations.
 
 <img src="12-aim1-notebook_files/figure-html/posterior-cors-1.png" width="80%" />
+
+
 
 
 ### Check for stable individual differences
@@ -698,7 +697,7 @@ reliability and efficiency over three years of study.
 
 Figure \@ref(fig:kendall-stats) depicts uncertainty intervals for the Kendall
 _W_'s for these growth curve features. The 90% uncertainty interval of _W_
-statistics from random ratings [0.275--0.392] subsumes the
+statistics from random ratings [0.274--0.389] subsumes the
 intervals for the Time^2^ effect [0.295--0.351] and the Time^3^ effect
 [0.276--0.348], indicating that these values do not differentiate
 children in a longitudinally stable way. That is, the Time^2^ and Time^3^
@@ -709,13 +708,13 @@ to capture the shape of the growth curve data. These statistics support that
 assertion.
 
 Concordance is strongest for the intercept term, _W_\ = 0.585
-[0.573--0.596] followed by the linear time term, _W_\ = `r
-w_pts[["Time"]]` [0.483--0.518]. Because these values are from the
+[0.573--0.596], followed by the linear time term, _W_\ =
+0.501 [0.483--0.518]. Because these values are from the
 statistics for random ratings, we conclude that there is a credible degree of
 correspondence across studies when we rank children using their average accuracy
 (the intercept) or their growth curve slope (linear time).
 
-#### Summary of this section 
+### Summary of this section 
 
 Growth curve features reflect individual differences in word recognition
 efficiency and accuracy. By using Kendall's _W_ to measure the degree of
@@ -728,26 +727,38 @@ that the intercept and linear time terms were stable over time.
 
 
 
+
 ### Posterior predictive checks
 
-Next, we let's check how well the model can simulate the observed data.
+Bayesian models are generative; they describe how the data could have been
+generated. One way to evaluate the model is to have it simulate new
+observations. If the simulated data closely resembles the observed data, then we
+have some confidence that our model has learned an approximation of how the data
+could have been generated. Figure \@ref(fig:post-pred) depicts the density of
+the observed data from each year of the study versus 200 posterior simulations.
+Because the simulations closely track the density of the observed data, we can
+infer that the model has learned how to generate data from each year of the
+study.
+
+(ref:post-pred) Posterior predictive density for the observed data from each
+year of the study. The _x_-axis represents the outcome measure---the proportion
+of looks to the target image---and the _y_-axis is the density of those values
+at year. At age 3, there is a large density of looks around chance performance
+(.25) with a rightward skew (above-chance looks are common). At age 4 and age 5,
+a bimodal distribution emerges, reflecting how looks start at chance and
+reliably increase to above-chance performance. Each light line is a simulation
+of the observed data from the model, and the thick lines are the observed data.
+Because the thick line is surrounded by light lines, we visually infer that the
+the model faithfully approximates the observed data.
+
+<div class="figure">
+<img src="12-aim1-notebook_files/figure-html/post-pred-1.png" alt="(ref:post-pred)" width="80%" />
+<p class="caption">(\#fig:post-pred)(ref:post-pred)</p>
+</div>
 
 
-```r
-rstanarm::pp_check(b, nreps = 200, seed = "09272017") + 
-  labs(
-    x = "Proportion of looks", 
-    title = "Observed data and 200 posterior simulations") +
-  guides(color = "none") +
-  coord_cartesian(xlim = c(0, 1))
-```
-
-<img src="12-aim1-notebook_files/figure-html/post-pred-1.png" width="80%" />
-
-
-### Look at some predictions
-
-Plot the posterior predictions for random participants. This is the model 
+We can ask the model make even more specific posterior predictions. Below we
+plot the posterior predictions for random participants. This is the model
 simulating new data for these participants.
 
 
@@ -807,170 +818,75 @@ ggplot(lpred) +
 
 <img src="12-aim1-notebook_files/figure-html/posterior-mean-lines-1.png" width="100%" />
 
-We can also consider predictions for hypothetical, new children as well. This
-procedure lets us explore the range of variability in performance at each age.
-In this case, the model has learned to predict less accurate and more spread out
-performance at age 3, and improved accuaracy and decreased variability at age 4
-and moreso at age 5.
+
+### Simulating data from new participants
+
+This mixed effects model assumes that the each child's growth curve is drawn
+from a distribution of related growth curves, and it tries to infer the
+parameters of that distribution of growth curves (like the scale of individual
+differences in the intercept term or the correlation among growth curve
+features). A natural next step is to ask the model to simulate new samples from
+that distribution of growth curves: That is, predict new data for a
+hypothetical, unobserved child drawn from the same distribution as the `N
+CHILDREN` observed children.This procedure lets us explore the range of
+variability in performance at each age.
+
+Figure \@ref(fig:new-participants) shows the posterior predictions for 1,000
+simulated participants, which demonstrates how the model expects new
+participants to improve longitudinally but also exhibit stable individual
+differences over time. Figure \@ref(fig:new-participants-intervals) shows
+uncertainty intervals for these simulations. The model has learned to predict
+less accurate and more variable performance at age 3 with improving accuracy and
+narrowing variability at age 4 and age 5.
 
 
 
+(ref:new-participants) Posterior predictions for new _unobserved_ participants.
+Each line represents the predicted performance for a new participant. The three
+dark lines highlight predictions from one single simulated participant. The
+simulated participant shows both longitudinal improvement in word recognition
+and similar relative performance compared to other simulations each year,
+indicating that the model would predict new children to improve year over year
+and show stable individual differences over time.
 
-```r
-dummy_data <- d_m %>% 
-  distinct(Study, Time, ot1, ot2, ot3) %>% 
-  mutate(ResearchID = "NEW",
-         Primary = 0, 
-         Others = 0)
+<div class="figure">
+<img src="12-aim1-notebook_files/figure-html/new-participants-1.png" alt="(ref:new-participants)" width="80%" />
+<p class="caption">(\#fig:new-participants)(ref:new-participants)</p>
+</div>
 
-lpred <- dummy_data %>% 
-  tristan::augment_posterior_linpred(b, newdata = ., nsamples = 1000)
+(ref:new-participants-intervals) Uncertainty intervals for the simulated
+participants. Variability is widest at age 3 and narrowest at age 5,
+consistent with the prediction that children become less variable as they 
+grow older.
 
-ggplot(lpred) + 
-  aes(x = Time, y = plogis(.posterior_value), color = Study) +
-  geom_hline(yintercept = .25, size = 2, color = "white") +
-  geom_line(aes(group = interaction(Study, .draw)), 
-            alpha = .1, show.legend = FALSE) +
-  facet_wrap("Study") + 
-  guides(color = guide_legend("none")) +
-  labs(
-    title = "Posterior predictions for 1,000 new participants",
-    x = "Time after target onset",
-    y = "Proportion looks to target")
-```
-
-<img src="12-aim1-notebook_files/figure-html/new-participants-1.png" width="80%" />
-
-```r
-
-ggplot(lpred) + 
-  aes(x = Time, y = plogis(.posterior_value), color = Study) +
-  geom_hline(yintercept = .25, size = 2, color = "white") +
-  stat_summary(fun.data = median_hilow, fun.args = list(conf.int = .9),
-               size = 1, geom = "linerange") + 
-  stat_summary(fun.data = median_hilow, fun.args = list(conf.int = .5), 
-               size = 1.5, geom = "linerange") + 
-  stat_summary(fun.y = median, fun.args = list(conf.int = .5), 
-               size = 2.5, geom = "point") + 
-  facet_wrap("Study") + 
-  guides(color = guide_legend("none")) +
-  labs(
-    title = "Posterior predictions for 1,000 new participants",
-    x = "Time after target onset",
-    y = "Proportion looks to target")
-```
-
-<img src="12-aim1-notebook_files/figure-html/new-participants-2.png" width="80%" />
+<div class="figure">
+<img src="12-aim1-notebook_files/figure-html/new-participants-intervals-1.png" alt="(ref:new-participants-intervals)" width="80%" />
+<p class="caption">(\#fig:new-participants-intervals)(ref:new-participants-intervals)</p>
+</div>
 
 
+One of the predictions was that children would become less variable as they
+grew older and converge on a mature level of performance. We can tackle
+this question by inspecting the ranges of predictions for the simulated
+participants. The claim that children become less variable would imply that the
+range of predictions should be narrower age 5 than for age 4 than age 3. Figure
+\@ref(fig:new-ranges) depicts the range of the predictions, both in terms of the
+90 percentile range (i.e., the range of the middle 90% of the data) and in terms
+of the 50 percentile (interquartile) range. The ranges of performance decrease
+from age 3 to age 4 to age 5, consistent with the hypothesized reduction in
+variability.
 
-```r
-by_draw <- lpred %>%
-  group_by(Study, Time) %>%
-  summarise(
-    iqr = IQR(plogis(.posterior_value)),
-    min = min(plogis(.posterior_value)),
-    max = max(plogis(.posterior_value)),
-    range = max - min)
+(ref:new-ranges) Ranges of predictions for simulated
+participants over the course of a trial. The ranges are most similar during the
+first half of the trial when participants are at chance performance, and the
+ranges are most different at the end of the trial as children reliably fixate on
+the target image. The ranges of performance decreases with each year of the
+study as children show less variability.
 
-ggplot(by_draw) +
-  aes(x = Time, y = range, color = Study) +
-  stat_summary(fun.data = median_hilow, fun.args = list(conf.int = .9),
-               size = 1, geom = "linerange") +
-  stat_summary(fun.data = median_hilow, fun.args = list(conf.int = .5),
-               size = 1.5, geom = "linerange") +
-  stat_summary(fun.y = median, fun.args = list(conf.int = .5),
-               size = 2.5, geom = "point") +
-  labs(
-    title = "Ranges of predictions for 1000 new participants",
-    x = "Time after target onset",
-    y = "Max - min predicted value") 
-```
-
-<img src="12-aim1-notebook_files/figure-html/hmmm-new-participants-1.png" width="80%" />
-
-```r
-
-ggplot(by_draw) +
-  aes(x = Time, y = iqr, color = Study) +
-  stat_summary(fun.data = median_hilow, fun.args = list(conf.int = .9),
-               size = 1, geom = "linerange") +
-  stat_summary(fun.data = median_hilow, fun.args = list(conf.int = .5),
-               size = 1.5, geom = "linerange") +
-  stat_summary(fun.y = median, fun.args = list(conf.int = .5),
-               size = 2.5, geom = "point") +
-  labs(
-    title = "25%-75% ranges of predictions",
-    x = "Time after target onset",
-    y = "Interquartile range of predictions") + 
-  ylim(0, .25)
-```
-
-<img src="12-aim1-notebook_files/figure-html/hmmm-new-participants-2.png" width="80%" />
-
-```r
-
-
-# in_every_study <- d_m %>% 
-#   distinct(Study, ResearchID) %>% 
-#   split(.$Study) %>% 
-#   lapply(getElement, "ResearchID") %>% 
-#   Reduce(intersect, .)
-# 
-# d_m_every <- d_m %>% 
-#   filter(ResearchID %in% in_every_study)
-# 
-# sims <- tristan::augment_posterior_linpred(b, d_m_every, nsamples = 1000)
-# 
-# ggplot(sims) + 
-#   aes(x = Time, y = plogis(.posterior_value, color = Study) +
-#   geom_hline(yintercept = .25, size = 2, color = "white") +
-#   stat_summary(fun.data = median_hilow, fun.args = list(conf.int = .9),
-#                size = 1, geom = "linerange") + 
-#   stat_summary(fun.data = median_hilow, fun.args = list(conf.int = .5), 
-#                size = 1.5, geom = "linerange") + 
-#   stat_summary(fun.y = median, fun.args = list(conf.int = .5), 
-#                size = 2.5, geom = "point") + 
-#   # geom_line(aes(group = interaction(Study, ResearchID, .draw)), 
-#   #           alpha = .1) +
-#   # facet_wrap("ResearchID") + 
-#   geom_point(aes(y = qlogis(Prop)), shape = 1) + 
-#   theme(
-#     legend.position = c(.95, 0), 
-#     legend.justification = c(1, 0),
-#     legend.margin = margin(0)) +
-#   guides(color = guide_legend(title = NULL, override.aes = list(alpha = 1))) +
-#   labs(
-#     title = "Observed data and 100 posterior predictions",
-#     x = "Time after target onset",
-#     y = "Posterior log-odds")
-# sds <- fits %>% 
-#   group_by(Study, coef, .draw) %>% 
-#   summarise(
-#     mean = mean(.posterior_value),
-#     min = min(.posterior_value),
-#     max = max(.posterior_value),
-#     range = max - min,
-#     sd = sd(.posterior_value)) %>%
-#   group_by(Study, coef) %>% 
-#   select(-.draw) %>% 
-#   do(bayesplot::mcmc_intervals_data(select(., mean:sd))) %>% 
-#   ungroup()
-# 
-# ggplot(sds %>% filter(coef %in% c("intercept", "ot1"))) + 
-#   aes(y = forcats::fct_rev(Study)) +
-#   geom_vline(xintercept = 0, size = 2, color = "white") +
-#   ggstance::geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
-#   ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
-#   geom_point(aes(x = m), size = 3, shape = 3) + 
-#   labs(x = NULL, y = NULL, caption = "90% and 50% intervals") + 
-#   facet_grid(parameter ~ coef, scales = "free")
-#   facet_gird("coef", ncol = 1, strip.position = "left", 
-#              labeller = label_parsed, scales = "free") + 
-#   theme(strip.placement = "outside", 
-#         strip.background = element_rect(fill = NA),
-#         axis.text.y = element_text(size = rel(1.2))) 
-```
+<div class="figure">
+<img src="12-aim1-notebook_files/figure-html/new-ranges-1.png" alt="(ref:new-ranges)" width="80%" />
+<p class="caption">(\#fig:new-ranges)(ref:new-ranges)</p>
+</div>
 
 
 ### Predicting the future

@@ -25,7 +25,7 @@
 <meta name="author" content="Tristan Mahr">
 
 
-<meta name="date" content="2017-11-15">
+<meta name="date" content="2017-11-20">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -181,10 +181,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="10.3.1" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#fixed-effects-plots"><i class="fa fa-check"></i><b>10.3.1</b> Fixed effects plots</a></li>
 <li class="chapter" data-level="10.3.2" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#plot-the-intervals-for-the-random-effect-parameters"><i class="fa fa-check"></i><b>10.3.2</b> Plot the intervals for the random effect parameters</a></li>
 <li class="chapter" data-level="10.3.3" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#check-for-stable-individual-differences"><i class="fa fa-check"></i><b>10.3.3</b> Check for stable individual differences</a></li>
-<li class="chapter" data-level="10.3.4" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#posterior-predictive-checks"><i class="fa fa-check"></i><b>10.3.4</b> Posterior predictive checks</a></li>
-<li class="chapter" data-level="10.3.5" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#look-at-some-predictions"><i class="fa fa-check"></i><b>10.3.5</b> Look at some predictions</a></li>
-<li class="chapter" data-level="10.3.6" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#predicting-the-future"><i class="fa fa-check"></i><b>10.3.6</b> Predicting the future</a></li>
-<li class="chapter" data-level="10.3.7" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#relationship-with-child-level-variables"><i class="fa fa-check"></i><b>10.3.7</b> Relationship with child-level variables</a></li>
+<li class="chapter" data-level="10.3.4" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#summary-of-this-section"><i class="fa fa-check"></i><b>10.3.4</b> Summary of this section</a></li>
+<li class="chapter" data-level="10.3.5" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#posterior-predictive-checks"><i class="fa fa-check"></i><b>10.3.5</b> Posterior predictive checks</a></li>
+<li class="chapter" data-level="10.3.6" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#simulating-data-from-new-participants"><i class="fa fa-check"></i><b>10.3.6</b> Simulating data from new participants</a></li>
+<li class="chapter" data-level="10.3.7" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#predicting-the-future"><i class="fa fa-check"></i><b>10.3.7</b> Predicting the future</a></li>
+<li class="chapter" data-level="10.3.8" data-path="analyze-familiar-word-recognition.html"><a href="analyze-familiar-word-recognition.html#relationship-with-child-level-variables"><i class="fa fa-check"></i><b>10.3.8</b> Relationship with child-level variables</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="11" data-path="visualize-looks-to-each-image-type.html"><a href="visualize-looks-to-each-image-type.html"><i class="fa fa-check"></i><b>11</b> Visualize looks to each image type</a><ul>
@@ -494,7 +495,6 @@ readr<span class="op">::</span><span class="kw">write_rds</span>(m, <span class=
 <p>And reload the saved model here.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(lme4)
 <span class="co">#&gt; Loading required package: Matrix</span>
-<span class="co">#&gt; Loading required package: methods</span>
 m &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_rds</span>(<span class="st">&quot;./data/aim1_cubic_model.rds.gz&quot;</span>)
 arm<span class="op">::</span><span class="kw">display</span>(m)
 <span class="co">#&gt; glmer(formula = cbind(Primary, Others) ~ (ot1 + ot2 + ot3) * </span>
@@ -856,11 +856,8 @@ b
 <span class="co">#&gt;  ~ decov(reg. = 2, conc. = 1, shape = 1, scale = 1)</span>
 <span class="co">#&gt; ------</span>
 <span class="co">#&gt; See help(&#39;prior_summary.stanreg&#39;) for more details</span></code></pre></div>
-<p>Below the TimePoint2, TimePoint3, Time x TimePoint2, and Time x TimePoint3 effects confirm that children get more reliable and faster each year of the study. Only the Time<sup>2</sup> effect is near 0, which does not matter. We mostly care about the intercept and time terms.</p>
-<p><img src="12-aim1-notebook_files/figure-html/effects1-1.png" width="80%" /></p>
-<p>Now, let’s undo interactions by adding year 1 main effects to interaction effects and plot the effects for each year of the study. For each effect, there appears to be a linear trend in the change from TP1 to TP2 and from TP2 to TP3.</p>
+<p>Below the intercept and time effects increase each year, confirming that children get more reliable and faster at recognizing words as they grow older. For each effect, there appears to be a linear trend in the change from TP1 to TP2 and from TP2 to TP3.</p>
 <p><img src="12-aim1-notebook_files/figure-html/effects2-1.png" width="80%" /></p>
-<p>Compute pairwise comparisons.</p>
 <p><img src="12-aim1-notebook_files/figure-html/pairwise-effects-1.png" width="80%" /></p>
 <p>Bayesplot supports transformations so we could invert the log-odds measure to see the intercepts (area under curve/average accuracy) in proportion units.</p>
 <table>
@@ -1018,27 +1015,24 @@ b
 Figure 10.1: Uncertainty intervals for the Kendall’s coefficient of concordance. Random ratings provide a baseline of null <em>W</em> statistics. The intercept and linear time features are decisively non-null, indicating a significant degree of correspondence in children’s relative word recognition reliability and efficiency over three years of study.
 </p>
 </div>
-<p>Figure <a href="analyze-familiar-word-recognition.html#fig:kendall-stats">10.1</a> depicts uncertainty intervals for the Kendall <em>W</em>’s for these growth curve features. The 90% uncertainty interval of <em>W</em> statistics from random ratings [0.275–0.392] subsumes the intervals for the Time<sup>2</sup> effect [0.295–0.351] and the Time<sup>3</sup> effect [0.276–0.348], indicating that these values do not differentiate children in a longitudinally stable way. That is, the Time<sup>2</sup> and Time<sup>3</sup> features differentiate children across studies as well as random numbers. Earlier, we stated that only the intercept and linear terms have psychologically meaningful interpretations and that the higher-order terms of these models serve to capture the shape of the growth curve data. These statistics support that assertion.</p>
-<p>Concordance is strongest for the intercept term, <em>W</em> = 0.585 [0.573–0.596] followed by the linear time term, <em>W</em> = <code>r w_pts[[&quot;Time&quot;]]</code> [0.483–0.518]. Because these values are from the statistics for random ratings, we conclude that there is a credible degree of correspondence across studies when we rank children using their average accuracy (the intercept) or their growth curve slope (linear time).</p>
-<div id="summary-of-this-section" class="section level4">
-<h4><span class="header-section-number">10.3.3.1</span> Summary of this section</h4>
+<p>Figure <a href="analyze-familiar-word-recognition.html#fig:kendall-stats">10.1</a> depicts uncertainty intervals for the Kendall <em>W</em>’s for these growth curve features. The 90% uncertainty interval of <em>W</em> statistics from random ratings [0.274–0.389] subsumes the intervals for the Time<sup>2</sup> effect [0.295–0.351] and the Time<sup>3</sup> effect [0.276–0.348], indicating that these values do not differentiate children in a longitudinally stable way. That is, the Time<sup>2</sup> and Time<sup>3</sup> features differentiate children across studies as well as random numbers. Earlier, we stated that only the intercept and linear terms have psychologically meaningful interpretations and that the higher-order terms of these models serve to capture the shape of the growth curve data. These statistics support that assertion.</p>
+<p>Concordance is strongest for the intercept term, <em>W</em> = 0.585 [0.573–0.596], followed by the linear time term, <em>W</em> = 0.501 [0.483–0.518]. Because these values are from the statistics for random ratings, we conclude that there is a credible degree of correspondence across studies when we rank children using their average accuracy (the intercept) or their growth curve slope (linear time).</p>
+</div>
+<div id="summary-of-this-section" class="section level3">
+<h3><span class="header-section-number">10.3.4</span> Summary of this section</h3>
 <p>Growth curve features reflect individual differences in word recognition efficiency and accuracy. By using Kendall’s <em>W</em> to measure the degree of concordance among growth curve features over time, we can measure whether individual differences in lexical processing are stable over time. We found that the intercept and linear time terms were stable over time.</p>
 </div>
-</div>
 <div id="posterior-predictive-checks" class="section level3">
-<h3><span class="header-section-number">10.3.4</span> Posterior predictive checks</h3>
-<p>Next, we let’s check how well the model can simulate the observed data.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rstanarm<span class="op">::</span><span class="kw">pp_check</span>(b, <span class="dt">nreps =</span> <span class="dv">200</span>, <span class="dt">seed =</span> <span class="st">&quot;09272017&quot;</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">labs</span>(
-    <span class="dt">x =</span> <span class="st">&quot;Proportion of looks&quot;</span>, 
-    <span class="dt">title =</span> <span class="st">&quot;Observed data and 200 posterior simulations&quot;</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="st">&quot;none&quot;</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</code></pre></div>
-<p><img src="12-aim1-notebook_files/figure-html/post-pred-1.png" width="80%" /></p>
+<h3><span class="header-section-number">10.3.5</span> Posterior predictive checks</h3>
+<p>Bayesian models are generative; they describe how the data could have been generated. One way to evaluate the model is to have it simulate new observations. If the simulated data closely resembles the observed data, then we have some confidence that our model has learned an approximation of how the data could have been generated. Figure <a href="analyze-familiar-word-recognition.html#fig:post-pred">10.2</a> depicts the density of the observed data from each year of the study versus 200 posterior simulations. Because the simulations closely track the density of the observed data, we can infer that the model has learned how to generate data from each year of the study.</p>
+
+<div class="figure"><span id="fig:post-pred"></span>
+<img src="12-aim1-notebook_files/figure-html/post-pred-1.png" alt="Posterior predictive density for the observed data from each year of the study. The x-axis represents the outcome measure—the proportion of looks to the target image—and the y-axis is the density of those values at year. At age 3, there is a large density of looks around chance performance (.25) with a rightward skew (above-chance looks are common). At age 4 and age 5, a bimodal distribution emerges, reflecting how looks start at chance and reliably increase to above-chance performance. Each light line is a simulation of the observed data from the model, and the thick lines are the observed data. Because the thick line is surrounded by light lines, we visually infer that the the model faithfully approximates the observed data." width="80%" />
+<p class="caption">
+Figure 10.2: Posterior predictive density for the observed data from each year of the study. The <em>x</em>-axis represents the outcome measure—the proportion of looks to the target image—and the <em>y</em>-axis is the density of those values at year. At age 3, there is a large density of looks around chance performance (.25) with a rightward skew (above-chance looks are common). At age 4 and age 5, a bimodal distribution emerges, reflecting how looks start at chance and reliably increase to above-chance performance. Each light line is a simulation of the observed data from the model, and the thick lines are the observed data. Because the thick line is surrounded by light lines, we visually infer that the the model faithfully approximates the observed data.
+</p>
 </div>
-<div id="look-at-some-predictions" class="section level3">
-<h3><span class="header-section-number">10.3.5</span> Look at some predictions</h3>
-<p>Plot the posterior predictions for random participants. This is the model simulating new data for these participants.</p>
+<p>We can ask the model make even more specific posterior predictions. Below we plot the posterior predictions for random participants. This is the model simulating new data for these participants.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">09272017</span>)
 
 ppred &lt;-<span class="st"> </span>d_m <span class="op">%&gt;%</span><span class="st"> </span>
@@ -1084,145 +1078,36 @@ ppred &lt;-<span class="st"> </span>d_m <span class="op">%&gt;%</span><span clas
     <span class="dt">x =</span> <span class="st">&quot;Time after target onset&quot;</span>,
     <span class="dt">y =</span> <span class="st">&quot;Posterior log-odds&quot;</span>)</code></pre></div>
 <p><img src="12-aim1-notebook_files/figure-html/posterior-mean-lines-1.png" width="100%" /></p>
-<p>We can also consider predictions for hypothetical, new children as well. This procedure lets us explore the range of variability in performance at each age. In this case, the model has learned to predict less accurate and more spread out performance at age 3, and improved accuaracy and decreased variability at age 4 and moreso at age 5.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dummy_data &lt;-<span class="st"> </span>d_m <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">distinct</span>(Study, Time, ot1, ot2, ot3) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">ResearchID =</span> <span class="st">&quot;NEW&quot;</span>,
-         <span class="dt">Primary =</span> <span class="dv">0</span>, 
-         <span class="dt">Others =</span> <span class="dv">0</span>)
+</div>
+<div id="simulating-data-from-new-participants" class="section level3">
+<h3><span class="header-section-number">10.3.6</span> Simulating data from new participants</h3>
+<p>This mixed effects model assumes that the each child’s growth curve is drawn from a distribution of related growth curves, and it tries to infer the parameters of that distribution of growth curves (like the scale of individual differences in the intercept term or the correlation among growth curve features). A natural next step is to ask the model to simulate new samples from that distribution of growth curves: That is, predict new data for a hypothetical, unobserved child drawn from the same distribution as the <code>N CHILDREN</code> observed children.This procedure lets us explore the range of variability in performance at each age.</p>
+<p>Figure <a href="analyze-familiar-word-recognition.html#fig:new-participants">10.3</a> shows the posterior predictions for 1,000 simulated participants, which demonstrates how the model expects new participants to improve longitudinally but also exhibit stable individual differences over time. Figure <a href="analyze-familiar-word-recognition.html#fig:new-participants-intervals">10.4</a> shows uncertainty intervals for these simulations. The model has learned to predict less accurate and more variable performance at age 3 with improving accuracy and narrowing variability at age 4 and age 5.</p>
 
-lpred &lt;-<span class="st"> </span>dummy_data <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>tristan<span class="op">::</span><span class="kw">augment_posterior_linpred</span>(b, <span class="dt">newdata =</span> ., <span class="dt">nsamples =</span> <span class="dv">1000</span>)
+<div class="figure"><span id="fig:new-participants"></span>
+<img src="12-aim1-notebook_files/figure-html/new-participants-1.png" alt="Posterior predictions for new unobserved participants. Each line represents the predicted performance for a new participant. The three dark lines highlight predictions from one single simulated participant. The simulated participant shows both longitudinal improvement in word recognition and similar relative performance compared to other simulations each year, indicating that the model would predict new children to improve year over year and show stable individual differences over time." width="80%" />
+<p class="caption">
+Figure 10.3: Posterior predictions for new <em>unobserved</em> participants. Each line represents the predicted performance for a new participant. The three dark lines highlight predictions from one single simulated participant. The simulated participant shows both longitudinal improvement in word recognition and similar relative performance compared to other simulations each year, indicating that the model would predict new children to improve year over year and show stable individual differences over time.
+</p>
+</div>
 
-<span class="kw">ggplot</span>(lpred) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> <span class="kw">plogis</span>(.posterior_value), <span class="dt">color =</span> Study) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> .<span class="dv">25</span>, <span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> <span class="kw">interaction</span>(Study, .draw)), 
-            <span class="dt">alpha =</span> .<span class="dv">1</span>, <span class="dt">show.legend =</span> <span class="ot">FALSE</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="st">&quot;Study&quot;</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="kw">guide_legend</span>(<span class="st">&quot;none&quot;</span>)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">labs</span>(
-    <span class="dt">title =</span> <span class="st">&quot;Posterior predictions for 1,000 new participants&quot;</span>,
-    <span class="dt">x =</span> <span class="st">&quot;Time after target onset&quot;</span>,
-    <span class="dt">y =</span> <span class="st">&quot;Proportion looks to target&quot;</span>)</code></pre></div>
-<p><img src="12-aim1-notebook_files/figure-html/new-participants-1.png" width="80%" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-<span class="kw">ggplot</span>(lpred) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> <span class="kw">plogis</span>(.posterior_value), <span class="dt">color =</span> Study) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> .<span class="dv">25</span>, <span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">stat_summary</span>(<span class="dt">fun.data =</span> median_hilow, <span class="dt">fun.args =</span> <span class="kw">list</span>(<span class="dt">conf.int =</span> .<span class="dv">9</span>),
-               <span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">geom =</span> <span class="st">&quot;linerange&quot;</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">stat_summary</span>(<span class="dt">fun.data =</span> median_hilow, <span class="dt">fun.args =</span> <span class="kw">list</span>(<span class="dt">conf.int =</span> .<span class="dv">5</span>), 
-               <span class="dt">size =</span> <span class="fl">1.5</span>, <span class="dt">geom =</span> <span class="st">&quot;linerange&quot;</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">stat_summary</span>(<span class="dt">fun.y =</span> median, <span class="dt">fun.args =</span> <span class="kw">list</span>(<span class="dt">conf.int =</span> .<span class="dv">5</span>), 
-               <span class="dt">size =</span> <span class="fl">2.5</span>, <span class="dt">geom =</span> <span class="st">&quot;point&quot;</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="st">&quot;Study&quot;</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="kw">guide_legend</span>(<span class="st">&quot;none&quot;</span>)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">labs</span>(
-    <span class="dt">title =</span> <span class="st">&quot;Posterior predictions for 1,000 new participants&quot;</span>,
-    <span class="dt">x =</span> <span class="st">&quot;Time after target onset&quot;</span>,
-    <span class="dt">y =</span> <span class="st">&quot;Proportion looks to target&quot;</span>)</code></pre></div>
-<p><img src="12-aim1-notebook_files/figure-html/new-participants-2.png" width="80%" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">by_draw &lt;-<span class="st"> </span>lpred <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">group_by</span>(Study, Time) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">summarise</span>(
-    <span class="dt">iqr =</span> <span class="kw">IQR</span>(<span class="kw">plogis</span>(.posterior_value)),
-    <span class="dt">min =</span> <span class="kw">min</span>(<span class="kw">plogis</span>(.posterior_value)),
-    <span class="dt">max =</span> <span class="kw">max</span>(<span class="kw">plogis</span>(.posterior_value)),
-    <span class="dt">range =</span> max <span class="op">-</span><span class="st"> </span>min)
+<div class="figure"><span id="fig:new-participants-intervals"></span>
+<img src="12-aim1-notebook_files/figure-html/new-participants-intervals-1.png" alt="Uncertainty intervals for the simulated participants. Variability is widest at age 3 and narrowest at age 5, consistent with the prediction that children become less variable as they grow older." width="80%" />
+<p class="caption">
+Figure 10.4: Uncertainty intervals for the simulated participants. Variability is widest at age 3 and narrowest at age 5, consistent with the prediction that children become less variable as they grow older.
+</p>
+</div>
+<p>One of the predictions was that children would become less variable as they grew older and converge on a mature level of performance. We can tackle this question by inspecting the ranges of predictions for the simulated participants. The claim that children become less variable would imply that the range of predictions should be narrower age 5 than for age 4 than age 3. Figure <a href="analyze-familiar-word-recognition.html#fig:new-ranges">10.5</a> depicts the range of the predictions, both in terms of the 90 percentile range (i.e., the range of the middle 90% of the data) and in terms of the 50 percentile (interquartile) range. The ranges of performance decrease from age 3 to age 4 to age 5, consistent with the hypothesized reduction in variability.</p>
 
-<span class="kw">ggplot</span>(by_draw) <span class="op">+</span>
-<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> range, <span class="dt">color =</span> Study) <span class="op">+</span>
-<span class="st">  </span><span class="kw">stat_summary</span>(<span class="dt">fun.data =</span> median_hilow, <span class="dt">fun.args =</span> <span class="kw">list</span>(<span class="dt">conf.int =</span> .<span class="dv">9</span>),
-               <span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">geom =</span> <span class="st">&quot;linerange&quot;</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">stat_summary</span>(<span class="dt">fun.data =</span> median_hilow, <span class="dt">fun.args =</span> <span class="kw">list</span>(<span class="dt">conf.int =</span> .<span class="dv">5</span>),
-               <span class="dt">size =</span> <span class="fl">1.5</span>, <span class="dt">geom =</span> <span class="st">&quot;linerange&quot;</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">stat_summary</span>(<span class="dt">fun.y =</span> median, <span class="dt">fun.args =</span> <span class="kw">list</span>(<span class="dt">conf.int =</span> .<span class="dv">5</span>),
-               <span class="dt">size =</span> <span class="fl">2.5</span>, <span class="dt">geom =</span> <span class="st">&quot;point&quot;</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">labs</span>(
-    <span class="dt">title =</span> <span class="st">&quot;Ranges of predictions for 1000 new participants&quot;</span>,
-    <span class="dt">x =</span> <span class="st">&quot;Time after target onset&quot;</span>,
-    <span class="dt">y =</span> <span class="st">&quot;Max - min predicted value&quot;</span>) </code></pre></div>
-<p><img src="12-aim1-notebook_files/figure-html/hmmm-new-participants-1.png" width="80%" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-<span class="kw">ggplot</span>(by_draw) <span class="op">+</span>
-<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> iqr, <span class="dt">color =</span> Study) <span class="op">+</span>
-<span class="st">  </span><span class="kw">stat_summary</span>(<span class="dt">fun.data =</span> median_hilow, <span class="dt">fun.args =</span> <span class="kw">list</span>(<span class="dt">conf.int =</span> .<span class="dv">9</span>),
-               <span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">geom =</span> <span class="st">&quot;linerange&quot;</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">stat_summary</span>(<span class="dt">fun.data =</span> median_hilow, <span class="dt">fun.args =</span> <span class="kw">list</span>(<span class="dt">conf.int =</span> .<span class="dv">5</span>),
-               <span class="dt">size =</span> <span class="fl">1.5</span>, <span class="dt">geom =</span> <span class="st">&quot;linerange&quot;</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">stat_summary</span>(<span class="dt">fun.y =</span> median, <span class="dt">fun.args =</span> <span class="kw">list</span>(<span class="dt">conf.int =</span> .<span class="dv">5</span>),
-               <span class="dt">size =</span> <span class="fl">2.5</span>, <span class="dt">geom =</span> <span class="st">&quot;point&quot;</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">labs</span>(
-    <span class="dt">title =</span> <span class="st">&quot;25%-75% ranges of predictions&quot;</span>,
-    <span class="dt">x =</span> <span class="st">&quot;Time after target onset&quot;</span>,
-    <span class="dt">y =</span> <span class="st">&quot;Interquartile range of predictions&quot;</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">ylim</span>(<span class="dv">0</span>, .<span class="dv">25</span>)</code></pre></div>
-<p><img src="12-aim1-notebook_files/figure-html/hmmm-new-participants-2.png" width="80%" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-
-<span class="co"># in_every_study &lt;- d_m %&gt;% </span>
-<span class="co">#   distinct(Study, ResearchID) %&gt;% </span>
-<span class="co">#   split(.$Study) %&gt;% </span>
-<span class="co">#   lapply(getElement, &quot;ResearchID&quot;) %&gt;% </span>
-<span class="co">#   Reduce(intersect, .)</span>
-<span class="co"># </span>
-<span class="co"># d_m_every &lt;- d_m %&gt;% </span>
-<span class="co">#   filter(ResearchID %in% in_every_study)</span>
-<span class="co"># </span>
-<span class="co"># sims &lt;- tristan::augment_posterior_linpred(b, d_m_every, nsamples = 1000)</span>
-<span class="co"># </span>
-<span class="co"># ggplot(sims) + </span>
-<span class="co">#   aes(x = Time, y = plogis(.posterior_value, color = Study) +</span>
-<span class="co">#   geom_hline(yintercept = .25, size = 2, color = &quot;white&quot;) +</span>
-<span class="co">#   stat_summary(fun.data = median_hilow, fun.args = list(conf.int = .9),</span>
-<span class="co">#                size = 1, geom = &quot;linerange&quot;) + </span>
-<span class="co">#   stat_summary(fun.data = median_hilow, fun.args = list(conf.int = .5), </span>
-<span class="co">#                size = 1.5, geom = &quot;linerange&quot;) + </span>
-<span class="co">#   stat_summary(fun.y = median, fun.args = list(conf.int = .5), </span>
-<span class="co">#                size = 2.5, geom = &quot;point&quot;) + </span>
-<span class="co">#   # geom_line(aes(group = interaction(Study, ResearchID, .draw)), </span>
-<span class="co">#   #           alpha = .1) +</span>
-<span class="co">#   # facet_wrap(&quot;ResearchID&quot;) + </span>
-<span class="co">#   geom_point(aes(y = qlogis(Prop)), shape = 1) + </span>
-<span class="co">#   theme(</span>
-<span class="co">#     legend.position = c(.95, 0), </span>
-<span class="co">#     legend.justification = c(1, 0),</span>
-<span class="co">#     legend.margin = margin(0)) +</span>
-<span class="co">#   guides(color = guide_legend(title = NULL, override.aes = list(alpha = 1))) +</span>
-<span class="co">#   labs(</span>
-<span class="co">#     title = &quot;Observed data and 100 posterior predictions&quot;,</span>
-<span class="co">#     x = &quot;Time after target onset&quot;,</span>
-<span class="co">#     y = &quot;Posterior log-odds&quot;)</span>
-<span class="co"># sds &lt;- fits %&gt;% </span>
-<span class="co">#   group_by(Study, coef, .draw) %&gt;% </span>
-<span class="co">#   summarise(</span>
-<span class="co">#     mean = mean(.posterior_value),</span>
-<span class="co">#     min = min(.posterior_value),</span>
-<span class="co">#     max = max(.posterior_value),</span>
-<span class="co">#     range = max - min,</span>
-<span class="co">#     sd = sd(.posterior_value)) %&gt;%</span>
-<span class="co">#   group_by(Study, coef) %&gt;% </span>
-<span class="co">#   select(-.draw) %&gt;% </span>
-<span class="co">#   do(bayesplot::mcmc_intervals_data(select(., mean:sd))) %&gt;% </span>
-<span class="co">#   ungroup()</span>
-<span class="co"># </span>
-<span class="co"># ggplot(sds %&gt;% filter(coef %in% c(&quot;intercept&quot;, &quot;ot1&quot;))) + </span>
-<span class="co">#   aes(y = forcats::fct_rev(Study)) +</span>
-<span class="co">#   geom_vline(xintercept = 0, size = 2, color = &quot;white&quot;) +</span>
-<span class="co">#   ggstance::geom_linerangeh(aes(xmin = ll, xmax = hh)) + </span>
-<span class="co">#   ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +</span>
-<span class="co">#   geom_point(aes(x = m), size = 3, shape = 3) + </span>
-<span class="co">#   labs(x = NULL, y = NULL, caption = &quot;90% and 50% intervals&quot;) + </span>
-<span class="co">#   facet_grid(parameter ~ coef, scales = &quot;free&quot;)</span>
-<span class="co">#   facet_gird(&quot;coef&quot;, ncol = 1, strip.position = &quot;left&quot;, </span>
-<span class="co">#              labeller = label_parsed, scales = &quot;free&quot;) + </span>
-<span class="co">#   theme(strip.placement = &quot;outside&quot;, </span>
-<span class="co">#         strip.background = element_rect(fill = NA),</span>
-<span class="co">#         axis.text.y = element_text(size = rel(1.2))) </span></code></pre></div>
+<div class="figure"><span id="fig:new-ranges"></span>
+<img src="12-aim1-notebook_files/figure-html/new-ranges-1.png" alt="Ranges of predictions for simulated participants over the course of a trial. The ranges are most similar during the first half of the trial when participants are at chance performance, and the ranges are most different at the end of the trial as children reliably fixate on the target image. The ranges of performance decreases with each year of the study as children show less variability." width="80%" />
+<p class="caption">
+Figure 10.5: Ranges of predictions for simulated participants over the course of a trial. The ranges are most similar during the first half of the trial when participants are at chance performance, and the ranges are most different at the end of the trial as children reliably fixate on the target image. The ranges of performance decreases with each year of the study as children show less variability.
+</p>
+</div>
 </div>
 <div id="predicting-the-future" class="section level3">
-<h3><span class="header-section-number">10.3.6</span> Predicting the future</h3>
+<h3><span class="header-section-number">10.3.7</span> Predicting the future</h3>
 <blockquote>
 <p>As a consequence, individual differences in word recognition at age 3, for example, will be more discriminating and predictive of age 5 language outcomes than differences at age 4.</p>
 </blockquote>
@@ -1454,7 +1339,7 @@ widely <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="co">#&gt; 4 TimePoint2_PPVT_GSV TimePoint2_intercept   0.4248   161       0</span></code></pre></div>
 </div>
 <div id="relationship-with-child-level-variables" class="section level3">
-<h3><span class="header-section-number">10.3.7</span> Relationship with child-level variables</h3>
+<h3><span class="header-section-number">10.3.8</span> Relationship with child-level variables</h3>
 <blockquote>
 <p>Vocabulary size and lexical processing will be tightly correlated such that large year-over-year gains in one measure will predict large year-over-years gains in the other measure.</p>
 </blockquote>
