@@ -190,16 +190,20 @@ wc_rmd_trend <- function() {
     rlang::set_names(., .) %>%
     purrr::map_df(readr::read_csv, col_types = "Tciii")
 
-  counts %>%
+  totals <- counts %>%
     mutate(Date = format(Date, tz = "America/Chicago")) %>%
     group_by(Date) %>%
     summarise(Words = sum(Words)) %>%
     mutate(Diff = Words - lag(Words),
            Diff = coalesce(Diff, 0L),
            Diff = sprintf("%+i", Diff),
-           Diff = ifelse(Diff == "+0", "", Diff)) %>%
+           Diff = ifelse(Diff == "+0", "", Diff))
+
+  totals <- totals %>%
     tail(10) %>%
     print()
+
+  invisible(totals)
 }
 
 #' clean up the rmd word count files
