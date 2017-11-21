@@ -1063,35 +1063,232 @@ ggplot(by_draw) +
 
 ### Predicting the future
 
+```{r, include = FALSE}
+fits <- readr::read_csv("./data/fits.csv.gz") %>% 
+  semi_join(d_m)
+
+scores <- readr::read_csv("./data-raw/test_scores.csv") %>% 
+  select(Study, ResearchID, Age, EVT_GSV, EVT_Standard, 
+         PPVT_GSV, PPVT_Standard)
+
+wide_scores <- scores %>% 
+  tidyr::gather("Test", "Value", -ResearchID, -Study) %>% 
+  tidyr::unite("Col", Study, Test) %>% 
+  tidyr::spread(Col, Value)
+
+cor_complete <- function(...) cor(..., use = "pairwise.complete")
+
+vocab_cors <- fits %>% 
+  left_join(wide_scores) %>% 
+  group_by(Study, coef, .draw) %>% 
+  summarise(
+    r_TimePoint3_EVT_Standard = .posterior_value %>% 
+      cor_complete(TimePoint3_EVT_Standard),
+    r_TimePoint3_EVT_GSV = .posterior_value %>% 
+      cor_complete(TimePoint3_EVT_GSV),
+    r_TimePoint2_PPVT_GSV = .posterior_value %>% 
+      cor_complete(TimePoint2_PPVT_GSV),
+    r_TimePoint2_PPVT_Standard = .posterior_value %>% 
+      cor_complete(TimePoint2_PPVT_Standard)) %>% 
+  ungroup()
+```
+
+```{r, include = FALSE}
+# Compute the intervals of the correlations
+c_intervals <- vocab_cors %>%
+  tidyr::nest(-Study, -coef) %>% 
+  mutate(data = data %>% 
+           purrr::map(select, -.draw) %>% 
+           purrr::map(mcmc_intervals_data, prob = .5, prob_outer = .9)) %>% 
+  tidyr::unnest()
+
+# Compute pairwise differences in vocabulary correlations
+vocab_cor_diffs <- vocab_cors %>% 
+  tidyr::gather("variable", "correlation", -Study, -coef, -.draw) %>% 
+  tidyr::nest(Study, .draw, correlation) %>% 
+  mutate(data = purrr::map(data, . %>% compare_pairs(Study, correlation))) %>% 
+  tidyr::unnest() %>% 
+  # Negative the pairwise differences and flip the labels. 
+  # E.g., if TP2-TP1 = .2, then make TP1-TP2 = -.2.
+  mutate(value = -value,
+         pair = pair %>% 
+           str_replace("TimePoint(\\d)-TimePoint(\\d)", "TP\\2 - TP\\1")) %>% 
+  tidyr::spread(pair, value) %>% 
+  tidyr::nest(-coef, -variable) %>% 
+  mutate(data = data %>% 
+           purrr::map(select, -.draw) %>% 
+           purrr::map(mcmc_intervals_data, prob = .5, prob_outer = .9)) %>% 
+  tidyr::unnest() %>% 
+  mutate(parameter = as.character(parameter))
+  
+main_diffs <- c_intervals %>% 
+  mutate(parameter = as.character(parameter),
+         variable = parameter) %>% 
+  bind_rows(vocab_cor_diffs %>% mutate(Study = parameter)) %>% 
+  filter(coef %in% c("intercept", "ot1"))
+
+main_diffs$Study <- main_diffs$Study %>% 
+  factor(c("TimePoint1", "TimePoint2", "TimePoint3", 
+           "TP1 - TP2", "TP2 - TP3", "TP1 - TP3"))
+```
+
+
+
 We predicted that individual differences in word recognition at age 3 will be
 more discriminating and predictive future language outcomes than differences
 at age 4 or age 5. To test this hypothesis, we calculated the correlations
 of growth curve features with year 3 expressive vocabulary size and year 2
-receptive vocabulary. (The receptive test was not administered during year
-3.) As with the concordance statistics, we compute each of the statistics for
-each sample of the posterior distribution so we would obtain a distribution of
-correlations.
+receptive vocabulary. (The receptive test was not administered during year 3
+for logistical reasons). As with the concordance statistics, we computed each
+of the statistics for each sample of the posterior distribution so we obtained a
+distribution of correlations.
 
-Figure \@ref(fig:evt2-gca-cors) shows the correlations of the intercept and linear time features with expressive vocabulary size at year 3. For all casses 
+```{r, include = FALSE}
+ot1_evt_tp3_uis <- main_diffs %>% 
+  filter(coef == "ot1", variable == "r_TimePoint3_EVT_Standard") %>% 
+  split(.$Study) %>% 
+  get_uis()
+# TODO: fix this correlation formatting
+
+ot1_evt_tp3_pts <- main_diffs %>% 
+  filter(coef == "ot1", variable == "r_TimePoint3_EVT_Standard") %>% 
+  split(.$Study) %>% 
+  get_pts() %>% 
+  lapply(. %>% printy::fmt_leading_zero() %>% printy::fmt_minus_sign())
+
+int_evt_tp3_uis <- main_diffs %>% 
+  filter(coef == "intercept", variable == "r_TimePoint3_EVT_Standard") %>% 
+  split(.$Study) %>% 
+  get_uis()
+# TODO: fix this correlation formatting
+
+int_evt_tp3_pts <- main_diffs %>% 
+  filter(coef == "intercept", variable == "r_TimePoint3_EVT_Standard") %>% 
+  split(.$Study) %>% 
+  get_pts() %>% 
+  lapply(. %>% printy::fmt_leading_zero() %>% printy::fmt_minus_sign())
+
+ot1_ppvt_tp2_uis <- main_diffs %>% 
+  filter(coef == "ot1", variable == "r_TimePoint2_PPVT_Standard") %>% 
+  split(.$Study) %>% 
+  get_uis()
+# TODO: fix this correlation formatting
+
+ot1_ppvt_tp2_pts <- main_diffs %>% 
+  filter(coef == "ot1", variable == "r_TimePoint2_PPVT_Standard") %>% 
+  split(.$Study) %>% 
+  get_pts() %>% 
+  lapply(. %>% printy::fmt_leading_zero() %>% printy::fmt_minus_sign())
+
+int_ppvt_tp2_uis <- main_diffs %>% 
+  filter(coef == "intercept", variable == "r_TimePoint2_PPVT_Standard") %>% 
+  split(.$Study) %>% 
+  get_uis()
+# TODO: fix this correlation formatting
+
+int_ppvt_tp2_pts <- main_diffs %>% 
+  filter(coef == "intercept", variable == "r_TimePoint2_PPVT_Standard") %>% 
+  split(.$Study) %>% 
+  get_pts() %>% 
+  lapply(. %>% printy::fmt_leading_zero() %>% printy::fmt_minus_sign())
+```
+
+
+Figure \@ref(fig:evt2-gca-cors) shows the correlations of the intercept and
+linear time features with expressive vocabulary size at year 3, and Figure
+\@ref(fig:ppvt4-gca-cors) shows analagous correlations for the receptive
+vocabulary at year 2. For both cases, the strongest correlations were
+found between the growth curve features at year 1. Lexical processing
+efficiency at year 1 correlated with year 3 vocabulary with _r_ =
+`r ot1_evt_tp3_pts$TimePoint1`, 90% UI [`r ot1_evt_tp3_uis$TimePoint1`], whereas
+the concurrent lexical processing feature at year 3 only showed a correlation
+of _r_ = `r ot1_evt_tp3_pts$TimePoint3`, [`r ot1_evt_tp3_uis$TimePoint3`],
+a difference between year 1 and year 3 of _r_<sub>TP1&minus;TP3</sub>\ =
+`r ot1_evt_tp3_pts[["TP1 - TP3"]]`, [`r ot1_evt_tp3_uis[["TP1 - TP3"]]`].
+For the intercept feature, the correlation for year 1, _r_ =
+`r int_evt_tp3_pts$TimePoint1`, [`r ot1_evt_tp3_uis$TimePoint1`],
+was probably only slightly greater than the correlation for year 2,
+_r_<sub>TP1&minus;TP2</sub>\ = `r  int_evt_tp3_pts[["TP1 - TP2"]]`,
+[`r int_evt_tp3_uis[["TP1 - TP2"]]`] but much considerably greater than
+the concurrent correlation at year 3, _r_<sub>TP1&minus;TP3</sub> =
+`r  int_evt_tp3_pts[["TP1 - TP3"]]`, [`r int_evt_tp3_uis[["TP1 - TP3"]]`].
+For year 2 receptive vocabulary, the correlation of year 1 intercept, _r_
+\ = `r int_ppvt_tp2_pts$TimePoint1`, [`r int_ppvt_tp2_uis$TimePoint1`],
+was greater than the year 2 correlation, _r_<sub>TP1&minus;TP2</sub> =
+`r  int_ppvt_tp2_pts[["TP1 - TP2"]]`, [`r int_ppvt_tp2_pts[["TP1 - TP2"]]`], and
+the correlation for year 1 linear time, _r_\ = `r ot1_ppvt_tp2_pts$TimePoint1`,
+[`r ot1_ppvt_tp2_uis$TimePoint1`], was likewise greater than the year 2
+correlation, _r_<sub>TP1&minus;TP2</sub> = `r  ot1_ppvt_tp2_pts[["TP1 - TP2"]]`,
+[`r ot1_ppvt_tp2_uis[["TP1 - TP2"]]`].
+
+(ref:evt2-gca-cors) Uncertainty intervals for the correlations of growth curve
+features at each time point with expressive vocabulary (EVT2 standard scores) at
+year 3. The bottom rows provide intervals for the pairwise differences in
+correlations between time points.
+
+```{r evt2-gca-cors, fig.cap = "(ref:evt2-gca-cors)", out.width = "80%", fig.height = 3, fig.width = 6, echo = FALSE}
+main_diffs %>% 
+  filter(variable == "r_TimePoint3_EVT_Standard") %>% 
+    ggplot() + 
+    aes(y = forcats::fct_rev(Study)) +
+    geom_vline(xintercept = 0, size = 2, color = "white") +
+    ggstance::geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
+    ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
+    geom_point(aes(x = m), size = 3, shape = 3) + 
+    facet_wrap("coef") +
+    labs(x = NULL, y = NULL, caption = "90% and 50% intervals") + 
+    ggtitle("Correlations of curve features and expressive vocabulary at year 3") + 
+    theme(title = element_text(size = rel(.9)))
+```
+
+(ref:ppvt4-gca-cors) Uncertainty intervals for the correlations of growth curve
+features at each time point with expressive vocabulary (PPVT4 standard scores)
+at year 2. The bottom row shows pairwise differences between the correlations at
+year 1 and year 2.
+
+```{r ppvt4-gca-cors, fig.cap = "(ref:ppvt4-gca-cors)", out.width = "80%", fig.height = 2, fig.width = 6, echo = FALSE}
+main_diffs %>% 
+  filter(variable == "r_TimePoint2_PPVT_Standard") %>% 
+  filter(Study %in% c("TimePoint1", "TimePoint2", "TP1 - TP2")) %>% 
+    ggplot() + 
+    aes(y = forcats::fct_rev(Study)) +
+    geom_vline(xintercept = 0, size = 2, color = "white") +
+    ggstance::geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
+    ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
+    geom_point(aes(x = m), size = 3, shape = 3) + 
+    facet_wrap("coef") +
+    labs(x = NULL, y = NULL, caption = "90% and 50% intervals") + 
+    ggtitle("Correlations of curve features and receptive vocabulary at year 2") + 
+    theme(title = element_text(size = rel(.9)))
+```
+
+
+
+
+
+### Relationship with child-level variables
+
+> Vocabulary size and lexical processing will be tightly correlated such that
+large year-over-year gains in one measure will predict large year-over-years
+gains in the other measure.
 
 
 
 ```{r bunch-of-plots, include = FALSE, out.width = "80%", fig.height=4, fig.width=5}
-fits <- readr::read_csv("./data/fits.csv.gz") %>% 
-  semi_join(d_m)
-
 point_ests <- fits %>% 
   group_by(Study, ResearchID, coef) %>% 
   summarise(point = median(.posterior_value)) %>% 
   ungroup() %>% 
   tidyr::spread(coef, point)
 
-scores <- readr::read_csv("./data-raw/test_scores.csv") %>% 
-  select(Study, ResearchID, Age, EVT_GSV, EVT_Standard, 
-         PPVT_GSV, PPVT_Standard)
 
 with_ests <- scores %>% 
   inner_join(point_ests)
+
+widely <- with_ests %>% 
+  tidyr::gather("Test", "Value", -ResearchID, -Study) %>% 
+  tidyr::unite("Col", Study, Test) %>% 
+  tidyr::spread(Col, Value)
 
 ggplot(with_ests) + 
   aes(x = intercept, y = EVT_GSV, color = Study) + 
@@ -1112,12 +1309,6 @@ ggplot(with_ests) +
   aes(x = Age, y = ot1, color = Study) + 
   geom_point() + 
   stat_smooth(method = "lm")
-
-widely <- with_ests %>% 
-  tidyr::gather("Test", "Value", -ResearchID, -Study) %>% 
-  tidyr::unite("Col", Study, Test) %>% 
-  tidyr::spread(Col, Value)
-
 
 ggplot(widely) + 
   aes(x = TimePoint1_intercept, y = TimePoint3_EVT_GSV) + 
@@ -1146,88 +1337,6 @@ ggplot(widely) +
 
 ```
 
-
-(ref:evt2-gca-cors) Text reference for caption
-
-```{r evt2-gca-cors, fig.cap = "(ref:evt2-gca-cors)", out.width = "80%", fig.height=4, fig.width=6}
-cor_complete <- function(...) cor(..., use = "pairwise.complete")
-
-test <- fits %>% 
-  left_join(widely) %>% 
-  group_by(Study, coef, .draw) %>% 
-  summarise(
-    r_TimePoint3_EVT_Standard = cor_complete(.posterior_value, 
-                                             TimePoint3_EVT_Standard),
-    r_TimePoint3_EVT_GSV = cor_complete(.posterior_value, 
-                                        TimePoint3_EVT_GSV),
-    r_TimePoint2_PPVT_GSV = cor_complete(.posterior_value, 
-                                         TimePoint2_PPVT_GSV),
-    r_TimePoint2_PPVT_Standard = cor_complete(.posterior_value, 
-                                              TimePoint2_PPVT_Standard))
-
-c_intervals <- test %>% 
-  do(bayesplot::mcmc_intervals_data(
-    select(., r_TimePoint3_EVT_Standard:r_TimePoint2_PPVT_Standard))) %>% 
-  ungroup()
-
-c_intervals %>% 
-  filter(parameter == "r_TimePoint3_EVT_Standard") %>% 
-  filter(coef %in% c("intercept", "ot1")) %>% 
-  ggplot() + 
-    aes(y = forcats::fct_rev(Study)) +
-    geom_vline(xintercept = 0, size = 2, color = "white") +
-    ggstance::geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
-    ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
-    geom_point(aes(x = m), size = 3, shape = 3) + 
-    facet_wrap("coef") +
-    labs(x = NULL, y = NULL, caption = "90% and 50% intervals") + 
-    ggtitle("Correlation of curve features and TP3 EVT Standard")
-
-
-
-# widely %>% 
-#   tidy_correlation(TimePoint3_EVT_GSV, ends_with("intercept"), ends_with("ot1")) %>% 
-#   filter(column1 == "TimePoint3_EVT_GSV")
-# 
-# widely %>% 
-#   tidy_correlation(TimePoint2_PPVT_GSV, TimePoint1_ot1, TimePoint2_ot1) %>% 
-#   filter(column1 == "TimePoint2_PPVT_GSV")
-# 
-# widely %>% 
-#   tidy_correlation(TimePoint2_PPVT_GSV, TimePoint1_ot1, TimePoint2_ot1,
-#             TimePoint1_intercept, TimePoint2_intercept) %>% 
-#   filter(column1 == "TimePoint2_PPVT_GSV")
-```
-
-
-Figure \@ref(fig:ppvt4-gca-cors) 
-
-(ref:ppvt4-gca-cors) Text reference for caption
-
-```{r ppvt4-gca-cors, fig.cap = "(ref:ppvt4-gca-cors)", out.width = "80%", fig.height=4, fig.width=6}
-c_intervals %>% 
-  filter(parameter == "r_TimePoint2_PPVT_Standard") %>% 
-  filter(coef %in% c("intercept", "ot1")) %>% 
-  filter(Study != "TimePoint3") %>% 
-  ggplot() + 
-    aes(y = forcats::fct_rev(Study)) +
-    geom_vline(xintercept = 0, size = 2, color = "white") +
-    ggstance::geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
-    ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
-    geom_point(aes(x = m), size = 3, shape = 3) + 
-    facet_wrap("coef") +
-    labs(x = NULL, y = NULL, caption = "90% and 50% intervals") + 
-    ggtitle("Correlation of curve features and TP2 PPVT Standard")
-
-```
-
-
-
-### Relationship with child-level variables
-
-> Vocabulary size and lexical processing will be tightly correlated such that
-large year-over-year gains in one measure will predict large year-over-years
-gains in the other measure.
 
 ```{r, eval = FALSE, include = FALSE}
 scores <- readr::read_csv("./data-raw/test_scores.csv") %>% 
