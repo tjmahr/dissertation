@@ -7,7 +7,9 @@ install_github_packages <- function() {
   devtools::install_github("tjmahr/lookr")
   devtools::install_github("tjmahr/bayesplot")
   devtools::install_github("tjmahr/tristan")
-  devtools::install_github("tjmahr/tjmisc")
+  # devtools::install_github("tjmahr/tjmisc")
+  devtools::install_github("tidyverse/rlang@1e54041")
+  devtools::install_github("tjmahr/printy")
   devtools::install_github("klutometis/roxygen")
   devtools::install_github("crsh/papaja")
 }
