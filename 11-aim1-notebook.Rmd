@@ -260,3 +260,98 @@ language disorder at TimePoint 3.)
 * Visual evidence that group averages get faster and more reliable at looking 
   to target each year. 
   
+  
+## Prepare the dataset for modeling
+
+## Data preparation
+
+Above we cleaned the data to remove trials with excessive missing data 
+and blocks of trials with too few trials. Now we prepare the data for modelling.
+
+```{r}
+opts_model <- list(
+  bin_width = 3,
+  start_time = 250,
+  end_time = 1500
+)
+opts_model$bin_length <- round(opts_model$bin_width * 16.67, -1)
+opts_model
+```
+
+We downsampled the data into `r opts_model$bin_length`-ms
+(`r opts_model$bin_width`-frame) bins in order to smooth the data. We modeled
+the looks from `r opts_model$start_time` to `r opts_model$end_time` ms. Lastly, 
+we aggregated looks by child, study and
+time, and created orthogonal polynomials to use as time features for the model
+
+```{r, echo = FALSE, message = FALSE, warnings = FALSE}
+data <- readr::read_csv("./data/aim1-screened.csv.gz") %>% 
+  select(Study, ResearchID, TrialID:GazeByImageAOI) %>% 
+  assign_bins(bin_width = opts_model$bin_width, Time, TrialID)
+
+# Compute time at center of each bin
+bin_times <- data %>% 
+  distinct(Time, .bin) %>% 
+  group_by(.bin) %>% 
+  mutate(BinTime = round(median(Time), -1)) %>% 
+  ungroup()
+
+# Attach bin times
+binned <- data %>% 
+  left_join(bin_times, by = c("Time", ".bin")) %>% 
+  ungroup() %>% 
+  select(-Time) %>% 
+  rename(Time = BinTime) 
+
+resp_def <- create_response_def(
+  primary = "Target",
+  others = c("PhonologicalFoil", "SemanticFoil", "Unrelated"),
+  elsewhere = "tracked",
+  missing = NA
+)  
+  
+d <- binned %>% 
+  aggregate_looks(resp_def, Study + ResearchID + Time ~ GazeByImageAOI)
+
+d_m <- d %>% 
+  filter(opts_model$start_time <= Time, 
+         Time <= opts_model$end_time) %>% 
+  polypoly::poly_add_columns(Time, degree = 3, 
+                             scale_width = 1, prefix = "ot")
+```
+
+Plot the model-ready data. For this plot, we use the so-called _empirical logit_
+transformation because the regular logit (log-odds) generates too extreme of
+values for plotting. 
+
+```{r spaghetti-elogit, echo = FALSE, message = FALSE, out.width = "100%", fig.height=2.5, fig.width=6}
+ggplot(d_m) + 
+  aes(x = Time, y = empirical_logit(Primary, Others)) + 
+  geom_line(aes(group = ResearchID), alpha = .2) + 
+  stat_smooth() +
+  theme_grey(base_size = 9) +
+  facet_grid(. ~ Study) + 
+  labs(x = "Time after target onset (smoothed to 50 ms bins)", 
+       y = "Emp. logit looking to target")
+```
+
+Those extreme lines indicate sparse data where there are zero-to-few looks to
+the distractors compared to the target. These are the 20 most extreme bins, to 
+illustrate how empirical logit tames infinite values.
+
+```{r, echo = FALSE}
+d_m %>% 
+  select(Study:Time, Primary, Others) %>% 
+  arrange(desc(log(Primary / Others))) %>% 
+  mutate(
+    logit = log(Primary / Others) %>% round(2),
+    elogit = empirical_logit(Primary, Others) %>% round(2)) %>% 
+  head(20) %>% 
+  knitr::kable()
+```
+
+```{r, echo = FALSE}
+readr::write_csv(d_m, "./data/aim1-model-ready.csv.gz")
+```
+
+  

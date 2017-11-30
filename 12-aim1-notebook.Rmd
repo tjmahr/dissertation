@@ -1,107 +1,20 @@
 Analyze familiar word recognition
 ===========================================================================
 
-Next steps:
+Current steps:
 
 - Model year over year changes.
 - Download test scores and individual differences. 
 - Analyze individual differences
 
 ```{r include = FALSE}
+d_m <- readr::read_csv("./data/aim1-model-ready.csv.gz")
 knitr::read_chunk("./helpers.R")
 if (interactive()) source("./helpers.R")
 ```
 
 ```{r helpers, include = FALSE}
 ```
-
-## Data preparation
-
-Earlier we cleaned the data to remove trials with excessive missing data 
-and blocks of trials with too few trials. Now we prepare the data for modelling.
-
-```{r}
-opts_model <- list(
-  bin_width = 3,
-  start_time = 250,
-  end_time = 1500
-)
-opts_model$bin_length <- round(opts_model$bin_width * 16.67, -1)
-opts_model
-```
-
-We downsampled the data into `r opts_model$bin_length`-ms
-(`r opts_model$bin_width`-frame) bins in order to smooth the data. We modeled
-the looks from `r opts_model$start_time` to `r opts_model$end_time` ms. Lastly, 
-we aggregated looks by child, study and
-time, and created orthogonal polynomials to use as time features for the model
-
-```{r, echo = FALSE, message = FALSE, warnings = FALSE}
-data <- readr::read_csv("./data/aim1-screened.csv.gz") %>% 
-  select(Study, ResearchID, TrialID:GazeByImageAOI) %>% 
-  assign_bins(bin_width = opts_model$bin_width, Time, TrialID)
-
-# Compute time at center of each bin
-bin_times <- data %>% 
-  distinct(Time, .bin) %>% 
-  group_by(.bin) %>% 
-  mutate(BinTime = round(median(Time), -1)) %>% 
-  ungroup()
-
-# Attach bin times
-binned <- data %>% 
-  left_join(bin_times, by = c("Time", ".bin")) %>% 
-  ungroup() %>% 
-  select(-Time) %>% 
-  rename(Time = BinTime) 
-
-resp_def <- create_response_def(
-  primary = "Target",
-  others = c("PhonologicalFoil", "SemanticFoil", "Unrelated"),
-  elsewhere = "tracked",
-  missing = NA
-)  
-  
-d <- binned %>% 
-  aggregate_looks(resp_def, Study + ResearchID + Time ~ GazeByImageAOI)
-
-d_m <- d %>% 
-  filter(opts_model$start_time <= Time, 
-         Time <= opts_model$end_time) %>% 
-  polypoly::poly_add_columns(Time, degree = 3, 
-                             scale_width = 1, prefix = "ot")
-```
-
-Plot the model-ready data. For this plot, we use the so-called _empirical logit_
-transformation because the regular logit (log-odds) generates too extreme of
-values for plotting. 
-
-```{r spaghetti-elogit, echo = FALSE, message = FALSE, out.width = "100%", fig.height=2.5, fig.width=6}
-ggplot(d_m) + 
-  aes(x = Time, y = empirical_logit(Primary, Others)) + 
-  geom_line(aes(group = ResearchID), alpha = .2) + 
-  stat_smooth() +
-  theme_grey(base_size = 9) +
-  facet_grid(. ~ Study) + 
-  labs(x = "Time after target onset (smoothed to 50 ms bins)", 
-       y = "Emp. logit looking to target")
-```
-
-Those extreme lines indicate sparse data where there are zero-to-few looks to
-the distractors compared to the target. These are the 20 most extreme bins, to 
-illustrate how empirical logit tames infinite values.
-
-```{r, echo = FALSE}
-d_m %>% 
-  select(Study:Time, Primary, Others) %>% 
-  arrange(desc(log(Primary / Others))) %>% 
-  mutate(
-    logit = log(Primary / Others) %>% round(2),
-    elogit = empirical_logit(Primary, Others) %>% round(2)) %>% 
-  head(20) %>% 
-  knitr::kable()
-```
-
 
 ## Maximum likelihood results
 
@@ -318,6 +231,10 @@ Open questions:
 
 
 
+
+
+
+
 ## Bayesian model results
 
 Here is the code used to fit the model with Stan. It took about 24 hours to run
@@ -361,6 +278,94 @@ summary(b, pars = names(fixef(b)))
 prior_summary(b)
 ```
 
+We used moderately informative priors for the effects of time and
+
+* b ~ Normal(mean = 0, sd = 1)
+
+When we computed the orthogonal polynomial features for Time, they were rescaled
+so that the linear feature ranged from −.5 to .5. Under this scaling a unit
+change in Time^1^ was equal to change from the start to the end of the analysis
+window. The polynomial features for the Time had the following ranges:
+
+```{r}
+d_m %>% 
+  distinct(ot1, ot2, ot3) %>% 
+  tidyr::gather("Feature", "Value") %>% 
+  group_by(Feature) %>% 
+  summarise(Min = min(Value), Max = max(Value), Range = Max - Min) %>% 
+  mutate_if(is.numeric, round, 2) %>% 
+  mutate(Feature = stringr::str_replace(Feature, "ot(\\d)", "Time^\\1^")) %>% 
+  knitr::kable()
+```
+
+Under the Normal(0, 1) prior, before seeing any data, we expect 95% of plausible
+effects to fall in the range ±1.96, which is an adequate range for these
+growth curve models. For example, consider just the effect of Time^1^. If a
+listener starts at chance performance, 25% or `r qlogis(.25) %>% round(2)`
+logits, and increases to, say, 65% or `r qlogis(.65) %>% round(2)`, the effect
+of a unit change in Time^1^ would be a change of
+`r (qlogis(.65) - qlogis(.25)) %>% round(2)` logits. This magnitude of effect is
+accommodated by our Normal(0, 1) prior. 
+
+For the hierarchical part of the model, I used RstanARM's `decov()` prior which
+simultaneously sets a prior of the variances and correlations of the model's
+random effect terms. For these terms, I used the default prior for the variance
+terms and used a weakly informative LKJ(2) prior on the random effect
+correlations. Under LKJ(1) supports all correlations in the range ±1, but under
+LKJ(2) extreme correlations are less plausible. In the figure below, we see that
+the LKJ(2) prior nudges some of the probability mass away from ±1 towards the
+center. The motivation for this kind of prior was *regularization*: We give the
+model a small amount of information to nudge it away from extreme, degenerate
+values.
+
+```{r, include = FALSE, fig.height = 3, fig.width = 5}
+lkj1 <- rstanarm::stan_glmer(
+  Sepal.Length ~ 1 + (Sepal.Width + Petal.Length | Species), 
+  prior = normal(0, 1),
+  prior_covariance = decov(1,1,1,1),
+  data = iris, 
+  prior_PD = TRUE
+)
+
+lkj2 <- rstanarm::stan_glmer(
+  Sepal.Length ~ 1 + (Sepal.Width + Petal.Length | Species), 
+  prior = normal(0, 1),
+  prior_covariance = decov(2,1,1,1),
+  data = iris, 
+  prior_PD = TRUE
+)
+
+big_dumb_model1 <- tristan::draw_var_corr(lkj1, nsamples = 2000)
+big_dumb_model2 <- tristan::draw_var_corr(lkj2, nsamples = 2000)
+nrow(big_dumb_model2)
+
+correlations <- bind_rows(
+  big_dumb_model1 %>% mutate(Model = "LKJ(1)"), 
+  big_dumb_model2 %>% mutate(Model = "LKJ(2)"))
+```
+
+```{r, echo = FALSE, fig.height = 3, fig.width = 5}
+ggplot(correlations %>% filter(!is.na(var2))) + 
+  aes(x = sdcor) + 
+  geom_histogram(binwidth = .1, boundary = 0) + 
+  facet_wrap("Model", labeller = label_both) +
+  labs(x = NULL, y = "Num. prior samples", 
+       caption = "12,000 prior samples drawn per model")
+```
+
+
+```{r, include = FALSE}
+gtools::rdirichlet(2000, c(1,1,4)) %>% colMeans()
+gtools::rdirichlet(10, c(.1,.1,.1)) %>% colMeans()
+gtools::rdirichlet(10, c(1,1,1)) %>% colMeans()
+gtools::rdirichlet(2, c(400,400,400)) %>% colMeans()
+gtools::rdirichlet(2, c(400,400,400))
+qlogis(.70) - qlogis(.25)
+qlogis(.65) - qlogis(.25)
+pnorm(-1.96)
+rnorm(10000) %>% quantile(c(.025, .975))
+rnorm(10000) %>% quantile(c(.075, .975))
+```
 
 
 Let's try to understand our model by making some plots.
@@ -568,11 +573,13 @@ d_pts <- get_pts(diff_list)
 d_uis <- get_uis(diff_list)
 ```
 
-The average accuracy was `r pts$TP1` [90% UI: `r uis$TP1`] for timepoint
-1, `r pts$TP2` [`r uis$TP2`] for timepoint 2, and `r pts$TP3` [`r uis$TP3`]
-for timepoint 3. The average accuracy increased by `r d_pts$TP2_TP1`
+The average accuracy was `r pts$TP1` [90% UI: `r uis$TP1`] for timepoint 1,
+`r pts$TP2` [`r uis$TP2`] for timepoint 2, and `r pts$TP3` [`r uis$TP3`] for
+timepoint 3. The average accuracy increased by `r d_pts$TP2_TP1`
 [`r d_uis$TP2_TP1`] from timepoint 1 to timepoint 2 and by `r d_pts$TP3_TP2`
-[`r d_uis$TP3_TP2`] from timepoint 2 to timepoint 3.
+[`r d_uis$TP3_TP2`] from timepoint 2 to timepoint 3. These results numerically
+confirm the hypothesis that children would improve in their accuracy each year
+over year and in their processing efficiency year over year.
 
 
 
@@ -582,7 +589,11 @@ for timepoint 3. The average accuracy increased by `r d_pts$TP2_TP1`
 ### Plot the intervals for the random effect parameters
 
 These are the parameters governing the random effect distributions. First, we
-plot the standard deviations.
+plot the standard deviations. Recall that in our hierarchical model we suppose 
+that each growth curve is drawn from a population of related curves. The 
+model's fixed effects estimate the means of the distribution. These terms
+estimate the variability around that mean. We did not have any a priori 
+hypotheses about the values of these scales, so do not discuss them any further.
 
 ```{r posterior-sds, echo = FALSE, out.width = "80%", fig.height = 2.5, fig.width = 5}
 sdcors <- tristan::draw_var_corr(b)

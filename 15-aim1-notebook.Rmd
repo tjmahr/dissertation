@@ -5,9 +5,10 @@ type.
 
 ```{r include = FALSE}
 knitr::read_chunk("./helpers.R")
+if (interactive()) source("./helpers.R")
 ```
 
-```{r helpers, message = FALSE, warnings = FALSE}
+```{r helpers, include = FALSE}
 ```
 
 Earlier we cleaned the data to remove trials with excessive missing data 
@@ -264,7 +265,71 @@ difference in strong and weak foils in Year 2 and Year 3, so I might be able
 to collapse to remove this distinction and include more items in the analysis.
 
 
+## Modeling looks to the phonological competitor over time
 
+```{r}
+opts_model <- list(
+  bin_width = 3,
+  start_time = 250,
+  end_time = 1500
+)
+opts_model$bin_length <- round(opts_model$bin_width * 16.67, -1)
+opts_model
+```
+
+
+```{r}
+data <- strong_phon_looks %>% 
+  select(Study, ResearchID, TrialID:GazeByImageAOI) %>% 
+  assign_bins(bin_width = opts_model$bin_width, Time, TrialID)
+
+# Compute time at center of each bin
+bin_times <- data %>% 
+  distinct(Time, .bin) %>% 
+  group_by(.bin) %>% 
+  mutate(BinTime = round(median(Time), -1)) %>% 
+  ungroup()
+
+# Attach bin times
+binned <- data %>% 
+  left_join(bin_times, by = c("Time", ".bin")) %>% 
+  ungroup() %>% 
+  select(-Time) %>% 
+  rename(Time = BinTime) 
+
+d <- binned %>% 
+  aggregate_looks(phon_defs, Study + ResearchID + Time ~ GazeByImageAOI)
+
+d_m <- d %>% 
+  filter(opts_model$start_time <= Time, 
+         Time <= opts_model$end_time) %>% 
+  polypoly::poly_add_columns(Time, degree = 3, 
+                             scale_width = 1, prefix = "ot") %>% 
+  rename(Focus = .response_def)
+
+
+# d_m %>% 
+#   sample_n_of(9, ResearchID) %>% 
+#   ggplot() + 
+#     aes(x = Time, y = log(Primary / Unrelated), color = Study, linetype = Focus) + 
+#     geom_line(aes(group = interaction(Study, Focus))) + 
+#     facet_wrap("ResearchID")
+
+library(lme4)
+
+m <- glmer(cbind(Primary, Unrelated) ~ 
+        Study * Focus * (ot1 + ot2 + ot3) + 
+        (ot1 + ot2 + ot3 | ResearchID:Focus) + 
+        (ot1 + ot2 + ot3 | Study:ResearchID:Focus), 
+      family = binomial,
+      data = d_m)
+
+```
+
+For this model structure, we estimate two growth curves simultaneously for each
+of the study. Each growth curve is the log-odds of fixating on a certain image
+relative to the unrelated image. We use an indicator variable _focus_ to record
+whether the image is the target or the phonological foil.
 
 
 
