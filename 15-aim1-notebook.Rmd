@@ -14,13 +14,13 @@ if (interactive()) source("./helpers.R")
 Earlier we cleaned the data to remove trials with excessive missing data 
 and blocks of trials with too few trials. Read in that data.
 
-```{r, message = FALSE, warnings = FALSE}
+```{r, message = FALSE, warnings = FALSE, echo = FALSE, message = FALSE}
 data <- readr::read_csv("./data/aim1-screened.csv.gz")
 ```
 
 Plot growth curves to each AOI.
 
-```{r by-aoi-prop, out.width = "100%", fig.height=2.5, fig.width=6}
+```{r by-aoi-prop, out.width = "100%", fig.height=2.5, fig.width=6, echo = FALSE, message = FALSE}
 resp_def <- create_response_def(
   primary = "Target",
   others = c("PhonologicalFoil", "SemanticFoil", "Unrelated"),
@@ -50,16 +50,19 @@ ggplot(looks_by_aoi) +
   stat_smooth() + 
   facet_grid( ~ AOI) + 
     labs(x = "Time after target onset [ms]",
-       y = "Proportion looks",
+       y = "Proportion looking to image",
        caption = "GAM smooth on partially screened data") +
   theme_grey(base_size = 9) +
   theme(legend.position = c(0.95, 0.95), 
         legend.justification = c(1, 1))
 ```
 
-Normalize by using ratio of looks to each AOI versus the unrelated image. 
+The looks to target increase year over year which decreases the remaining
+proportion of looks for the other three images each year. To study the relative
+propensity of looking to each image, we instead can use the log-odds of looking
+to each AOI versus the unrelated image.
 
-```{r by-aoi-logit, out.width = "100%", fig.height=2.5, fig.width=6}
+```{r by-aoi-logit, out.width = "100%", fig.height=2.5, fig.width=6, echo = FALSE, message = FALSE}
 ggplot(looks_by_aoi %>% filter(AOI != "Unrelated")) + 
   aes(x = Time, y = log(Primary / Unrelated), color = Study) + 
   geom_hline(size = 2, color = "white", yintercept = 0) +
@@ -78,25 +81,27 @@ semantic foil versus the unrelated word. Positive values mean more looks to an
 image type than the unrelated. If you think of the _y_ axis as the image's
 _relatedness_ to the target, you can see a time course of relatedness in each
 panel: Here early phonological effects meaning early relatedness and later,
-flatter semantic effects meaning late relate relatedness. (Which makes extra
-sense if phonological representations come into play before semantic ones.)
+flatter semantic effects meaning late relatedness. (These effects make even more
+sense sense if phonological representations affect processing before semantic
+ones.)
 
 This plot suggests an important finding: Children becoming more sensitive to the
-phonological and semantic foils as they grow older. (I use the verb _suggest_
-because this is still a preliminary finding). Jan and I had made opposite 
-predictions about whether this would happen. Her argument, I think, was that 
-children become better at word recognition by becoming better able to inhibit 
-interference from competing words. This plot would suggest that they show 
-increased sensitive to the target and foils words by looking less to the 
-unrelated word as they age and reapportioning those looks to the other three 
+phonological and semantic foils as they grow older. (I use the verb *suggest*
+because this is still a preliminary, unmodeled finding.) Jan and I had made
+opposite predictions about whether this would happen. Her argument, I think, was
+that children become better at word recognition by becoming better able to
+inhibit interference from competing words. This plot would suggest that they
+show increased sensitive to the target and foils words by looking less to the
+unrelated word as they age and reapportioning those looks to the other three
 lexically relevant words.
 
 ## Comparing strong versus weak foils
 
 In @RWLPaper, we ignored trials for certain items where we didn't think the
-phonological or semantic similarity was strong enough.
+phonological or semantic similarity was strong enough. The two sets of
+phonological foils are shown below.
 
-```{r print-foil-tables, message = FALSE}
+```{r print-phon-foil-tables, message = FALSE, echo = FALSE}
 trial_info <- bind_rows(
   readr::read_csv("data-raw/rwl_timepoint1_trials.csv.gz"),
   readr::read_csv("data-raw/rwl_timepoint2_trials.csv.gz"),
@@ -128,7 +133,14 @@ phono_foils$strong_foil %>%
 
 phono_foils$weak_foil %>% 
   knitr::kable(caption = "Trials with weak phonological foils.")
+```
 
+The stronger phonological foils are pairs where the syllable onsets are the
+same. The weaker foils include rime pairs, pairs where the words have
+different syllable onsets, and pairs where the onsets differ by a phonetic
+feature.
+
+```{r print-semy-foil-tables, message = FALSE, echo = FALSE}
 semy_foils$strong_foil %>% 
   knitr::kable(caption = "Trials with strong semantic foils.")
 
@@ -136,9 +148,12 @@ semy_foils$weak_foil %>%
   knitr::kable(caption = "Trials with weak semantic foils.")
 ```
 
-We should verify that the two sets of words behave differently.
+The strong semantic foils belong to the same category and the weaker ones have a
+less obvious relationship (*ring* and *dress*).
 
-```{r by-aoi-logit-foils, out.width = "100%", fig.height=2.5, fig.width=6}
+We visually confirm that the strong versus weak foils behave differently.
+
+```{r by-aoi-logit-foils, out.width = "100%", fig.height=2.5, fig.width=6, echo = FALSE, message = FALSE}
 weak_phon_looks <- trial_info %>% 
   semi_join(phono_foils$weak_foil) %>% 
   inner_join(data) %>% 
@@ -205,16 +220,24 @@ ggplot(looks_by_aoi3 %>% filter(AOI != "Unrelated")) +
 
 What's going on here:
 
-* The weak phonological foils are indeed weaker than the strong foils.
-* The strong semantic foils appear stronger than the weak ones. The strong foils 
-  show a growth curve pattern of increasing looks away from baseline and there 
-  a developmental difference among the growth curves for each time point.
-* Children have a lower advantage for the target (vs unrelated) in weak 
-  foil trials because... why?
+- The weak phonological foils are indeed weaker than the strong foils.
+- The strong semantic foils appear stronger than the weak ones. The strong
+  foils show a growth curve pattern of increasing looks away from baseline and
+  there a developmental difference among the growth curves for each time
+  point.
+- Children have a lower advantage for the target (vs unrelated) in weak foil
+  trials because... why? My reading is that if the semantic or phonological
+  foil is effective, children will look at it instead of the unrelated image.
+  Conversely, if the semantic or phonological foil are less effective,
+  children will look more to the unrelated image, which pulls down the ratio
+  of looks to target versus the unrelated image.
 
-Now let's look at the target versus each foil and the unrelated.
+In the above plots, we fixed the denominator to be the number of looks to the
+unrelated image and varied the numerator. In the plots below, we fix the
+numerator to be the looks to the target and vary the denominator to looks to
+target versus looks to each foil.
 
-```{r by-aoi-logit-target-phon, out.width = "100%", fig.height=2.5, fig.width=6}
+```{r by-aoi-logit-target-phon, out.width = "100%", fig.height=2.5, fig.width=6, echo = FALSE, message = FALSE}
 semantic_target_curves <- looks_by_aoi3 %>% 
   filter(AOI == "Target") %>% 
   mutate(`Target vs Semantic` = log(Primary / SemanticFoil), 
@@ -241,12 +264,12 @@ ggplot(phonological_target_curves) +
   theme_grey(base_size = 9) 
 ```
 
-Both comparisons attain the same height, so phonological and unrelated foils 
+Curves in both panels attain the same height, so phonological and unrelated foils 
 affect processing equally later in the trial. The strong phonological foils 
 curves in the Target vs Phonological comparison rise later than the weak foils, 
 reflecting early looks to the phonological foils.
 
-```{r by-aoi-logit-target-semi, out.width = "100%", fig.height=2.5, fig.width=6}
+```{r by-aoi-logit-target-semi, out.width = "100%", fig.height=2.5, fig.width=6, echo = FALSE, message = FALSE}
 ggplot(semantic_target_curves) + 
   aes(x = Time, y = LogOdds, 
       color = Study, linetype = SemyFoil) + 
@@ -259,26 +282,33 @@ ggplot(semantic_target_curves) +
   theme_grey(base_size = 9) 
 ```
 
-The two comparisons do not attain the same height, so the semantic foil reduces 
-odds of fixating to the target later on in a trial. There appears to be no 
-difference in strong and weak foils in Year 2 and Year 3, so I might be able 
+Curves in the two panels do not attain the same height, so the semantic foil
+reduces odds of fixating to the target later on in a trial. There appears to be
+no difference in strong and weak foils in Year 2 and Year 3, so I might be able
 to collapse to remove this distinction and include more items in the analysis.
 
 
-## Modeling looks to the phonological competitor over time
+## Preparing data for the model
 
-```{r}
+```{r, echo = FALSE}
 opts_model <- list(
   bin_width = 3,
   start_time = 250,
   end_time = 1500
 )
 opts_model$bin_length <- round(opts_model$bin_width * 16.67, -1)
-opts_model
+message("Modelling options: ")
+message(str(opts_model))
 ```
 
+As in the earlier models, we downsampled the data into
+`r opts_model$bin_length`-ms (`r opts_model$bin_width`-frame) bins in order to
+smooth the data. We modeled the looks from `r opts_model$start_time` to
+`r opts_model$end_time` ms. Lastly, we aggregated looks by child, study and
+time, and created orthogonal polynomials to use as time features for the model
 
-```{r}
+
+```{r, echo = FALSE, message = FALSE}
 data <- strong_phon_looks %>% 
   select(Study, ResearchID, TrialID:GazeByImageAOI) %>% 
   assign_bins(bin_width = opts_model$bin_width, Time, TrialID)
@@ -300,36 +330,69 @@ binned <- data %>%
 d <- binned %>% 
   aggregate_looks(phon_defs, Study + ResearchID + Time ~ GazeByImageAOI)
 
-d_m <- d %>% 
+phon_d <- d %>% 
   filter(opts_model$start_time <= Time, 
          Time <= opts_model$end_time) %>% 
   polypoly::poly_add_columns(Time, degree = 3, 
                              scale_width = 1, prefix = "ot") %>% 
   rename(Focus = .response_def)
 
+phon_d %>%
+  sample_n_of(9, ResearchID) %>%
+  ggplot() +
+    aes(x = Time, y = log(Primary / Unrelated), color = Study, linetype = Focus) +
+    geom_line(aes(group = interaction(Study, Focus))) +
+    facet_wrap("ResearchID")
 
-# d_m %>% 
-#   sample_n_of(9, ResearchID) %>% 
-#   ggplot() + 
-#     aes(x = Time, y = log(Primary / Unrelated), color = Study, linetype = Focus) + 
-#     geom_line(aes(group = interaction(Study, Focus))) + 
-#     facet_wrap("ResearchID")
+# phon_d %>%
+#   # sample_n_of(50, ResearchID) %>%
+#   ggplot() +
+#     aes(x = Time, y = log(Primary / Unrelated), color = Study, linetype = Focus) +
+#     stat_summary(fun.y = mean, geom = "line")
+```
 
-library(lme4)
-
-m <- glmer(cbind(Primary, Unrelated) ~ 
-        Study * Focus * (ot1 + ot2 + ot3) + 
-        (ot1 + ot2 + ot3 | ResearchID:Focus) + 
-        (ot1 + ot2 + ot3 | Study:ResearchID:Focus), 
-      family = binomial,
-      data = d_m)
+```{r}
+# library(lme4)
+# m <- glmer(
+#  cbind(Primary, Unrelated) ~
+#         Study * (ot1 + ot2 + ot3) +
+#         (ot1 + ot2 + ot3 | ResearchID) +
+#         (ot1 + ot2 + ot3 | Study:ResearchID),
+#   family = binomial,
+#   data = phon_d %>% filter(Focus == "PhonologicalFoil"))
 
 ```
 
+The final model should looks like this. I'll have to run this for a few days.
+
+```{r, eval = FALSE}
+library(rstanarm)
+options(mc.cores = parallel::detectCores())
+
+m <- stan_glmer(
+ cbind(Primary, Unrelated) ~ 
+        Study * Focus * (ot1 + ot2 + ot3) + 
+        (ot1 + ot2 + ot3 | ResearchID:Focus) + 
+        (ot1 + ot2 + ot3 | Study:ResearchID:Focus),
+  family = binomial,
+  prior = normal(0, 1, autoscale = FALSE),
+  prior_intercept = normal(0, 2),
+  prior_covariance = decov(2, 1, 1),
+  data = phon_d)
+readr::write_rds(m, "./data/stan_aim1_phon_model.rds.gz")
+```
+
 For this model structure, we estimate two growth curves simultaneously for each
-of the study. Each growth curve is the log-odds of fixating on a certain image
-relative to the unrelated image. We use an indicator variable _focus_ to record
-whether the image is the target or the phonological foil.
+year of the study. Each growth curve is the log-odds of fixating on a certain
+image relative to the unrelated image. We use an indicator variable *focus* to
+record whether the image is the target or the phonological foil. 
+
+Actually, I am not sure I need to estimate two growth curves simulataneously
+yet. I could just estimate log-odds of looking to Phonological vs Unrelated
+directly. This would let me estimate year over year changes, the time course of
+the effects and maybe some individual differences in looks to the phonological
+foil. I could posterior-predict looks at each time bin and see how the 
+intervals compare to zero.
 
 
 
@@ -417,7 +480,7 @@ tidyr::unnest(by_study, data) %>%
 ## Interim summary
 
 * Visual evidence that the semantic foil and phonological foil become more 
-  relevant (compared to unrelated foil) each. 
+  relevant (compared to unrelated foil) each year. 
 * Our previous distinction between strong and weak foils still applies, 
   although it might be better to exclude only the (a priori) weakest foils, 
   like the rime phonological foils.
