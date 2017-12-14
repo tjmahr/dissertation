@@ -7,81 +7,23 @@ type.
 
 
 
-```r
-library(dplyr)
-library(rlang)
-library(littlelisteners)
-library(ggplot2)
-library(tjmisc)
-```
 
 Earlier we cleaned the data to remove trials with excessive missing data 
 and blocks of trials with too few trials. Read in that data.
 
 
-```r
-data <- readr::read_csv("./data/aim1-screened.csv.gz")
-```
 
 Plot growth curves to each AOI.
 
-
-```r
-resp_def <- create_response_def(
-  primary = "Target",
-  others = c("PhonologicalFoil", "SemanticFoil", "Unrelated"),
-  elsewhere = "tracked",
-  missing = NA
-)
-
-defs <- cycle_response_def(resp_def)
-
-# We use this later on
-semy_defs <- defs %>% 
-  purrr::keep(~ .x$primary %in% c("Target", "SemanticFoil")) 
-phon_defs <- defs %>% 
-  purrr::keep(~ .x$primary %in% c("Target", "PhonologicalFoil"))
-
-# Aggregate looks using each rule
-looks_by_aoi <- data %>% 
-  aggregate_looks(defs, Study + ResearchID + Time ~ GazeByImageAOI) %>% 
-  rename(AOI = .response_def) %>% 
-  select(AOI:Time, Prop, Primary, Unrelated) %>% 
-  mutate(AOI = factor(AOI, c("Target", "PhonologicalFoil", 
-                             "SemanticFoil", "Unrelated")))
-  
-ggplot(looks_by_aoi) + 
-  aes(x = Time, y = Prop, color = Study) + 
-  geom_hline(size = 2, color = "white", yintercept = .25) +
-  stat_smooth() + 
-  facet_grid( ~ AOI) + 
-    labs(x = "Time after target onset [ms]",
-       y = "Proportion looks",
-       caption = "GAM smooth on partially screened data") +
-  theme_grey(base_size = 9) +
-  theme(legend.position = c(0.95, 0.95), 
-        legend.justification = c(1, 1))
-#> `geom_smooth()` using method = 'gam'
-```
-
 <img src="15-aim1-notebook_files/figure-html/by-aoi-prop-1.png" width="100%" />
 
-Normalize by using ratio of looks to each AOI versus the unrelated image. 
+The looks to target increase year over year which decreases the remaining
+proportion of looks for the other three images each year. To study the relative
+propensity of looking to each image, we instead can use the log-odds of looking
+to each AOI versus the unrelated image.
 
 
-```r
-ggplot(looks_by_aoi %>% filter(AOI != "Unrelated")) + 
-  aes(x = Time, y = log(Primary / Unrelated), color = Study) + 
-  geom_hline(size = 2, color = "white", yintercept = 0) +
-  stat_smooth() + 
-  facet_grid( ~ AOI) + 
-    labs(x = "Time after target onset [ms]",
-       y = "Log odds looking to word vs. unrelated word",
-       caption = "GAM smooth on partially screened data") +
-  theme_grey(base_size = 9) +
-  theme(legend.position = c(0.95, 0.95), 
-        legend.justification = c(1, 1))
-#> `geom_smooth()` using method = 'gam'
+```
 #> Warning: Removed 10559 rows containing non-finite values (stat_smooth).
 ```
 
@@ -92,59 +34,28 @@ semantic foil versus the unrelated word. Positive values mean more looks to an
 image type than the unrelated. If you think of the _y_ axis as the image's
 _relatedness_ to the target, you can see a time course of relatedness in each
 panel: Here early phonological effects meaning early relatedness and later,
-flatter semantic effects meaning late relate relatedness. (Which makes extra
-sense if phonological representations come into play before semantic ones.)
+flatter semantic effects meaning late relatedness. (These effects make even more
+sense sense if phonological representations affect processing before semantic
+ones.)
 
 This plot suggests an important finding: Children becoming more sensitive to the
-phonological and semantic foils as they grow older. (I use the verb _suggest_
-because this is still a preliminary finding). Jan and I had made opposite 
-predictions about whether this would happen. Her argument, I think, was that 
-children become better at word recognition by becoming better able to inhibit 
-interference from competing words. This plot would suggest that they show 
-increased sensitive to the target and foils words by looking less to the 
-unrelated word as they age and reapportioning those looks to the other three 
+phonological and semantic foils as they grow older. (I use the verb *suggest*
+because this is still a preliminary, unmodeled finding.) Jan and I had made
+opposite predictions about whether this would happen. Her argument, I think, was
+that children become better at word recognition by becoming better able to
+inhibit interference from competing words. This plot would suggest that they
+show increased sensitive to the target and foils words by looking less to the
+unrelated word as they age and reapportioning those looks to the other three
 lexically relevant words.
 
 ## Comparing strong versus weak foils
 
 In @RWLPaper, we ignored trials for certain items where we didn't think the
-phonological or semantic similarity was strong enough.
+phonological or semantic similarity was strong enough. The two sets of
+phonological foils are shown below.
 
 
-```r
-trial_info <- bind_rows(
-  readr::read_csv("data-raw/rwl_timepoint1_trials.csv.gz"),
-  readr::read_csv("data-raw/rwl_timepoint2_trials.csv.gz"),
-  readr::read_csv("data-raw/rwl_timepoint3_trials.csv.gz")) %>% 
-  select(TrialID, Target = WordTarget, 
-         PhonologicalFoil = WordPhonologicalFoil,
-         SemanticFoil = WordSemanticFoil, 
-         Unrelated = WordUnrelated)
-
-good_phono <- c("bear", "bee", "bell", "dress", "drum", "flag", "fly", 
-                "heart", "horse", "pan", "pear", "pen", "vase")
-
-good_semy <- c("bear", "bee", "bell", "bread", "cheese", "dress", 
-               "drum", "fly", "horse", "pan", "pear", "shirt", "spoon")
-
-words <- trial_info %>% 
-  distinct(Target, PhonologicalFoil, SemanticFoil, Unrelated)
-
-phono_foils <- split(words, words$Target %in% good_phono) %>% 
-  lapply(arrange, Target) %>% 
-  setNames(c("weak_foil", "strong_foil"))
-
-semy_foils <- split(words, words$Target %in% good_semy) %>% 
-  lapply(arrange, Target) %>% 
-  setNames(c("weak_foil", "strong_foil"))
-
-phono_foils$strong_foil %>% 
-  knitr::kable(caption = "Trials with strong phonological foils.")
-```
-
-
-
-Table: (\#tab:print-foil-tables)Trials with strong phonological foils.
+Table: (\#tab:print-phon-foil-tables)Trials with strong phonological foils.
 
 Target   PhonologicalFoil   SemanticFoil   Unrelated 
 -------  -----------------  -------------  ----------
@@ -165,15 +76,9 @@ pear     pen                cheese         vase
 pen      pear               sword          van       
 vase     van                gift           swan      
 
-```r
-
-phono_foils$weak_foil %>% 
-  knitr::kable(caption = "Trials with weak phonological foils.")
-```
 
 
-
-Table: (\#tab:print-foil-tables)Trials with weak phonological foils.
+Table: (\#tab:print-phon-foil-tables)Trials with weak phonological foils.
 
 Target   PhonologicalFoil   SemanticFoil   Unrelated 
 -------  -----------------  -------------  ----------
@@ -190,15 +95,13 @@ swing    spoon              kite           heart
 sword    swan               pen            gift      
 van      pan                horse          sword     
 
-```r
-
-semy_foils$strong_foil %>% 
-  knitr::kable(caption = "Trials with strong semantic foils.")
-```
-
+The stronger phonological foils are pairs where the syllable onsets are the
+same. The weaker foils include rime pairs, pairs where the words have
+different syllable onsets, and pairs where the onsets differ by a phonetic
+feature.
 
 
-Table: (\#tab:print-foil-tables)Trials with strong semantic foils.
+Table: (\#tab:print-semy-foil-tables)Trials with strong semantic foils.
 
 Target   PhonologicalFoil   SemanticFoil   Unrelated 
 -------  -----------------  -------------  ----------
@@ -218,15 +121,9 @@ pear     pen                cheese         vase
 shirt    cheese             dress          fly       
 spoon    swan               pan            drum      
 
-```r
-
-semy_foils$weak_foil %>% 
-  knitr::kable(caption = "Trials with weak semantic foils.")
-```
 
 
-
-Table: (\#tab:print-foil-tables)Trials with weak semantic foils.
+Table: (\#tab:print-semy-foil-tables)Trials with weak semantic foils.
 
 Target   PhonologicalFoil   SemanticFoil   Unrelated 
 -------  -----------------  -------------  ----------
@@ -244,88 +141,19 @@ sword    swan               pen            gift
 van      pan                horse          sword     
 vase     van                gift           swan      
 
-We should verify that the two sets of words behave differently.
+The strong semantic foils belong to the same category and the weaker ones have a
+less obvious relationship (*ring* and *dress*).
+
+We visually confirm that the strong versus weak foils behave differently.
 
 
-```r
-weak_phon_looks <- trial_info %>% 
-  semi_join(phono_foils$weak_foil) %>% 
-  inner_join(data) %>% 
-  mutate(PhonFoil = "Weak")
-#> Joining, by = c("Target", "PhonologicalFoil", "SemanticFoil", "Unrelated")
-#> Joining, by = "TrialID"
-
-strong_phon_looks <- trial_info %>% 
-  semi_join(phono_foils$strong_foil) %>% 
-  inner_join(data) %>% 
-  mutate(PhonFoil = "Strong")
-#> Joining, by = c("Target", "PhonologicalFoil", "SemanticFoil", "Unrelated")
-#> Joining, by = "TrialID"
-
-phon_data <- bind_rows(strong_phon_looks, weak_phon_looks)
-
-weak_semy_looks <- trial_info %>% 
-  semi_join(semy_foils$weak_foil) %>% 
-  inner_join(data) %>% 
-  mutate(SemyFoil = "Weak")
-#> Joining, by = c("Target", "PhonologicalFoil", "SemanticFoil", "Unrelated")
-#> Joining, by = "TrialID"
-
-strong_semy_looks <- trial_info %>% 
-  semi_join(semy_foils$strong_foil) %>% 
-  inner_join(data) %>% 
-  mutate(SemyFoil = "Strong")
-#> Joining, by = c("Target", "PhonologicalFoil", "SemanticFoil", "Unrelated")
-#> Joining, by = "TrialID"
-
-phon_data <- bind_rows(strong_phon_looks, weak_phon_looks)
-semy_data <- bind_rows(weak_semy_looks, strong_semy_looks)
-
-looks_by_aoi2 <- phon_data %>% 
-  aggregate_looks(phon_defs, 
-                  Study + ResearchID + PhonFoil + Time ~ GazeByImageAOI) %>% 
-  rename(AOI = .response_def) %>% 
-  select(AOI:Time, PhonFoil, Prop, Primary, PhonologicalFoil, Unrelated) %>% 
-  mutate(AOI = factor(AOI, c("Target", "PhonologicalFoil", 
-                             "SemanticFoil", "Unrelated")))
-
-looks_by_aoi3 <- semy_data %>% 
-  aggregate_looks(semy_defs, 
-                  Study + ResearchID + SemyFoil + Time ~ GazeByImageAOI) %>% 
-  rename(AOI = .response_def) %>% 
-  select(AOI:Time, SemyFoil, Prop, Primary, SemanticFoil, Unrelated) %>% 
-  mutate(AOI = factor(AOI, c("Target", "PhonologicalFoil", 
-                             "SemanticFoil", "Unrelated")))
-
-ggplot(looks_by_aoi2 %>% filter(AOI != "Unrelated")) + 
-  aes(x = Time, y = log(Primary / Unrelated), 
-      color = Study, linetype = PhonFoil) + 
-  geom_hline(size = 2, color = "white", yintercept = 0) +
-  stat_smooth() + 
-  facet_grid( ~ AOI) + 
-    labs(x = "Time after target onset [ms]",
-       y = "Log odds looking to word vs. unrelated word",
-       caption = "GAM smooth on partially screened data") +
-  theme_grey(base_size = 9) 
-#> `geom_smooth()` using method = 'gam'
+```
 #> Warning: Removed 48304 rows containing non-finite values (stat_smooth).
 ```
 
 <img src="15-aim1-notebook_files/figure-html/by-aoi-logit-foils-1.png" width="100%" />
 
-```r
-
-ggplot(looks_by_aoi3 %>% filter(AOI != "Unrelated")) + 
-  aes(x = Time, y = log(Primary / Unrelated), 
-      color = Study, linetype = SemyFoil) + 
-  geom_hline(size = 2, color = "white", yintercept = 0) +
-  stat_smooth() + 
-  facet_grid( ~ AOI) + 
-    labs(x = "Time after target onset [ms]",
-       y = "Log odds looking to word vs. unrelated word",
-       caption = "GAM smooth on partially screened data") +
-  theme_grey(base_size = 9) 
-#> `geom_smooth()` using method = 'gam'
+```
 #> Warning: Removed 43071 rows containing non-finite values (stat_smooth).
 ```
 
@@ -333,78 +161,217 @@ ggplot(looks_by_aoi3 %>% filter(AOI != "Unrelated")) +
 
 What's going on here:
 
-* The weak phonological foils are indeed weaker than the strong foils.
-* The strong semantic foils appear stronger than the weak ones. The strong foils 
-  show a growth curve pattern of increasing looks away from baseline and there 
-  a developmental difference among the growth curves for each time point.
-* Children have a lower advantage for the target (vs unrelated) in weak 
-  foil trials because... why?
+- The weak phonological foils are indeed weaker than the strong foils.
+- The strong semantic foils appear stronger than the weak ones. The strong
+  foils show a growth curve pattern of increasing looks away from baseline and
+  there a developmental difference among the growth curves for each time
+  point.
+- Children have a lower advantage for the target (vs unrelated) in weak foil
+  trials because... why? My reading is that if the semantic or phonological
+  foil is effective, children will look at it instead of the unrelated image.
+  Conversely, if the semantic or phonological foil are less effective,
+  children will look more to the unrelated image, which pulls down the ratio
+  of looks to target versus the unrelated image.
 
-Now let's look at the target versus each foil and the unrelated.
+In the above plots, we fixed the denominator to be the number of looks to the
+unrelated image and varied the numerator. In the plots below, we fix the
+numerator to be the looks to the target and vary the denominator to looks to
+target versus looks to each foil.
 
 
-```r
-semantic_target_curves <- looks_by_aoi3 %>% 
-  filter(AOI == "Target") %>% 
-  mutate(`Target vs Semantic` = log(Primary / SemanticFoil), 
-         `Target vs Unrelated` = log(Primary / Unrelated)) %>% 
-  tidyr::gather("Comparison", "LogOdds", 
-                `Target vs Semantic`, `Target vs Unrelated`) 
-  
-phonological_target_curves <- looks_by_aoi2 %>% 
-  filter(AOI == "Target") %>% 
-  mutate(`Target vs Phonological` = log(Primary / PhonologicalFoil), 
-         `Target vs Unrelated` = log(Primary / Unrelated)) %>% 
-  tidyr::gather("Comparison", "LogOdds", 
-                `Target vs Phonological`, `Target vs Unrelated`) 
-  
-ggplot(phonological_target_curves) + 
-  aes(x = Time, y = LogOdds, 
-      color = Study, linetype = PhonFoil) + 
-  geom_hline(size = 2, color = "white", yintercept = 0) +
-  stat_smooth() + 
-  facet_grid( ~ Comparison) + 
-    labs(x = "Time after target onset [ms]",
-       y = "Log odds looking",
-       caption = "GAM smooth on partially screened data") +
-  theme_grey(base_size = 9) 
-#> `geom_smooth()` using method = 'gam'
+```
 #> Warning: Removed 37498 rows containing non-finite values (stat_smooth).
 ```
 
 <img src="15-aim1-notebook_files/figure-html/by-aoi-logit-target-phon-1.png" width="100%" />
 
-Both comparisons attain the same height, so phonological and unrelated foils 
+Curves in both panels attain the same height, so phonological and unrelated foils 
 affect processing equally later in the trial. The strong phonological foils 
 curves in the Target vs Phonological comparison rise later than the weak foils, 
 reflecting early looks to the phonological foils.
 
 
-```r
-ggplot(semantic_target_curves) + 
-  aes(x = Time, y = LogOdds, 
-      color = Study, linetype = SemyFoil) + 
-  geom_hline(size = 2, color = "white", yintercept = 0) +
-  stat_smooth() + 
-  facet_grid( ~ Comparison) + 
-    labs(x = "Time after target onset [ms]",
-       y = "Log odds looking",
-       caption = "GAM smooth on partially screened data") +
-  theme_grey(base_size = 9) 
-#> `geom_smooth()` using method = 'gam'
+```
 #> Warning: Removed 29775 rows containing non-finite values (stat_smooth).
 ```
 
 <img src="15-aim1-notebook_files/figure-html/by-aoi-logit-target-semi-1.png" width="100%" />
 
-The two comparisons do not attain the same height, so the semantic foil reduces 
-odds of fixating to the target later on in a trial. There appears to be no 
-difference in strong and weak foils in Year 2 and Year 3, so I might be able 
+Curves in the two panels do not attain the same height, so the semantic foil
+reduces odds of fixating to the target later on in a trial. There appears to be
+no difference in strong and weak foils in Year 2 and Year 3, so I might be able
 to collapse to remove this distinction and include more items in the analysis.
 
 
+## Preparing data for the model
 
 
+```
+#> Modelling options:
+#> List of 4
+#>  $ bin_width : num 3
+#>  $ start_time: num 250
+#>  $ end_time  : num 1500
+#>  $ bin_length: num 50
+#> 
+```
+
+As in the earlier models, we downsampled the data into
+50-ms (3-frame) bins in order to
+smooth the data. We modeled the looks from 250 to
+1500 ms. Lastly, we aggregated looks by child, study and
+time, and created orthogonal polynomials to use as time features for the model
+
+
+
+```
+#> Warning: Removed 1 rows containing missing values (geom_path).
+```
+
+<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-5-1.png" width="80" />
+
+
+```r
+# library(lme4)
+# m <- glmer(
+#  cbind(Primary, Unrelated) ~
+#         Study * (ot1 + ot2 + ot3) +
+#         (ot1 + ot2 + ot3 | ResearchID) +
+#         (ot1 + ot2 + ot3 | Study:ResearchID),
+#   family = binomial,
+#   data = phon_d %>% filter(Focus == "PhonologicalFoil"))
+
+```
+
+The final model should looks like this. I'll have to run this for a few days.
+
+
+```r
+phon_d <- phon_d %>% 
+  filter(Focus == "PhonologicalFoil")
+```
+
+
+
+```r
+library(rstanarm)
+options(mc.cores = parallel::detectCores())
+
+m <- stan_glmer(
+ cbind(Primary, Unrelated) ~ 
+        Study * (ot1 + ot2 + ot3) + 
+        (ot1 + ot2 + ot3 | ResearchID) + 
+        (ot1 + ot2 + ot3 | Study:ResearchID),
+  family = binomial,
+  prior = normal(0, 1, autoscale = FALSE),
+  prior_intercept = normal(0, 2),
+  prior_covariance = decov(2, 1, 1),
+  control = list(adapt_delta = .99),
+  data = phon_d)
+readr::write_rds(m, "./data/stan_aim1_phon_model2.rds.gz")
+```
+
+For this model structure, we estimate two growth curves simultaneously for each
+year of the study. Each growth curve is the log-odds of fixating on a certain
+image relative to the unrelated image. We use an indicator variable *focus* to
+record whether the image is the target or the phonological foil. 
+
+Actually, I am not sure I need to estimate two growth curves simulataneously
+yet. I could just estimate log-odds of looking to Phonological vs Unrelated
+directly. This would let me estimate year over year changes, the time course of
+the effects and maybe some individual differences in looks to the phonological
+foil. I could posterior-predict looks at each time bin and see how the 
+intervals compare to zero.
+
+
+Hmmm, this is not working quite right yet.
+
+
+```r
+library(rstanarm)
+#> Loading required package: Rcpp
+#> rstanarm (Version 2.15.3, packaged: 2017-04-29 06:18:44 UTC)
+#> - Do not expect the default priors to remain the same in future rstanarm versions.
+#> Thus, R scripts should specify priors explicitly, even if they are just the defaults.
+#> - For execution on a local, multicore CPU with excess RAM we recommend calling
+#> options(mc.cores = parallel::detectCores())
+okay <- readr::read_rds("./data/stan_aim1_phon_model2.rds.gz")
+summary(okay, pars = names(fixef(okay)))
+#> 
+#> Model Info:
+#> 
+#>  function:  stan_glmer
+#>  family:    binomial [logit]
+#>  formula:   cbind(Primary, Unrelated) ~ Study * (ot1 + ot2 + ot3) + (ot1 + 
+#> 	   ot2 + ot3 | ResearchID) + (ot1 + ot2 + ot3 | Study:ResearchID)
+#>  algorithm: sampling
+#>  priors:    see help('prior_summary')
+#>  sample:    4000 (posterior sample size)
+#>  num obs:   12584
+#>  groups:    Study:ResearchID (484), ResearchID (195)
+#> 
+#> Estimates:
+#>                       mean   sd   2.5%   25%   50%   75%   97.5%
+#> (Intercept)          0.2    0.1  0.0    0.1   0.2   0.2   0.3   
+#> StudyTimePoint2      0.0    0.1 -0.2   -0.1   0.0   0.0   0.1   
+#> StudyTimePoint3      0.2    0.1  0.0    0.1   0.2   0.2   0.3   
+#> ot1                 -0.3    0.2 -0.7   -0.4  -0.3  -0.2   0.1   
+#> ot2                 -0.2    0.1 -0.5   -0.3  -0.2  -0.1   0.1   
+#> ot3                  0.1    0.1 -0.1    0.0   0.1   0.1   0.3   
+#> StudyTimePoint2:ot1 -0.3    0.3 -0.8   -0.4  -0.3  -0.1   0.3   
+#> StudyTimePoint3:ot1  0.2    0.3 -0.4    0.0   0.2   0.4   0.8   
+#> StudyTimePoint2:ot2 -0.4    0.2 -0.8   -0.6  -0.4  -0.3   0.0   
+#> StudyTimePoint3:ot2 -0.3    0.2 -0.7   -0.4  -0.3  -0.2   0.1   
+#> StudyTimePoint2:ot3  0.0    0.1 -0.3   -0.1   0.0   0.1   0.2   
+#> StudyTimePoint3:ot3 -0.1    0.1 -0.4   -0.2  -0.1   0.0   0.2   
+#> 
+#> Diagnostics:
+#>                     mcse Rhat n_eff
+#> (Intercept)         0.0  1.0  175  
+#> StudyTimePoint2     0.0  1.0  272  
+#> StudyTimePoint3     0.0  1.0  200  
+#> ot1                 0.0  1.0  230  
+#> ot2                 0.0  1.0  318  
+#> ot3                 0.0  1.0  481  
+#> StudyTimePoint2:ot1 0.0  1.0  328  
+#> StudyTimePoint3:ot1 0.0  1.0  269  
+#> StudyTimePoint2:ot2 0.0  1.0  385  
+#> StudyTimePoint3:ot2 0.0  1.0  483  
+#> StudyTimePoint2:ot3 0.0  1.0  468  
+#> StudyTimePoint3:ot3 0.0  1.0  661  
+#> 
+#> For each parameter, mcse is Monte Carlo standard error, n_eff is a crude measure of effective sample size, and Rhat is the potential scale reduction factor on split chains (at convergence Rhat=1).
+
+sims <- rstanarm::posterior_predict(okay, draws = 200, seed = "09272017")
+n_trials <- data_frame(y_id = seq_along(okay$y[, 1]), n_trials = rowSums(okay$y))
+
+length(phon_d$Study)
+#> [1] 12584
+length(okay$y[, 1])
+#> [1] 12584
+
+bayesplot:::ppc_data(okay$y[, 1], sims, group = phon_d$Study) %>% 
+  left_join(n_trials, by = "y_id") %>% 
+  mutate(prop = value / n_trials) %>% 
+  ggplot() +
+    aes(x = prop) +
+    stat_density(
+      aes_(group = ~ rep_id),
+      data = function(x) dplyr::filter(x, !.data$is_y),
+      geom = "line", position = "identity", size = .25, alpha = .1, 
+      color = "#0074D9") +
+    stat_density(
+      data = function(x) dplyr::filter(x, .data$is_y),
+      geom = "line", position = "identity", size = 1) + 
+    labs(x = "Proportion of looks", 
+         title = "Observed data and 200 posterior simulations") + 
+    coord_cartesian(xlim = c(0, 1), expand = FALSE) + 
+    facet_wrap("group")
+#> Warning: Removed 50400 rows containing non-finite values (stat_density).
+#> Warning: Removed 252 rows containing non-finite values (stat_density).
+```
+
+<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-9-1.png" width="80" />
 
 
 
@@ -423,7 +390,7 @@ to collapse to remove this distinction and include more items in the analysis.
 ## Interim summary
 
 * Visual evidence that the semantic foil and phonological foil become more 
-  relevant (compared to unrelated foil) each. 
+  relevant (compared to unrelated foil) each year. 
 * Our previous distinction between strong and weak foils still applies, 
   although it might be better to exclude only the (a priori) weakest foils, 
   like the rime phonological foils.

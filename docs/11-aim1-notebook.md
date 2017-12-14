@@ -88,3 +88,71 @@ language disorder at TimePoint 3.)
 * Visual evidence that group averages get faster and more reliable at looking 
   to target each year. 
   
+  
+## Prepare the dataset for modeling
+
+## Data preparation
+
+Above we cleaned the data to remove trials with excessive missing data 
+and blocks of trials with too few trials. Now we prepare the data for modelling.
+
+
+```
+#> $bin_width
+#> [1] 3
+#> 
+#> $start_time
+#> [1] 250
+#> 
+#> $end_time
+#> [1] 1500
+#> 
+#> $bin_length
+#> [1] 50
+```
+
+We downsampled the data into 50-ms
+(3-frame) bins in order to smooth the data. We modeled
+the looks from 250 to 1500 ms. Lastly, 
+we aggregated looks by child, study and
+time, and created orthogonal polynomials to use as time features for the model
+
+
+
+Plot the model-ready data. For this plot, we use the so-called _empirical logit_
+transformation because the regular logit (log-odds) generates too extreme of
+values for plotting. 
+
+<img src="11-aim1-notebook_files/figure-html/spaghetti-elogit-1.png" width="100%" />
+
+Those extreme lines indicate sparse data where there are zero-to-few looks to
+the distractors compared to the target. These are the 20 most extreme bins, to 
+illustrate how empirical logit tames infinite values.
+
+
+Study        ResearchID    Time   Primary   Others   logit   elogit
+-----------  -----------  -----  --------  -------  ------  -------
+TimePoint2   607L          1300        30        0     Inf     4.11
+TimePoint2   607L          1350        29        0     Inf     4.08
+TimePoint2   640L          1000        33        0     Inf     4.20
+TimePoint2   640L          1050        29        0     Inf     4.08
+TimePoint2   640L          1100        31        0     Inf     4.14
+TimePoint2   640L          1150        30        0     Inf     4.11
+TimePoint2   640L          1200        27        0     Inf     4.01
+TimePoint2   640L          1250        24        0     Inf     3.89
+TimePoint2   640L          1300        27        0     Inf     4.01
+TimePoint2   640L          1350        26        0     Inf     3.97
+TimePoint2   640L          1400        28        0     Inf     4.04
+TimePoint2   640L          1450        27        0     Inf     4.01
+TimePoint2   640L          1500        28        0     Inf     4.04
+TimePoint3   014L          1350        58        0     Inf     4.76
+TimePoint3   014L          1400        53        0     Inf     4.67
+TimePoint3   640L          1300       110        1    4.70     4.30
+TimePoint3   037L          1350        88        1    4.48     4.08
+TimePoint3   037L          1300        87        1    4.47     4.07
+TimePoint3   037L          1250        84        1    4.43     4.03
+TimePoint3   640L          1100        94        2    3.85     3.63
+
+
+
+  

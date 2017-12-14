@@ -2,7 +2,7 @@
 Analyze familiar word recognition
 ===========================================================================
 
-Next steps:
+Current steps:
 
 - Model year over year changes.
 - Download test scores and individual differences. 
@@ -10,111 +10,6 @@ Next steps:
 
 
 
-
-
-## Data preparation
-
-Earlier we cleaned the data to remove trials with excessive missing data 
-and blocks of trials with too few trials. Now we prepare the data for modelling.
-
-
-```r
-opts_model <- list(
-  bin_width = 3,
-  start_time = 250,
-  end_time = 1500
-)
-opts_model$bin_length <- round(opts_model$bin_width * 16.67, -1)
-opts_model
-#> $bin_width
-#> [1] 3
-#> 
-#> $start_time
-#> [1] 250
-#> 
-#> $end_time
-#> [1] 1500
-#> 
-#> $bin_length
-#> [1] 50
-```
-
-We next downsample the data into 50 ms
-(3-frame) bins in order to smooth the data. We will model
-the looks from 250 to 1500 ms, so we
-filter down to that time window. Lastly, we aggregate looks by child, study and
-time, and create orthogonal polynomials to use as time features for the model
-
-
-```r
-data <- readr::read_csv("./data/aim1-screened.csv.gz") %>% 
-  select(Study, ResearchID, TrialID:GazeByImageAOI) %>% 
-  assign_bins(bin_width = opts_model$bin_width, Time, TrialID)
-
-# Compute time at center of each bin
-bin_times <- data %>% 
-  distinct(Time, .bin) %>% 
-  group_by(.bin) %>% 
-  mutate(BinTime = round(median(Time), -1)) %>% 
-  ungroup()
-
-# Attach bin times
-binned <- data %>% 
-  left_join(bin_times, by = c("Time", ".bin")) %>% 
-  ungroup() %>% 
-  select(-Time) %>% 
-  rename(Time = BinTime) 
-
-resp_def <- create_response_def(
-  primary = "Target",
-  others = c("PhonologicalFoil", "SemanticFoil", "Unrelated"),
-  elsewhere = "tracked",
-  missing = NA
-)  
-  
-d <- binned %>% 
-  aggregate_looks(resp_def, Study + ResearchID + Time ~ GazeByImageAOI)
-
-d_m <- d %>% 
-  filter(opts_model$start_time <= Time, 
-         Time <= opts_model$end_time) %>% 
-  polypoly::poly_add_columns(Time, degree = 3, 
-                             scale_width = 1, prefix = "ot")
-```
-
-Plot the model-ready data. For this plot, we use the so-called _empirical logit_
-transformation because the regular logit (log-odds) generates too extreme of
-values for plotting. 
-
-<img src="12-aim1-notebook_files/figure-html/spaghetti-elogit-1.png" width="100%" />
-
-Those extreme lines indicate sparse data where there are zero-to-few looks to
-the distractors compared to the target. These are the 20 most extreme bins, to 
-illustrate how empirical logit tames infinite values.
-
-
-Study        ResearchID    Time   Primary   Others   logit   elogit
------------  -----------  -----  --------  -------  ------  -------
-TimePoint2   607L          1300        30        0     Inf     4.11
-TimePoint2   607L          1350        29        0     Inf     4.08
-TimePoint2   640L          1000        33        0     Inf     4.20
-TimePoint2   640L          1050        29        0     Inf     4.08
-TimePoint2   640L          1100        31        0     Inf     4.14
-TimePoint2   640L          1150        30        0     Inf     4.11
-TimePoint2   640L          1200        27        0     Inf     4.01
-TimePoint2   640L          1250        24        0     Inf     3.89
-TimePoint2   640L          1300        27        0     Inf     4.01
-TimePoint2   640L          1350        26        0     Inf     3.97
-TimePoint2   640L          1400        28        0     Inf     4.04
-TimePoint2   640L          1450        27        0     Inf     4.01
-TimePoint2   640L          1500        28        0     Inf     4.04
-TimePoint3   014L          1350        58        0     Inf     4.76
-TimePoint3   014L          1400        53        0     Inf     4.67
-TimePoint3   640L          1300       110        1    4.70     4.30
-TimePoint3   037L          1350        88        1    4.48     4.08
-TimePoint3   037L          1300        87        1    4.47     4.07
-TimePoint3   037L          1250        84        1    4.43     4.03
-TimePoint3   640L          1100        94        2    3.85     3.63
 
 
 ## Maximum likelihood results
@@ -168,7 +63,7 @@ arm::display(m)
 #>                   ot3         0.29     -0.09 -0.44 -0.05 
 #>  ResearchID       (Intercept) 0.27                       
 #>                   ot1         0.46      0.86             
-#>                   ot2         0.09     -0.98 -0.84       
+#>                   ot2         0.09     -0.99 -0.85       
 #>                   ot3         0.03     -0.92 -0.98  0.92 
 #>  Residual                     1.00                       
 #> ---
@@ -416,6 +311,10 @@ Open questions:
 
 
 
+
+
+
+
 ## Bayesian model results
 
 Here is the code used to fit the model with Stan. It took about 24 hours to run
@@ -431,43 +330,20 @@ m <- stan_glmer(
     (ot1 + ot2 + ot3) * Study +
     (ot1 + ot2 + ot3 | ResearchID/Study),
   family = binomial,
-  prior = normal(0, 1),
-  prior_intercept = normal(0, 5),
+  prior = normal(0, 1, autoscale = FALSE),
+  prior_intercept = normal(0, 2),
   prior_covariance = decov(2, 1, 1),
   data = d_m)
 readr::write_rds(m, "./data/stan_aim1_cubic_model.rds.gz")
 ```
 
-Let's try to understand our model by making some plots.
 
-### Fixed effects plots
 
-First, let's prepare to plot the intervals for the fixed effects.
+The output below contains the model quick view, a summary of the fixed effect
+terms, and a summary of the priors used.
 
 
 ```r
-library(rstanarm)
-#> Loading required package: Rcpp
-#> rstanarm (Version 2.15.3, packaged: 2017-04-29 06:18:44 UTC)
-#> - Do not expect the default priors to remain the same in future rstanarm versions.
-#> Thus, R scripts should specify priors explicitly, even if they are just the defaults.
-#> - For execution on a local, multicore CPU with excess RAM we recommend calling
-#> options(mc.cores = parallel::detectCores())
-library(bayesplot)
-#> This is bayesplot version 1.4.0.9000
-#> - Plotting theme set to bayesplot::theme_default()
-#> - Online documentation at mc-stan.org/bayesplot
-theme_set(theme_grey())
-library(stringr)
-library(ggstance)
-#> 
-#> Attaching package: 'ggstance'
-#> The following objects are masked from 'package:ggplot2':
-#> 
-#>     geom_errorbarh, GeomErrorbarh
-parse_text <- function(x) parse(text = x)
-
-b <- readr::read_rds("./data/stan_aim1_cubic_model.rds.gz")
 b
 #> stan_glmer
 #>  family:  binomial [logit]
@@ -572,16 +448,94 @@ prior_summary(b)
 #> See help('prior_summary.stanreg') for more details
 ```
 
+We used moderately informative priors for the effects of time and
+
+* b ~ Normal(mean = 0, sd = 1)
+
+When we computed the orthogonal polynomial features for Time, they were rescaled
+so that the linear feature ranged from −.5 to .5. Under this scaling a unit
+change in Time^1^ was equal to change from the start to the end of the analysis
+window. The polynomial features for the Time had the following ranges:
 
 
-Below the intercept and time effects increase each year, confirming that
-children get more reliable and faster at recognizing words as they grow older.
-For each effect, there appears to be a linear trend in the change from TP1 to
-TP2 and from TP2 to TP3. 
+```r
+d_m %>% 
+  distinct(ot1, ot2, ot3) %>% 
+  tidyr::gather("Feature", "Value") %>% 
+  group_by(Feature) %>% 
+  summarise(Min = min(Value), Max = max(Value), Range = Max - Min) %>% 
+  mutate_if(is.numeric, round, 2) %>% 
+  mutate(Feature = stringr::str_replace(Feature, "ot(\\d)", "Time^\\1^")) %>% 
+  knitr::kable()
+```
 
-<img src="12-aim1-notebook_files/figure-html/effects2-1.png" width="80%" />
 
-<img src="12-aim1-notebook_files/figure-html/pairwise-effects-1.png" width="80%" />
+
+Feature      Min    Max   Range
+--------  ------  -----  ------
+Time^1^    -0.50   0.50    1.00
+Time^2^    -0.33   0.60    0.93
+Time^3^    -0.63   0.63    1.26
+
+Under the Normal(0, 1) prior, before seeing any data, we expect 95% of plausible
+effects to fall in the range ±1.96, which is an adequate range for these
+growth curve models. For example, consider just the effect of Time^1^. If a
+listener starts at chance performance, 25% or -1.1
+logits, and increases to, say, 65% or 0.62, the effect
+of a unit change in Time^1^ would be a change of
+1.72 logits. This magnitude of effect is
+accommodated by our Normal(0, 1) prior. 
+
+For the hierarchical part of the model, I used RstanARM's `decov()` prior which
+simultaneously sets a prior of the variances and correlations of the model's
+random effect terms. For these terms, I used the default prior for the variance
+terms and used a weakly informative LKJ(2) prior on the random effect
+correlations. Under LKJ(1) supports all correlations in the range ±1, but under
+LKJ(2) extreme correlations are less plausible. In the figure below, we see that
+the LKJ(2) prior nudges some of the probability mass away from ±1 towards the
+center. The motivation for this kind of prior was *regularization*: We give the
+model a small amount of information to nudge it away from extreme, degenerate
+values.
+
+
+
+<img src="12-aim1-notebook_files/figure-html/unnamed-chunk-11-1.png" width="80" />
+
+
+
+
+
+Let's try to understand our model by making some plots.
+
+### Fixed effects plots
+
+First, let's prepare to plot the intervals for the fixed effects.
+
+
+
+Figure \@ref(fig:effects2) depicts uncertainty intervals with the model's
+average effects of each time-point on the growth curve features. The intercept
+and time effects increase each year, confirming that children get more reliable
+and faster at recognizing words as they grow older. For each effect, the change
+from year\ 1 to year\ 2 is approximately the same as the change from year\ 2 to
+year\ 3, as visible in figure \@ref(fig:pairwise-effects).
+
+
+(ref:effects2) Uncertainty intervals for the effects of study timepoints on
+growth curve features.
+
+<div class="figure">
+<img src="12-aim1-notebook_files/figure-html/effects2-1.png" alt="(ref:effects2)" width="80%" />
+<p class="caption">(\#fig:effects2)(ref:effects2)</p>
+</div>
+
+(ref:pairwise-effects) Uncertainty intervals for the differences between study
+timepoints.
+
+<div class="figure">
+<img src="12-aim1-notebook_files/figure-html/pairwise-effects-1.png" alt="(ref:pairwise-effects)" width="80%" />
+<p class="caption">(\#fig:pairwise-effects)(ref:pairwise-effects)</p>
+</div>
 
 
 
@@ -604,11 +558,13 @@ We can compute differences in average accuracy as well.
 
 
 
-The average accuracy was 0.385 [90% UI: 0.372--0.397] for timepoint
-1, 0.485 [0.473--0.498] for timepoint 2, and 0.557 [0.544--0.569]
-for timepoint 3. The average accuracy increased by 0.1
+The average accuracy was 0.385 [90% UI: 0.372--0.397] for timepoint 1,
+0.485 [0.473--0.498] for timepoint 2, and 0.557 [0.544--0.569] for
+timepoint 3. The average accuracy increased by 0.1
 [0.087--0.114] from timepoint 1 to timepoint 2 and by 0.072
-[0.058--0.085] from timepoint 2 to timepoint 3.
+[0.058--0.085] from timepoint 2 to timepoint 3. These results numerically
+confirm the hypothesis that children would improve in their accuracy each year
+over year and in their processing efficiency year over year.
 
 
 
@@ -618,7 +574,11 @@ for timepoint 3. The average accuracy increased by 0.1
 ### Plot the intervals for the random effect parameters
 
 These are the parameters governing the random effect distributions. First, we
-plot the standard deviations.
+plot the standard deviations. Recall that in our hierarchical model we suppose 
+that each growth curve is drawn from a population of related curves. The 
+model's fixed effects estimate the means of the distribution. These terms
+estimate the variability around that mean. We did not have any a priori 
+hypotheses about the values of these scales, so do not discuss them any further.
 
 <img src="12-aim1-notebook_files/figure-html/posterior-sds-1.png" width="80%" />
 
@@ -649,8 +609,7 @@ are the "judges" used to compute the intercept's _W_. Thus, we compute four sets
 of _W_ coefficients, one for each set of growth curve features: Intercept,
 Time^1^, Time^2^, and Time^3^.
 
-(Maybe: Table X illustrates 
-some sample ratings of these participants.)
+(_Maybe: Table X illustrates some sample ratings of these participants._)
 
 
 Participant ID   Growth curve feature               Year 1              Year 2       Year 3
@@ -697,7 +656,7 @@ reliability and efficiency over three years of study.
 
 Figure \@ref(fig:kendall-stats) depicts uncertainty intervals for the Kendall
 _W_'s for these growth curve features. The 90% uncertainty interval of _W_
-statistics from random ratings [0.274--0.389] subsumes the
+statistics from random ratings [0.279--0.392] subsumes the
 intervals for the Time^2^ effect [0.295--0.351] and the Time^3^ effect
 [0.276--0.348], indicating that these values do not differentiate
 children in a longitudinally stable way. That is, the Time^2^ and Time^3^
@@ -840,7 +799,6 @@ less accurate and more variable performance at age 3 with improving accuracy and
 narrowing variability at age 4 and age 5.
 
 
-
 (ref:new-participants) Posterior predictions for new _unobserved_ participants.
 Each line represents the predicted performance for a new participant. The three
 dark lines highlight predictions from one single simulated participant. The
@@ -891,287 +849,70 @@ study as children show less variability.
 
 ### Predicting the future
 
-> As a consequence, individual differences in word recognition at age 3, for
-example, will be more discriminating and predictive of age 5 language outcomes
-than differences at age 4.
 
 
 
-```r
-fits <- readr::read_csv("./data/fits.csv.gz")
-#> Parsed with column specification:
-#> cols(
-#>   .draw = col_integer(),
-#>   Study = col_character(),
-#>   ResearchID = col_character(),
-#>   coef = col_character(),
-#>   .posterior_value = col_double()
-#> )
-fits <- fits %>% semi_join(d_m)
-#> Joining, by = c("Study", "ResearchID")
-
-point_ests <- fits %>% 
-  group_by(Study, ResearchID, coef) %>% 
-  summarise(point = median(.posterior_value)) %>% 
-  ungroup() %>% 
-  tidyr::spread(coef, point)
-
-scores <- readr::read_csv("./data-raw/test_scores.csv") %>% 
-  select(Study, ResearchID, Age, EVT_GSV, EVT_Standard, 
-         PPVT_GSV, PPVT_Standard)
-#> Parsed with column specification:
-#> cols(
-#>   .default = col_integer(),
-#>   Study = col_character(),
-#>   ResearchID = col_character(),
-#>   Female = col_logical(),
-#>   Male = col_logical(),
-#>   MAE = col_logical(),
-#>   AAE = col_logical(),
-#>   Maternal_Education_LMH = col_character(),
-#>   MinPair_ProportionCorrect = col_double(),
-#>   SAILS_ProportionTestCorrect = col_double()
-#> )
-#> See spec(...) for full column specifications.
-
-with_ests <- scores %>% 
-  inner_join(point_ests)
-#> Joining, by = c("Study", "ResearchID")
-
-ggplot(with_ests) + 
-  aes(x = intercept, y = EVT_GSV, color = Study) + 
-  geom_point() + 
-  stat_smooth(method = "lm")
-#> Warning: Removed 2 rows containing non-finite values (stat_smooth).
-#> Warning: Removed 2 rows containing missing values (geom_point).
-```
-
-<img src="12-aim1-notebook_files/figure-html/bunch-of-plots-1.png" width="80%" />
-
-```r
-
-ggplot(with_ests) + 
-  aes(x = ot1, y = EVT_GSV, color = Study) + 
-  geom_point() + 
-  stat_smooth(method = "lm")
-#> Warning: Removed 2 rows containing non-finite values (stat_smooth).
-
-#> Warning: Removed 2 rows containing missing values (geom_point).
-```
-
-<img src="12-aim1-notebook_files/figure-html/bunch-of-plots-2.png" width="80%" />
-
-```r
-
-ggplot(with_ests) + 
-  aes(x = Age, y = intercept, color = Study) + 
-  geom_point() + 
-  stat_smooth(method = "lm")
-```
-
-<img src="12-aim1-notebook_files/figure-html/bunch-of-plots-3.png" width="80%" />
-
-```r
-
-ggplot(with_ests) + 
-  aes(x = Age, y = ot1, color = Study) + 
-  geom_point() + 
-  stat_smooth(method = "lm")
-```
-
-<img src="12-aim1-notebook_files/figure-html/bunch-of-plots-4.png" width="80%" />
-
-```r
-
-widely <- with_ests %>% 
-  tidyr::gather("Test", "Value", -ResearchID, -Study) %>% 
-  tidyr::unite("Col", Study, Test) %>% 
-  tidyr::spread(Col, Value)
 
 
-ggplot(widely) + 
-  aes(x = TimePoint1_intercept, y = TimePoint3_EVT_GSV) + 
-  geom_point() + 
-  stat_smooth(method = "lm")
-#> Warning: Removed 67 rows containing non-finite values (stat_smooth).
-#> Warning: Removed 67 rows containing missing values (geom_point).
-```
 
-<img src="12-aim1-notebook_files/figure-html/bunch-of-plots-5.png" width="80%" />
-
-```r
-
-ggplot(widely) + 
-  aes(x = TimePoint2_intercept, y = TimePoint3_EVT_GSV) + 
-  geom_point() + 
-  stat_smooth(method = "lm")
-#> Warning: Removed 45 rows containing non-finite values (stat_smooth).
-#> Warning: Removed 45 rows containing missing values (geom_point).
-```
-
-<img src="12-aim1-notebook_files/figure-html/bunch-of-plots-6.png" width="80%" />
-
-```r
-
-ggplot(widely) + 
-  aes(x = TimePoint1_ot1, y = TimePoint3_EVT_GSV) + 
-  geom_point() + 
-  stat_smooth(method = "lm")
-#> Warning: Removed 67 rows containing non-finite values (stat_smooth).
-#> Warning: Removed 67 rows containing missing values (geom_point).
-```
-
-<img src="12-aim1-notebook_files/figure-html/bunch-of-plots-7.png" width="80%" />
-
-```r
-
-ggplot(widely) + 
-  aes(x = TimePoint2_ot1, y = TimePoint3_EVT_GSV) + 
-  geom_point() + 
-  stat_smooth(method = "lm")
-#> Warning: Removed 45 rows containing non-finite values (stat_smooth).
-#> Warning: Removed 45 rows containing missing values (geom_point).
-```
-
-<img src="12-aim1-notebook_files/figure-html/bunch-of-plots-8.png" width="80%" />
-
-```r
-
-ggplot(widely) + 
-  aes(x = TimePoint3_ot1, y = TimePoint3_EVT_GSV) + 
-  geom_point() + 
-  stat_smooth(method = "lm")
-#> Warning: Removed 35 rows containing non-finite values (stat_smooth).
-#> Warning: Removed 35 rows containing missing values (geom_point).
-```
-
-<img src="12-aim1-notebook_files/figure-html/bunch-of-plots-9.png" width="80%" />
+We predicted that individual differences in word recognition at age 3 will be
+more discriminating and predictive future language outcomes than differences
+at age 4 or age 5. To test this hypothesis, we calculated the correlations
+of growth curve features with year 3 expressive vocabulary size and year 2
+receptive vocabulary. (The receptive test was not administered during year 3
+for logistical reasons). As with the concordance statistics, we computed each
+of the statistics for each sample of the posterior distribution so we obtained a
+distribution of correlations.
 
 
-```r
-cor_complete <- function(...) cor(..., use = "pairwise.complete")
-
-test <- fits %>% 
-  left_join(widely) %>% 
-  group_by(Study, coef, .draw) %>% 
-  summarise(
-    r_TimePoint3_EVT_Standard = cor_complete(.posterior_value, 
-                                             TimePoint3_EVT_Standard),
-    r_TimePoint3_EVT_GSV = cor_complete(.posterior_value, 
-                                        TimePoint3_EVT_GSV),
-    r_TimePoint2_PPVT_GSV = cor_complete(.posterior_value, 
-                                         TimePoint2_PPVT_GSV),
-    r_TimePoint2_PPVT_Standard = cor_complete(.posterior_value, 
-                                              TimePoint2_PPVT_Standard))
-#> Joining, by = "ResearchID"
-
-c_intervals <- test %>% 
-  do(bayesplot::mcmc_intervals_data(
-    select(., r_TimePoint3_EVT_Standard:r_TimePoint2_PPVT_Standard))) %>% 
-  ungroup()
-
-c_intervals %>% 
-  filter(parameter == "r_TimePoint3_EVT_Standard") %>% 
-  filter(coef %in% c("intercept", "ot1")) %>% 
-  ggplot() + 
-    aes(y = forcats::fct_rev(Study)) +
-    geom_vline(xintercept = 0, size = 2, color = "white") +
-    ggstance::geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
-    ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
-    geom_point(aes(x = m), size = 3, shape = 3) + 
-    facet_wrap("coef") +
-    labs(x = NULL, y = NULL, caption = "90% and 50% intervals") + 
-    ggtitle("Correlation of curve features and TP3 EVT Standard")
-```
-
-<img src="12-aim1-notebook_files/figure-html/bunch-of-plots2-1.png" width="80%" />
-
-```r
-
-c_intervals %>% 
-  filter(parameter == "r_TimePoint2_PPVT_Standard") %>% 
-  filter(coef %in% c("intercept", "ot1")) %>% 
-  filter(Study != "TimePoint3") %>% 
-  ggplot() + 
-    aes(y = forcats::fct_rev(Study)) +
-    geom_vline(xintercept = 0, size = 2, color = "white") +
-    ggstance::geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
-    ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
-    geom_point(aes(x = m), size = 3, shape = 3) + 
-    facet_wrap("coef") +
-    labs(x = NULL, y = NULL, caption = "90% and 50% intervals") + 
-    ggtitle("Correlation of curve features and TP2 PPVT Standard")
-```
-
-<img src="12-aim1-notebook_files/figure-html/bunch-of-plots2-2.png" width="80%" />
-
-```r
-
-# test %>% 
-#   filter(coef == "intercept") %>%
-#   ggplot() + 
-#   aes(x = c1) + 
-#   geom_histogram() + 
-#   facet_grid(Study ~ coef)
-# 
-# test %>% 
-#   filter(coef == "ot1") %>%
-#   ggplot() + 
-#   aes(x = c1) + 
-#   geom_histogram() + 
-#   facet_grid(Study ~ coef)
-# 
-# test %>% 
-#   filter(coef == "ot2") %>%
-#   ggplot() + 
-#   aes(x = c1) + 
-#   geom_histogram() + 
-#   facet_grid(Study ~ coef)
-
-widely %>% tidy_correlation(ends_with("EVT_GSV"))
-#> # A tibble: 3 x 5
-#>              column1            column2 estimate     n p.value
-#>                <chr>              <chr>    <dbl> <dbl>   <dbl>
-#> 1 TimePoint1_EVT_GSV TimePoint2_EVT_GSV   0.7087   128       0
-#> 2 TimePoint1_EVT_GSV TimePoint3_EVT_GSV   0.6875   121       0
-#> 3 TimePoint2_EVT_GSV TimePoint3_EVT_GSV   0.8511   143       0
-
-widely %>% 
-  tidy_correlation(TimePoint3_EVT_GSV, ends_with("intercept"), ends_with("ot1")) %>% 
-  filter(column1 == "TimePoint3_EVT_GSV")
-#> # A tibble: 6 x 5
-#>              column1              column2 estimate     n p.value
-#>                <chr>                <chr>    <dbl> <dbl>   <dbl>
-#> 1 TimePoint3_EVT_GSV TimePoint1_intercept   0.5058   121   0e+00
-#> 2 TimePoint3_EVT_GSV TimePoint2_intercept   0.4398   143   0e+00
-#> 3 TimePoint3_EVT_GSV TimePoint3_intercept   0.3648   153   0e+00
-#> 4 TimePoint3_EVT_GSV       TimePoint1_ot1   0.4518   121   0e+00
-#> 5 TimePoint3_EVT_GSV       TimePoint2_ot1   0.3253   143   1e-04
-#> 6 TimePoint3_EVT_GSV       TimePoint3_ot1   0.3144   153   1e-04
-
-widely %>% 
-  tidy_correlation(TimePoint2_PPVT_GSV, TimePoint1_ot1, TimePoint2_ot1) %>% 
-  filter(column1 == "TimePoint2_PPVT_GSV")
-#> # A tibble: 2 x 5
-#>               column1        column2 estimate     n p.value
-#>                 <chr>          <chr>    <dbl> <dbl>   <dbl>
-#> 1 TimePoint2_PPVT_GSV TimePoint1_ot1   0.4807   127       0
-#> 2 TimePoint2_PPVT_GSV TimePoint2_ot1   0.3418   161       0
-
-widely %>% 
-  tidy_correlation(TimePoint2_PPVT_GSV, TimePoint1_ot1, TimePoint2_ot1,
-            TimePoint1_intercept, TimePoint2_intercept) %>% 
-  filter(column1 == "TimePoint2_PPVT_GSV")
-#> # A tibble: 4 x 5
-#>               column1              column2 estimate     n p.value
-#>                 <chr>                <chr>    <dbl> <dbl>   <dbl>
-#> 1 TimePoint2_PPVT_GSV       TimePoint1_ot1   0.4807   127       0
-#> 2 TimePoint2_PPVT_GSV       TimePoint2_ot1   0.3418   161       0
-#> 3 TimePoint2_PPVT_GSV TimePoint1_intercept   0.4997   127       0
-#> 4 TimePoint2_PPVT_GSV TimePoint2_intercept   0.4248   161       0
-```
 
 
+Figure \@ref(fig:evt2-gca-cors) shows the correlations of the intercept and
+linear time features with expressive vocabulary size at year 3, and Figure
+\@ref(fig:ppvt4-gca-cors) shows analagous correlations for the receptive
+vocabulary at year 2. For both cases, the strongest correlations were
+found between the growth curve features at year 1. Lexical processing
+efficiency at year 1 correlated with year 3 vocabulary with _r_ =
+.413, 90% UI [0.389--0.438], whereas
+the concurrent lexical processing feature at year 3 only showed a correlation
+of _r_ = .283, [0.259--0.306],
+a difference between year 1 and year 3 of _r_<sub>TP1&minus;TP3</sub>\ =
+.13, [0.097--0.164].
+For the intercept feature, the correlation for year 1, _r_ =
+.391, [0.389--0.438],
+was probably only slightly greater than the correlation for year 2,
+_r_<sub>TP1&minus;TP2</sub>\ = .018,
+[-0.005--0.042] but much considerably greater than
+the concurrent correlation at year 3, _r_<sub>TP1&minus;TP3</sub> =
+.077, [0.054--0.099].
+For year 2 receptive vocabulary, the correlation of year 1 intercept, _r_
+\ = .454, [0.437--0.47],
+was greater than the year 2 correlation, _r_<sub>TP1&minus;TP2</sub> =
+.084, [.084], and
+the correlation for year 1 linear time, _r_\ = .514,
+[0.492--0.538], was likewise greater than the year 2
+correlation, _r_<sub>TP1&minus;TP2</sub> = .225,
+[0.192--0.257].
+
+(ref:evt2-gca-cors) Uncertainty intervals for the correlations of growth curve
+features at each time point with expressive vocabulary (EVT2 standard scores) at
+year 3. The bottom rows provide intervals for the pairwise differences in
+correlations between time points.
+
+<div class="figure">
+<img src="12-aim1-notebook_files/figure-html/evt2-gca-cors-1.png" alt="(ref:evt2-gca-cors)" width="80%" />
+<p class="caption">(\#fig:evt2-gca-cors)(ref:evt2-gca-cors)</p>
+</div>
+
+(ref:ppvt4-gca-cors) Uncertainty intervals for the correlations of growth curve
+features at each time point with expressive vocabulary (PPVT4 standard scores)
+at year 2. The bottom row shows pairwise differences between the correlations at
+year 1 and year 2.
+
+<div class="figure">
+<img src="12-aim1-notebook_files/figure-html/ppvt4-gca-cors-1.png" alt="(ref:ppvt4-gca-cors)" width="80%" />
+<p class="caption">(\#fig:ppvt4-gca-cors)(ref:ppvt4-gca-cors)</p>
+</div>
 
 
 
@@ -1182,6 +923,11 @@ widely %>%
 > Vocabulary size and lexical processing will be tightly correlated such that
 large year-over-year gains in one measure will predict large year-over-years
 gains in the other measure.
+
+
+
+
+
 
 
 

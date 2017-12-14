@@ -365,21 +365,28 @@ phon_d %>%
 
 The final model should looks like this. I'll have to run this for a few days.
 
+```{r}
+phon_d <- phon_d %>% 
+  filter(Focus == "PhonologicalFoil")
+```
+
+
 ```{r, eval = FALSE}
 library(rstanarm)
 options(mc.cores = parallel::detectCores())
 
 m <- stan_glmer(
  cbind(Primary, Unrelated) ~ 
-        Study * Focus * (ot1 + ot2 + ot3) + 
-        (ot1 + ot2 + ot3 | ResearchID:Focus) + 
-        (ot1 + ot2 + ot3 | Study:ResearchID:Focus),
+        Study * (ot1 + ot2 + ot3) + 
+        (ot1 + ot2 + ot3 | ResearchID) + 
+        (ot1 + ot2 + ot3 | Study:ResearchID),
   family = binomial,
   prior = normal(0, 1, autoscale = FALSE),
   prior_intercept = normal(0, 2),
   prior_covariance = decov(2, 1, 1),
+  control = list(adapt_delta = .99),
   data = phon_d)
-readr::write_rds(m, "./data/stan_aim1_phon_model.rds.gz")
+readr::write_rds(m, "./data/stan_aim1_phon_model2.rds.gz")
 ```
 
 For this model structure, we estimate two growth curves simultaneously for each
@@ -394,6 +401,38 @@ the effects and maybe some individual differences in looks to the phonological
 foil. I could posterior-predict looks at each time bin and see how the 
 intervals compare to zero.
 
+
+Hmmm, this is not working quite right yet.
+
+```{r}
+library(rstanarm)
+okay <- readr::read_rds("./data/stan_aim1_phon_model2.rds.gz")
+summary(okay, pars = names(fixef(okay)))
+
+sims <- rstanarm::posterior_predict(okay, draws = 200, seed = "09272017")
+n_trials <- data_frame(y_id = seq_along(okay$y[, 1]), n_trials = rowSums(okay$y))
+
+length(phon_d$Study)
+length(okay$y[, 1])
+
+bayesplot:::ppc_data(okay$y[, 1], sims, group = phon_d$Study) %>% 
+  left_join(n_trials, by = "y_id") %>% 
+  mutate(prop = value / n_trials) %>% 
+  ggplot() +
+    aes(x = prop) +
+    stat_density(
+      aes_(group = ~ rep_id),
+      data = function(x) dplyr::filter(x, !.data$is_y),
+      geom = "line", position = "identity", size = .25, alpha = .1, 
+      color = "#0074D9") +
+    stat_density(
+      data = function(x) dplyr::filter(x, .data$is_y),
+      geom = "line", position = "identity", size = 1) + 
+    labs(x = "Proportion of looks", 
+         title = "Observed data and 200 posterior simulations") + 
+    coord_cartesian(xlim = c(0, 1), expand = FALSE) + 
+    facet_wrap("group")
+```
 
 
 
