@@ -1,0 +1,49 @@
+Prepare and explore the data
+===========================================================================
+
+```{r include = FALSE}
+knitr::read_chunk("./helpers.R")
+if (interactive()) source("./helpers.R")
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+```{r helpers, message = FALSE, warning = FALSE}
+```
+
+```{r, message = FALSE, warnings = FALSE}
+trials <- c("./data-raw/mp_timepoint1_trials.csv.gz", 
+  "./data-raw/mp_timepoint2_trials.csv.gz", 
+  "./data-raw/mp_timepoint3_trials.csv.gz") %>% 
+  lapply(readr::read_csv) %>% 
+  bind_rows() %>% 
+  select(TrialID, Condition = StimType, WordGroup)
+
+looks <- c("./data-raw/mp_timepoint1_looks.csv.gz", 
+  "./data-raw/mp_timepoint2_looks.csv.gz", 
+  "./data-raw/mp_timepoint3_looks.csv.gz") %>% 
+  lapply(readr::read_csv) %>% 
+  bind_rows() 
+
+looks <- looks %>% left_join(trials)
+
+resp_def <- create_response_def(
+  primary = "Target",
+  others = "Distractor",
+  elsewhere = "tracked",
+  missing = NA
+)
+
+# Keep only frames from -500 to 2000 plus or minus any frames to make the 
+# number of frames divisible by 3 (for binning)
+times_to_keep <- looks %>% 
+  distinct(Time) %>% 
+  trim_to_bin_width(3, time_var = Time, key_time = 0, key_position = 2, 
+                    min_time = -500, max_time = 2000) %>% 
+  pull(Time) %>% 
+  range()
+
+raw_data <- looks %>% 
+  filter(between(Time, times_to_keep[1], times_to_keep[2])) %>% 
+  aggregate_looks(resp_def, Study + ResearchID + 
+                    Condition + Time ~ GazeByImageAOI)
+```
