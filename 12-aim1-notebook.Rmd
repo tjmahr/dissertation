@@ -265,6 +265,7 @@ library(ggstance)
 parse_text <- function(x) parse(text = x)
 
 b <- readr::read_rds("./data/stan_aim1_cubic_model.rds.gz")
+b$stan_function <- "stan_glmer"
 ```
 
 The output below contains the model quick view, a summary of the fixed effect

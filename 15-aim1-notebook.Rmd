@@ -404,7 +404,7 @@ intervals compare to zero.
 
 Hmmm, this is not working quite right yet.
 
-```{r}
+```{r, eval = FALSE, echo = FALSE}
 library(rstanarm)
 okay <- readr::read_rds("./data/stan_aim1_phon_model2.rds.gz")
 summary(okay, pars = names(fixef(okay)))
