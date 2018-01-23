@@ -27,6 +27,6 @@ doing so, I worked all the kinks required to generate a nice
 a... uh... _functional_ 
 [Word document version](https://tjmahr.github.io/dissertation/dissertation.docx).
 
-- Last compiled: 2018-01-23 12:30:37
+- Last compiled: 2018-01-23 13:54:18
 
 \mainmatter

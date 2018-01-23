@@ -10,12 +10,22 @@ if (interactive()) source("./helpers.R")
 ```{r helpers, include = FALSE}
 ```
 
+```{r, include = FALSE}
+library(rstanarm)
+library(bayesplot)
+theme_set(theme_grey())
+library(stringr)
+library(ggstance)
+parse_text <- function(x) parse(text = x)
+
+b <- readr::read_rds("./data/stan_aim1_cubic_model.rds.gz")
+b$stan_function <- "stan_glmer"
+```
 
 
+## Growth curve analysis
 
-## Growth Curve Analysis
-
-Eyetracking data were analyzed using **Bayesian mixed
+Looks to the familiar image were analyzed using **Bayesian mixed
 effects logistic regression**. We used *logistic* regression because
 the outcome measurement is a probability (the log-odds of looking to the
 target image versus a distractor). We used *mixed-effects* models
@@ -79,10 +89,290 @@ probability.[^3]
 
 We studied how word recognition changes
 over time by modeling how growth curves change over developmental time.
-This amounted to study how the growth curve parameters changes year over
-year in the study. We included dummy-coded indicators for Year 1, Year 2, and 
+This amounted to studying how the growth curve parameters changes year over
+year. We included dummy-coded indicators for Year 1, Year 2, and 
 Year 3 and having these indicators interact with the growth curve parameters. 
+We also included random effects to represent child-by-study effects.
 
+### Model specification
+
+We used moderately informative priors for the main regression effects.
+
+* b ~ Normal(mean = 0, sd = 1)
+
+When we computed the orthogonal polynomial features for Time, they were rescaled
+so that the linear feature ranged from −.5 to .5. Under this scaling a unit
+change in Time^1^ was equal to change from the start to the end of the analysis
+window. The polynomial features for the Time had the following ranges:
+
+```{r}
+d_m %>% 
+  distinct(ot1, ot2, ot3) %>% 
+  tidyr::gather("Feature", "Value") %>% 
+  group_by(Feature) %>% 
+  summarise(Min = min(Value), Max = max(Value), Range = Max - Min) %>% 
+  mutate_if(is.numeric, round, 2) %>% 
+  mutate(Feature = stringr::str_replace(Feature, "ot(\\d)", "Time^\\1^")) %>% 
+  knitr::kable()
+```
+
+Under the Normal(0, 1) prior, before seeing any data, we expect 95% of plausible
+effects to fall in the range ±1.96, which is an adequate range for these
+growth curve models. For example, consider just the effect of Time^1^. If a
+listener starts at chance performance, 25% or `r qlogis(.25) %>% round(2)`
+logits, and increases to, say, 65% or `r qlogis(.65) %>% round(2)`, the effect
+of a unit change in Time^1^ would be a change of
+`r (qlogis(.65) - qlogis(.25)) %>% round(2)` logits. This magnitude of effect is
+accommodated by our Normal(0, 1) prior. 
+
+### Derived growth curve features
+
+As noted earlier, two of the model's growth curve features have clear interpretations for lexical processing performance: The model's intercept parameter corresponds to the average proportion of looks to the named image of the trial window and the time parameter corresponds to slope of the growth curve or lexical processing efficiency. We also may be interested in _peak_ proportion of looks to the target. We derived this value from the growth curve by taking the median of the five points on a growth curve.
+
+```{r, echo = FALSE}
+dummy_data <- d_m %>% 
+  distinct(Study, Time, ot1, ot2, ot3) %>% 
+  mutate(
+    ResearchID = "NEW", 
+    Primary = 0, 
+    Others = 0)
+
+set.seed(11102017)
+lpred <- dummy_data %>% 
+  tristan::augment_posterior_linpred(
+    model = b, 
+    newdata = ., 
+    re.form = NA)
+
+peaks <- lpred %>% 
+  group_by(Study, .draw) %>% 
+  top_n(5, .posterior_value) %>% 
+  mutate(med = median(.posterior_value)) %>% 
+  select(.draw, Study, peek_accuracy = med) %>% 
+  distinct() %>% 
+  ungroup() %>% 
+  mutate(peek_accuracy = peek_accuracy) %>% 
+  tidyr::spread(Study, peek_accuracy) %>% 
+  select(
+    `Peak~~(TP1)` = TimePoint1,
+    `Peak~~(TP2)` = TimePoint2,
+    `Peak~~(TP3)` = TimePoint3)
+```
+
+
+### Year over year changes in word recognition
+
+Figure \@ref(fig:effects2) depicts uncertainty intervals with the model's
+average effects of each timepoint on the growth curve features. The intercept
+and time effects increased each year, confirming that children get more reliable
+and faster at recognizing words as they grow older. For each effect, the change
+from year\ 1 to year\ 2 is approximately the same as the change from year\ 2 to
+year\ 3, as visible in figure \@ref(fig:pairwise-effects).
+
+
+(ref:effects2) Uncertainty intervals for the effects of study timepoints on
+growth curve features.
+
+```{r effects2, fig.cap = "(ref:effects2)", echo = FALSE, out.width = "80%", fig.height=4, fig.width=5}
+# Column names will have mathematical formatting too
+draws <- as.data.frame(b) %>% 
+  as_tibble() %>% 
+  transmute(
+    `Intercept~~(TP1)` = `(Intercept)`,
+    `Intercept~~(TP2)` = `(Intercept)` + StudyTimePoint2,
+    `Intercept~~(TP3)` = `(Intercept)` + StudyTimePoint3,
+    `Time~~(TP1)` = ot1,
+    `Time~~(TP2)` = ot1 + `ot1:StudyTimePoint2`,
+    `Time~~(TP3)` = ot1 + `ot1:StudyTimePoint3`,
+    `Time^2~~(TP1)` = ot2,
+    `Time^2~~(TP2)` = ot2 + `ot2:StudyTimePoint2`,
+    `Time^2~~(TP3)` = ot2 + `ot2:StudyTimePoint3`,
+    `Time^3~~(TP1)` = ot3,
+    `Time^3~~(TP2)` = ot3 + `ot3:StudyTimePoint2`,
+    `Time^3~~(TP3)` = ot3 + `ot3:StudyTimePoint3`) %>% 
+  bind_cols(peaks)
+
+intervals2 <- draws %>% 
+  mcmc_intervals_data(prob = 0.5, prob_outer = 0.9) %>% 
+  mutate(parameter = factor(parameter, levels = rev(parameter)))
+
+ggplot(intervals2) + 
+  aes(y = parameter) +
+  geom_vline(xintercept = 0, size = 2, color = "white") +
+  geom_point(aes(x = m), size = 3, shape = 3) + 
+  # Draw mock gridlines in case the point's + shape is wider than the interval.
+  # All that's visible is then a | with a gap in the middle.
+  geom_segment(
+    aes(y = parameter, yend = parameter, x = min(ll), xend = max(hh)), 
+    color = "white", size = .25) +
+  ggstance::geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
+  ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
+  scale_y_discrete(labels = parse_text) + 
+  labs(x = NULL, y = NULL, 
+       caption = "Posterior median with 90% and 50% intervals") + 
+  ggtitle("Average effects by study")
+```
+
+```{r average-growth-curves, fig.cap = "", echo = FALSE, out.width = "80%", fig.height=4, fig.width=5}
+lpred %>% 
+  tjmisc::sample_n_of(200, .draw) %>% 
+  ggplot() + 
+    aes(x = Time, y = plogis(.posterior_value), color = Study) +
+    geom_line(
+      aes(group = interaction(Study, ResearchID, .draw)), 
+      alpha = .1) +
+    stat_summary(
+      aes(y = Prop, group = Study), data = d_m, fun.y = "mean", geom = "line", 
+      color = "grey50", size = 1) + 
+    theme(
+      legend.position = c(.95, 0), 
+      legend.justification = c(1, 0),
+      legend.margin = margin(0)) +
+    guides(color = guide_legend(title = NULL, override.aes = list(alpha = 1))) +
+    labs(
+      title = "Observed means and 200 posterior predictions of mean",
+      x = "Time after target onset",
+      y = "Proportion of looks")
+```
+
+
+(ref:pairwise-effects) Uncertainty intervals for the differences between study
+timepoints.
+
+```{r pairwise-effects, fig.cap = "(ref:pairwise-effects)", echo = FALSE, out.width = "80%", fig.height=4, fig.width=5}
+clean_names <- . %>% 
+  stringr::str_replace_all("[()]", "") %>% 
+  stringr::str_replace("~~", "_")
+
+pairwise <- draws %>% 
+  tibble::rowid_to_column(".draw") %>% 
+  set_names(clean_names) %>% 
+  tidyr::gather(parameter, value, -.draw) %>% 
+  tidyr::separate(parameter, c("parameter", "year"), sep = "_") %>% 
+  compare_pairs(year, value) %>% 
+  tidyr::spread(pair, value) %>% 
+  split(.$parameter) %>% 
+  lapply(. %>% 
+           select(-.draw, -parameter) %>% 
+           mcmc_intervals_data(prob = 0.5, prob_outer = 0.9) %>% 
+           rename(pair = parameter)) %>% 
+  bind_rows(.id = "parameter")
+
+ggplot(pairwise) + 
+  aes(y = forcats::fct_rev(pair)) +
+  geom_vline(xintercept = 0, size = 2, color = "white") +
+  ggstance::geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
+  ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
+  geom_point(aes(x = m), size = 3, shape = 3) + 
+  labs(x = NULL, y = NULL, 
+       caption = "Posterior median with 90% and 50% intervals") + 
+  facet_wrap("parameter", ncol = 1, strip.position = "left", 
+             labeller = label_parsed) + 
+  theme(strip.placement = "outside", 
+        strip.background = element_rect(fill = NA),
+        axis.text.y = element_text(size = rel(1.2))) +
+  ggtitle("Differences in average effects")
+```
+
+
+
+
+Bayesplot supports transformations so we could invert the log-odds measure to
+see the intercepts (area under curve/average accuracy) in proportion units.
+
+```{r intercepts, echo = FALSE, out.width = "60%", fig.height=2.5, fig.width=4}
+intervals3 <- draws %>% 
+  mcmc_intervals_data(regex_pars = "Intercept", transformations = "plogis", 
+                      prob = 0.5, prob_outer = 0.9) %>% 
+  mutate(parameter = factor(parameter, levels = rev(parameter)))
+
+intervals3 %>% 
+  mutate_if(is.numeric, round, 3) %>% 
+  select(-point_est) %>% 
+  rename(outer = outer_width, inner = inner_width) %>% 
+  knitr::kable()
+
+ggplot(intervals3) + 
+  aes(y = parameter) +
+  geom_vline(xintercept = .25, size = 2, color = "white") +
+  ggstance::geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
+  ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
+  geom_point(aes(x = m), size = 3, shape = 3) + 
+  scale_y_discrete(labels = parse_text) + 
+  labs(x = NULL, y = NULL, 
+       caption = "Posterior median with 90% and 50% intervals") + 
+  ggtitle("Average accuracy by year")
+```
+
+We can compute differences in average accuracy as well.
+
+```{r intercept-differences, echo = FALSE, out.width = "60%", fig.height=2.5, fig.width=4}
+proportions <- b %>% 
+  as.data.frame() %>%
+  transmute(
+    `TP1` = `(Intercept)`,
+    `TP2` = `(Intercept)` + StudyTimePoint2,
+    `TP3` = `(Intercept)` + StudyTimePoint3) %>% 
+  tibble::rowid_to_column(".draw") %>% 
+  tidyr::gather(parameter, estimate, -.draw) %>% 
+  mutate(estimate = plogis(estimate)) %>% 
+  as_tibble()
+
+prop_diffs <- proportions %>% 
+  compare_pairs(parameter, estimate) %>% 
+  tidyr::spread(pair, value) %>% 
+  select(-.draw) %>% 
+  mcmc_intervals_data(prob = 0.5, prob_outer = 0.9)
+
+ggplot(prop_diffs) + 
+  aes(y = forcats::fct_rev(parameter)) +
+  geom_vline(xintercept = 0, size = 2, color = "white") +
+  ggstance::geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
+  ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
+  geom_point(aes(x = m), size = 3, shape = 3) + 
+  scale_y_discrete(labels = parse_text) + 
+  labs(x = NULL, y = NULL, 
+       caption = "Posterior median with 90% and 50% intervals") + 
+  ggtitle("Differences in average accuracy")
+```
+
+```{r, include = FALSE}
+pluck <- purrr::pluck
+
+prop_list <- intervals3 %>% 
+  split(.$parameter) %>% 
+  set_names(str_extract, "TP.")
+
+get_pts <- . %>% lapply(. %>% pluck("m") %>% round(3)) 
+get_uis <- . %>% lapply(. %>% glue::glue_data("{round(ll,3)}--{round(hh,3)}")) 
+
+pts <- get_pts(prop_list)
+uis <- get_uis(prop_list)
+
+diff_list <- prop_diffs %>% 
+  split(.$parameter) %>% 
+  set_names(str_replace, "-", "_")
+
+d_pts <- get_pts(diff_list)
+d_uis <- get_uis(diff_list)
+```
+
+The average accuracy was `r pts$TP1` [90% UI: `r uis$TP1`] for timepoint 1,
+`r pts$TP2` [`r uis$TP2`] for timepoint 2, and `r pts$TP3` [`r uis$TP3`] for
+timepoint 3. The average accuracy increased by `r d_pts$TP2_TP1`
+[`r d_uis$TP2_TP1`] from timepoint 1 to timepoint 2 and by `r d_pts$TP3_TP2`
+[`r d_uis$TP3_TP2`] from timepoint 2 to timepoint 3. These results numerically
+confirm the hypothesis that children would improve in their accuracy each year
+over year and in their processing efficiency year over year.
+
+
+
+
+
+
+```{r}
+
+```
 
 
 
@@ -332,17 +622,7 @@ m <- stan_glmer(
 readr::write_rds(m, "./data/stan_aim1_cubic_model.rds.gz")
 ```
 
-```{r, include = FALSE}
-library(rstanarm)
-library(bayesplot)
-theme_set(theme_grey())
-library(stringr)
-library(ggstance)
-parse_text <- function(x) parse(text = x)
 
-b <- readr::read_rds("./data/stan_aim1_cubic_model.rds.gz")
-b$stan_function <- "stan_glmer"
-```
 
 The output below contains the model quick view, a summary of the fixed effect
 terms, and a summary of the priors used.
@@ -355,34 +635,8 @@ summary(b, pars = names(fixef(b)))
 prior_summary(b)
 ```
 
-We used moderately informative priors for the effects of time and
 
-* b ~ Normal(mean = 0, sd = 1)
 
-When we computed the orthogonal polynomial features for Time, they were rescaled
-so that the linear feature ranged from −.5 to .5. Under this scaling a unit
-change in Time^1^ was equal to change from the start to the end of the analysis
-window. The polynomial features for the Time had the following ranges:
-
-```{r}
-d_m %>% 
-  distinct(ot1, ot2, ot3) %>% 
-  tidyr::gather("Feature", "Value") %>% 
-  group_by(Feature) %>% 
-  summarise(Min = min(Value), Max = max(Value), Range = Max - Min) %>% 
-  mutate_if(is.numeric, round, 2) %>% 
-  mutate(Feature = stringr::str_replace(Feature, "ot(\\d)", "Time^\\1^")) %>% 
-  knitr::kable()
-```
-
-Under the Normal(0, 1) prior, before seeing any data, we expect 95% of plausible
-effects to fall in the range ±1.96, which is an adequate range for these
-growth curve models. For example, consider just the effect of Time^1^. If a
-listener starts at chance performance, 25% or `r qlogis(.25) %>% round(2)`
-logits, and increases to, say, 65% or `r qlogis(.65) %>% round(2)`, the effect
-of a unit change in Time^1^ would be a change of
-`r (qlogis(.65) - qlogis(.25)) %>% round(2)` logits. This magnitude of effect is
-accommodated by our Normal(0, 1) prior. 
 
 For the hierarchical part of the model, I used RstanARM's `decov()` prior which
 simultaneously sets a prior of the variances and correlations of the model's
@@ -421,243 +675,24 @@ correlations <- bind_rows(
   big_dumb_model2 %>% mutate(Model = "LKJ(2)"))
 ```
 
-```{r, echo = FALSE, fig.height = 3, fig.width = 5}
+```{r, echo = FALSE,  out.width = "80%", fig.height = 3, fig.width = 5}
 ggplot(correlations %>% filter(!is.na(var2))) + 
   aes(x = sdcor) + 
   geom_histogram(binwidth = .1, boundary = 0) + 
   facet_wrap("Model", labeller = label_both) +
   labs(x = NULL, y = "Num. prior samples", 
        caption = "12,000 prior samples drawn per model")
-```
 
-
-```{r, include = FALSE}
-gtools::rdirichlet(2000, c(1,1,4)) %>% colMeans()
-gtools::rdirichlet(10, c(.1,.1,.1)) %>% colMeans()
-gtools::rdirichlet(10, c(1,1,1)) %>% colMeans()
-gtools::rdirichlet(2, c(400,400,400)) %>% colMeans()
-gtools::rdirichlet(2, c(400,400,400))
-qlogis(.70) - qlogis(.25)
-qlogis(.65) - qlogis(.25)
-pnorm(-1.96)
-rnorm(10000) %>% quantile(c(.025, .975))
-rnorm(10000) %>% quantile(c(.075, .975))
+ggplot(correlations %>% filter(!is.na(var2))) + 
+  aes(x = sdcor) + 
+  geom_density() + 
+  facet_wrap("Model", labeller = label_both) +
+  labs(x = NULL, y = "Num. prior samples", 
+       caption = "12,000 prior samples drawn per model")
 ```
 
 
 Let's try to understand our model by making some plots.
-
-### Fixed effects plots
-
-First, let's prepare to plot the intervals for the fixed effects.
-
-```{r effects1, eval = FALSE, echo = FALSE, out.width = "80%", fig.height=4, fig.width=5}
-intervals <- mcmc_intervals_data(as.data.frame(b), pars = names(fixef(b)))
-
-# Rename to use mathematical formatting
-intervals$pname <- intervals$parameter %>%
-  str_replace("ot(2|3)", "Time^\\1") %>% 
-  str_replace("ot(1)", "Time") %>% 
-  str_replace(".Intercept.", "Intercept") %>% 
-  str_replace("Study", "") %>% 
-  str_replace(":", " %*% ") %>% 
-  factor(., levels = rev(.))
-
-order <- c("Intercept", "TimePoint2", "TimePoint3", 
-  "Time", "Time %*% TimePoint2", "Time %*% TimePoint3",
-  "Time^2", "Time^2 %*% TimePoint2", "Time^2 %*% TimePoint3",
-  "Time^3", "Time^3 %*% TimePoint2", "Time^3 %*% TimePoint3")
-   
-intervals$pname <- intervals$pname %>% 
-  forcats::fct_relevel(rev(order))
-
-ggplot(intervals) + 
-  aes(y = pname) +
-  geom_vline(xintercept = 0, size = 2, color = "white") +
-  geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
-  geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
-  geom_point(aes(x = m), size = 3, shape = 3) + 
-  scale_y_discrete(labels = parse_text) + 
-  labs(x = NULL, y = NULL, 
-       caption = "Posterior median with 90% and 50% intervals") + 
-  ggtitle("Average effects", 
-          subtitle = "Dummy-coded effects with Timepoint1 as reference level")
-```
-
-Figure \@ref(fig:effects2) depicts uncertainty intervals with the model's
-average effects of each time-point on the growth curve features. The intercept
-and time effects increase each year, confirming that children get more reliable
-and faster at recognizing words as they grow older. For each effect, the change
-from year\ 1 to year\ 2 is approximately the same as the change from year\ 2 to
-year\ 3, as visible in figure \@ref(fig:pairwise-effects).
-
-
-(ref:effects2) Uncertainty intervals for the effects of study timepoints on
-growth curve features.
-
-```{r effects2, fig.cap = "(ref:effects2)", echo = FALSE, out.width = "80%", fig.height=4, fig.width=5}
-# Column names will have mathematical formatting too
-draws <- as.data.frame(b) %>% 
-  as_tibble() %>% 
-  transmute(
-    `Intercept~~(TP1)` = `(Intercept)`,
-    `Intercept~~(TP2)` = `(Intercept)` + StudyTimePoint2,
-    `Intercept~~(TP3)` = `(Intercept)` + StudyTimePoint3,
-    `Time~~(TP1)` = ot1,
-    `Time~~(TP2)` = ot1 + `ot1:StudyTimePoint2`,
-    `Time~~(TP3)` = ot1 + `ot1:StudyTimePoint3`,
-    `Time^2~~(TP1)` = ot2,
-    `Time^2~~(TP2)` = ot2 + `ot2:StudyTimePoint2`,
-    `Time^2~~(TP3)` = ot2 + `ot2:StudyTimePoint3`,
-    `Time^3~~(TP1)` = ot3,
-    `Time^3~~(TP2)` = ot3 + `ot3:StudyTimePoint2`,
-    `Time^3~~(TP3)` = ot3 + `ot3:StudyTimePoint3`)
-
-intervals2 <- draws %>% 
-  mcmc_intervals_data(prob = 0.5, prob_outer = 0.9) %>% 
-  mutate(parameter = factor(parameter, levels = rev(parameter)))
-
-ggplot(intervals2) + 
-  aes(y = parameter) +
-  geom_vline(xintercept = 0, size = 2, color = "white") +
-  ggstance::geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
-  ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
-  geom_point(aes(x = m), size = 3, shape = 3) + 
-  scale_y_discrete(labels = parse_text) + 
-  labs(x = NULL, y = NULL, 
-       caption = "Posterior median with 90% and 50% intervals") + 
-  ggtitle("Average effects by study")
-```
-
-(ref:pairwise-effects) Uncertainty intervals for the differences between study
-timepoints.
-
-```{r pairwise-effects, fig.cap = "(ref:pairwise-effects)", echo = FALSE, out.width = "80%", fig.height=4, fig.width=5}
-clean_names <- . %>% 
-  stringr::str_replace_all("[()]", "") %>% 
-  stringr::str_replace("~~", "_")
-
-pairwise <- draws %>% 
-  tibble::rowid_to_column(".draw") %>% 
-  set_names(clean_names) %>% 
-  tidyr::gather(parameter, value, -.draw) %>% 
-  tidyr::separate(parameter, c("parameter", "year"), sep = "_") %>% 
-  compare_pairs(year, value) %>% 
-  tidyr::spread(pair, value) %>% 
-  split(.$parameter) %>% 
-  lapply(. %>% 
-           select(-.draw, -parameter) %>% 
-           mcmc_intervals_data(prob = 0.5, prob_outer = 0.9) %>% 
-           rename(pair = parameter)) %>% 
-  bind_rows(.id = "parameter")
-
-ggplot(pairwise) + 
-  aes(y = forcats::fct_rev(pair)) +
-  geom_vline(xintercept = 0, size = 2, color = "white") +
-  ggstance::geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
-  ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
-  geom_point(aes(x = m), size = 3, shape = 3) + 
-  labs(x = NULL, y = NULL, 
-       caption = "Posterior median with 90% and 50% intervals") + 
-  facet_wrap("parameter", ncol = 1, strip.position = "left", 
-             labeller = label_parsed) + 
-  theme(strip.placement = "outside", 
-        strip.background = element_rect(fill = NA),
-        axis.text.y = element_text(size = rel(1.2))) +
-  ggtitle("Differences in average effects")
-```
-
-
-
-
-Bayesplot supports transformations so we could invert the log-odds measure to
-see the intercepts (area under curve/average accuracy) in proportion units.
-
-```{r intercepts, echo = FALSE, out.width = "60%", fig.height=2.5, fig.width=4}
-intervals3 <- draws %>% 
-  mcmc_intervals_data(regex_pars = "Intercept", transformations = "plogis", 
-                      prob = 0.5, prob_outer = 0.9) %>% 
-  mutate(parameter = factor(parameter, levels = rev(parameter)))
-
-intervals3 %>% 
-  mutate_if(is.numeric, round, 3) %>% 
-  select(-point_est) %>% 
-  rename(outer = outer_width, inner = inner_width) %>% 
-  knitr::kable()
-
-ggplot(intervals3) + 
-  aes(y = parameter) +
-  geom_vline(xintercept = .25, size = 2, color = "white") +
-  ggstance::geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
-  ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
-  geom_point(aes(x = m), size = 3, shape = 3) + 
-  scale_y_discrete(labels = parse_text) + 
-  labs(x = NULL, y = NULL, 
-       caption = "Posterior median with 90% and 50% intervals") + 
-  ggtitle("Average accuracy by year")
-```
-
-We can compute differences in average accuracy as well.
-
-```{r intercept-differences, echo = FALSE, out.width = "60%", fig.height=2.5, fig.width=4}
-proportions <- b %>% 
-  as.data.frame() %>%
-  transmute(
-    `TP1` = `(Intercept)`,
-    `TP2` = `(Intercept)` + StudyTimePoint2,
-    `TP3` = `(Intercept)` + StudyTimePoint3) %>% 
-  tibble::rowid_to_column(".draw") %>% 
-  tidyr::gather(parameter, estimate, -.draw) %>% 
-  mutate(estimate = plogis(estimate)) %>% 
-  as_tibble()
-
-prop_diffs <- proportions %>% 
-  compare_pairs(parameter, estimate) %>% 
-  tidyr::spread(pair, value) %>% 
-  select(-.draw) %>% 
-  mcmc_intervals_data(prob = 0.5, prob_outer = 0.9)
-
-ggplot(prop_diffs) + 
-  aes(y = forcats::fct_rev(parameter)) +
-  geom_vline(xintercept = 0, size = 2, color = "white") +
-  ggstance::geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
-  ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
-  geom_point(aes(x = m), size = 3, shape = 3) + 
-  scale_y_discrete(labels = parse_text) + 
-  labs(x = NULL, y = NULL, 
-       caption = "Posterior median with 90% and 50% intervals") + 
-  ggtitle("Differences in average accuracy")
-```
-
-```{r, include = FALSE}
-pluck <- purrr::pluck
-
-prop_list <- intervals3 %>% 
-  split(.$parameter) %>% 
-  set_names(str_extract, "TP.")
-
-get_pts <- . %>% lapply(. %>% pluck("m") %>% round(3)) 
-get_uis <- . %>% lapply(. %>% glue::glue_data("{round(ll,3)}--{round(hh,3)}")) 
-
-pts <- get_pts(prop_list)
-uis <- get_uis(prop_list)
-
-diff_list <- prop_diffs %>% 
-  split(.$parameter) %>% 
-  set_names(str_replace, "-", "_")
-
-d_pts <- get_pts(diff_list)
-d_uis <- get_uis(diff_list)
-```
-
-The average accuracy was `r pts$TP1` [90% UI: `r uis$TP1`] for timepoint 1,
-`r pts$TP2` [`r uis$TP2`] for timepoint 2, and `r pts$TP3` [`r uis$TP3`] for
-timepoint 3. The average accuracy increased by `r d_pts$TP2_TP1`
-[`r d_uis$TP2_TP1`] from timepoint 1 to timepoint 2 and by `r d_pts$TP3_TP2`
-[`r d_uis$TP3_TP2`] from timepoint 2 to timepoint 3. These results numerically
-confirm the hypothesis that children would improve in their accuracy each year
-over year and in their processing efficiency year over year.
-
 
 
 

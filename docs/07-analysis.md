@@ -74,12 +74,7 @@ $$
 Thus, the interaction effects for the intercept term ($\gamma_{0:1}$,
 $\gamma_{0:3}$) describe how overall accuracy changed between years, and
 interaction effects for the linear-time terms ($\gamma_{1:1}$, $\gamma_{1:3}$)
-describe changes in overall processing efficiency between years.[^3b]
-
-[^3b]: In the case that these omnibus multi-year interaction
-models do not converge or are otherwise computationally ill-behaved, I will
-model each year separately, extract each participant's growth curve parameters,
-and compare those measures in a second stage of modeling.
+describe changes in overall processing efficiency between years.
 
 Lastly, a brief comment about priors. Bayesian
 models require prior information (“priors”). For these models, I will

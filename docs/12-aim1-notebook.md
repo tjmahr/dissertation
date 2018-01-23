@@ -9,6 +9,184 @@ Analysis of familiar word recognition
 
 
 
+## Growth curve analysis
+
+Looks to the familiar image were analyzed using **Bayesian mixed
+effects logistic regression**. We used *logistic* regression because
+the outcome measurement is a probability (the log-odds of looking to the
+target image versus a distractor). We used *mixed-effects* models
+because to estimate a separate growth curve for each child (to
+measure individual differences in word recognition) but also treat each
+child's individual growth curve as a draw from a distribution of related
+curves.
+
+We used *Bayesian* techniques to study a generative model of the
+data. Instead of reporting and describing a single, best-fitting model
+of some data, Bayesian techniques consider an entire distribution of
+plausible models that are consistent with the data and any prior
+information we have about the models. By using this approach, one can
+explicitly quantify uncertainty about statistical effects and draw
+inferences using estimates of uncertainty (instead of using statistical
+significance—which is not a straightforward matter for mixed-effects
+models).[^2]
+
+[^2]: It is tempting to further justify this approach by comparing
+    Bayesian versus classical/frequentist statistics, but my goals in
+    using this method are simple: To estimate statistical effects and
+    quantify uncertainty about those effects. This pragmatic brand of
+    Bayesian statistics is illustrated in texts by @GelmanHill and 
+    @RethinkingBook.
+
+The eyetracking growth curves were fit using an orthogonal cubic polynomial
+function of time [a now-conventional approach; see @Mirman2014]. Put
+differently, we modeled the probability of looking to the target during an
+eyetracking task as:
+
+$$
+\text{log-odds}(\mathit{looking}) = \beta_0 + \beta_1 * \textit{Time}^1 +  \beta_2 * \textit{Time}^2 +   \beta_3 * \textit{Time}^3
+$$
+
+That the time terms are *orthogonal* means that $\textit{Time}^1$, $\textit{Time}^2$ and
+$\textit{Time}^3$ are transformed so that they are uncorrelated. Under this
+formulation, the parameters $\beta_0$ and $\beta_1$ have a clear
+interpretation in terms of lexical processing performance. The
+intercept, $\beta_0$, measures the area under the growth curve—or the
+probability of fixating on the target word averaged over the whole
+window. We can think of $\beta_0$ as a measure of average looking accuracy or of
+*word recognition reliability*. The linear time parameter, $\beta_1$,
+estimates the steepness of the growth curve—or how the probability of
+fixating changes from frame to frame. We can think of $\beta_1$ as a
+measure of *processing efficiency*, because growth curves with stronger
+linear features exhibit steeper frame-by-frame increases in looking
+probability.[^3]
+
+[^3]: The polynomial other terms are less important—or rather, they have
+    do not map as neatly onto behavioral descriptions as the accuracy
+    and efficiency parameters. The primary purpose of quadratic and
+    cubic terms is to ensure that the estimated growth curve adequately
+    fits the data. In this kind of data, there is a steady baseline at
+    chance probability before the child hears the word, followed a
+    window of increasing probability of fixating on the target as the
+    child recognizes the word, followed by a period of plateauing and
+    then diminishing looks to target. The cubic polynomial allows the
+    growth curve to be fit with two inflection points: the point when
+    the looks to target start to increase from baseline and the point
+    when the looks to target stops increasing.
+
+We studied how word recognition changes
+over time by modeling how growth curves change over developmental time.
+This amounted to studying how the growth curve parameters changes year over
+year. We included dummy-coded indicators for Year 1, Year 2, and 
+Year 3 and having these indicators interact with the growth curve parameters. 
+We also included random effects to represent child-by-study effects.
+
+### Model specification
+
+We used moderately informative priors for the main regression effects.
+
+* b ~ Normal(mean = 0, sd = 1)
+
+When we computed the orthogonal polynomial features for Time, they were rescaled
+so that the linear feature ranged from −.5 to .5. Under this scaling a unit
+change in Time^1^ was equal to change from the start to the end of the analysis
+window. The polynomial features for the Time had the following ranges:
+
+
+```r
+d_m %>% 
+  distinct(ot1, ot2, ot3) %>% 
+  tidyr::gather("Feature", "Value") %>% 
+  group_by(Feature) %>% 
+  summarise(Min = min(Value), Max = max(Value), Range = Max - Min) %>% 
+  mutate_if(is.numeric, round, 2) %>% 
+  mutate(Feature = stringr::str_replace(Feature, "ot(\\d)", "Time^\\1^")) %>% 
+  knitr::kable()
+```
+
+
+
+Feature      Min    Max   Range
+--------  ------  -----  ------
+Time^1^    -0.50   0.50    1.00
+Time^2^    -0.33   0.60    0.93
+Time^3^    -0.63   0.63    1.26
+
+Under the Normal(0, 1) prior, before seeing any data, we expect 95% of plausible
+effects to fall in the range ±1.96, which is an adequate range for these
+growth curve models. For example, consider just the effect of Time^1^. If a
+listener starts at chance performance, 25% or -1.1
+logits, and increases to, say, 65% or 0.62, the effect
+of a unit change in Time^1^ would be a change of
+1.72 logits. This magnitude of effect is
+accommodated by our Normal(0, 1) prior. 
+
+### Derived growth curve features
+
+As noted earlier, two of the model's growth curve features have clear interpretations for lexical processing performance: The model's intercept parameter corresponds to the average proportion of looks to the named image of the trial window and the time parameter corresponds to slope of the growth curve or lexical processing efficiency. We also may be interested in _peak_ proportion of looks to the target. We derived this value from the growth curve by taking the median of the five points on a growth curve.
+
+
+
+
+### Year over year changes in word recognition
+
+Figure \@ref(fig:effects2) depicts uncertainty intervals with the model's
+average effects of each timepoint on the growth curve features. The intercept
+and time effects increased each year, confirming that children get more reliable
+and faster at recognizing words as they grow older. For each effect, the change
+from year\ 1 to year\ 2 is approximately the same as the change from year\ 2 to
+year\ 3, as visible in figure \@ref(fig:pairwise-effects).
+
+
+(ref:effects2) Uncertainty intervals for the effects of study timepoints on
+growth curve features.
+
+<div class="figure">
+<img src="12-aim1-notebook_files/figure-html/effects2-1.png" alt="(ref:effects2)" width="80%" />
+<p class="caption">(\#fig:effects2)(ref:effects2)</p>
+</div>
+
+<img src="12-aim1-notebook_files/figure-html/average-growth-curves-1.png" width="80%" />
+
+
+(ref:pairwise-effects) Uncertainty intervals for the differences between study
+timepoints.
+
+<div class="figure">
+<img src="12-aim1-notebook_files/figure-html/pairwise-effects-1.png" alt="(ref:pairwise-effects)" width="80%" />
+<p class="caption">(\#fig:pairwise-effects)(ref:pairwise-effects)</p>
+</div>
+
+
+
+
+Bayesplot supports transformations so we could invert the log-odds measure to
+see the intercepts (area under curve/average accuracy) in proportion units.
+
+
+parameter                   outer   inner      ll       l       m       h      hh
+-------------------------  ------  ------  ------  ------  ------  ------  ------
+plogis(Intercept~~(TP1))      0.9     0.5   0.372   0.380   0.385   0.390   0.397
+plogis(Intercept~~(TP2))      0.9     0.5   0.473   0.480   0.485   0.490   0.498
+plogis(Intercept~~(TP3))      0.9     0.5   0.544   0.551   0.557   0.562   0.569
+
+<img src="12-aim1-notebook_files/figure-html/intercepts-1.png" width="60%" />
+
+We can compute differences in average accuracy as well.
+
+<img src="12-aim1-notebook_files/figure-html/intercept-differences-1.png" width="60%" />
+
+
+
+The average accuracy was 0.385 [90% UI: 0.372--0.397] for timepoint 1,
+0.485 [0.473--0.498] for timepoint 2, and 0.557 [0.544--0.569] for
+timepoint 3. The average accuracy increased by 0.1
+[0.087--0.114] from timepoint 1 to timepoint 2 and by 0.072
+[0.058--0.085] from timepoint 2 to timepoint 3. These results numerically
+confirm the hypothesis that children would improve in their accuracy each year
+over year and in their processing efficiency year over year.
+
+
+
 
 
 
@@ -456,43 +634,8 @@ prior_summary(b)
 #> See help('prior_summary.stanreg') for more details
 ```
 
-We used moderately informative priors for the effects of time and
-
-* b ~ Normal(mean = 0, sd = 1)
-
-When we computed the orthogonal polynomial features for Time, they were rescaled
-so that the linear feature ranged from −.5 to .5. Under this scaling a unit
-change in Time^1^ was equal to change from the start to the end of the analysis
-window. The polynomial features for the Time had the following ranges:
 
 
-```r
-d_m %>% 
-  distinct(ot1, ot2, ot3) %>% 
-  tidyr::gather("Feature", "Value") %>% 
-  group_by(Feature) %>% 
-  summarise(Min = min(Value), Max = max(Value), Range = Max - Min) %>% 
-  mutate_if(is.numeric, round, 2) %>% 
-  mutate(Feature = stringr::str_replace(Feature, "ot(\\d)", "Time^\\1^")) %>% 
-  knitr::kable()
-```
-
-
-
-Feature      Min    Max   Range
---------  ------  -----  ------
-Time^1^    -0.50   0.50    1.00
-Time^2^    -0.33   0.60    0.93
-Time^3^    -0.63   0.63    1.26
-
-Under the Normal(0, 1) prior, before seeing any data, we expect 95% of plausible
-effects to fall in the range ±1.96, which is an adequate range for these
-growth curve models. For example, consider just the effect of Time^1^. If a
-listener starts at chance performance, 25% or -1.1
-logits, and increases to, say, 65% or 0.62, the effect
-of a unit change in Time^1^ would be a change of
-1.72 logits. This magnitude of effect is
-accommodated by our Normal(0, 1) prior. 
 
 For the hierarchical part of the model, I used RstanARM's `decov()` prior which
 simultaneously sets a prior of the variances and correlations of the model's
@@ -507,73 +650,10 @@ values.
 
 
 
-<img src="12-aim1-notebook_files/figure-html/unnamed-chunk-11-1.png" width="80" />
-
-
-
+<img src="12-aim1-notebook_files/figure-html/unnamed-chunk-14-1.png" width="80%" /><img src="12-aim1-notebook_files/figure-html/unnamed-chunk-14-2.png" width="80%" />
 
 
 Let's try to understand our model by making some plots.
-
-### Fixed effects plots
-
-First, let's prepare to plot the intervals for the fixed effects.
-
-
-
-Figure \@ref(fig:effects2) depicts uncertainty intervals with the model's
-average effects of each time-point on the growth curve features. The intercept
-and time effects increase each year, confirming that children get more reliable
-and faster at recognizing words as they grow older. For each effect, the change
-from year\ 1 to year\ 2 is approximately the same as the change from year\ 2 to
-year\ 3, as visible in figure \@ref(fig:pairwise-effects).
-
-
-(ref:effects2) Uncertainty intervals for the effects of study timepoints on
-growth curve features.
-
-<div class="figure">
-<img src="12-aim1-notebook_files/figure-html/effects2-1.png" alt="(ref:effects2)" width="80%" />
-<p class="caption">(\#fig:effects2)(ref:effects2)</p>
-</div>
-
-(ref:pairwise-effects) Uncertainty intervals for the differences between study
-timepoints.
-
-<div class="figure">
-<img src="12-aim1-notebook_files/figure-html/pairwise-effects-1.png" alt="(ref:pairwise-effects)" width="80%" />
-<p class="caption">(\#fig:pairwise-effects)(ref:pairwise-effects)</p>
-</div>
-
-
-
-
-Bayesplot supports transformations so we could invert the log-odds measure to
-see the intercepts (area under curve/average accuracy) in proportion units.
-
-
-parameter                   outer   inner      ll       l       m       h      hh
--------------------------  ------  ------  ------  ------  ------  ------  ------
-plogis(Intercept~~(TP1))      0.9     0.5   0.372   0.380   0.385   0.390   0.397
-plogis(Intercept~~(TP2))      0.9     0.5   0.473   0.480   0.485   0.490   0.498
-plogis(Intercept~~(TP3))      0.9     0.5   0.544   0.551   0.557   0.562   0.569
-
-<img src="12-aim1-notebook_files/figure-html/intercepts-1.png" width="60%" />
-
-We can compute differences in average accuracy as well.
-
-<img src="12-aim1-notebook_files/figure-html/intercept-differences-1.png" width="60%" />
-
-
-
-The average accuracy was 0.385 [90% UI: 0.372--0.397] for timepoint 1,
-0.485 [0.473--0.498] for timepoint 2, and 0.557 [0.544--0.569] for
-timepoint 3. The average accuracy increased by 0.1
-[0.087--0.114] from timepoint 1 to timepoint 2 and by 0.072
-[0.058--0.085] from timepoint 2 to timepoint 3. These results numerically
-confirm the hypothesis that children would improve in their accuracy each year
-over year and in their processing efficiency year over year.
-
 
 
 
@@ -664,7 +744,7 @@ reliability and efficiency over three years of study.
 
 Figure \@ref(fig:kendall-stats) depicts uncertainty intervals for the Kendall
 _W_'s for these growth curve features. The 90% uncertainty interval of _W_
-statistics from random ratings [0.278--0.393] subsumes the
+statistics from random ratings [0.277--0.391] subsumes the
 intervals for the Time^2^ effect [0.295--0.351] and the Time^3^ effect
 [0.276--0.348], indicating that these values do not differentiate
 children in a longitudinally stable way. That is, the Time^2^ and Time^3^

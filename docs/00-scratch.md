@@ -210,10 +210,10 @@ devtools::session_info()
 
 last_four_commits <- git2r::commits(git2r::repository("."), n = 4)
 msgs <- lapply(last_four_commits, methods::show)
+#> [82930be] 2018-01-23: add methods for aim 1
 #> [627efb9] 2018-01-23: reorganize things
 #> [920dea1] 2018-01-18: update pre-holiday word counts
 #> [fd0d82b] 2018-01-02: start aim 2 section
-#> [6df6470] 2018-01-02: dont use dev rlang
 ```
 
 
