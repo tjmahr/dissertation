@@ -2,6 +2,43 @@
 (APPENDIX) Appendix {#appendix-appendix .unnumbered}
 ===================
 
+Items used in the visual world experiment {#vw-experiment-items}
+=========================================
+
+Each row of the table represents a set of four images used in a trial
+for the experiment. There were two blocks of trials with different
+images and trial orderings. For the two unrelated foils with more than
+one word listed, the first word was used in block one and the second in
+block two.
+
+  **Target**   **Phonological**   **Semantic**   **Unrelated**
+  ------------ ------------------ -------------- ---------------
+  bear         bell               horse          ring
+  bee          bear               fly            heart
+  bell         bee                drum           swing
+  bread        bear               cheese         vase
+  cheese       shirt              bread          van
+  dress        drum               shirt          swing
+  drum         dress              bell           sword
+  flag         fly                kite           pear
+  fly          flag               bee            pen
+  gift         kite               vase           bread
+  heart        horse              ring           bread/pan
+  horse        heart              bear           pan
+  kite         gift               flag           shirt
+  pan          pear               spoon          vase
+  pear         pen                cheese         ring/vase
+  pen          pear               sword          van
+  ring         swing              dress          flag
+  shirt        cheese             dress          fly
+  spoon        swan               pan            drum
+  swan         spoon              bee            bell
+  swing        spoon              kite           heart
+  sword        swan               pen            gift
+  van          pan                horse          sword
+  vase         van                gift           swan
+
+
 Items used in the mispronunciation experiment {#mp-experiment-items}
 =============================================
 
@@ -31,43 +68,6 @@ replaced with rice/wice.
   2, 3              rice             Correct Production   /ɹaɪs/            rice                  anise
                                      Mispronunciation     /waɪs/            rice                  anise
                                      Nonword              /bep/             ball                  sextant
-
-Items used in the visual world experiment {#vw-experiment-items}
-=========================================
-
-Each row of the table represents a set of four images used in a trial
-for the experiment. There were two blocks of trials with different
-images and trial orderings. For the two unrelated foils with more than
-one word listed, the first word was used in block one and the second in
-block 2.
-
-  **Target**   **Phonological**   **Semantic**   **Unrelated**
-  ------------ ------------------ -------------- ---------------
-  bear         bell               horse          ring
-  bee          bear               fly            heart
-  bell         bee                drum           swing
-  bread        bear               cheese         vase
-  cheese       shirt              bread          van
-  dress        drum               shirt          swing
-  drum         dress              bell           sword
-  flag         fly                kite           pear
-  fly          flag               bee            pen
-  gift         kite               vase           bread
-  heart        horse              ring           bread/pan
-  horse        heart              bear           pan
-  kite         gift               flag           shirt
-  pan          pear               spoon          vase
-  pear         pen                cheese         ring/vase
-  pen          pear               sword          van
-  ring         swing              dress          flag
-  shirt        cheese             dress          fly
-  spoon        swan               pan            drum
-  swan         spoon              bee            bell
-  swing        spoon              kite           heart
-  sword        swan               pen            gift
-  van          pan                horse          sword
-  vase         van                gift           swan
-
 
 Related Work {#related-work}
 ========================

@@ -1,4 +1,4 @@
-Methods
+Method {#aim1-method}
 ===========================================================================
 
 ```{r include = FALSE}
@@ -10,133 +10,149 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 ```{r helpers, message = FALSE, warning = FALSE}
 ```
 
+
+
+## Participants
+
+
+### Special case data screening
+
+(_Skip for now._ This is where I review the participant notes and will remove 
+children who have to be excluded for other reasons, like being diagnosed with a 
+language disorder at TimePoint 3.)
+
+
+## Procedure
+
+This experiment used a version of the Visual World Paradigm for word recognition
+experiments. In eyetracking studies with toddlers, two familiar images are
+usually presented: a target and a distractor. This experiment is a four-image
+eyetracking task that was designed to provide a more demanding word recognition
+task for preschoolers. In this procedure, four familiar images are presented
+onscreen followed by a prompt to view one of the images (e.g., *find the
+bell!*). The four images include the target word (e.g., *bell*), a semantically
+related word (*drum*), a phonologically similar word (*bee*), and an unrelated
+word (*swing*). Figure \@ref(fig:sample-vw-screen) shows an example of a trial's
+items. This procedure measures a child’s real-time comprehension of
+words by capturing how the child’s gaze location changes over time in
+response to speech.
+
+(ref:sample-vw-screen-cap2) Example display for the target *bell* with
+the semantic foil *drum*, the phonological foil *bee*, and the unrelated
+*swing*.
+
+```{r sample-vw-screen, echo = FALSE, fig.cap = "(ref:sample-vw-screen-cap2)", out.width = "100%"}
+knitr::include_graphics("./misc/rwl-screens/TimePoint1/actual/Block2_17_swing2_bell2_bee2_drum2_UpperRightImage_bell.png")
+```
+
+## Experiment Administration
+
+Children participating in the study were tested over two lab visits
+(i.e., on different dates). The first portion of each visit involved
+“watching movies”—that is, performing two blocks of eyetracking
+experiments. A play break or hearing screening occurred between the two
+eyetracking blocks, depending on the visit.
+
+Each eyetracking experiment was administered as a block of trials (24 for this
+experiment and 38 for a two-image task---see chapter X). Children received two
+different blocks of each experiment. The blocks for an experiment differed in
+trial ordering and other features. Experiment order and block selection were
+counterbalanced over children and visits. For example, a child might have
+received Exp. 1 Block A and Exp. 2 Block B on Visit 1 and next received Exp. 2
+Block A and Exp. 1 Block B on Visit 2. The purpose of this presentation was to
+control possible ordering effects where a particular experiment or block
+benefited from consistently occurring first or second.
+
+Experiments were administered using E-Prime 2.0 and a Tobii T60XL
+eyetracker which recorded gaze location at a rate of 60 Hz. The
+experiments were conducted by two examiners, one “behind the scenes” who
+controlled the computer running the experiment and another “onstage” who
+guided the child through the experiment. At the beginning of each block,
+the child was positioned so the child’s eyes were approximately 60 cm
+from the screen. The examiners calibrated the eyetracker to the child’s
+eyes using a five-point calibration procedure (center of screen and
+centers of four screen quadrants). The examiners repeated this
+calibration procedure if one of the five calibration points for one of
+the eyes did not calibrate successfully. During the experiment, the
+behind-the-scenes examiner monitored the child’s distance from the
+screen and whether the eyetracker was capturing the child’s gaze. The
+onstage examiner coached the child to stay fixated on the screen and
+repositioned the child as needed to ensure the child’s eyes were being
+tracked. Every six or seven trials in a block of an experiment, the
+experiment briefly paused with a reinforcing animation or activity.
+During these breaks, the onstage examiner could reposition the child if
+necessary before resuming the experiment.
+
+We used a gaze-contingent stimulus presentation. “After 2 s of
+familiarization time with the images in silence, the experiment paused
+to verify that the child’s gaze was being tracked. After 300 ms of
+continuous gaze tracking, the trial advanced. Otherwise, if the gaze
+could not be verified after 10 s, the trial advanced. This step ensured
+that for nearly every trial, the gaze was being tracked before playing
+the carrier phrase, or in other words, that the child was ready to hear
+the carrier stimuli” (Mahr & Edwards, in revision). During Year 1 and
+Year 2, an attention-getter (e.g., *check it out*!) played 1 s following
+the end of the target noun. These reinforcers were dropped in Year 3 to
+streamline the experiment for older listeners.
+
+## Stimuli
+
+_A few sentences to reiterate what the four kinds of images represented_. A complete list of the items used in the experiment in [Appendix \@ref(vw-experiment-items)](#vw-experiment-items).
+
+
+Recorded “stimuli were presented in children’s home
+dialect, either Mainstream American English (MAE) or African American
+English (AAE). We made an initial guess about what the home dialect was
+likely to be based on a number of factors, including the recruitment
+source and the child’s address. For most children, the home dialect was
+MAE. If we thought the home dialect might be AAE, a native AAE speaker
+who was a fluent dialect-shifter between AAE and MAE was scheduled for
+the lab visit, and she confirmed the home dialect by listening to the
+caregiver interact with the child during the consent procedure at the
+beginning of the visit” (Mahr & Edwards, in revision). Prompts to view
+the target image of a trial (e.g., *find the girl*) used the carrier
+phrases “find the” and “see the”. These carriers were recording in the
+frame “find/see the egg” and cross-spliced with the target nouns to
+minimize coarticulatory cues on the determiner “the”.
+
+The images used in the experiment consisted of color photographs on
+gray backgrounds. These images were piloted in a preschool classroom to
+ensure that children consistently used the same label for familiar
+objects.
+
+
+
+## Data screening
+
 ```{r prep-raw-data, message = FALSE, warnings = FALSE}
 looks1 <- readr::read_csv("./data-raw/rwl_timepoint1_looks.csv.gz")
 looks2 <- readr::read_csv("./data-raw/rwl_timepoint2_looks.csv.gz")
 looks3 <- readr::read_csv("./data-raw/rwl_timepoint3_looks.csv.gz")
-looks <- bind_rows(looks1, looks2, looks3) %>% 
+looks <- bind_rows(looks1, looks2, looks3) %>%
   filter(Version == "Standard")
 
 resp_def <- create_response_def(
   primary = "Target",
   others = c("PhonologicalFoil", "SemanticFoil", "Unrelated"),
   elsewhere = "tracked",
-  missing = NA
-)
+  missing = NA)
 
-# Keep only frames from -500 to 2000 plus or minus any frames to make the 
+# Keep only frames from -500 to 2000 plus or minus any frames to make the
 # number of frames divisible by 3 (for binning)
-times_to_keep <- looks %>% 
-  distinct(Time) %>% 
-  trim_to_bin_width(3, time_var = Time, key_time = 0, key_position = 2, 
-                    min_time = -500, max_time = 2000) %>% 
-  pull(Time) %>% 
+times_to_keep <- looks %>%
+  distinct(Time) %>%
+  trim_to_bin_width(
+    bin_width = 3, time_var = Time, key_time = 0, key_position = 2,
+    min_time = -500, max_time = 2000) %>%
+  pull(Time) %>%
   range()
 
-raw_data <- looks %>% 
-  filter(between(Time, times_to_keep[1], times_to_keep[2])) %>% 
+raw_data <- looks %>%
+  filter(between(Time, times_to_keep[1], times_to_keep[2])) %>%
   aggregate_looks(resp_def, Study + ResearchID + Time ~ GazeByImageAOI)
 ```
 
-## Methods
-
-### Participants
-
-### Procedure
-
-
-*Visual World Paradigm Task.* In eyetracking studies with toddlers, two
-familiar images are usually presented: a target and a distractor. This
-experiment is a four-image eyetracking task that was designed to provide
-a more demanding word recognition task for preschoolers. In this
-procedure, four familiar images are presented onscreen followed by a
-prompt to view one of the images (e.g., *find the bell!*). The four
-images include the target word (e.g., *bell*), a semantically related
-word (*drum*), a phonologically similar word (*bee*), and an unrelated
-word (*swing*).
-
-(ref:sample-vw-screen-cap) Example display for the target *bell* with
-the semantic foil *drum*, the phonological foil *bee*, and the unrelated
-*swing*.
-
-```{r sample-vw-screen, echo = FALSE, fig.cap = "(ref:sample-vw-screen-cap)", out.width = "100%"}
-knitr::include_graphics("./misc/rwl-screens/TimePoint1/actual/Block2_17_swing2_bell2_bee2_drum2_UpperRightImage_bell.png")
-```
-
-
-#### Stimuli
-
-#### Administration
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-```{r raw-aim1, out.width = "50%", fig.show='hold', fig.height=3, fig.width=3, }
-# ## Raw data visualization
-# 
-# First, let's plot the overall averages from each year.
-
-ggplot(raw_data) + 
-  aes(x = Time, y = Prop, color = Study) +
-  geom_hline(size = 2, color = "white", yintercept = .25) +
-  stat_summary(fun.data = mean_se) +
-  labs(x = "Time after target onset [ms]",
-       y = "Proportion looks to target",
-       caption = "Mean ± SE") +
-  theme_grey(base_size = 9) +
-  theme(legend.position = c(0.05, 0.95), 
-        legend.justification = c(0, 1))
-
-ggplot(raw_data) + 
-  aes(x = Time, y = Prop, color = Study) +
-  geom_hline(size = 2, color = "white", yintercept = .25) +
-  stat_smooth() +
-  labs(x = "Time after target onset [ms]",
-       y = "Proportion looks to target",
-       caption = "GAM smooth") +
-  theme_grey(base_size = 9) +
-  theme(legend.position = c(0.05, 0.95), 
-        legend.justification = c(0, 1))
-```
-
-```{r spaghetti-aim1, out.width = "100%", fig.height=2.5, fig.width=6, include = FALSE, eval = FALSE}
-# The raw data plainly confirm hypothesis 1:
-# 
-# > Children’s accuracy and efficiency of recognizing words will improve each year.
-# 
-# We can also plot a spaghetti plot to invidual lines for each participant. We see
-# that they tighten from year to year.
-
-
-ggplot(raw_data) + 
-  aes(x = Time, y = Prop, group = ResearchID) +
-  geom_hline(size = 2, color = "white", yintercept = .25) +
-  geom_line(alpha = .15) +
-  facet_grid(~ Study) +
-  theme_grey(base_size = 9) +
-  labs(x = "Time after target onset [ms]",
-       y = "Proportion looks to target",
-       caption = "Lines: Individual participants") +
-  theme(legend.position = c(0.05, 0.95), 
-        legend.justification = c(0, 1))
-```
-
-
-
-## Data preparation and screening
-
-```{r, include = FALSE}
+```{r aim1-screening-rules, include = FALSE}
 # We use the following options for data screening.
 rules <- list(
   screening_window = c(0, 2000),
@@ -167,8 +183,11 @@ had fewer than `r rules$min_trials` reliable trials.
 # same reasoning applies to the frame at 2016.65.
 screening_times <- looks %>% 
   distinct(Time) %>% 
-  trim_to_bin_width(3, 0, 2, Time, min_time = rules$screening_window[1] - 20, 
-                    max_time = rules$screening_window[2] + 20) %>% 
+  trim_to_bin_width(
+    bin_width = 3, key_time = 0, 
+    key_position = 2, time_var = Time, 
+    min_time = rules$screening_window[1] - 20, 
+    max_time = rules$screening_window[2] + 20) %>% 
   pull(Time) %>% 
   range()
 screening_times
@@ -186,10 +205,11 @@ bad_trial_counts <- missing_data_by_trial %>%
   rename(n_bad = `TRUE`, n_good = `FALSE`) %>% 
   # Replace NAs with 0, in case there were 0 good trials in a block or 
   # 0 bad trials in a block
-  mutate(n_bad = coalesce(n_bad, 0L),
-         n_good = coalesce(n_good, 0L),
-         trials = n_good + n_bad,
-         prop_bad = round(n_bad / trials, 2)) 
+  mutate(
+    n_bad = coalesce(n_bad, 0L),
+    n_good = coalesce(n_good, 0L),
+    trials = n_good + n_bad,
+    prop_bad = round(n_bad / trials, 2)) 
 
 blocks_to_drop <- bad_trial_counts %>% 
   filter(.5 <= prop_bad)
@@ -215,7 +235,7 @@ n_lost_in_bad_version <- ids_by_version$`Early attention getter` %>%
   length()
 ```
 
-Table @ref(tab:screening-counts) shows the numbers of participants and trials
+Table \@ref(tab:screening-counts) shows the numbers of participants and trials
 excluded at each time point due to unreliable data. There were more children in
 the second timepoint than the first timepoint due to a timing error in the
 initial version of this experiment, leading to the exclusion of
@@ -247,8 +267,9 @@ screening_results2 <- screening_results %>%
   mutate(`Raw &minus; Screened` = Raw - Screened) %>% 
   tidyr::gather(Dataset, "Count", -Study, -Stat) %>% 
   tidyr::spread(Stat, Count) %>% 
-  mutate(Dataset = Dataset %>% 
-           factor(c("Raw", "Screened", "Raw &minus; Screened"))) %>% 
+  mutate(
+    Dataset = Dataset %>% 
+      factor(c("Raw", "Screened", "Raw &minus; Screened"))) %>% 
   select(Dataset, Study, `N Children`, `N Blocks`, `N Trials`) %>% 
   arrange(Dataset, Study) %>% 
   mutate(Dataset = Dataset %>% as.character() %>% replace_if_same_as_last(""))
@@ -270,69 +291,9 @@ knitr::kable(
 
 
 
-
-
-```{r clean-aim1, echo = FALSE, message = FALSE, warning = FALSE, out.width = "50%", fig.show='hold', fig.height=3, fig.width=3}
-# Plot the data after partial data screening. We include the curves from the
-# earlier plots in gray. The data-cleaning process slightly increases the average
-# accuracy during the plateau-ed portion of the growth curve.
-
-data <- clean_looks %>% 
-  filter(between(Time, times_to_keep[1], times_to_keep[2])) %>% 
-  readr::write_csv("./data/aim1-screened.csv.gz") 
-
-agg_data <- data %>% 
-  aggregate_looks(resp_def, Study + ResearchID + Time ~ GazeByImageAOI)
-
-ggplot(agg_data) + 
-  aes(x = Time, y = Prop, color = Study) +
-  geom_hline(size = 2, color = "white", yintercept = .25) +
-  stat_summary(aes(group = Study), data = raw_data, 
-               color = "gray70") +
-  stat_summary() +
-  labs(x = "Time after target onset [ms]",
-       y = "Proportion looks to target",
-       caption = "Mean ± SE. Screened data drawn over raw data (gray).") +
-  theme_grey(base_size = 9) +
-  theme(legend.position = c(0.05, 0.95), 
-        legend.justification = c(0, 1))
-
-ggplot(agg_data) + 
-  aes(x = Time, y = Prop, color = Study) +
-  geom_hline(size = 2, color = "white", yintercept = .25) +
-  stat_smooth(aes(group = Study), data = raw_data, 
-              color = "gray70") +
-  stat_smooth() +
-  labs(x = "Time after target onset [ms]",
-       y = "Proportion looks to target",
-       caption = "GAM smooth. Screened data drawn over raw data (gray).") +
-  guides(colour = guide_legend(override.aes = list(fill = NA))) + 
-  theme_grey(base_size = 9) +
-  theme(legend.position = c(0.05, 0.95), 
-        legend.justification = c(0, 1))
-```
-
-### Special case data screening
-
-(_Skip for now._ This is where I review the participant notes and will remove 
-children who have to be excluded for other reasons, like being diagnosed with a 
-language disorder at TimePoint 3.)
-
-
-```{r}
-# code stub for saving the final-final data
-```
-
-
-### Interim summary
-
-* Visual evidence that group averages get faster and more reliable at looking 
-  to target each year. 
-  
-  
 ## Prepare the dataset for modeling
 
-```{r}
+```{r, include = FALSE}
 opts_model <- list(
   bin_width = 3,
   start_time = 250,
@@ -374,24 +335,24 @@ resp_def <- create_response_def(
   primary = "Target",
   others = c("PhonologicalFoil", "SemanticFoil", "Unrelated"),
   elsewhere = "tracked",
-  missing = NA
-)  
+  missing = NA)
   
 d <- binned %>% 
   aggregate_looks(resp_def, Study + ResearchID + Time ~ GazeByImageAOI)
 
 d_m <- d %>% 
-  filter(opts_model$start_time <= Time, 
-         Time <= opts_model$end_time) %>% 
-  polypoly::poly_add_columns(Time, degree = 3, 
-                             scale_width = 1, prefix = "ot")
+  filter(opts_model$start_time <= Time, Time <= opts_model$end_time) %>% 
+  polypoly::poly_add_columns(
+    Time, degree = 3, scale_width = 1, prefix = "ot")
 ```
 
-Plot the model-ready data. For this plot, we use the so-called _empirical logit_
-transformation because the regular logit (log-odds) generates too extreme of
-values for plotting. 
 
-```{r spaghetti-elogit, echo = FALSE, message = FALSE, out.width = "100%", fig.height=2.5, fig.width=6}
+
+```{r spaghetti-elogit, echo = FALSE, message = FALSE, out.width = "100%", fig.height = 2.5, fig.width = 6}
+# Plot the model-ready data. For this plot, we use the so-called _empirical logit_
+# transformation because the regular logit (log-odds) generates too extreme of
+# values for plotting. 
+
 ggplot(d_m) + 
   aes(x = Time, y = empirical_logit(Primary, Others)) + 
   geom_line(aes(group = ResearchID), alpha = .2) + 
@@ -401,7 +362,6 @@ ggplot(d_m) +
   labs(x = "Time after target onset (smoothed to 50 ms bins)", 
        y = "Emp. logit looking to target")
 ```
-
 
 ```{r, echo = FALSE, eval = FALSE}
 # Those extreme lines indicate sparse data where there are zero-to-few looks to
@@ -422,4 +382,94 @@ d_m %>%
 readr::write_csv(d_m, "./data/aim1-model-ready.csv.gz")
 ```
 
-  
+```{r raw-aim1, out.width = "50%", fig.show = 'hold', fig.height = 3, fig.width = 3, eval = FALSE}
+# ## Raw data visualization
+# 
+# First, let's plot the overall averages from each year.
+
+ggplot(raw_data) + 
+  aes(x = Time, y = Prop, color = Study) +
+  geom_hline(size = 2, color = "white", yintercept = .25) +
+  stat_summary(fun.data = mean_se) +
+  labs(x = "Time after target onset [ms]",
+       y = "Proportion looks to target",
+       caption = "Mean ± SE") +
+  theme_grey(base_size = 9) +
+  theme(legend.position = c(0.05, 0.95), 
+        legend.justification = c(0, 1))
+
+ggplot(raw_data) + 
+  aes(x = Time, y = Prop, color = Study) +
+  geom_hline(size = 2, color = "white", yintercept = .25) +
+  stat_smooth() +
+  labs(x = "Time after target onset [ms]",
+       y = "Proportion looks to target",
+       caption = "GAM smooth") +
+  theme_grey(base_size = 9) +
+  theme(legend.position = c(0.05, 0.95), 
+        legend.justification = c(0, 1))
+```
+
+```{r clean-aim1, echo = FALSE, message = FALSE, warning = FALSE, out.width = "50%", fig.show='hold', fig.height=3, fig.width=3, eval = FALSE}
+# Plot the data after partial data screening. We include the curves from the
+# earlier plots in gray. The data-cleaning process slightly increases the average
+# accuracy during the plateau-ed portion of the growth curve.
+
+data <- clean_looks %>% 
+  filter(between(Time, times_to_keep[1], times_to_keep[2])) %>% 
+  readr::write_csv("./data/aim1-screened.csv.gz") 
+
+agg_data <- data %>% 
+  aggregate_looks(resp_def, Study + ResearchID + Time ~ GazeByImageAOI)
+
+ggplot(agg_data) + 
+  aes(x = Time, y = Prop, color = Study) +
+  geom_hline(size = 2, color = "white", yintercept = .25) +
+  stat_summary(aes(group = Study), data = raw_data, color = "gray70") +
+  stat_summary() +
+  labs(
+    x = "Time after target onset [ms]",
+    y = "Proportion looks to target",
+    caption = "Mean ± SE. Screened data drawn over raw data (gray).") +
+  theme_grey(base_size = 9) +
+  theme(
+    legend.position = c(0.05, 0.95), 
+    legend.justification = c(0, 1))
+
+ggplot(agg_data) + 
+  aes(x = Time, y = Prop, color = Study) +
+  geom_hline(size = 2, color = "white", yintercept = .25) +
+  stat_smooth(aes(group = Study), data = raw_data, color = "gray70") +
+  stat_smooth() +
+  labs(
+    x = "Time after target onset [ms]",
+    y = "Proportion looks to target",
+    caption = "GAM smooth. Screened data drawn over raw data (gray).") +
+  guides(colour = guide_legend(override.aes = list(fill = NA))) + 
+  theme_grey(base_size = 9) +
+  theme(
+    legend.position = c(0.05, 0.95), 
+    legend.justification = c(0, 1))
+```
+
+```{r spaghetti-aim1, out.width = "100%", fig.height = 2.5, fig.width = 6, include = FALSE, eval = FALSE}
+# The raw data plainly confirm hypothesis 1:
+# 
+# > Children’s accuracy and efficiency of recognizing words will improve each year.
+# 
+# We can also plot a spaghetti plot to invidual lines for each participant. We see
+# that they tighten from year to year.
+
+ggplot(raw_data) + 
+  aes(x = Time, y = Prop, group = ResearchID) +
+  geom_hline(size = 2, color = "white", yintercept = .25) +
+  geom_line(alpha = .15) +
+  facet_grid(~ Study) +
+  theme_grey(base_size = 9) +
+  labs(x = "Time after target onset [ms]",
+       y = "Proportion looks to target",
+       caption = "Lines: Individual participants") +
+  theme(legend.position = c(0.05, 0.95), 
+        legend.justification = c(0, 1))
+```
+

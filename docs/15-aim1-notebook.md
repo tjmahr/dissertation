@@ -223,11 +223,6 @@ smooth the data. We modeled the looks from 250 to
 time, and created orthogonal polynomials to use as time features for the model
 
 
-
-```
-#> Warning: Removed 1 rows containing missing values (geom_path).
-```
-
 <img src="15-aim1-notebook_files/figure-html/unnamed-chunk-5-1.png" width="80" />
 
 
@@ -287,91 +282,6 @@ intervals compare to zero.
 Hmmm, this is not working quite right yet.
 
 
-```r
-library(rstanarm)
-#> Loading required package: Rcpp
-#> rstanarm (Version 2.15.3, packaged: 2017-04-29 06:18:44 UTC)
-#> - Do not expect the default priors to remain the same in future rstanarm versions.
-#> Thus, R scripts should specify priors explicitly, even if they are just the defaults.
-#> - For execution on a local, multicore CPU with excess RAM we recommend calling
-#> options(mc.cores = parallel::detectCores())
-okay <- readr::read_rds("./data/stan_aim1_phon_model2.rds.gz")
-summary(okay, pars = names(fixef(okay)))
-#> 
-#> Model Info:
-#> 
-#>  function:  stan_glmer
-#>  family:    binomial [logit]
-#>  formula:   cbind(Primary, Unrelated) ~ Study * (ot1 + ot2 + ot3) + (ot1 + 
-#> 	   ot2 + ot3 | ResearchID) + (ot1 + ot2 + ot3 | Study:ResearchID)
-#>  algorithm: sampling
-#>  priors:    see help('prior_summary')
-#>  sample:    4000 (posterior sample size)
-#>  num obs:   12584
-#>  groups:    Study:ResearchID (484), ResearchID (195)
-#> 
-#> Estimates:
-#>                       mean   sd   2.5%   25%   50%   75%   97.5%
-#> (Intercept)          0.2    0.1  0.0    0.1   0.2   0.2   0.3   
-#> StudyTimePoint2      0.0    0.1 -0.2   -0.1   0.0   0.0   0.1   
-#> StudyTimePoint3      0.2    0.1  0.0    0.1   0.2   0.2   0.3   
-#> ot1                 -0.3    0.2 -0.7   -0.4  -0.3  -0.2   0.1   
-#> ot2                 -0.2    0.1 -0.5   -0.3  -0.2  -0.1   0.1   
-#> ot3                  0.1    0.1 -0.1    0.0   0.1   0.1   0.3   
-#> StudyTimePoint2:ot1 -0.3    0.3 -0.8   -0.4  -0.3  -0.1   0.3   
-#> StudyTimePoint3:ot1  0.2    0.3 -0.4    0.0   0.2   0.4   0.8   
-#> StudyTimePoint2:ot2 -0.4    0.2 -0.8   -0.6  -0.4  -0.3   0.0   
-#> StudyTimePoint3:ot2 -0.3    0.2 -0.7   -0.4  -0.3  -0.2   0.1   
-#> StudyTimePoint2:ot3  0.0    0.1 -0.3   -0.1   0.0   0.1   0.2   
-#> StudyTimePoint3:ot3 -0.1    0.1 -0.4   -0.2  -0.1   0.0   0.2   
-#> 
-#> Diagnostics:
-#>                     mcse Rhat n_eff
-#> (Intercept)         0.0  1.0  175  
-#> StudyTimePoint2     0.0  1.0  272  
-#> StudyTimePoint3     0.0  1.0  200  
-#> ot1                 0.0  1.0  230  
-#> ot2                 0.0  1.0  318  
-#> ot3                 0.0  1.0  481  
-#> StudyTimePoint2:ot1 0.0  1.0  328  
-#> StudyTimePoint3:ot1 0.0  1.0  269  
-#> StudyTimePoint2:ot2 0.0  1.0  385  
-#> StudyTimePoint3:ot2 0.0  1.0  483  
-#> StudyTimePoint2:ot3 0.0  1.0  468  
-#> StudyTimePoint3:ot3 0.0  1.0  661  
-#> 
-#> For each parameter, mcse is Monte Carlo standard error, n_eff is a crude measure of effective sample size, and Rhat is the potential scale reduction factor on split chains (at convergence Rhat=1).
-
-sims <- rstanarm::posterior_predict(okay, draws = 200, seed = "09272017")
-n_trials <- data_frame(y_id = seq_along(okay$y[, 1]), n_trials = rowSums(okay$y))
-
-length(phon_d$Study)
-#> [1] 12584
-length(okay$y[, 1])
-#> [1] 12584
-
-bayesplot:::ppc_data(okay$y[, 1], sims, group = phon_d$Study) %>% 
-  left_join(n_trials, by = "y_id") %>% 
-  mutate(prop = value / n_trials) %>% 
-  ggplot() +
-    aes(x = prop) +
-    stat_density(
-      aes_(group = ~ rep_id),
-      data = function(x) dplyr::filter(x, !.data$is_y),
-      geom = "line", position = "identity", size = .25, alpha = .1, 
-      color = "#0074D9") +
-    stat_density(
-      data = function(x) dplyr::filter(x, .data$is_y),
-      geom = "line", position = "identity", size = 1) + 
-    labs(x = "Proportion of looks", 
-         title = "Observed data and 200 posterior simulations") + 
-    coord_cartesian(xlim = c(0, 1), expand = FALSE) + 
-    facet_wrap("group")
-#> Warning: Removed 50400 rows containing non-finite values (stat_density).
-#> Warning: Removed 252 rows containing non-finite values (stat_density).
-```
-
-<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-9-1.png" width="80" />
 
 
 

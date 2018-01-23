@@ -1,12 +1,29 @@
 
-Analyze familiar word recognition
+Analysis of familiar word recognition
 ===========================================================================
 
-Current steps:
 
-- Model year over year changes.
-- Download test scores and individual differences. 
-- Analyze individual differences
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -303,13 +320,6 @@ ggplot(d_m) +
 
 <img src="12-aim1-notebook_files/figure-html/ranks-on-raw-1.png" width="100%" />
 
-Open questions:
-
-* How to test for stability of individual differences over time? 
-  + Intuitively, I would say that the differences are unstable if the red and 
-    blue lines got shuffled in each study. What stats formalize this intuition?
-
-
 
 
 
@@ -346,12 +356,11 @@ terms, and a summary of the priors used.
 ```r
 b
 #> stan_glmer
-#>  family:  binomial [logit]
-#>  formula: cbind(Primary, Others) ~ (ot1 + ot2 + ot3) * Study + (ot1 + ot2 + 
+#>  family:       binomial [logit]
+#>  formula:      cbind(Primary, Others) ~ (ot1 + ot2 + ot3) * Study + (ot1 + ot2 + 
 #> 	   ot3 | ResearchID/Study)
+#>  observations: 12584
 #> ------
-#> 
-#> Estimates:
 #>                     Median MAD_SD
 #> (Intercept)         -0.5    0.0  
 #> ot1                  1.6    0.1  
@@ -378,8 +387,7 @@ b
 #>                   ot3         0.058    -0.23 -0.31  0.19
 #> Num. levels: Study:ResearchID 484, ResearchID 195 
 #> 
-#> Sample avg. posterior predictive 
-#> distribution of y (X = xbar):
+#> Sample avg. posterior predictive distribution of y:
 #>          Median MAD_SD
 #> mean_PPD 49.9    0.1  
 #> 
@@ -390,15 +398,15 @@ summary(b, pars = names(fixef(b)))
 #> 
 #> Model Info:
 #> 
-#>  function:  stan_glmer
-#>  family:    binomial [logit]
-#>  formula:   cbind(Primary, Others) ~ (ot1 + ot2 + ot3) * Study + (ot1 + ot2 + 
+#>  function:     stan_glmer
+#>  family:       binomial [logit]
+#>  formula:      cbind(Primary, Others) ~ (ot1 + ot2 + ot3) * Study + (ot1 + ot2 + 
 #> 	   ot3 | ResearchID/Study)
-#>  algorithm: sampling
-#>  priors:    see help('prior_summary')
-#>  sample:    4000 (posterior sample size)
-#>  num obs:   12584
-#>  groups:    Study:ResearchID (484), ResearchID (195)
+#>  algorithm:    sampling
+#>  priors:       see help('prior_summary')
+#>  sample:       4000 (posterior sample size)
+#>  observations: 12584
+#>  groups:       Study:ResearchID (484), ResearchID (195)
 #> 
 #> Estimates:
 #>                       mean   sd   2.5%   25%   50%   75%   97.5%
@@ -656,7 +664,7 @@ reliability and efficiency over three years of study.
 
 Figure \@ref(fig:kendall-stats) depicts uncertainty intervals for the Kendall
 _W_'s for these growth curve features. The 90% uncertainty interval of _W_
-statistics from random ratings [0.279--0.392] subsumes the
+statistics from random ratings [0.278--0.393] subsumes the
 intervals for the Time^2^ effect [0.295--0.351] and the Time^3^ effect
 [0.276--0.348], indicating that these values do not differentiate
 children in a longitudinally stable way. That is, the Time^2^ and Time^3^
@@ -913,23 +921,6 @@ year 1 and year 2.
 <img src="12-aim1-notebook_files/figure-html/ppvt4-gca-cors-1.png" alt="(ref:ppvt4-gca-cors)" width="80%" />
 <p class="caption">(\#fig:ppvt4-gca-cors)(ref:ppvt4-gca-cors)</p>
 </div>
-
-
-
-
-
-### Relationship with child-level variables
-
-> Vocabulary size and lexical processing will be tightly correlated such that
-large year-over-year gains in one measure will predict large year-over-years
-gains in the other measure.
-
-
-
-
-
-
-
 
 
 

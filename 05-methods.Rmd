@@ -89,7 +89,7 @@ guided the child through the experiment. At the beginning of each block,
 the child was positioned so the child’s eyes were approximately 60 cm
 from the screen. The examiners calibrated the eyetracker to the child’s
 eyes using a five-point calibration procedure (center of screen and
-centers of four screen quadrants). The examiners would repeated this
+centers of four screen quadrants). The examiners repeated this
 calibration procedure if one of the five calibration points for one of
 the eyes did not calibrate successfully. During the experiment, the
 behind-the-scenes examiner monitored the child’s distance from the

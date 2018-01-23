@@ -1,11 +1,5 @@
-Analyze familiar word recognition
+Analysis of familiar word recognition
 ===========================================================================
-
-Current steps:
-
-- Model year over year changes.
-- Download test scores and individual differences. 
-- Analyze individual differences
 
 ```{r include = FALSE}
 d_m <- readr::read_csv("./data/aim1-model-ready.csv.gz")
@@ -15,6 +9,95 @@ if (interactive()) source("./helpers.R")
 
 ```{r helpers, include = FALSE}
 ```
+
+
+
+
+## Growth Curve Analysis
+
+Eyetracking data were analyzed using **Bayesian mixed
+effects logistic regression**. We used *logistic* regression because
+the outcome measurement is a probability (the log-odds of looking to the
+target image versus a distractor). We used *mixed-effects* models
+because to estimate a separate growth curve for each child (to
+measure individual differences in word recognition) but also treat each
+child's individual growth curve as a draw from a distribution of related
+curves.
+
+We used *Bayesian* techniques to study a generative model of the
+data. Instead of reporting and describing a single, best-fitting model
+of some data, Bayesian techniques consider an entire distribution of
+plausible models that are consistent with the data and any prior
+information we have about the models. By using this approach, one can
+explicitly quantify uncertainty about statistical effects and draw
+inferences using estimates of uncertainty (instead of using statistical
+significance—which is not a straightforward matter for mixed-effects
+models).[^2]
+
+[^2]: It is tempting to further justify this approach by comparing
+    Bayesian versus classical/frequentist statistics, but my goals in
+    using this method are simple: To estimate statistical effects and
+    quantify uncertainty about those effects. This pragmatic brand of
+    Bayesian statistics is illustrated in texts by @GelmanHill and 
+    @RethinkingBook.
+
+The eyetracking growth curves were fit using an orthogonal cubic polynomial
+function of time [a now-conventional approach; see @Mirman2014]. Put
+differently, we modeled the probability of looking to the target during an
+eyetracking task as:
+
+$$
+\text{log-odds}(\mathit{looking}) = \beta_0 + \beta_1 * \textit{Time}^1 +  \beta_2 * \textit{Time}^2 +   \beta_3 * \textit{Time}^3
+$$
+
+That the time terms are *orthogonal* means that $\textit{Time}^1$, $\textit{Time}^2$ and
+$\textit{Time}^3$ are transformed so that they are uncorrelated. Under this
+formulation, the parameters $\beta_0$ and $\beta_1$ have a clear
+interpretation in terms of lexical processing performance. The
+intercept, $\beta_0$, measures the area under the growth curve—or the
+probability of fixating on the target word averaged over the whole
+window. We can think of $\beta_0$ as a measure of average looking accuracy or of
+*word recognition reliability*. The linear time parameter, $\beta_1$,
+estimates the steepness of the growth curve—or how the probability of
+fixating changes from frame to frame. We can think of $\beta_1$ as a
+measure of *processing efficiency*, because growth curves with stronger
+linear features exhibit steeper frame-by-frame increases in looking
+probability.[^3]
+
+[^3]: The polynomial other terms are less important—or rather, they have
+    do not map as neatly onto behavioral descriptions as the accuracy
+    and efficiency parameters. The primary purpose of quadratic and
+    cubic terms is to ensure that the estimated growth curve adequately
+    fits the data. In this kind of data, there is a steady baseline at
+    chance probability before the child hears the word, followed a
+    window of increasing probability of fixating on the target as the
+    child recognizes the word, followed by a period of plateauing and
+    then diminishing looks to target. The cubic polynomial allows the
+    growth curve to be fit with two inflection points: the point when
+    the looks to target start to increase from baseline and the point
+    when the looks to target stops increasing.
+
+We studied how word recognition changes
+over time by modeling how growth curves change over developmental time.
+This amounted to study how the growth curve parameters changes year over
+year in the study. We included dummy-coded indicators for Year 1, Year 2, and 
+Year 3 and having these indicators interact with the growth curve parameters. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Maximum likelihood results
 
@@ -222,13 +305,6 @@ ggplot(d_m) +
        x = "Time after target onset (smoothed to 50 ms bins)",
        caption = "Colors: Top 20 and bottom 20 children by linear time effect")
 ```
-
-Open questions:
-
-* How to test for stability of individual differences over time? 
-  + Intuitively, I would say that the differences are unstable if the red and 
-    blue lines got shuffled in each study. What stats formalize this intuition?
-
 
 
 
@@ -1272,157 +1348,6 @@ main_diffs %>%
     labs(x = NULL, y = NULL, caption = "90% and 50% intervals") + 
     ggtitle("Correlations of curve features and receptive vocabulary at year 2") + 
     theme(title = element_text(size = rel(.9)))
-```
-
-
-
-
-
-### Relationship with child-level variables
-
-> Vocabulary size and lexical processing will be tightly correlated such that
-large year-over-year gains in one measure will predict large year-over-years
-gains in the other measure.
-
-
-
-```{r bunch-of-plots, include = FALSE, out.width = "80%", fig.height=4, fig.width=5}
-point_ests <- fits %>% 
-  group_by(Study, ResearchID, coef) %>% 
-  summarise(point = median(.posterior_value)) %>% 
-  ungroup() %>% 
-  tidyr::spread(coef, point)
-
-
-with_ests <- scores %>% 
-  inner_join(point_ests)
-
-widely <- with_ests %>% 
-  tidyr::gather("Test", "Value", -ResearchID, -Study) %>% 
-  tidyr::unite("Col", Study, Test) %>% 
-  tidyr::spread(Col, Value)
-
-ggplot(with_ests) + 
-  aes(x = intercept, y = EVT_GSV, color = Study) + 
-  geom_point() + 
-  stat_smooth(method = "lm")
-
-ggplot(with_ests) + 
-  aes(x = ot1, y = EVT_GSV, color = Study) + 
-  geom_point() + 
-  stat_smooth(method = "lm")
-
-ggplot(with_ests) + 
-  aes(x = Age, y = intercept, color = Study) + 
-  geom_point() + 
-  stat_smooth(method = "lm")
-
-ggplot(with_ests) + 
-  aes(x = Age, y = ot1, color = Study) + 
-  geom_point() + 
-  stat_smooth(method = "lm")
-
-ggplot(widely) + 
-  aes(x = TimePoint1_intercept, y = TimePoint3_EVT_GSV) + 
-  geom_point() + 
-  stat_smooth(method = "lm")
-
-ggplot(widely) + 
-  aes(x = TimePoint2_intercept, y = TimePoint3_EVT_GSV) + 
-  geom_point() + 
-  stat_smooth(method = "lm")
-
-ggplot(widely) + 
-  aes(x = TimePoint1_ot1, y = TimePoint3_EVT_GSV) + 
-  geom_point() + 
-  stat_smooth(method = "lm")
-
-ggplot(widely) + 
-  aes(x = TimePoint2_ot1, y = TimePoint3_EVT_GSV) + 
-  geom_point() + 
-  stat_smooth(method = "lm")
-
-ggplot(widely) + 
-  aes(x = TimePoint3_ot1, y = TimePoint3_EVT_GSV) + 
-  geom_point() + 
-  stat_smooth(method = "lm")
-
-```
-
-
-```{r, eval = FALSE, include = FALSE}
-scores <- readr::read_csv("./data-raw/test_scores.csv") %>% 
-  select(Study, ResearchID, Age, EVT_GSV, EVT_Standard, 
-         PPVT_GSV, PPVT_Standard)
-
-changes <- scores %>% 
-  tidyr::gather("Score", "Value", -Study, -ResearchID) %>% 
-  tidyr::spread(Study, Value) %>% 
-  mutate(TP3_Change = TimePoint3 - TimePoint2, 
-         TP2_Change = TimePoint2 - TimePoint1) %>% 
-  select(-TimePoint1, -TimePoint2, -TimePoint3) %>% 
-  tidyr::gather("Change", "Value", TP3_Change, TP2_Change) %>% 
-  tidyr::unite(Col, Change, Score) %>% 
-  tidyr::spread(Col, Value)
-
-ggplot(changes) + 
-  aes(x = TP2_Change_PPVT_Standard) + 
-  geom_histogram()
-
-bot_20_ppvt_changes <- changes %>% top_n(20, TP2_Change_PPVT_Standard)
-bot_20_ppvt_changes <- changes %>% top_n(20, -TP2_Change_PPVT_Standard)
-
-
-d_avg <- binned %>% 
-  filter(250 <= Time, Time <= 1500) %>% 
-  aggregate_looks(resp_def, Study + ResearchID ~ GazeByImageAOI)
-
-with_prop_changes <- d_avg %>% 
-  select(Study, ResearchID, Prop) %>% 
-  tidyr::spread(Study, Prop) %>% 
-  mutate(TP2_Change_Prop = TimePoint2 - TimePoint1, 
-         TP3_Change_Prop = TimePoint3 - TimePoint2) %>% 
-  select(ResearchID, TP2_Change_Prop, TP3_Change_Prop) %>% 
-  inner_join(changes, by = "ResearchID")
-
-
-long_changes <- with_prop_changes %>% 
-  tidyr::gather("Var", "Value", -ResearchID) %>% 
-  mutate(when = ifelse(str_detect(Var, "TP2_Change"), "TP2", "TP3"),
-         Var = str_replace(Var, "TP._Change_", "")) %>% 
-  tidyr::spread(Var, Value) %>% 
-  tidyr::gather("Var", "Change", -ResearchID, -when, -Prop)
-
-ggplot(long_changes %>% filter(when == "TP2")) + 
-  aes(x = Change, y = Prop) + 
-  geom_point() + 
-  facet_wrap("Var", scales = "free_x") +
-  stat_smooth(method = "lm")
-ggplot(long_changes %>% filter(when == "TP3")) + 
-  aes(x = Change, y = Prop) + 
-  geom_point() + 
-  facet_wrap("Var", scales = "free_x") +
-  stat_smooth(method = "lm")
-
-cor(with_prop_changes$TP2_Change_PPVT_Standard,
-    with_prop_changes$TP2_Change_Prop,
-    use = "pairwise.complete.obs")
-
-cor(with_prop_changes$TP3_Change_Age,
-    with_prop_changes$TP3_Change_Prop,
-    use = "pairwise.complete.obs")
-
-cor(with_prop_changes$TP2_Change_Age,
-    with_prop_changes$TP2_Change_Prop,
-    use = "pairwise.complete.obs")
-
-cor(with_prop_changes$TP2_Change_EVT_Standard,
-    with_prop_changes$TP2_Change_Prop,
-    use = "pairwise.complete.obs")
-
-cor(with_prop_changes$TP3_Change_EVT_Standard,
-    with_prop_changes$TP3_Change_Prop,
-    use = "pairwise.complete.obs")
 ```
 
 
