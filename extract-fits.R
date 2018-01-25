@@ -51,6 +51,7 @@ remove_intercept_effects <- function(predictions) {
 }
 
 b <- readr::read_rds("./data/stan_aim1_cubic_model.rds.gz")
+b$stan_function <- "stan_glmer"
 d_m <- b$data
 
 done <- fixef_pred_grid(b) %>%
@@ -106,9 +107,24 @@ for (sub_group_i in seq_along(sub_groups)) {
     remove_intercept_effects()
   output[[sub_group_i]] <- preds
 }
+
 all <- bind_rows(output) %>%
   select(-Primary, -Others)
 readr::write_csv(all, "./data/fits.csv.gz")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 as.data.frame(b) %>%

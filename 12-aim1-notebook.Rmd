@@ -1,3 +1,35 @@
+```{r include=FALSE, cache=FALSE}
+# ---- set-options ----
+library(methods)
+knitr::opts_chunk$set(
+  tidy = FALSE,
+  collapse = TRUE,
+  comment = "#>",
+  out.width = 80
+)
+
+options(width = 80)
+
+
+# ---- knitr-helper-functions ----
+is_word_output <- function() {
+  knitr::opts_knit$get("rmarkdown.pandoc.to") == "docx"
+}
+is_html_output <- knitr:::is_html_output
+is_latex_output <- knitr:::is_latex_output
+
+# Make a function that prints a string of characters if the output is pdf
+make_latex_decorator <- function(output, otherwise) {
+  function() {
+    if (is_latex_output()) output else otherwise
+  }
+}
+
+# insert_pause <- make_latex_decorator(". . .", "\n")
+# insert_slide_break <- make_latex_decorator("----", "\n")
+# insert_inc_bullet <- make_latex_decorator("> *", "*")
+insert_html_math <- make_latex_decorator("", "$$")
+```
 Analysis of familiar word recognition
 ===========================================================================
 
@@ -234,7 +266,9 @@ _TODO: CAPTION_
 ### Year over year changes in word recognition
 
 
-```{r, echo = FALSE}
+
+
+```{r average-growth-curves, fig.cap = "", echo = FALSE, out.width = "50%", fig.height=3, fig.width=4}
 dummy_data <- d_m %>% 
   distinct(Study, Time, ot1, ot2, ot3) %>% 
   mutate(
@@ -259,9 +293,7 @@ peaks <- lpred %>%
     `Peak~~(TP1)` = TimePoint1,
     `Peak~~(TP2)` = TimePoint2,
     `Peak~~(TP3)` = TimePoint3)
-```
 
-```{r average-growth-curves, fig.cap = "", echo = FALSE, out.width = "80%", fig.height=4, fig.width=5}
 lpred %>% 
   tjmisc::sample_n_of(200, .draw) %>% 
   ggplot() + 
@@ -417,57 +449,66 @@ ggplot(pairwise %>% filter(parameter %in% c("Peak", "Intercept"))) +
     strip.background = element_rect(fill = NA),
     axis.text.y = element_text(size = rel(1.2)))
 ```
+
 ```{r, include = FALSE}
-intervals3 <- draws %>% 
-  mcmc_intervals_data(
-    regex_pars = "Intercept", transformations = "plogis", 
-    prob = 0.5, prob_outer = 0.9) %>% 
-  mutate(parameter = factor(parameter, levels = rev(parameter)))
-
-proportions <- b %>% 
-  as.data.frame() %>%
-  transmute(
-    `TP1` = `(Intercept)`,
-    `TP2` = `(Intercept)` + StudyTimePoint2,
-    `TP3` = `(Intercept)` + StudyTimePoint3) %>% 
-  tibble::rowid_to_column(".draw") %>% 
-  tidyr::gather(parameter, estimate, -.draw) %>% 
-  mutate(estimate = plogis(estimate)) %>% 
-  as_tibble()
-
-prop_diffs <- proportions %>% 
-  compare_pairs(parameter, estimate) %>% 
-  tidyr::spread(pair, value) %>% 
-  select(-.draw) %>% 
-  mcmc_intervals_data(prob = 0.5, prob_outer = 0.9)
-
 pluck <- purrr::pluck
-
-prop_list <- intervals3 %>% 
-  split(.$parameter) %>% 
-  set_names(str_extract, "TP.")
-
 get_pts <- . %>% lapply(. %>% pluck("m") %>% round(3)) 
 get_uis <- . %>% lapply(. %>% glue::glue_data("{round(ll,3)}--{round(hh,3)}")) 
 
-pts <- get_pts(prop_list)
-uis <- get_uis(prop_list)
+props <- props %>% 
+  mutate(
+    parameter = parameter %>% 
+      stringr::str_replace("~~.", "_") %>% 
+      stringr::str_replace("\\)", "")) %>% 
+  tidyr::separate(parameter, into = c("parameter", "study"))
 
-diff_list <- prop_diffs %>% 
-  split(.$parameter) %>% 
+prop_diffs <- pairwise %>% 
+  filter(parameter %in% c("Intercept", "Peak"))
+
+prop_list1 <- props %>% 
+  filter(parameter == "Intercept") %>% 
+  split(.$study) %>% 
+  set_names(str_extract, "TP.")
+
+prop_list2 <- props %>% 
+  filter(parameter == "Peak") %>% 
+  split(.$study) %>% 
+  set_names(str_extract, "TP.")
+
+int_pts <- get_pts(prop_list1)
+int_uis <- get_uis(prop_list1)
+peak_pts <- get_pts(prop_list2)
+peak_uis <- get_uis(prop_list2)
+
+diff_list1 <- prop_diffs %>% 
+  filter(parameter == "Intercept") %>% 
+  split(.$pair) %>% 
   set_names(str_replace, "-", "_")
 
-d_pts <- get_pts(diff_list)
-d_uis <- get_uis(diff_list)
+diff_list2 <- prop_diffs %>% 
+  filter(parameter == "Peak") %>% 
+  split(.$pair) %>% 
+  set_names(str_replace, "-", "_")
+
+int_dpts <- get_pts(diff_list1)
+int_duis <- get_uis(diff_list1)
+peak_dpts <- get_pts(diff_list2)
+peak_duis <- get_uis(diff_list2)
 ```
 
-The average accuracy was `r pts$TP1` [90% UI: `r uis$TP1`] for timepoint 1,
-`r pts$TP2` [`r uis$TP2`] for timepoint 2, and `r pts$TP3` [`r uis$TP3`] for
-timepoint 3. The average accuracy increased by `r d_pts$TP2_TP1`
-[`r d_uis$TP2_TP1`] from timepoint 1 to timepoint 2 and by `r d_pts$TP3_TP2`
-[`r d_uis$TP3_TP2`] from timepoint 2 to timepoint 3. These results numerically
-confirm the hypothesis that children would improve in their accuracy each year
-over year and in their processing efficiency year over year.
+The average reliability was `r int_pts$TP1` [90% UI: `r int_uis$TP1`] for
+timepoint 1, `r int_pts$TP2` [`r int_uis$TP2`] for timepoint 2, and
+`r int_pts$TP3` [`r int_uis$TP3`] for timepoint 3. The averages increased by
+`r int_dpts$TP2_TP1` [`r int_duis$TP2_TP1`] from timepoint 1 to timepoint 2
+and by `r int_dpts$TP3_TP2` [`r int_duis$TP3_TP2`] from timepoint 2 to
+timepoint 3. The peak accuracy was `r peak_pts$TP1` [90% UI: `r peak_uis$TP1`]
+for timepoint 1, `r peak_pts$TP2` [`r peak_uis$TP2`] for timepoint 2, and
+`r peak_pts$TP3` [`r peak_uis$TP3`] for timepoint 3. The peak values increased
+by `r peak_dpts$TP2_TP1` [`r peak_duis$TP2_TP1`] from timepoint 1 to
+timepoint 2 and by `r peak_dpts$TP3_TP2` [`r peak_duis$TP3_TP2`] from
+timepoint 2 to timepoint 3. These results numerically confirm the hypothesis
+that children would improve in their word recognition reliability, both in terms
+of average looking and in terms of peak accuracy, each year.
 
 
 ### Check for stable individual differences
@@ -509,8 +550,8 @@ posterior_w <- ws %>%
 ```
 
 We predicted that children would show stable individual differences such that
-children who are faster and more accurate at recognizing words at age 3 remain
-relatively faster and more accurate at age 5. To evaluate this hypothesis,
+children who are faster and more reliable at recognizing words at age 3 remain
+relatively faster and more reliable at age 5. To evaluate this hypothesis,
 we used Kendall's _W_ (the coefficient of correspondence or concordance). This
 nonparametric statistic measures the degree of agreement among _J_ judges who
 are rating _I_ items. For our purposes, the items are the `r n_rated`
@@ -522,7 +563,7 @@ participants' intercept terms from year 1 are one set of ratings and the
 terms from years 2 and 3 provide two more sets of ratings. These three ratings
 are the "judges" used to compute the intercept's _W_. Thus, we compute four sets
 of _W_ coefficients, one for each set of growth curve features: Intercept,
-Time^1^, Time^2^, and Time^3^.
+Time^1^, Time^2^, Time^3^, and Peak accuracy.
 
 (_Maybe: Table X illustrates some sample ratings of these participants._)
 
