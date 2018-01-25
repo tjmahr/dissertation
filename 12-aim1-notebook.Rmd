@@ -66,7 +66,7 @@ formulation, the parameters $\beta_0$ and $\beta_1$ have a clear
 interpretation in terms of lexical processing performance. The
 intercept, $\beta_0$, measures the area under the growth curve—or the
 probability of fixating on the target word averaged over the whole
-window. We can think of $\beta_0$ as a measure of average looking accuracy or of
+window. We can think of $\beta_0$ as a measure of 
 *word recognition reliability*. The linear time parameter, $\beta_1$,
 estimates the steepness of the growth curve—or how the probability of
 fixating changes from frame to frame. We can think of $\beta_1$ as a
@@ -126,9 +126,113 @@ of a unit change in Time^1^ would be a change of
 accommodated by our Normal(0, 1) prior. 
 
 
-### Derived growth curve features
+### Growth curve features as measures of individual performance
 
-As noted earlier, two of the model's growth curve features have clear interpretations for lexical processing performance: The model's intercept parameter corresponds to the average proportion of looks to the named image of the trial window and the time parameter corresponds to slope of the growth curve or lexical processing efficiency. We also may be interested in _peak_ proportion of looks to the target. We derived this value from the growth curve by taking the median of the five points on a growth curve.
+As noted above, two of the model's growth curve features have direct
+interpretations in terms of  lexical processing performance: The model's
+intercept parameter corresponds to the average proportion of looks to the named
+image of the trial window and the linear time parameter corresponds to slope of
+the growth curve or lexical processing efficiency. We also may be interested in
+_peak_ proportion of looks to the target. We derived this value from the growth
+curve by taking the median of the five points on a growth curve. Figure _TODO_
+shows three simulated growth curves and how each of these growth curve features
+relate to word recognition performance.
+
+```{r curve-features, fig.show = 'hold', echo = FALSE, out.width = "80%", fig.height = 6, fig.width = 6}
+dummy_data <- d_m %>% 
+  filter(Study == "TimePoint2") %>% 
+  distinct(Study, Time, ot1, ot2, ot3) %>% 
+  mutate(
+    ResearchID = "NEW", 
+    Primary = 0, 
+    Others = 0)
+
+set.seed(11102017)
+
+lpred <- dummy_data %>% 
+  tristan::augment_posterior_linpred(model = b, newdata = ., nsamples = 3)
+
+lpred_lm <- lpred %>% 
+  tidyr::nest(-.draw) %>% 
+  mutate(
+    model = purrr::map(data, ~ lm(.posterior_value ~ ot1 + ot2 + ot3, .x)),
+    coef = lapply(model, coef),
+    auc = purrr::map_dbl(coef, purrr::pluck, 1),
+    slope = purrr::map_dbl(coef, purrr::pluck, 2)) %>% 
+  select(-model, -coef) %>% 
+  tidyr::unnest(data)
+
+
+p1 <- ggplot(lpred_lm) + 
+  aes(x = ot1, y = .posterior_value, group = .draw) + 
+  geom_line(linetype = "dashed") + 
+  geom_hline(
+    aes(yintercept = auc), 
+    color = "red", size = .75) + 
+  labs(
+    x = "Time",
+    y = "Logodds looking to familiar",
+    title = "Intercept term represents average probability") + 
+  facet_wrap(".draw") + 
+  theme_grey(base_size = 9) + 
+  theme(
+    strip.text = element_blank(), 
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank())
+
+
+p2 <- ggplot(lpred_lm) + 
+  aes(x = ot1, y = .posterior_value, group = .draw) + 
+  geom_line(linetype = "dashed") + 
+  geom_abline(
+    aes(intercept = auc, slope = slope),
+    color = "red", size = .75) + 
+  facet_wrap(".draw") + 
+  labs(
+    x = "Time",
+    y = "Logodds looking to familiar",
+    title = "Linear time term conveys processing efficiency") +
+  theme_grey(base_size = 9) + 
+  theme(
+    strip.text = element_blank(), 
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank())
+
+
+p3 <- ggplot(lpred_lm) + 
+  aes(x = ot1, y = .posterior_value, group = .draw) + 
+  geom_line(linetype = "dashed") + 
+  geom_point(
+    data = lpred_lm %>% group_by(.draw) %>% top_n(5, .posterior_value), 
+    size = 2) + 
+  geom_hline(
+    aes(yintercept = .posterior_value), 
+    data = lpred_lm %>% 
+      group_by(.draw) %>% 
+      top_n(5, .posterior_value) %>% 
+      summarise(.posterior_value = median(.posterior_value)), 
+    size = .75, color = "red") + 
+  facet_wrap(".draw") + 
+  labs(
+    x = "Time",
+    y = "Logodds looking to familiar",
+    title = "Median of top five points provides peak probability") + 
+  theme_grey(base_size = 9) + 
+  theme(
+    strip.text = element_blank(), 
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank())
+
+cowplot::plot_grid(p1, p2, p3, ncol = 1)
+```
+
+_TODO: CAPTION_
+
+
+
+
+### Year over year changes in word recognition
+
 
 ```{r, echo = FALSE}
 dummy_data <- d_m %>% 
@@ -162,6 +266,7 @@ lpred %>%
   tjmisc::sample_n_of(200, .draw) %>% 
   ggplot() + 
     aes(x = Time, y = plogis(.posterior_value), color = Study) +
+    geom_hline(yintercept = .25, color = "white", size = 2) +
     geom_line(
       aes(group = interaction(Study, ResearchID, .draw)), 
       alpha = .1) +
@@ -180,9 +285,6 @@ lpred %>%
       x = "Time after target onset",
       y = "Proportion of looks")
 ```
-
-
-### Year over year changes in word recognition
 
 We first consider how the shape of the average growth curves change each year.
 Figure \@ref(fig:effects2) depicts uncertainty intervals with the model's
@@ -222,7 +324,6 @@ logodds <- draws %>%
   mutate(Scale = "Log-odds") %>% 
   mutate(parameter = factor(parameter, levels = rev(names(draws))))
 
-
 props <- draws %>% 
   select(starts_with("Intercept"), starts_with("Peak")) %>% 
   mutate_all(plogis) %>% 
@@ -260,7 +361,7 @@ ggplot(intervals2) +
 (ref:pairwise-effects) Uncertainty intervals for the differences between study
 timepoints.
 
-```{r pairwise-effects, fig.cap = "(ref:pairwise-effects)", fig.show = 'hold', echo = FALSE, out.width = "50%", fig.height = 4, fig.width = 4}
+```{r pairwise-effects, fig.cap = "(ref:pairwise-effects)", fig.show = 'hold', echo = FALSE, out.width = "50%", fig.height = c(4, 3), fig.width = c(4, 4)}
 clean_names <- . %>% 
   stringr::str_replace_all("[()]", "") %>% 
   stringr::str_replace("~~", "_")
@@ -316,20 +417,30 @@ ggplot(pairwise %>% filter(parameter %in% c("Peak", "Intercept"))) +
     strip.background = element_rect(fill = NA),
     axis.text.y = element_text(size = rel(1.2)))
 ```
-
-Bayesplot supports transformations so we could invert the log-odds measure to
-see the intercepts (area under curve/average accuracy) in proportion units.
-
-```{r intercepts, echo = FALSE, out.width = "60%", fig.height=2.5, fig.width=4}
+```{r, include = FALSE}
 intervals3 <- draws %>% 
   mcmc_intervals_data(
     regex_pars = "Intercept", transformations = "plogis", 
     prob = 0.5, prob_outer = 0.9) %>% 
   mutate(parameter = factor(parameter, levels = rev(parameter)))
-```
 
+proportions <- b %>% 
+  as.data.frame() %>%
+  transmute(
+    `TP1` = `(Intercept)`,
+    `TP2` = `(Intercept)` + StudyTimePoint2,
+    `TP3` = `(Intercept)` + StudyTimePoint3) %>% 
+  tibble::rowid_to_column(".draw") %>% 
+  tidyr::gather(parameter, estimate, -.draw) %>% 
+  mutate(estimate = plogis(estimate)) %>% 
+  as_tibble()
 
-```{r, include = FALSE}
+prop_diffs <- proportions %>% 
+  compare_pairs(parameter, estimate) %>% 
+  tidyr::spread(pair, value) %>% 
+  select(-.draw) %>% 
+  mcmc_intervals_data(prob = 0.5, prob_outer = 0.9)
+
 pluck <- purrr::pluck
 
 prop_list <- intervals3 %>% 
@@ -357,6 +468,177 @@ timepoint 3. The average accuracy increased by `r d_pts$TP2_TP1`
 [`r d_uis$TP3_TP2`] from timepoint 2 to timepoint 3. These results numerically
 confirm the hypothesis that children would improve in their accuracy each year
 over year and in their processing efficiency year over year.
+
+
+### Check for stable individual differences
+
+```{r compute-kendalls, include = FALSE}
+fits <- readr::read_csv("./data/fits.csv.gz") %>%
+  semi_join(d_m)
+
+# Compute Kendall's coefficient of correspondence
+tidy_kendall <- . %>%
+  unclass() %>%
+  as.data.frame(stringsAsFactors = FALSE)
+
+new_coef <- fits %>%
+  filter(coef == "intercept") %>%
+  mutate(
+    .posterior_value = runif(length(.posterior_value)),
+    coef = "random values")
+
+reduced_data <- fits %>%
+  bind_rows(new_coef) %>%
+  tidyr::spread(Study, .posterior_value) %>%
+  tidyr::drop_na(TimePoint1:TimePoint3) 
+
+n_rated <- n_distinct(reduced_data$ResearchID)
+
+ws <- reduced_data %>%
+  select(-ResearchID) %>%
+  tidyr::nest(TimePoint1:TimePoint3) %>%
+  mutate(ws = purrr::map(data, irr::kendall) %>% purrr::map(tidy_kendall)) %>%
+  select(-data) %>%
+  tidyr::unnest(ws)
+
+posterior_w <- ws %>%
+  select(.draw, coef, value) %>%
+  tidyr::spread(coef, value) %>%
+  rename(`random numbers` = `random values`) %>%
+  select(-.draw)
+```
+
+We predicted that children would show stable individual differences such that
+children who are faster and more accurate at recognizing words at age 3 remain
+relatively faster and more accurate at age 5. To evaluate this hypothesis,
+we used Kendall's _W_ (the coefficient of correspondence or concordance). This
+nonparametric statistic measures the degree of agreement among _J_ judges who
+are rating _I_ items. For our purposes, the items are the `r n_rated`
+children who provided reliable eyetracking for all three years of the study.
+(That is, we excluded children who only had reliable eyetracking data for one or
+two years.) The judges are the sets of growth curve parameters from each year of 
+study. For example, the intercept term provides three sets of ratings: The 
+participants' intercept terms from year 1 are one set of ratings and the 
+terms from years 2 and 3 provide two more sets of ratings. These three ratings
+are the "judges" used to compute the intercept's _W_. Thus, we compute four sets
+of _W_ coefficients, one for each set of growth curve features: Intercept,
+Time^1^, Time^2^, and Time^3^.
+
+(_Maybe: Table X illustrates some sample ratings of these participants._)
+
+```{r table-example-of-feature-ranks, echo = FALSE}
+zero_pad_int <- function(xs) {
+  formatter <- paste0("%0", max(nchar(xs)), "d")
+  sprintf(formatter, xs)
+}
+
+val_rank <- function(xs) {
+  a <- printy::fmt_minus_sign(printy::fmt_fix_digits(xs, 2))
+  b <- zero_pad_int(rank(-xs))
+  glue::glue("{a} ({b})")
+}
+
+reduced_data %>% 
+  filter(coef == "intercept") %>% 
+  group_by(ResearchID, coef) %>% 
+  summarise_at(vars(starts_with("TimePoint")), median) %>% 
+  ungroup() %>% 
+  arrange(desc(TimePoint3)) %>% 
+  mutate(
+    TimePoint1 = val_rank(TimePoint1), 
+    TimePoint2 = val_rank(TimePoint2), 
+    TimePoint3 = val_rank(TimePoint3)) %>% 
+  rename(
+    `Participant ID` = ResearchID,
+    `Growth curve feature` = coef,
+    `Year 1` = `TimePoint1`,
+    `Year 2` = `TimePoint2`,
+    `Year 3` = `TimePoint3`) %>% 
+  head(10) %>% 
+  knitr::kable(align = c("l", "l", "r", "r", "r"))
+
+nsamples <- nrow(as.data.frame(b))
+```
+
+Because we used a Bayesian model, we have a distribution of ratings and thus a
+distribution of concordance statistics. Each sample of the posterior
+distribution fits a growth curve for each child in each study, so each sample
+provides a set of ratings for concordance coefficients. The distribution of
+_W_'s lets us quantify our uncertainty because we can compute _W_'s for each of 
+the `r nsamples` samples from the posterior distribution.
+
+One final matter is how do we assess whether a concordance statistic is 
+meaningful. To tackle this question, we also included a "null rater", a fake 
+parameter that assigned each child in each year a random number. We can use the 
+distribution of _W_'s generated by randomly rating children as a benchmark for 
+assessing whether the other concordance statistics differ meaningfully from 
+chance.
+
+We used the `kendall()` function in the `irr` package (vers.
+`r packageVersion("irr")`, CITATION) to compute concordance statistics.
+
+(ref:kendall-stats) Uncertainty intervals for the Kendall's coefficient of
+concordance. Random ratings provide a baseline of null _W_ statistics. The
+intercept and linear time features are decisively non-null, indicating a
+significant degree of correspondence in children's relative word recognition
+reliability and efficiency over three years of study.
+
+```{r kendall-stats, fig.cap = "(ref:kendall-stats)", echo = FALSE, out.width = "80%", fig.height = 3, fig.width = 6}
+subtitle <- glue::glue(
+  "Kendall's W. Raters: 3 time points. Items: {n_rated} children.")
+
+w_intervals <- posterior_w %>% 
+  rename(
+    Intercept = `intercept`, `Time` = ot1, `Time^2` = ot2, `Time^3` = ot3,
+    `Random~ratings` = `random numbers`) %>% 
+  mcmc_intervals_data(prob_outer = .9, prob = .5) %>% 
+  mutate(parameter = forcats::fct_rev(parameter)) 
+
+ggplot(w_intervals) + 
+  aes(y = parameter) +
+  geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
+  geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
+  geom_point(aes(x = m), size = 3, shape = 3) + 
+  scale_y_discrete(labels = parse_text) + 
+  labs(
+    x = NULL, 
+    y = NULL, 
+    title = "Concordance coefficients for growth curve features",
+    caption = "Posterior median with 90% and 50% intervals",
+    subtitle = subtitle)
+
+# TODO format as correlations
+w_pts <- w_intervals %>% split(.$parameter) %>% get_pts()
+w_uis <- w_intervals %>% split(.$parameter) %>% get_uis()
+```
+
+
+Figure \@ref(fig:kendall-stats) depicts uncertainty intervals for the Kendall
+_W_'s for these growth curve features. The 90% uncertainty interval of _W_
+statistics from random ratings [`r w_uis[["Random~ratings"]]`] subsumes the
+intervals for the Time^2^ effect [`r w_uis[["Time^2"]]`] and the Time^3^ effect
+[`r w_uis[["Time^3"]]`], indicating that these values do not differentiate
+children in a longitudinally stable way. That is, the Time^2^ and Time^3^
+features differentiate children across studies as well as random numbers.
+Earlier, we stated that only the intercept and linear terms have psychologically
+meaningful interpretations and that the higher-order terms of these models serve
+to capture the shape of the growth curve data. These statistics support that
+assertion.
+
+Concordance is strongest for the intercept term, _W_\ = `r w_pts[["Intercept"]]`
+[`r w_uis[["Intercept"]]`], followed by the linear time term, _W_\ =
+`r w_pts[["Time"]]` [`r w_uis[["Time"]]`]. Because these values are from the
+statistics for random ratings, we conclude that there is a credible degree of
+correspondence across studies when we rank children using their average accuracy
+(the intercept) or their growth curve slope (linear time).
+
+### Summary of this section 
+
+Growth curve features reflect individual differences in word recognition
+efficiency and accuracy. By using Kendall's _W_ to measure the degree of
+concordance among growth curve features over time, we can measure whether
+individual differences in lexical processing are stable over time. We found 
+that the intercept and linear time terms were stable over time.
 
 
 
@@ -563,177 +845,6 @@ ggplot(intervals %>% filter(class == "correlation")) +
 ```
 
 
-
-
-### Check for stable individual differences
-
-```{r compute-kendalls, include = FALSE}
-fits <- readr::read_csv("./data/fits.csv.gz") %>%
-  semi_join(d_m)
-
-# Compute Kendall's coefficient of correspondence
-tidy_kendall <- . %>%
-  unclass() %>%
-  as.data.frame(stringsAsFactors = FALSE)
-
-new_coef <- fits %>%
-  filter(coef == "intercept") %>%
-  mutate(
-    .posterior_value = runif(length(.posterior_value)),
-    coef = "random values")
-
-reduced_data <- fits %>%
-  bind_rows(new_coef) %>%
-  tidyr::spread(Study, .posterior_value) %>%
-  tidyr::drop_na(TimePoint1:TimePoint3) 
-
-n_rated <- n_distinct(reduced_data$ResearchID)
-
-ws <- reduced_data %>%
-  select(-ResearchID) %>%
-  tidyr::nest(TimePoint1:TimePoint3) %>%
-  mutate(ws = purrr::map(data, irr::kendall) %>% purrr::map(tidy_kendall)) %>%
-  select(-data) %>%
-  tidyr::unnest(ws)
-
-posterior_w <- ws %>%
-  select(.draw, coef, value) %>%
-  tidyr::spread(coef, value) %>%
-  rename(`random numbers` = `random values`) %>%
-  select(-.draw)
-```
-
-We predicted that children would show stable individual differences such that
-children who are faster and more accurate at recognizing words at age 3 remain
-relatively faster and more accurate at age 5. To evaluate this hypothesis,
-we used Kendall's _W_ (the coefficient of correspondence or concordance). This
-nonparametric statistic measures the degree of agreement among _J_ judges who
-are rating _I_ items. For our purposes, the items are the `r n_rated`
-children who provided reliable eyetracking for all three years of the study.
-(That is, we excluded children who only had reliable eyetracking data for one or
-two years.) The judges are the sets of growth curve parameters from each year of 
-study. For example, the intercept term provides three sets of ratings: The 
-participants' intercept terms from year 1 are one set of ratings and the 
-terms from years 2 and 3 provide two more sets of ratings. These three ratings
-are the "judges" used to compute the intercept's _W_. Thus, we compute four sets
-of _W_ coefficients, one for each set of growth curve features: Intercept,
-Time^1^, Time^2^, and Time^3^.
-
-(_Maybe: Table X illustrates some sample ratings of these participants._)
-
-```{r table-example-of-feature-ranks, echo = FALSE}
-zero_pad_int <- function(xs) {
-  formatter <- paste0("%0", max(nchar(xs)), "d")
-  sprintf(formatter, xs)
-}
-
-val_rank <- function(xs) {
-  a <- printy::fmt_minus_sign(printy::fmt_fix_digits(xs, 2))
-  b <- zero_pad_int(rank(-xs))
-  glue::glue("{a} ({b})")
-}
-
-reduced_data %>% 
-  filter(coef == "intercept") %>% 
-  group_by(ResearchID, coef) %>% 
-  summarise_at(vars(starts_with("TimePoint")), median) %>% 
-  ungroup() %>% 
-  arrange(desc(TimePoint3)) %>% 
-  mutate(
-    TimePoint1 = val_rank(TimePoint1), 
-    TimePoint2 = val_rank(TimePoint2), 
-    TimePoint3 = val_rank(TimePoint3)) %>% 
-  rename(
-    `Participant ID` = ResearchID,
-    `Growth curve feature` = coef,
-    `Year 1` = `TimePoint1`,
-    `Year 2` = `TimePoint2`,
-    `Year 3` = `TimePoint3`) %>% 
-  head(10) %>% 
-  knitr::kable(align = c("l", "l", "r", "r", "r"))
-
-nsamples <- nrow(as.data.frame(b))
-```
-
-Because we used a Bayesian model, we have a distribution of ratings and thus a
-distribution of concordance statistics. Each sample of the posterior
-distribution fits a growth curve for each child in each study, so each sample
-provides a set of ratings for concordance coefficients. The distribution of
-_W_'s lets us quantify our uncertainty because we can compute _W_'s for each of 
-the `r nsamples` samples from the posterior distribution.
-
-One final matter is how do we assess whether a concordance statistic is 
-meaningful. To tackle this question, we also included a "null rater", a fake 
-parameter that assigned each child in each year a random number. We can use the 
-distribution of _W_'s generated by randomly rating children as a benchmark for 
-assessing whether the other concordance statistics differ meaningfully from 
-chance.
-
-We used the `kendall()` function in the `irr` package (vers.
-`r packageVersion("irr")`, CITATION) to compute concordance statistics.
-
-(ref:kendall-stats) Uncertainty intervals for the Kendall's coefficient of
-concordance. Random ratings provide a baseline of null _W_ statistics. The
-intercept and linear time features are decisively non-null, indicating a
-significant degree of correspondence in children's relative word recognition
-reliability and efficiency over three years of study.
-
-```{r kendall-stats, fig.cap = "(ref:kendall-stats)", echo = FALSE, out.width = "80%", fig.height = 3, fig.width = 6}
-subtitle <- glue::glue(
-  "Kendall's W. Raters: 3 time points. Items: {n_rated} children.")
-
-w_intervals <- posterior_w %>% 
-  rename(
-    Intercept = `intercept`, `Time` = ot1, `Time^2` = ot2, `Time^3` = ot3,
-    `Random~ratings` = `random numbers`) %>% 
-  mcmc_intervals_data(prob_outer = .9, prob = .5) %>% 
-  mutate(parameter = forcats::fct_rev(parameter)) 
-
-ggplot(w_intervals) + 
-  aes(y = parameter) +
-  geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
-  geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
-  geom_point(aes(x = m), size = 3, shape = 3) + 
-  scale_y_discrete(labels = parse_text) + 
-  labs(
-    x = NULL, 
-    y = NULL, 
-    title = "Concordance coefficients for growth curve features",
-    caption = "Posterior median with 90% and 50% intervals",
-    subtitle = subtitle)
-
-# TODO format as correlations
-w_pts <- w_intervals %>% split(.$parameter) %>% get_pts()
-w_uis <- w_intervals %>% split(.$parameter) %>% get_uis()
-```
-
-
-Figure \@ref(fig:kendall-stats) depicts uncertainty intervals for the Kendall
-_W_'s for these growth curve features. The 90% uncertainty interval of _W_
-statistics from random ratings [`r w_uis[["Random~ratings"]]`] subsumes the
-intervals for the Time^2^ effect [`r w_uis[["Time^2"]]`] and the Time^3^ effect
-[`r w_uis[["Time^3"]]`], indicating that these values do not differentiate
-children in a longitudinally stable way. That is, the Time^2^ and Time^3^
-features differentiate children across studies as well as random numbers.
-Earlier, we stated that only the intercept and linear terms have psychologically
-meaningful interpretations and that the higher-order terms of these models serve
-to capture the shape of the growth curve data. These statistics support that
-assertion.
-
-Concordance is strongest for the intercept term, _W_\ = `r w_pts[["Intercept"]]`
-[`r w_uis[["Intercept"]]`], followed by the linear time term, _W_\ =
-`r w_pts[["Time"]]` [`r w_uis[["Time"]]`]. Because these values are from the
-statistics for random ratings, we conclude that there is a credible degree of
-correspondence across studies when we rank children using their average accuracy
-(the intercept) or their growth curve slope (linear time).
-
-### Summary of this section 
-
-Growth curve features reflect individual differences in word recognition
-efficiency and accuracy. By using Kendall's _W_ to measure the degree of
-concordance among growth curve features over time, we can measure whether
-individual differences in lexical processing are stable over time. We found 
-that the intercept and linear time terms were stable over time.
 
 
 
