@@ -23,6 +23,10 @@ b$stan_function <- "stan_glmer"
 ```
 
 
+General Todos:
+
+* Determine and use consistent terminology for the studies and growth curve features.
+
 ## Growth curve analysis
 
 Looks to the familiar image were analyzed using **Bayesian mixed
@@ -420,8 +424,34 @@ ggplot(pairwise %>% filter(parameter %in% c("Peak", "Intercept"))) +
 
 ```{r, include = FALSE}
 pluck <- purrr::pluck
-get_pts <- . %>% lapply(. %>% pluck("m") %>% round(3)) 
-get_uis <- . %>% lapply(. %>% glue::glue_data("{round(ll,3)}--{round(hh,3)}")) 
+  
+lapply(. %>% )
+
+get_pts <- . %>% 
+  lapply(. %>% pluck("m") %>% round(3))
+
+get_uis <- . %>% 
+  lapply(. %>% glue::glue_data("{round(ll,3)}--{round(hh,3)}")) 
+
+get_cor_pts <- function(x) {
+  format_cor <- . %>%
+    round(3) %>% 
+    printy::fmt_leading_zero() %>% 
+    printy::fmt_minus_sign()
+  
+  x %>% 
+    lapply(. %>% pluck("m") %>% format_cor())
+}
+  
+get_cor_uis <- function(x) {
+  format_cor <- . %>%
+    round(3) %>% 
+    printy::fmt_leading_zero() %>% 
+    printy::fmt_minus_sign()
+  
+  x %>% 
+    lapply(. %>% glue::glue_data("{format_cor(ll)}--{format_cor(hh)}")) 
+}
 
 props <- props %>% 
   mutate(
@@ -661,7 +691,7 @@ degree of correspondence across studies when we rank children using their peak
 looking probability, average look probability (the intercept) or their growth
 curve slope (linear time).
 
-**Summary.** Growth curve features reflect individual differences in word
+**Summary**. Growth curve features reflect individual differences in word
 recognition reliability and efficiency. By using Kendall's *W* to measure the
 degree of concordance among growth curve features over developmental time, we
 tested whether individual differences in lexical processing persisted over
@@ -760,91 +790,64 @@ main_diffs$Study <- main_diffs$Study %>%
 ```
 
 
+```{r correlation-texts, include = FALSE}
+# EVT Standard at TimePoint3
+evt_tp3_diffs <- main_diffs %>% 
+  filter(variable == "r_TimePoint3_EVT_Standard")
 
-We predicted that individual differences in word recognition at age 3 will be
+peak_evt_tp3_data <- evt_tp3_diffs %>% 
+  filter(coef == "peak_logit") %>% 
+  split(.$Study) 
+peak_evt_tp3_pts <- get_cor_pts(peak_evt_tp3_data) 
+peak_evt_tp3_uis <- get_cor_uis(peak_evt_tp3_data)
+
+ot1_evt_tp3_data <- evt_tp3_diffs %>% 
+  filter(coef == "ot1") %>% 
+  split(.$Study)
+ot1_evt_tp3_pts <- get_cor_pts(ot1_evt_tp3_data) 
+ot1_evt_tp3_uis <- get_cor_uis(ot1_evt_tp3_data)
+
+int_evt_tp3_data <- evt_tp3_diffs %>% 
+  filter(coef == "intercept") %>% 
+  split(.$Study) 
+int_evt_tp3_pts <- get_cor_pts(int_evt_tp3_data) 
+int_evt_tp3_uis <- get_cor_uis(int_evt_tp3_data)
+
+
+# PPVT Standard at TimePoint2
+ppvt_tp2_diffs <- main_diffs %>% 
+  filter(variable == "r_TimePoint2_PPVT_Standard")
+
+peak_ppvt_tp2_data <- ppvt_tp2_diffs %>% 
+  filter(coef == "peak_logit") %>% 
+  split(.$Study) 
+peak_ppvt_tp2_pts <- get_cor_pts(peak_ppvt_tp2_data)
+peak_ppvt_tp2_uis <- get_cor_uis(peak_ppvt_tp2_data)
+
+int_ppvt_tp2_data <- ppvt_tp2_diffs %>% 
+  filter(coef == "intercept") %>% 
+  split(.$Study) 
+int_ppvt_tp2_pts <- get_cor_pts(int_ppvt_tp2_data)
+int_ppvt_tp2_uis <- get_cor_uis(int_ppvt_tp2_data)
+
+ot1_ppvt_tp2_data <- ppvt_tp2_diffs %>% 
+  filter(coef == "ot1") %>% 
+  split(.$Study) 
+ot1_ppvt_tp2_pts <- get_cor_pts(ot1_ppvt_tp2_data)
+ot1_ppvt_tp2_uis <- get_cor_uis(ot1_ppvt_tp2_data)
+```
+
+We hypothesized that individual differences in word recognition at age 3 will be
 more discriminating and predictive future language outcomes than differences
 at age 4 or age 5. To test this hypothesis, we calculated the correlations
 of growth curve features with year 3 expressive vocabulary size and year 2
 receptive vocabulary. (The receptive test was not administered during year 3
-for logistical reasons). As with the concordance statistics, we computed each
-of the statistics for each sample of the posterior distribution so we obtained a
+for logistical reasons). As with the concordance analysis, we computed each
+the correlations for each sample of the posterior distribution to obtain a
 distribution of correlations.
 
-```{r, include = FALSE}
-# TODO: fix this correlation formatting
-
-ot1_evt_tp3_uis <- main_diffs %>% 
-  filter(coef == "ot1", variable == "r_TimePoint3_EVT_Standard") %>% 
-  split(.$Study) %>% 
-  get_uis()
-
-ot1_evt_tp3_pts <- main_diffs %>% 
-  filter(coef == "ot1", variable == "r_TimePoint3_EVT_Standard") %>% 
-  split(.$Study) %>% 
-  get_pts() %>% 
-  lapply(. %>% printy::fmt_leading_zero() %>% printy::fmt_minus_sign())
-
-int_evt_tp3_uis <- main_diffs %>% 
-  filter(coef == "intercept", variable == "r_TimePoint3_EVT_Standard") %>% 
-  split(.$Study) %>% 
-  get_uis()
-
-int_evt_tp3_pts <- main_diffs %>% 
-  filter(coef == "intercept", variable == "r_TimePoint3_EVT_Standard") %>% 
-  split(.$Study) %>% 
-  get_pts() %>% 
-  lapply(. %>% printy::fmt_leading_zero() %>% printy::fmt_minus_sign())
-
-ot1_ppvt_tp2_uis <- main_diffs %>% 
-  filter(coef == "ot1", variable == "r_TimePoint2_PPVT_Standard") %>% 
-  split(.$Study) %>% 
-  get_uis()
-
-ot1_ppvt_tp2_pts <- main_diffs %>% 
-  filter(coef == "ot1", variable == "r_TimePoint2_PPVT_Standard") %>% 
-  split(.$Study) %>% 
-  get_pts() %>% 
-  lapply(. %>% printy::fmt_leading_zero() %>% printy::fmt_minus_sign())
-
-int_ppvt_tp2_uis <- main_diffs %>% 
-  filter(coef == "intercept", variable == "r_TimePoint2_PPVT_Standard") %>% 
-  split(.$Study) %>% 
-  get_uis()
-
-int_ppvt_tp2_pts <- main_diffs %>% 
-  filter(coef == "intercept", variable == "r_TimePoint2_PPVT_Standard") %>% 
-  split(.$Study) %>% 
-  get_pts() %>% 
-  lapply(. %>% printy::fmt_leading_zero() %>% printy::fmt_minus_sign())
-```
 
 
-Figure \@ref(fig:evt2-gca-cors) shows the correlations of the intercept and
-linear time features with expressive vocabulary size at year 3, and Figure
-\@ref(fig:ppvt4-gca-cors) shows analagous correlations for the receptive
-vocabulary at year 2. For both cases, the strongest correlations were
-found between the growth curve features at year 1. Lexical processing
-efficiency at year 1 correlated with year 3 vocabulary with _r_ =
-`r ot1_evt_tp3_pts$TimePoint1`, 90% UI [`r ot1_evt_tp3_uis$TimePoint1`], whereas
-the concurrent lexical processing feature at year 3 only showed a correlation
-of _r_ = `r ot1_evt_tp3_pts$TimePoint3`, [`r ot1_evt_tp3_uis$TimePoint3`],
-a difference between year 1 and year 3 of _r_<sub>TP1&minus;TP3</sub>\ =
-`r ot1_evt_tp3_pts[["TP1 - TP3"]]`, [`r ot1_evt_tp3_uis[["TP1 - TP3"]]`].
-For the intercept feature, the correlation for year 1, _r_ =
-`r int_evt_tp3_pts$TimePoint1`, [`r ot1_evt_tp3_uis$TimePoint1`],
-was probably only slightly greater than the correlation for year 2,
-_r_<sub>TP1&minus;TP2</sub>\ = `r  int_evt_tp3_pts[["TP1 - TP2"]]`,
-[`r int_evt_tp3_uis[["TP1 - TP2"]]`] but much considerably greater than
-the concurrent correlation at year 3, _r_<sub>TP1&minus;TP3</sub> =
-`r  int_evt_tp3_pts[["TP1 - TP3"]]`, [`r int_evt_tp3_uis[["TP1 - TP3"]]`].
-For year 2 receptive vocabulary, the correlation of year 1 intercept, _r_
-\ = `r int_ppvt_tp2_pts$TimePoint1`, [`r int_ppvt_tp2_uis$TimePoint1`],
-was greater than the year 2 correlation, _r_<sub>TP1&minus;TP2</sub> =
-`r  int_ppvt_tp2_pts[["TP1 - TP2"]]`, [`r int_ppvt_tp2_pts[["TP1 - TP2"]]`], and
-the correlation for year 1 linear time, _r_\ = `r ot1_ppvt_tp2_pts$TimePoint1`,
-[`r ot1_ppvt_tp2_uis$TimePoint1`], was likewise greater than the year 2
-correlation, _r_<sub>TP1&minus;TP2</sub> = `r  ot1_ppvt_tp2_pts[["TP1 - TP2"]]`,
-[`r ot1_ppvt_tp2_uis[["TP1 - TP2"]]`].
 
 (ref:evt2-gca-cors) Uncertainty intervals for the correlations of growth curve
 features at each time point with expressive vocabulary (EVT2 standard scores) at
@@ -852,8 +855,6 @@ year 3. The bottom rows provide intervals for the pairwise differences in
 correlations between time points.
 
 ```{r evt2-gca-cors, fig.cap = "(ref:evt2-gca-cors)", out.width = "80%", fig.height = 3, fig.width = 6, echo = FALSE}
-# TODO make sure point is not wider than interval
-
 plot_names <- c(
   intercept = "Avg. Probability", 
   ot1 = "Linear Time",
@@ -916,9 +917,50 @@ main_diffs %>%
 ```
 
 
+Figure \@ref(fig:evt2-gca-cors) shows the correlations of the peak looking
+probability, average looking probability and linear time features with
+expressive vocabulary size at year 3, and Figure \@ref(fig:ppvt4-gca-cors) shows
+analagous correlations for the receptive vocabulary at year 2. For all cases,
+the strongest correlations were found between the growth curve features 
+at year 1.
+Growth curve peaks from year 1 correlated with year 3 vocabulary with _r_ =
+`r peak_evt_tp3_pts$TimePoint1`, 90% UI [`r peak_evt_tp3_uis$TimePoint1`], but
+the concurrent peaks from year 3 showed a correlation
+of just _r_ = `r peak_evt_tp3_pts$TimePoint3`, [`r peak_evt_tp3_uis$TimePoint3`],
+a difference between year 1 and year 3 of _r_<sub>TP1&minus;TP3</sub>\ =
+`r peak_evt_tp3_pts[["TP1 - TP3"]]`, [`r peak_evt_tp3_uis[["TP1 - TP3"]]`].
+A similar pattern held for lexical processing efficiency values. Linear time
+features from year 1 correlated with year 3 vocabulary with *r* =
+`r ot1_evt_tp3_pts$TimePoint1`, 90% UI [`r ot1_evt_tp3_uis$TimePoint1`],
+whereas the concurrent lexical processing values from year 3 only showed a
+correlation of *r* = `r ot1_evt_tp3_pts$TimePoint3`,
+[`r ot1_evt_tp3_uis$TimePoint3`], a difference of *r*<sub>TP1−TP3</sub>\ =
+`r ot1_evt_tp3_pts[["TP1 - TP3"]]`, [`r ot1_evt_tp3_uis[["TP1 - TP3"]]`].
+For the average looking probabilities, the correlation for year 1, _r_ =
+`r int_evt_tp3_pts$TimePoint1`, [`r ot1_evt_tp3_uis$TimePoint1`],
+was probably only slightly greater than the correlation for year 2,
+_r_<sub>TP1&minus;TP2</sub>\ = `r  int_evt_tp3_pts[["TP1 - TP2"]]`,
+[`r int_evt_tp3_uis[["TP1 - TP2"]]`] but considerably greater than
+the concurrent correlation at year 3, _r_<sub>TP1&minus;TP3</sub> =
+`r  int_evt_tp3_pts[["TP1 - TP3"]]`, [`r int_evt_tp3_uis[["TP1 - TP3"]]`].
 
+Peak looking probabilities from year 1 were strongly correlated with year 2 
+receptive vocabulary, _r_\ = `r peak_ppvt_tp2_pts$TimePoint1`, 
+[`r peak_ppvt_tp2_uis$TimePoint1`], and this correlation was much greater
+than the correlation observed for the year 2 growth curve peaks,
+*r*<sub>TP1−TP2</sub> = `r  peak_ppvt_tp2_pts[["TP1 - TP2"]]`,
+[`r peak_ppvt_tp2_pts[["TP1 - TP2"]]`].
+The correlation of year 1 average looking probabilities, _r_
+\ = `r int_ppvt_tp2_pts$TimePoint1`, [`r int_ppvt_tp2_uis$TimePoint1`],
+was greater than the year 2 correlation, _r_<sub>TP1&minus;TP2</sub> =
+`r  int_ppvt_tp2_pts[["TP1 - TP2"]]`, [`r int_ppvt_tp2_pts[["TP1 - TP2"]]`], and
+the correlation for year 1 linear time features, 
+_r_\ = `r ot1_ppvt_tp2_pts$TimePoint1`,
+[`r ot1_ppvt_tp2_uis$TimePoint1`], was likewise greater than the year 2
+correlation, _r_<sub>TP1&minus;TP2</sub> = `r  ot1_ppvt_tp2_pts[["TP1 - TP2"]]`,
+[`r ot1_ppvt_tp2_uis[["TP1 - TP2"]]`].
 
-
+**Summary**.
 
 
 
