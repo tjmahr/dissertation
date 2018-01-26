@@ -485,7 +485,7 @@ timepoint 1, `r int_pts$TP2` [`r int_uis$TP2`] for timepoint 2, and
 `r int_pts$TP3` [`r int_uis$TP3`] for timepoint 3. The averages increased by
 `r int_dpts$TP2_TP1` [`r int_duis$TP2_TP1`] from timepoint 1 to timepoint 2
 and by `r int_dpts$TP3_TP2` [`r int_duis$TP3_TP2`] from timepoint 2 to
-timepoint 3. The peak looking probability was `r peak_pts$TP1` [90% UI: `r peak_uis$TP1`]
+timepoint 3. The peak looking probability was `r peak_pts$TP1` [`r peak_uis$TP1`]
 for timepoint 1, `r peak_pts$TP2` [`r peak_uis$TP2`] for timepoint 2, and
 `r peak_pts$TP3` [`r peak_uis$TP3`] for timepoint 3. The peak values increased
 by `r peak_dpts$TP2_TP1` [`r peak_duis$TP2_TP1`] from timepoint 1 to
@@ -500,7 +500,168 @@ children's looked to the target more quickly and more reliable.
 
 
 
+### Simulating data from new participants
 
+```{r, include = FALSE}
+dummy_data <- d_m %>% 
+  distinct(Study, Time, ot1, ot2, ot3) %>% 
+  mutate(ResearchID = "NEW",
+         Primary = 0, 
+         Others = 0)
+
+set.seed(11102017)
+lpred <- dummy_data %>% 
+  tristan::augment_posterior_linpred(b, newdata = ., nsamples = 1000)
+
+new_peaks <- lpred %>% 
+  distinct(.draw, .posterior_value, Study) %>% 
+  group_by(Study, .draw) %>% 
+  top_n(5, .posterior_value) %>% 
+  summarise(peak = median(.posterior_value)) %>% 
+  ungroup() %>% 
+  mutate(peak = plogis(peak)) %>% 
+  tidyr::spread(Study, peak) %>% 
+  select(-.draw) %>% 
+  mcmc_intervals_data(prob = 0.5, prob_outer = 0.9)
+
+new_peaks_pts <- new_peaks %>% 
+  split(.$parameter) %>% 
+  get_pts()
+
+new_peaks_uis <- new_peaks %>% 
+  split(.$parameter) %>% 
+  get_uis()
+
+new_peaks_diff <- new_peaks %>% 
+  split(.$parameter) %>% 
+  lapply(function(l) round(l$hh - l$ll, 2))
+```
+
+
+Bayesian models are generative; they describe how the data could have been
+generated. Our model assumed that each child's growth curve was drawn from a
+population of related growth curves, and it tried to infer the parameters over
+that distribution. These two features---a generative model and learning about
+the population of growth curves---allow the model to simulate new samples from
+that distribution of growth curves. That is, we can predict a set of growth
+curves for a hypothetical, unobserved child drawn from the same distribution as
+the `r n_distinct(d_m$ResearchID)` observed children. This procedure lets us
+explore the range of variability in performance at each age.
+
+Figure \@ref(fig:new-participants) shows the posterior predictions for 1,000
+simulated participants, which demonstrates how the model expects new
+participants to improve longitudinally but also exhibit stable individual
+differences over time. Figure \@ref(fig:new-participants-intervals) shows
+uncertainty intervals for these simulations. The model learned to predict
+less accurate and more variable performance at age 3 with improving accuracy and
+narrowing variability at age 4 and age 5. 
+
+(ref:new-participants) Posterior predictions for hypothetical *unobserved*
+participants. Each line represents the predicted performance for a new
+participant. The three dark lines highlight predictions from one single
+simulated participant. The simulated participant shows both longitudinal
+improvement in word recognition and similar relative performance compared to
+other simulations each year, indicating that the model would predict new
+children to improve year over year and show stable individual differences over
+time.
+
+
+```{r new-participants, echo = FALSE, fig.cap = "(ref:new-participants)", fig.width = 6, fig.height = 3, out.width = "80%"}
+ggplot(lpred) + 
+  aes(x = Time, y = plogis(.posterior_value), color = Study) +
+  geom_hline(yintercept = .25, size = 2, color = "white") +
+  geom_line(aes(group = interaction(Study, .draw)), 
+            alpha = .1, show.legend = FALSE) +
+  geom_line(aes(group = interaction(Study, .draw)), 
+            data = sample_n_of(lpred, 1, .draw), color = "grey20",
+            show.legend = FALSE) +
+  facet_wrap("Study") + 
+  guides(color = guide_legend("none")) +
+  labs(
+    title = "Posterior predictions for 1,000 new participants",
+    x = "Time after target onset [ms]",
+    y = "Proportion looks to target")
+```
+
+
+
+(ref:new-participants-intervals) Uncertainty intervals for the simulated
+participants. Variability is widest at age 3 and narrowest at age 5,
+consistent with the prediction that children become less variable as they 
+grow older.
+
+```{r new-participants-intervals, echo = FALSE, fig.cap = "(ref:new-participants-intervals)", fig.width = 6, fig.height = 3, out.width = "80%"}
+ggplot(lpred) + 
+  aes(x = Time, y = plogis(.posterior_value), color = Study) +
+  geom_hline(yintercept = .25, size = 2, color = "white") +
+  stat_summary(fun.data = median_hilow, fun.args = list(conf.int = .9),
+               size = 1, geom = "linerange") + 
+  stat_summary(fun.data = median_hilow, fun.args = list(conf.int = .5), 
+               size = 1.5, geom = "linerange") + 
+  facet_wrap("Study") + 
+  guides(color = guide_legend("none")) +
+  labs(
+    title = "Posterior predictions for 1,000 new participants",
+    x = "Time after target onset [ms]",
+    y = "Proportion looks to target",
+    caption = "90% and 50% intervals")
+```
+
+We hypothesized that children would become less variable as they
+grew older and converged on a mature level of performance. We can address
+this question by inspecting the ranges of predictions for the simulated
+participants. The claim that children become less variable would imply that the
+range of predictions should be narrower age 5 than for age 4 than age 3. Figure
+\@ref(fig:new-ranges) depicts the range of the predictions, both in terms of the
+90 percentile range (i.e., the range of the middle 90% of the data) and in terms
+of the 50 percentile (interquartile) range. The ranges of performance decrease
+from age 3 to age 4 to age 5, consistent with the hypothesized reduction in
+variability.
+
+(ref:new-ranges) Ranges of predictions for simulated
+participants over the course of a trial. The ranges are most similar during the
+first half of the trial when participants are at chance performance, and the
+ranges are most different at the end of the trial as children reliably fixate on
+the target image. The ranges of performance decreases with each year of the
+study as children show less variability.
+
+```{r new-ranges, echo = FALSE, fig.cap = "(ref:new-ranges)", fig.width = 6, fig.height = 3, out.width = "80%"}
+by_draw <- lpred %>%
+  group_by(Study, Time) %>%
+  summarise(
+    `95th` = quantile(plogis(.posterior_value), .95),
+    `05th` = quantile(plogis(.posterior_value), .05),
+    `75th` = quantile(plogis(.posterior_value), .75),
+    `25th` = quantile(plogis(.posterior_value), .25),
+    `95^th~vs.~05^th` = `95th` - `05th`,
+    `75^th~vs.~25^th` = `75th` - `25th`) %>% 
+  select(-matches("^..th$")) %>% 
+  ungroup() %>% 
+  tidyr::gather("range", "extent", -Study, -Time) %>% 
+  mutate(range = factor(range, levels = unique(rev(sort(range))))) 
+  
+ggplot(by_draw) +
+  aes(x = Time, y = extent, color = Study) +
+  geom_point() + 
+  facet_wrap("range", labeller = label_parsed) +
+  labs(
+    title = "Ranges of predictions for 1000 new participants",
+    x = "Time after target onset [ms]",
+    y = "Difference of percentiles") 
+```
+
+The developmental pattern of increasing reliability and decreasing variability was also observed for the growth curve peaks. For the synthetic participants, 
+the model predicted that individual peak probabilities will increase each
+year, peak<sub>TP1</sub>\ = `r new_peaks_pts$TimePoint1` 
+[90% UI: `r new_peaks_uis$TimePoint1`], 
+peak<sub>TP2</sub>\ = `r new_peaks_pts$TimePoint2` [`r new_peaks_uis$TimePoint2`], 
+peak<sub>TP3</sub>\ = `r new_peaks_pts$TimePoint3` [`r new_peaks_uis$TimePoint3`]. Moreover, the range of plausible values for the individual peaks narrowed each
+for the simulated data. For instance, the difference between the 95^th^
+and 5^th^ percentiles was `r new_peaks_diff$TimePoint1` for timepoint 1,
+`r new_peaks_diff$TimePoint2` for timepoint 2, and `r new_peaks_diff$TimePoint3`
+for timepoint 3.  
+
+**Summary**. 
 
 ### Are individual differences stable over time?
 
@@ -1235,8 +1396,10 @@ bayesplot:::ppc_data(b$y[, 1], sims, group = d_m$Study) %>%
     stat_density(
       data = function(x) dplyr::filter(x, .data$is_y),
       geom = "line", position = "identity", size = 1) + 
-    labs(x = "Proportion of looks", 
-         title = "Observed data and 200 posterior simulations") + 
+    labs(
+      x = "Proportion of looks", 
+      y = "Density",
+      title = "Observed data and 200 posterior simulations") + 
     coord_cartesian(xlim = c(0, 1), expand = FALSE) + 
     facet_wrap("group")
 ```
@@ -1295,129 +1458,6 @@ ggplot(lpred) +
     title = "Observed data and 100 posterior predictions",
     x = "Time after target onset [ms]",
     y = "Posterior log-odds")
-```
-
-
-### Simulating data from new participants
-
-This mixed effects model assumes that the each child's growth curve is drawn
-from a distribution of related growth curves, and it tries to infer the
-parameters of that distribution of growth curves (like the scale of individual
-differences in the intercept term or the correlation among growth curve
-features). A natural next step is to ask the model to simulate new samples from
-that distribution of growth curves: That is, predict new data for a
-hypothetical, unobserved child drawn from the same distribution as the `N
-CHILDREN` observed children.This procedure lets us explore the range of
-variability in performance at each age.
-
-Figure \@ref(fig:new-participants) shows the posterior predictions for 1,000
-simulated participants, which demonstrates how the model expects new
-participants to improve longitudinally but also exhibit stable individual
-differences over time. Figure \@ref(fig:new-participants-intervals) shows
-uncertainty intervals for these simulations. The model has learned to predict
-less accurate and more variable performance at age 3 with improving accuracy and
-narrowing variability at age 4 and age 5.
-
-
-(ref:new-participants) Posterior predictions for new _unobserved_ participants.
-Each line represents the predicted performance for a new participant. The three
-dark lines highlight predictions from one single simulated participant. The
-simulated participant shows both longitudinal improvement in word recognition
-and similar relative performance compared to other simulations each year,
-indicating that the model would predict new children to improve year over year
-and show stable individual differences over time.
-
-```{r new-participants, echo = FALSE, fig.cap = "(ref:new-participants)", fig.width = 6, fig.height = 3, out.width = "80%"}
-dummy_data <- d_m %>% 
-  distinct(Study, Time, ot1, ot2, ot3) %>% 
-  mutate(ResearchID = "NEW",
-         Primary = 0, 
-         Others = 0)
-
-set.seed(11102017)
-lpred <- dummy_data %>% 
-  tristan::augment_posterior_linpred(b, newdata = ., nsamples = 1000)
-
-ggplot(lpred) + 
-  aes(x = Time, y = plogis(.posterior_value), color = Study) +
-  geom_hline(yintercept = .25, size = 2, color = "white") +
-  geom_line(aes(group = interaction(Study, .draw)), 
-            alpha = .1, show.legend = FALSE) +
-  geom_line(aes(group = interaction(Study, .draw)), 
-            data = sample_n_of(lpred, 1, .draw), color = "grey20",
-            show.legend = FALSE) +
-  facet_wrap("Study") + 
-  guides(color = guide_legend("none")) +
-  labs(
-    title = "Posterior predictions for 1,000 new participants",
-    x = "Time after target onset [ms]",
-    y = "Proportion looks to target")
-```
-
-(ref:new-participants-intervals) Uncertainty intervals for the simulated
-participants. Variability is widest at age 3 and narrowest at age 5,
-consistent with the prediction that children become less variable as they 
-grow older.
-
-```{r new-participants-intervals, echo = FALSE, fig.cap = "(ref:new-participants-intervals)", fig.width = 6, fig.height = 3, out.width = "80%"}
-ggplot(lpred) + 
-  aes(x = Time, y = plogis(.posterior_value), color = Study) +
-  geom_hline(yintercept = .25, size = 2, color = "white") +
-  stat_summary(fun.data = median_hilow, fun.args = list(conf.int = .9),
-               size = 1, geom = "linerange") + 
-  stat_summary(fun.data = median_hilow, fun.args = list(conf.int = .5), 
-               size = 1.5, geom = "linerange") + 
-  facet_wrap("Study") + 
-  guides(color = guide_legend("none")) +
-  labs(
-    title = "Posterior predictions for 1,000 new participants",
-    x = "Time after target onset [ms]",
-    y = "Proportion looks to target",
-    caption = "90% and 50% intervals")
-```
-
-
-One of the predictions was that children would become less variable as they
-grew older and converge on a mature level of performance. We can tackle
-this question by inspecting the ranges of predictions for the simulated
-participants. The claim that children become less variable would imply that the
-range of predictions should be narrower age 5 than for age 4 than age 3. Figure
-\@ref(fig:new-ranges) depicts the range of the predictions, both in terms of the
-90 percentile range (i.e., the range of the middle 90% of the data) and in terms
-of the 50 percentile (interquartile) range. The ranges of performance decrease
-from age 3 to age 4 to age 5, consistent with the hypothesized reduction in
-variability.
-
-(ref:new-ranges) Ranges of predictions for simulated
-participants over the course of a trial. The ranges are most similar during the
-first half of the trial when participants are at chance performance, and the
-ranges are most different at the end of the trial as children reliably fixate on
-the target image. The ranges of performance decreases with each year of the
-study as children show less variability.
-
-```{r new-ranges, echo = FALSE, fig.cap = "(ref:new-ranges)", fig.width = 6, fig.height = 3, out.width = "80%"}
-by_draw <- lpred %>%
-  group_by(Study, Time) %>%
-  summarise(
-    `95th` = quantile(plogis(.posterior_value), .95),
-    `05th` = quantile(plogis(.posterior_value), .05),
-    `75th` = quantile(plogis(.posterior_value), .75),
-    `25th` = quantile(plogis(.posterior_value), .25),
-    `95^th~vs.~05^th` = `95th` - `05th`,
-    `75^th~vs.~25^th` = `75th` - `25th`) %>% 
-  select(-matches("^..th$")) %>% 
-  ungroup() %>% 
-  tidyr::gather("range", "extent", -Study, -Time) %>% 
-  mutate(range = factor(range, levels = unique(rev(sort(range))))) 
-  
-ggplot(by_draw) +
-  aes(x = Time, y = extent, color = Study) +
-  geom_point() + 
-  facet_wrap("range", labeller = label_parsed) +
-  labs(
-    title = "Ranges of predictions for 1000 new participants",
-    x = "Time after target onset [ms]",
-    y = "Difference of percentiles") 
 ```
 
 
