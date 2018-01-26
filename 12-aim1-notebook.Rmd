@@ -500,7 +500,10 @@ children's looked to the target more quickly and more reliable.
 
 
 
-### Simulating data from new participants
+### Exploring plausible ranges of performance over time
+
+_TJM: I like this analysis, but I'm realizing I should describe how variable the
+real participants are first._
 
 ```{r, include = FALSE}
 dummy_data <- d_m %>% 
@@ -546,7 +549,7 @@ the population of growth curves---allow the model to simulate new samples from
 that distribution of growth curves. That is, we can predict a set of growth
 curves for a hypothetical, unobserved child drawn from the same distribution as
 the `r n_distinct(d_m$ResearchID)` observed children. This procedure lets us
-explore the range of variability in performance at each age.
+explore the plausible degrees of variability in performance at each age.
 
 Figure \@ref(fig:new-participants) shows the posterior predictions for 1,000
 simulated participants, which demonstrates how the model expects new
@@ -661,7 +664,11 @@ and 5^th^ percentiles was `r new_peaks_diff$TimePoint1` for timepoint 1,
 `r new_peaks_diff$TimePoint2` for timepoint 2, and `r new_peaks_diff$TimePoint3`
 for timepoint 3.  
 
-**Summary**. 
+**Summary**. We used the model's random effects estimates to simulate growth
+curves from 1,000 hypothetical, unobserved participants. The simulated dataset
+showed increasing looking probability and decreasing variability with each year
+of the study. These simulations confirm the hypothesis that variability would be
+diminish as children converge on a mature level of performance on this task.
 
 ### Are individual differences stable over time?
 
@@ -1197,58 +1204,6 @@ prior_summary(b)
 
 
 
-For the hierarchical part of the model, I used RstanARM's `decov()` prior which
-simultaneously sets a prior of the variances and correlations of the model's
-random effect terms. For these terms, I used the default prior for the variance
-terms and used a weakly informative LKJ(2) prior on the random effect
-correlations. Under LKJ(1) supports all correlations in the range ±1, but under
-LKJ(2) extreme correlations are less plausible. In the figure below, we see that
-the LKJ(2) prior nudges some of the probability mass away from ±1 towards the
-center. The motivation for this kind of prior was *regularization*: We give the
-model a small amount of information to nudge it away from extreme, degenerate
-values.
-
-```{r, include = FALSE, fig.height = 3, fig.width = 5}
-lkj1 <- rstanarm::stan_glmer(
-  Sepal.Length ~ 1 + (Sepal.Width + Petal.Length | Species), 
-  prior = normal(0, 1),
-  prior_covariance = decov(1,1,1,1),
-  data = iris, 
-  prior_PD = TRUE)
-
-lkj2 <- rstanarm::stan_glmer(
-  Sepal.Length ~ 1 + (Sepal.Width + Petal.Length | Species), 
-  prior = normal(0, 1),
-  prior_covariance = decov(2,1,1,1),
-  data = iris, 
-  prior_PD = TRUE)
-
-big_dumb_model1 <- tristan::draw_var_corr(lkj1, nsamples = 2000)
-big_dumb_model2 <- tristan::draw_var_corr(lkj2, nsamples = 2000)
-nrow(big_dumb_model2)
-
-correlations <- bind_rows(
-  big_dumb_model1 %>% mutate(Model = "LKJ(1)"), 
-  big_dumb_model2 %>% mutate(Model = "LKJ(2)"))
-```
-
-```{r, echo = FALSE,  out.width = "80%", fig.height = 3, fig.width = 5}
-ggplot(correlations %>% filter(!is.na(var2))) + 
-  aes(x = sdcor) + 
-  geom_histogram(binwidth = .1, boundary = 0) + 
-  facet_wrap("Model", labeller = label_both) +
-  labs(
-    x = NULL, y = "Num. prior samples", 
-    caption = "12,000 prior samples drawn per model")
-
-ggplot(correlations %>% filter(!is.na(var2))) + 
-  aes(x = sdcor) + 
-  geom_density() + 
-  facet_wrap("Model", labeller = label_both) +
-  labs(
-    x = NULL, y = "Num. prior samples", 
-    caption = "12,000 prior samples drawn per model")
-```
 
 
 Let's try to understand our model by making some plots.
@@ -1502,3 +1457,57 @@ of a unit change in Time^1^ would be a change of
 accommodated by our Normal(0, 1) prior. 
 
 _Here I would have to also describe the random effects structure.
+
+
+For the hierarchical part of the model, I used RstanARM's `decov()` prior which
+simultaneously sets a prior of the variances and correlations of the model's
+random effect terms. For these terms, I used the default prior for the variance
+terms and used a weakly informative LKJ(2) prior on the random effect
+correlations. Under LKJ(1) supports all correlations in the range ±1, but under
+LKJ(2) extreme correlations are less plausible. In the figure below, we see that
+the LKJ(2) prior nudges some of the probability mass away from ±1 towards the
+center. The motivation for this kind of prior was *regularization*: We give the
+model a small amount of information to nudge it away from extreme, degenerate
+values.
+
+```{r, include = FALSE, fig.height = 3, fig.width = 5}
+lkj1 <- rstanarm::stan_glmer(
+  Sepal.Length ~ 1 + (Sepal.Width + Petal.Length | Species), 
+  prior = normal(0, 1),
+  prior_covariance = decov(1,1,1,1),
+  data = iris, 
+  prior_PD = TRUE)
+
+lkj2 <- rstanarm::stan_glmer(
+  Sepal.Length ~ 1 + (Sepal.Width + Petal.Length | Species), 
+  prior = normal(0, 1),
+  prior_covariance = decov(2,1,1,1),
+  data = iris, 
+  prior_PD = TRUE)
+
+big_dumb_model1 <- tristan::draw_var_corr(lkj1, nsamples = 2000)
+big_dumb_model2 <- tristan::draw_var_corr(lkj2, nsamples = 2000)
+nrow(big_dumb_model2)
+
+correlations <- bind_rows(
+  big_dumb_model1 %>% mutate(Model = "LKJ(1)"), 
+  big_dumb_model2 %>% mutate(Model = "LKJ(2)"))
+```
+
+```{r, echo = FALSE,  out.width = "80%", fig.height = 3, fig.width = 5}
+ggplot(correlations %>% filter(!is.na(var2))) + 
+  aes(x = sdcor) + 
+  geom_histogram(binwidth = .1, boundary = 0) + 
+  facet_wrap("Model", labeller = label_both) +
+  labs(
+    x = NULL, y = "Num. prior samples", 
+    caption = "12,000 prior samples drawn per model")
+
+ggplot(correlations %>% filter(!is.na(var2))) + 
+  aes(x = sdcor) + 
+  geom_density() + 
+  facet_wrap("Model", labeller = label_both) +
+  labs(
+    x = NULL, y = "Num. prior samples", 
+    caption = "12,000 prior samples drawn per model")
+```
