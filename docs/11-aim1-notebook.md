@@ -37,10 +37,7 @@ response to speech.
 the semantic foil *drum*, the phonological foil *bee*, and the unrelated
 *swing*.
 
-<div class="figure">
-<img src="./misc/rwl-screens/TimePoint1/actual/Block2_17_swing2_bell2_bee2_drum2_UpperRightImage_bell.png" alt="(ref:sample-vw-screen-cap2)" width="100%" />
-<p class="caption">(\#fig:sample-vw-screen)(ref:sample-vw-screen-cap2)</p>
-</div>
+![(\#fig:sample-vw-screen)(ref:sample-vw-screen-cap2)](./misc/rwl-screens/TimePoint1/actual/Block2_17_swing2_bell2_bee2_drum2_UpperRightImage_bell.png)
 
 ## Experiment Administration
 
@@ -193,7 +190,7 @@ time features for the model.
 
 
 
-<img src="11-aim1-notebook_files/figure-html/spaghetti-elogit-1.png" width="100%" />
+![](11-aim1-notebook_files/figure-docx/spaghetti-elogit-1.png)<!-- -->
 
 
 

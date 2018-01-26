@@ -136,10 +136,7 @@ the phonological foil and a late negative effect of the semantic foil.
 
 (ref:rwl-comp-to-unre-cap) Reprint of Figure 4 from @RWLPaper to illustrate the strategy of examining lexical competition effects where the semantic foil and phonological foil are compared to the unrelated image.
 
-<div class="figure">
-<img src="./misc/rwl-screenshot.png" alt="(ref:rwl-comp-to-unre-cap)" width="100%" />
-<p class="caption">(\#fig:rwl-comp-to-unre)(ref:rwl-comp-to-unre-cap)</p>
-</div>
+![(\#fig:rwl-comp-to-unre)(ref:rwl-comp-to-unre-cap)](./misc/rwl-screenshot.png)
 
 I plan to employ this technique for studying lexical competition effects
 and their development from Year\ 1 to Year\ 2 to Year\ 3.[^4] Increased
@@ -209,10 +206,7 @@ symmetry for the real word and nonword conditions.
 (ref:le-means-cap) Condition averages for data described by @MPPaper. Compare to
 Figure 2 in the original manuscript.
 
-<div class="figure">
-<img src="./misc/le_means.png" alt="(ref:le-means-cap)" width="100%" />
-<p class="caption">(\#fig:le-means)(ref:le-means-cap)</p>
-</div>
+![(\#fig:le-means)(ref:le-means-cap)](./misc/le_means.png)
 
 
 I will test whether the two measures ever dissociate by computing the
@@ -239,10 +233,7 @@ which child-level factors are associated with these kinds of listeners.
 
 (ref:le-post-diff-cap) Demonstration of posterior difference technique on data from @MPPaper.
 
-<div class="figure">
-<img src="./misc/mp_post_diff.png" alt="(ref:le-post-diff-cap)" width="100%" />
-<p class="caption">(\#fig:le-post-diff)(ref:le-post-diff-cap)</p>
-</div>
+![(\#fig:le-post-diff)(ref:le-post-diff-cap)](./misc/mp_post_diff.png)
 
 Even though performance on the real word and nonword conditions might be
 highly correlated, one might intuitively hypothesize that that
@@ -296,10 +287,7 @@ among competing units within a layer. This image is a lightly modified
 public-domain version of Figure 1 in @jTRACE: 
 <https://en.wikipedia.org/wiki/File:TRACE_architecture.jpg>
 
-<div class="figure">
-<img src="./misc/trace-schematic.jpeg" alt="(ref:trace-schematic-cap)" width="100%" />
-<p class="caption">(\#fig:trace-schematic)(ref:trace-schematic-cap)</p>
-</div>
+![(\#fig:trace-schematic)(ref:trace-schematic-cap)](./misc/trace-schematic.jpeg)
 
 Units within a level (phonetic, phonemic, lexical) compete through
 lateral inhibition, so that more active units can suppress less active

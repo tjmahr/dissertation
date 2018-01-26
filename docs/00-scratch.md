@@ -134,25 +134,20 @@ knitr::include_graphics(
 
 
 
-The caption for Figure \@ref(fig:happy-cat) is defined as a _text reference_
+The caption for Figure \@ref(fig:happy-cat-docx) is defined as a _text reference_
 below and passed to the `fig.cap` chunk option.
 
 (ref:happy-cat-cap) This is a happy cat.
 
 
 
+
+
 ```r
-knitr::include_graphics(
-  rep("./misc/happy-cat-grooming-itself-vector-file.png", 2)
-)
+knitr::include_graphics("./misc/happy-cat-grooming-itself-vector-file.png")
 ```
 
-<div class="figure">
-<img src="./misc/happy-cat-grooming-itself-vector-file.png" alt="(ref:happy-cat-cap)" width="30%" /><img src="./misc/happy-cat-grooming-itself-vector-file.png" alt="(ref:happy-cat-cap)" width="30%" />
-<p class="caption">(\#fig:happy-cat)(ref:happy-cat-cap)</p>
-</div>
-
-
+![(\#fig:happy-cat-docx)(ref:happy-cat-cap)](./misc/happy-cat-grooming-itself-vector-file.png)
 
 
 
@@ -163,9 +158,9 @@ knitr::include_graphics(
 str(list(html = is_html_output(), latex = is_latex_output(),
          word = is_word_output(), width = options("width")[[1]]))
 #> List of 4
-#>  $ html : logi TRUE
+#>  $ html : logi FALSE
 #>  $ latex: logi FALSE
-#>  $ word : logi FALSE
+#>  $ word : logi TRUE
 #>  $ width: int 80
 
 devtools::session_info()
@@ -177,12 +172,12 @@ devtools::session_info()
 #>  language (EN)                        
 #>  collate  English_United States.1252  
 #>  tz       America/Chicago             
-#>  date     2018-01-23
+#>  date     2018-01-26
 #> Packages ----------------------------------------------------------------------
 #>  package   * version date       source        
 #>  backports   1.1.2   2017-12-13 CRAN (R 3.4.3)
 #>  base      * 3.4.3   2017-11-30 local         
-#>  bookdown    0.5     2017-08-20 CRAN (R 3.4.1)
+#>  bookdown    0.6     2018-01-25 CRAN (R 3.4.3)
 #>  compiler    3.4.3   2017-11-30 local         
 #>  datasets  * 3.4.3   2017-11-30 local         
 #>  devtools    1.13.4  2017-11-09 CRAN (R 3.4.1)
@@ -206,18 +201,19 @@ devtools::session_info()
 #>  tools       3.4.3   2017-11-30 local         
 #>  utils     * 3.4.3   2017-11-30 local         
 #>  withr       2.1.1   2017-12-19 CRAN (R 3.4.3)
+#>  xfun        0.1     2018-01-22 CRAN (R 3.4.3)
 #>  yaml        2.1.16  2017-12-12 CRAN (R 3.4.3)
 
 last_four_commits <- git2r::commits(git2r::repository("."), n = 4)
 msgs <- lapply(last_four_commits, methods::show)
-#> [82930be] 2018-01-23: add methods for aim 1
-#> [627efb9] 2018-01-23: reorganize things
-#> [920dea1] 2018-01-18: update pre-holiday word counts
-#> [fd0d82b] 2018-01-02: start aim 2 section
+#> [6e3937f] 2018-01-26: move another specification part
+#> [17614ff] 2018-01-26: clean up synthetic participants section
+#> [07e7838] 2018-01-26: flesh out curve averages
+#> [cf6bd64] 2018-01-26: add peaks to correlations section
 ```
 
 
 
 
 
-Built with love using R [Version 3.4.3; @R-base] and the R-packages *bayesplot* [Version 1.4.0.9000; @R-bayesplot], *bookdown* [Version 0.5; @R-bookdown], *dplyr* [Version 0.7.4; @R-dplyr], *ggplot2* [Version 2.2.1; @R-ggplot2], *knitr* [Version 1.18; @R-knitr], *littlelisteners* [Version 0.0.0.9000; @R-littlelisteners], *lme4* [Version 1.1.15; @R-lme4], *rlang* [Version 0.1.6; @R-rlang], *rmarkdown* [Version 1.8; @R-rmarkdown], *rstanarm* [Version 2.17.2; @R-rstanarm], *tjmisc* [Version 0.0.0.9000; @R-tjmisc], and *tristan* [Version 0.0.0.9000; @R-tristan].
+Built with love using R [Version 3.4.3; @R-base] and the R-packages *bayesplot* [Version 1.4.0.9000; @R-bayesplot], *bookdown* [Version 0.6; @R-bookdown], *dplyr* [Version 0.7.4; @R-dplyr], *ggplot2* [Version 2.2.1; @R-ggplot2], *knitr* [Version 1.18; @R-knitr], *littlelisteners* [Version 0.0.0.9000; @R-littlelisteners], *lme4* [Version 1.1.15; @R-lme4], *rlang* [Version 0.1.6; @R-rlang], *rmarkdown* [Version 1.8; @R-rmarkdown], *rstanarm* [Version 2.17.2; @R-rstanarm], *tjmisc* [Version 0.0.0.9000; @R-tjmisc], and *tristan* [Version 0.0.0.9000; @R-tristan].

@@ -9,20 +9,29 @@ Analysis of familiar word recognition
 
 
 
+General Todos:
+
+* Determine and use consistent terminology for the studies and growth curve
+  features.
+* Make sure axis labels and legend labels are consistent.
+
 ## Growth curve analysis
+
+_TJM: I'll have to clean this section up once the order of the main results is
+pinned down. That way this can flow neatly in to the findings._
 
 Looks to the familiar image were analyzed using **Bayesian mixed
 effects logistic regression**. We used *logistic* regression because
 the outcome measurement is a probability (the log-odds of looking to the
 target image versus a distractor). We used *mixed-effects* models
-because to estimate a separate growth curve for each child (to
+to estimate a separate growth curve for each child (to
 measure individual differences in word recognition) but also treat each
 child's individual growth curve as a draw from a distribution of related
 curves.
 
 We used *Bayesian* techniques to study a generative model of the
 data. Instead of reporting and describing a single, best-fitting model
-of some data, Bayesian techniques consider an entire distribution of
+of some data, Bayesian methods consider an entire distribution of
 plausible models that are consistent with the data and any prior
 information we have about the models. By using this approach, one can
 explicitly quantify uncertainty about statistical effects and draw
@@ -48,11 +57,11 @@ $$
 
 That the time terms are *orthogonal* means that $\textit{Time}^1$, $\textit{Time}^2$ and
 $\textit{Time}^3$ are transformed so that they are uncorrelated. Under this
-formulation, the parameters $\beta_0$ and $\beta_1$ have a clear
+formulation, the parameters $\beta_0$ and $\beta_1$ have a direct
 interpretation in terms of lexical processing performance. The
 intercept, $\beta_0$, measures the area under the growth curve—or the
 probability of fixating on the target word averaged over the whole
-window. We can think of $\beta_0$ as a measure of average looking accuracy or of
+window. We can think of $\beta_0$ as a measure of 
 *word recognition reliability*. The linear time parameter, $\beta_1$,
 estimates the steepness of the growth curve—or how the probability of
 fixating changes from frame to frame. We can think of $\beta_1$ as a
@@ -73,430 +82,385 @@ probability.[^3]
     the looks to target start to increase from baseline and the point
     when the looks to target stops increasing.
 
-We studied how word recognition changes
-over time by modeling how growth curves change over developmental time.
-This amounted to studying how the growth curve parameters changes year over
-year. We included dummy-coded indicators for Year 1, Year 2, and 
-Year 3 and having these indicators interact with the growth curve parameters. 
-We also included random effects to represent child-by-study effects.
-
-### Model specification
-
-We used moderately informative priors for the main regression effects.
-
-* b ~ Normal(mean = 0, sd = 1)
-
-When we computed the orthogonal polynomial features for Time, they were rescaled
-so that the linear feature ranged from −.5 to .5. Under this scaling a unit
-change in Time^1^ was equal to change from the start to the end of the analysis
-window. The polynomial features for the Time had the following ranges:
+We studied how word recognition changes over time by modeling how growth curves
+change over developmental time. This amounted to studying how the growth curve
+parameters changes year over year. We included dummy-coded indicators for
+Year 1, Year 2, and Year 3 and having these indicators interact with the growth
+curve parameters. We also included random effects to represent child-by-study
+effects.
 
 
-```r
-d_m %>% 
-  distinct(ot1, ot2, ot3) %>% 
-  tidyr::gather("Feature", "Value") %>% 
-  group_by(Feature) %>% 
-  summarise(Min = min(Value), Max = max(Value), Range = Max - Min) %>% 
-  mutate_if(is.numeric, round, 2) %>% 
-  mutate(Feature = stringr::str_replace(Feature, "ot(\\d)", "Time^\\1^")) %>% 
-  knitr::kable()
-```
+### Growth curve features as measures of word recognition performance
+
+As noted above, two of the model's growth curve features have direct
+interpretations in terms of lexical processing performance: The model's
+intercept parameter corresponds to the average proportion/probability of looking
+to the named image over the trial window and the linear time parameter
+corresponds to slope of the growth curve or lexical processing efficiency. We
+also were interested in _peak_ proportion of looks to the target. We derived
+this value by computing the growth curves from the model and taking the median
+of the five highest points on the curve. Figure _TODO_ shows three simulated
+growth curves and how each of these growth curve features relate to word
+recognition performance.
+
+_TODO: Figure number and caption_
+
+![](12-aim1-notebook_files/figure-docx/curve-features-1.png)<!-- -->
 
 
 
-Feature      Min    Max   Range
---------  ------  -----  ------
-Time^1^    -0.50   0.50    1.00
-Time^2^    -0.33   0.60    0.93
-Time^3^    -0.63   0.63    1.26
 
-Under the Normal(0, 1) prior, before seeing any data, we expect 95% of plausible
-effects to fall in the range ±1.96, which is an adequate range for these
-growth curve models. For example, consider just the effect of Time^1^. If a
-listener starts at chance performance, 25% or -1.1
-logits, and increases to, say, 65% or 0.62, the effect
-of a unit change in Time^1^ would be a change of
-1.72 logits. This magnitude of effect is
-accommodated by our Normal(0, 1) prior. 
 
-### Derived growth curve features
-
-As noted earlier, two of the model's growth curve features have clear interpretations for lexical processing performance: The model's intercept parameter corresponds to the average proportion of looks to the named image of the trial window and the time parameter corresponds to slope of the growth curve or lexical processing efficiency. We also may be interested in _peak_ proportion of looks to the target. We derived this value from the growth curve by taking the median of the five points on a growth curve.
 
 
 
 
 ### Year over year changes in word recognition
 
+_TJM: This is a bit rough still._
+
+As a mixed-effects model, the model estimated a population-average growth curve
+(the "fixed" effects) and how individual children deviated from average (the
+"random" effects). Figure _TODO_ shows 200 posterior samples of those average
+growth curves for each study. Clearly, on average, the growth curves become
+steeper and achieve higher looking probabilities with each year of the study.
+
+![](12-aim1-notebook_files/figure-docx/average-growth-curves-1.png)<!-- -->
+
+We now consider how the curvature of the average growth curves change each year.
 Figure \@ref(fig:effects2) depicts uncertainty intervals with the model's
 average effects of each timepoint on the growth curve features. The intercept
-and time effects increased each year, confirming that children get more reliable
-and faster at recognizing words as they grow older. For each effect, the change
-from year\ 1 to year\ 2 is approximately the same as the change from year\ 2 to
-year\ 3, as visible in figure \@ref(fig:pairwise-effects).
+and linear time effects increased each year, confirming that children become
+more reliable and faster at recognizing words as they grow older. The peak
+accuracy also increased each year. For each effect, the change from year\ 1 to
+year\ 2 is approximately the same as the change from year\ 2 to year\ 3, as
+visible in figure \@ref(fig:pairwise-effects).
 
 
 (ref:effects2) Uncertainty intervals for the effects of study timepoints on
-growth curve features.
+growth curve features. The intercept and peak features were converted from
+log-odds to proportions to ease interpretation.
 
-<div class="figure">
-<img src="12-aim1-notebook_files/figure-html/effects2-1.png" alt="(ref:effects2)" width="80%" />
-<p class="caption">(\#fig:effects2)(ref:effects2)</p>
-</div>
-
-<img src="12-aim1-notebook_files/figure-html/average-growth-curves-1.png" width="80%" />
-
+![(\#fig:effects2)(ref:effects2)](12-aim1-notebook_files/figure-docx/effects2-1.png)
 
 (ref:pairwise-effects) Uncertainty intervals for the differences between study
-timepoints.
+timepoints. Again, the intercept and peak features were converted to
+proportions.
 
-<div class="figure">
-<img src="12-aim1-notebook_files/figure-html/pairwise-effects-1.png" alt="(ref:pairwise-effects)" width="80%" />
-<p class="caption">(\#fig:pairwise-effects)(ref:pairwise-effects)</p>
-</div>
+![(\#fig:pairwise-effects)(ref:pairwise-effects)](12-aim1-notebook_files/figure-docx/pairwise-effects-1.png)![(\#fig:pairwise-effects)(ref:pairwise-effects)](12-aim1-notebook_files/figure-docx/pairwise-effects-2.png)
 
 
 
+The average looking probability (intercept feature) was 0.385 [90% UI: 0.372--0.397] for
+timepoint 1, 0.485 [0.473--0.498] for timepoint 2, and
+0.557 [0.544--0.569] for timepoint 3. The averages increased by
+0.1 [0.087--0.114] from timepoint 1 to timepoint 2
+and by 0.072 [0.058--0.085] from timepoint 2 to
+timepoint 3. The peak looking probability was 0.548 [0.528--0.567]
+for timepoint 1, 0.683 [0.666--0.7] for timepoint 2, and
+0.769 [0.755--0.782] for timepoint 3. The peak values increased
+by 0.135 [0.114--0.156] from timepoint 1 to
+timepoint 2 and by 0.086 [0.069--0.103] from
+timepoint 2 to timepoint 3. These results numerically confirm the hypothesis
+that children would improve in their word recognition reliability, both in terms
+of average looking and in terms of peak accuracy, each year.
 
-Bayesplot supports transformations so we could invert the log-odds measure to
-see the intercepts (area under curve/average accuracy) in proportion units.
-
-
-parameter                   outer   inner      ll       l       m       h      hh
--------------------------  ------  ------  ------  ------  ------  ------  ------
-plogis(Intercept~~(TP1))      0.9     0.5   0.372   0.380   0.385   0.390   0.397
-plogis(Intercept~~(TP2))      0.9     0.5   0.473   0.480   0.485   0.490   0.498
-plogis(Intercept~~(TP3))      0.9     0.5   0.544   0.551   0.557   0.562   0.569
-
-<img src="12-aim1-notebook_files/figure-html/intercepts-1.png" width="60%" />
-
-We can compute differences in average accuracy as well.
-
-<img src="12-aim1-notebook_files/figure-html/intercept-differences-1.png" width="60%" />
-
-
-
-The average accuracy was 0.385 [90% UI: 0.372--0.397] for timepoint 1,
-0.485 [0.473--0.498] for timepoint 2, and 0.557 [0.544--0.569] for
-timepoint 3. The average accuracy increased by 0.1
-[0.087--0.114] from timepoint 1 to timepoint 2 and by 0.072
-[0.058--0.085] from timepoint 2 to timepoint 3. These results numerically
-confirm the hypothesis that children would improve in their accuracy each year
-over year and in their processing efficiency year over year.
+**Summary**. The average growth curve features increased year over year, so that
+children's looked to the target more quickly and more reliable.
 
 
 
 
+### Exploring plausible ranges of performance over time
+
+_TJM: I like this analysis, but I'm realizing I should describe how variable the
+real participants are first._
 
 
 
 
+Bayesian models are generative; they describe how the data could have been
+generated. Our model assumed that each child's growth curve was drawn from a
+population of related growth curves, and it tried to infer the parameters over
+that distribution. These two features---a generative model and learning about
+the population of growth curves---allow the model to simulate new samples from
+that distribution of growth curves. That is, we can predict a set of growth
+curves for a hypothetical, unobserved child drawn from the same distribution as
+the 195 observed children. This procedure lets us
+explore the plausible degrees of variability in performance at each age.
+
+Figure \@ref(fig:new-participants) shows the posterior predictions for 1,000
+simulated participants, which demonstrates how the model expects new
+participants to improve longitudinally but also exhibit stable individual
+differences over time. Figure \@ref(fig:new-participants-intervals) shows
+uncertainty intervals for these simulations. The model learned to predict
+less accurate and more variable performance at age 3 with improving accuracy and
+narrowing variability at age 4 and age 5. 
+
+(ref:new-participants) Posterior predictions for hypothetical *unobserved*
+participants. Each line represents the predicted performance for a new
+participant. The three dark lines highlight predictions from one single
+simulated participant. The simulated participant shows both longitudinal
+improvement in word recognition and similar relative performance compared to
+other simulations each year, indicating that the model would predict new
+children to improve year over year and show stable individual differences over
+time.
+
+
+![(\#fig:new-participants)(ref:new-participants)](12-aim1-notebook_files/figure-docx/new-participants-1.png)
+
+
+
+(ref:new-participants-intervals) Uncertainty intervals for the simulated
+participants. Variability is widest at age 3 and narrowest at age 5,
+consistent with the prediction that children become less variable as they 
+grow older.
+
+![(\#fig:new-participants-intervals)(ref:new-participants-intervals)](12-aim1-notebook_files/figure-docx/new-participants-intervals-1.png)
+
+We hypothesized that children would become less variable as they
+grew older and converged on a mature level of performance. We can address
+this question by inspecting the ranges of predictions for the simulated
+participants. The claim that children become less variable would imply that the
+range of predictions should be narrower age 5 than for age 4 than age 3. Figure
+\@ref(fig:new-ranges) depicts the range of the predictions, both in terms of the
+90 percentile range (i.e., the range of the middle 90% of the data) and in terms
+of the 50 percentile (interquartile) range. The ranges of performance decrease
+from age 3 to age 4 to age 5, consistent with the hypothesized reduction in
+variability.
+
+(ref:new-ranges) Ranges of predictions for simulated
+participants over the course of a trial. The ranges are most similar during the
+first half of the trial when participants are at chance performance, and the
+ranges are most different at the end of the trial as children reliably fixate on
+the target image. The ranges of performance decreases with each year of the
+study as children show less variability.
+
+![(\#fig:new-ranges)(ref:new-ranges)](12-aim1-notebook_files/figure-docx/new-ranges-1.png)
+
+The developmental pattern of increasing reliability and decreasing variability was also observed for the growth curve peaks. For the synthetic participants, 
+the model predicted that individual peak probabilities will increase each
+year, peak<sub>TP1</sub>\ = 0.552 
+[90% UI: 0.347--0.774], 
+peak<sub>TP2</sub>\ = 0.692 [0.477--0.861], 
+peak<sub>TP3</sub>\ = 0.776 [0.586--0.909]. Moreover, the range of plausible values for the individual peaks narrowed each
+for the simulated data. For instance, the difference between the 95^th^
+and 5^th^ percentiles was 0.43 for timepoint 1,
+0.38 for timepoint 2, and 0.32
+for timepoint 3.  
+
+**Summary**. We used the model's random effects estimates to simulate growth
+curves from 1,000 hypothetical, unobserved participants. The simulated dataset
+showed increasing looking probability and decreasing variability with each year
+of the study. These simulations confirm the hypothesis that variability would be
+diminish as children converge on a mature level of performance on this task.
+
+### Are individual differences stable over time?
+
+_TJM: This section is in really good shape._
+
+
+
+We predicted that children would show stable individual differences such that
+children who are faster and more reliable at recognizing words at age 3 remain
+relatively faster and more reliable at age 5. To evaluate this hypothesis,
+we used Kendall's _W_ (the coefficient of correspondence or concordance). This
+nonparametric statistic measures the degree of agreement among _J_ judges who
+are rating _I_ items. For our purposes, the items are the 123
+children who provided reliable eyetracking for all three years of the study.
+(That is, we excluded children who only had reliable eyetracking data for one or
+two years.) The judges are the sets of growth curve parameters from each year of 
+study. For example, the intercept term provides three sets of ratings: The 
+participants' intercept terms from year 1 are one set of ratings and the 
+terms from years 2 and 3 provide two more sets of ratings. These three ratings
+are the "judges" used to compute the intercept's _W_. Thus, we compute five 
+groups of _W_ coefficients, one for each set of growth curve features: 
+Intercept, Time^1^, Time^2^, Time^3^, and Peak looking probability.
 
 
 
 
+Because we used a Bayesian model, we have a distribution of ratings and thus a
+distribution of concordance statistics. Each sample of the posterior
+distribution fits a growth curve for each child in each study, so each posterior
+sample provides a set of ratings for concordance coefficients. The distribution
+of *W*'s lets us quantify our uncertainty because we can compute *W*'s for each
+of the 4000 samples from the posterior distribution.
 
+One final matter is how do we assess whether a concordance statistic is 
+meaningful. To tackle this question, we also included a "null rater", a fake 
+parameter that assigned each child in each year a random number. We can use the 
+distribution of _W_'s generated by randomly rating children as a benchmark for 
+assessing whether the other concordance statistics differ meaningfully from 
+chance.
 
+(ref:kendall-stats) Uncertainty intervals for the Kendall's coefficient of
+concordance. Random ratings provide a baseline of null _W_ statistics. The
+intercept and linear time features are decisively non-null, indicating a
+significant degree of correspondence in children's relative word recognition
+reliability and efficiency over three years of study.
 
+![(\#fig:kendall-stats)(ref:kendall-stats)](12-aim1-notebook_files/figure-docx/kendall-stats-1.png)
 
+We used the `kendall()` function in the `irr` package (vers.
+0.84, CITATION) to compute concordance statistics.
+Figure \@ref(fig:kendall-stats) depicts uncertainty intervals for the Kendall
+_W_'s for these growth curve features. The 90% uncertainty interval of _W_
+statistics from random ratings [0.275--0.391] subsumes the
+intervals for the Time^2^ effect [0.295--0.351] and the Time^3^ effect
+[0.276--0.348], indicating that these values do not differentiate
+children in a longitudinally stable way. That is, the Time^2^ and Time^3^
+features differentiate children across studies as well as random numbers.
+Earlier, we stated that only the intercept, linear time, and peak features have
+psychologically meaningful interpretations and that the higher-order features of
+these models serve to capture the shape of the growth curve data. These
+statistics support that assertion.
 
+Concordance is strongest for the peak feature, _W_\ = 0.587 
+[0.572--0.601] and the intercept term, _W_\ = 0.585
+[0.573--0.596], followed by the linear time term, _W_\ =
+0.501 [0.483--0.518]. Because these values are removed 
+from the statistics for random ratings, we conclude that there is a credible
+degree of correspondence across studies when we rank children using their peak
+looking probability, average look probability (the intercept) or their growth
+curve slope (linear time).
 
-
-
-
-
-
-## Maximum likelihood results
-
-Fit a maximum likelihood model as a first pass for the analysis. We won't fit
-the model automatically (whenever this page is updated). It's too time
-consuming. Instead, we do it manually here, and save the results.
-
-
-```r
-library(lme4)
-m <- glmer(
-    cbind(Primary, Others) ~
-      (ot1 + ot2 + ot3) * Study +
-      (ot1 + ot2 + ot3 | ResearchID/Study),
-    family = binomial,
-    data = d_m)
-readr::write_rds(m, "./data/aim1_cubic_model.rds.gz")
-```
-
-And reload the saved model here.
-
-
-```r
-library(lme4)
-#> Loading required package: Matrix
-m <- readr::read_rds("./data/aim1_cubic_model.rds.gz")
-arm::display(m)
-#> glmer(formula = cbind(Primary, Others) ~ (ot1 + ot2 + ot3) * 
-#>     Study + (ot1 + ot2 + ot3 | ResearchID/Study), data = d_m, 
-#>     family = binomial)
-#>                     coef.est coef.se
-#> (Intercept)         -0.47     0.03  
-#> ot1                  1.58     0.06  
-#> ot2                  0.05     0.04  
-#> ot3                 -0.17     0.03  
-#> StudyTimePoint2      0.41     0.03  
-#> StudyTimePoint3      0.70     0.04  
-#> ot1:StudyTimePoint2  0.56     0.08  
-#> ot1:StudyTimePoint3  1.10     0.08  
-#> ot2:StudyTimePoint2 -0.16     0.05  
-#> ot2:StudyTimePoint3 -0.35     0.05  
-#> ot3:StudyTimePoint2 -0.12     0.04  
-#> ot3:StudyTimePoint3 -0.21     0.04  
-#> 
-#> Error terms:
-#>  Groups           Name        Std.Dev. Corr              
-#>  Study:ResearchID (Intercept) 0.30                       
-#>                   ot1         0.68      0.18             
-#>                   ot2         0.44     -0.12  0.03       
-#>                   ot3         0.29     -0.09 -0.44 -0.05 
-#>  ResearchID       (Intercept) 0.27                       
-#>                   ot1         0.46      0.86             
-#>                   ot2         0.09     -0.99 -0.85       
-#>                   ot3         0.03     -0.92 -0.98  0.92 
-#>  Residual                     1.00                       
-#> ---
-#> number of obs: 12584, groups: Study:ResearchID, 484; ResearchID, 195
-#> AIC = 74467.3, DIC = -61745.9
-#> deviance = 6328.7
-
-d_m$cubic_fit <- fitted(m)
-
-ggplot(d_m) + 
-  aes(x = Time, y = cubic_fit) + 
-  geom_line(aes(group = ResearchID), alpha = .2) + 
-  facet_grid(. ~ Study) + 
-    labs(
-      x = "Time after target onset (smoothed to 50 ms bins)",
-      y = "Proportion looks to target (fitted)") +
-  theme_grey(base_size = 9) 
-```
-
-<img src="12-aim1-notebook_files/figure-html/cubic-model-fits-1.png" width="100%" />
-
-### What's being captured by the random effects? 
-
-First, let's plot just the fixed effect predictions.
-
-
-```r
-predict_y <- function(...) predict(..., type = "response")
-d_m$fixef_fit <- predict_y(m, re.form = ~ 0)
-d_m$subj_fit  <- predict_y(m, re.form = ~ (ot1 + ot2 + ot3 | ResearchID))
-d_m$study_fit <- predict_y(m, re.form = ~ (ot1 + ot2 + ot3 | Study:ResearchID))
-d_m$full_fit  <- predict_y(m, re.form = ~ (ot1 + ot2 + ot3 | Study:ResearchID) + 
-                            (ot1 + ot2 + ot3 | ResearchID))
-
-ggplot(d_m) + 
-  aes(x = Time, y = fixef_fit) + 
-  geom_line(aes(group = ResearchID), alpha = .2) + 
-  facet_grid(. ~ Study) + 
-  theme_grey(base_size = 9) +
-  labs(
-    x = "Time after target onset (smoothed to 50 ms bins)",
-    y = "Proportion looks to target (fitted)",
-    caption = "Conditioned on no random effects") 
-```
-
-<img src="12-aim1-notebook_files/figure-html/cubic-model-fits-fixes-1.png" width="100%" />
-
-Now, we condition on child level effects. 
-
-
-```r
-ggplot(d_m) + 
-  aes(x = Time, y = subj_fit) + 
-  geom_line(aes(group = ResearchID), alpha = .2) + 
-  facet_grid(. ~ Study) + 
-  theme_grey(base_size = 9) +
-  labs(
-    x = "Time after target onset (smoothed to 50 ms bins)",
-    y = "Proportion looks to target (fitted)",
-    caption = "Conditioned on Child effects") 
-```
-
-<img src="12-aim1-notebook_files/figure-html/cubic-model-fits-child-efs-1.png" width="100%" />
-
-```r
-
-ggplot(d_m) + 
-  aes(x = Time, y = subj_fit - fixef_fit) + 
-  geom_line(aes(group = ResearchID), alpha = .2) + 
-  facet_grid(. ~ Study) + 
-  theme_grey(base_size = 9) +
-  labs(
-    x = "Time after target onset (smoothed to 50 ms bins)",
-    y = "Child-conditioned minus study means") 
-```
-
-<img src="12-aim1-notebook_files/figure-html/cubic-model-fits-child-efs-2.png" width="100%" />
-
-It looks like the range of y values is
-smaller in TimePoint2 and TimePoint3, but could that just be the different
-numbers of participants who contribute to each study?
+**Summary**. Growth curve features reflect individual differences in word
+recognition reliability and efficiency. By using Kendall's *W* to measure the
+degree of concordance among growth curve features over developmental time, we
+tested whether individual differences in lexical processing persisted over
+development. We found that the peak looking probability, average looking
+probability and linear time features were stable over time.
 
 
 ```r
-d_m %>% 
-  distinct(ResearchID, Study) %>% 
-  count(Study) %>% 
-  rename(`Num children in model` = n) %>% 
-  knitr::kable()
+rm(ws, reduced_data, posterior_w)
 ```
 
 
+### Predicting future vocabulary size
 
-Study         Num children in model
------------  ----------------------
-TimePoint1                      163
-TimePoint2                      165
-TimePoint3                      156
-
-Now we condition on Study x Child effects. These would be capturing the
-subject-x-study variability.
+_TJM: This section is in good shape._
 
 
-```r
-ggplot(d_m) +
-  aes(x = Time, y = study_fit) +
-  geom_line(aes(group = ResearchID), alpha = .2) +
-  facet_grid(. ~ Study) +
-  theme_grey(base_size = 9) +
-  labs(
-    x = "Time after target onset (smoothed to 50 ms bins)",
-    y = "Proportion looks to target (fitted)",
-    caption = "Conditioned on Study x Child effects")
-```
-
-<img src="12-aim1-notebook_files/figure-html/cubic-model-fits-ranefs-1.png" width="100%" />
-
-```r
-
-ggplot(d_m) +
-  aes(x = Time, y = study_fit - fixef_fit) +
-  geom_line(aes(group = ResearchID), alpha = .2) +
-  facet_grid(. ~ Study) +
-  theme_grey(base_size = 9) +
-  labs(
-    x = "Time after target onset (smoothed to 50 ms bins)",
-    y = "Child-x-Study-conditioned minus study means")
-```
-
-<img src="12-aim1-notebook_files/figure-html/cubic-model-fits-ranefs-2.png" width="100%" />
-
-Look for weak spots in the time series.
 
 
-```r
-d_corr <- d_m %>% 
-  group_by(Time, Study) %>% 
-  summarise(r = cor(Prop, cubic_fit)) 
-
-ggplot(d_corr) + 
-  aes(x = Time, y = r, color = Study) + 
-  geom_point(shape = 1, size = 3) + 
-  ylim(c(.8, 1)) + 
-  labs(
-    x = "Time after target onset (smoothed to 50 ms bins)",
-    y = "Correlation of fitted and observed") + 
-  theme_grey(base_size = 9) +
-  theme(
-    legend.position = c(0.025, 0.05), 
-    legend.justification = c(0, 0)) 
-```
-
-<img src="12-aim1-notebook_files/figure-html/cubic-model-raw-fit-corr-1.png" width="50%" />
-
-Rank the participants by their growth curve parameters---that is, the growth
-curve features when conditioned on child ID.
 
 
-```r
-xstudy_effects <- m %>% 
-  ranef() %>% 
-  getElement("ResearchID") %>% 
-  tibble::rownames_to_column("ResearchID") %>% 
-  as_tibble() %>% 
-  select(ResearchID, intercept = `(Intercept)`, slope = ot1)
 
-top_20 <- top_n(xstudy_effects, 20, slope)
-bot_20 <- top_n(xstudy_effects, 20, -slope)
-```
+We hypothesized that individual differences in word recognition at age 3 will be
+more discriminating and predictive future language outcomes than differences
+at age 4 or age 5. To test this hypothesis, we calculated the correlations
+of growth curve features with year 3 expressive vocabulary size and year 2
+receptive vocabulary. (The receptive test was not administered during year 3
+for logistical reasons). As with the concordance analysis, we computed each
+the correlations for each sample of the posterior distribution to obtain a
+distribution of correlations.
+
+Figure \@ref(fig:evt2-gca-cors) shows the correlations of the peak looking
+probability, average looking probability and linear time features with
+expressive vocabulary size at year 3, and Figure \@ref(fig:ppvt4-gca-cors) shows
+analagous correlations for the receptive vocabulary at year 2. For all cases,
+the strongest correlations were found between the growth curve features 
+at year 1.
+Growth curve peaks from year 1 correlated with year 3 vocabulary with _r_ =
+.519, 90% UI [.498--.54], but
+the concurrent peaks from year 3 showed a correlation
+of just _r_ = .311, [.293--.328],
+a difference between year 1 and year 3 of _r_<sub>TP1&minus;TP3</sub>\ =
+.209, [.18--.236].
+A similar pattern held for lexical processing efficiency values. Linear time
+features from year 1 correlated with year 3 vocabulary with *r* =
+.413, 90% UI [.389--.438],
+whereas the concurrent lexical processing values from year 3 only showed a
+correlation of *r* = .283,
+[.259--.306], a difference of *r*<sub>TP1−TP3</sub>\ =
+.13, [.097--.164].
+For the average looking probabilities, the correlation for year 1, _r_ =
+.391, [.389--.438],
+was probably only slightly greater than the correlation for year 2,
+_r_<sub>TP1&minus;TP2</sub>\ = .018,
+[&minus;.005--.042] but considerably greater than
+the concurrent correlation at year 3, _r_<sub>TP1&minus;TP3</sub> =
+.077, [.054--.099].
+
+(ref:evt2-gca-cors) Uncertainty intervals for the correlations of growth curve
+features at each time point with expressive vocabulary (EVT2 standard scores) at
+year 3. The bottom rows provide intervals for the pairwise differences in
+correlations between time points.
+
+![(\#fig:evt2-gca-cors)(ref:evt2-gca-cors)](12-aim1-notebook_files/figure-docx/evt2-gca-cors-1.png)
+
+Peak looking probabilities from year 1 were strongly correlated with year 2 
+receptive vocabulary, _r_\ = .625, 
+[.606--.643], and this correlation was much greater
+than the correlation observed for the year 2 growth curve peaks,
+*r*<sub>TP1−TP2</sub> = .258,
+[.258].
+The correlation of year 1 average looking probabilities, _r_
+\ = .454, [.437--.47],
+was greater than the year 2 correlation, _r_<sub>TP1&minus;TP2</sub> =
+.084, [.084], and
+the correlation for year 1 linear time features, 
+_r_\ = .514,
+[.492--.538], was likewise greater than the year 2
+correlation, _r_<sub>TP1&minus;TP2</sub> = .225,
+[.192--.257].
+
+(ref:ppvt4-gca-cors) Uncertainty intervals for the correlations of growth curve
+features at each time point with expressive vocabulary (PPVT4 standard scores)
+at year 2. The bottom row shows pairwise differences between the correlations at
+year 1 and year 2.
+
+![(\#fig:ppvt4-gca-cors)(ref:ppvt4-gca-cors)](12-aim1-notebook_files/figure-docx/ppvt4-gca-cors-1.png)
+
+**Summary**. Although individual differences in word recognition are stable over
+time, early differences are more significant than later ones. The strongest
+predictors of future vocabulary size were the growth curve features from age 3.
+That is, word recognition performance from age 3 was more strongly correlated
+with age 5 expressive vocabulary than word recognition performance at age 5. A
+similar pattern of results held for predicting receoptive vocabulary at age 4.
+
+### Relationships with other child-level predictors
+
+_TJM: This is where I would analyze the other test scores as we have discussed._
 
 
-```r
-ggplot(d_m %>% filter(Study == "TimePoint2")) + 
-  aes(x = Time, y = subj_fit) + 
-  geom_line(aes(group = ResearchID), alpha = .2) +
-  geom_line(aes(group = ResearchID), 
-            data = semi_join(d_m, top_20) %>% filter(Study == "TimePoint2"), 
-            size = .7, color = "#0074D9") + 
-  geom_line(aes(group = ResearchID), 
-            data = semi_join(d_m, bot_20) %>% filter(Study == "TimePoint2"), 
-            size = .7, color = "#FF4136") + 
-  theme_grey(base_size = 9) +
-  labs(y = "TP2 fits conditioned on Child effects", 
-       x = "Time after target onset (smoothed to 50 ms bins)",
-       caption = "Colors: Top 20 and bottom 20 children by linear time effect")
-#> Joining, by = "ResearchID"
-#> Joining, by = "ResearchID"
-```
-
-<img src="12-aim1-notebook_files/figure-html/cubic-model-fits-child-efs-ranks-1.png" width="50%" />
-
-Visualize the model fits for the top and bottom 20 children. This plot
-illustrates that the children with strongest and weakest linear time components
-overall stay clustered away from each other when looking study level
-predictions. That is, the top 20 in general perform bunch together in all three
-studies.
 
 
-```r
-ggplot(d_m) + 
-  aes(x = Time, y = cubic_fit) + 
-  geom_line(aes(group = ResearchID), alpha = .2) +
-  geom_line(aes(group = ResearchID), data = semi_join(d_m, top_20), 
-            size = .7, color = "#0074D9") + 
-  geom_line(aes(group = ResearchID), data = semi_join(d_m, bot_20), 
-            size = .7, color = "#FF4136") + 
-  facet_grid(. ~ Study) + 
-  theme_grey(base_size = 9) +
-  labs(y = "Proportion looks to target [model fits]", 
-       x = "Time after target onset (smoothed to 50 ms bins)",
-       caption = "Colors: Top 20 and bottom 20 children by linear time effect")
-#> Joining, by = "ResearchID"
-#> Joining, by = "ResearchID"
-```
-
-<img src="12-aim1-notebook_files/figure-html/ranks-1.png" width="100%" />
-
-To confirm that this differences are not just an artifact of modeling, visualize
-the ranks on the observed data.
 
 
-```r
-ggplot(d_m) + 
-  aes(x = Time, y = Prop) + 
-  geom_line(aes(group = ResearchID), alpha = .2) +
-  geom_line(aes(group = ResearchID), data = semi_join(d_m, top_20), 
-            size = .7, color = "#0074D9") + 
-  geom_line(aes(group = ResearchID), data = semi_join(d_m, bot_20), 
-            size = .7, color = "#FF4136") + 
-  facet_grid(. ~ Study) + 
-  labs(y = "Proportion looks to target", 
-       x = "Time after target onset (smoothed to 50 ms bins)",
-       caption = "Colors: Top 20 and bottom 20 children by linear time effect")
-#> Joining, by = "ResearchID"
-#> Joining, by = "ResearchID"
-```
 
-<img src="12-aim1-notebook_files/figure-html/ranks-on-raw-1.png" width="100%" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -637,20 +601,6 @@ prior_summary(b)
 
 
 
-For the hierarchical part of the model, I used RstanARM's `decov()` prior which
-simultaneously sets a prior of the variances and correlations of the model's
-random effect terms. For these terms, I used the default prior for the variance
-terms and used a weakly informative LKJ(2) prior on the random effect
-correlations. Under LKJ(1) supports all correlations in the range ±1, but under
-LKJ(2) extreme correlations are less plausible. In the figure below, we see that
-the LKJ(2) prior nudges some of the probability mass away from ±1 towards the
-center. The motivation for this kind of prior was *regularization*: We give the
-model a small amount of information to nudge it away from extreme, degenerate
-values.
-
-
-
-<img src="12-aim1-notebook_files/figure-html/unnamed-chunk-14-1.png" width="80%" /><img src="12-aim1-notebook_files/figure-html/unnamed-chunk-14-2.png" width="80%" />
 
 
 Let's try to understand our model by making some plots.
@@ -668,106 +618,13 @@ model's fixed effects estimate the means of the distribution. These terms
 estimate the variability around that mean. We did not have any a priori 
 hypotheses about the values of these scales, so do not discuss them any further.
 
-<img src="12-aim1-notebook_files/figure-html/posterior-sds-1.png" width="80%" />
+![](12-aim1-notebook_files/figure-docx/posterior-sds-1.png)<!-- -->
 
 Then the correlations.
 
-<img src="12-aim1-notebook_files/figure-html/posterior-cors-1.png" width="80%" />
+![](12-aim1-notebook_files/figure-docx/posterior-cors-1.png)<!-- -->
 
 
-
-
-### Check for stable individual differences
-
-
-
-We predicted that children would show stable individual differences such that
-children who are faster and more accurate at recognizing words at age 3 remain
-relatively faster and more accurate at age 5. To evaluate this hypothesis,
-we used Kendall's _W_ (the coefficient of correspondence or concordance). This
-nonparametric statistic measures the degree of agreement among _J_ judges who
-are rating _I_ items. For our purposes, the items are the 123
-children who provided reliable eyetracking for all three years of the study.
-(That is, we excluded children who only had reliable eyetracking data for one or
-two years.) The judges are the sets of growth curve parameters from each year of 
-study. For example, the intercept term provides three sets of ratings: The 
-participants' intercept terms from year 1 are one set of ratings and the 
-terms from years 2 and 3 provide two more sets of ratings. These three ratings
-are the "judges" used to compute the intercept's _W_. Thus, we compute four sets
-of _W_ coefficients, one for each set of growth curve features: Intercept,
-Time^1^, Time^2^, and Time^3^.
-
-(_Maybe: Table X illustrates some sample ratings of these participants._)
-
-
-Participant ID   Growth curve feature               Year 1              Year 2       Year 3
----------------  ---------------------  ------------------  ------------------  -----------
-640L             intercept                      0.09 (006)          1.78 (001)   1.53 (001)
-040L             intercept                      0.02 (009)          0.31 (017)   1.18 (002)
-080L             intercept               &minus;0.02 (013)          0.77 (005)   1.09 (003)
-037L             intercept               &minus;0.33 (052)   &minus;0.03 (060)   0.95 (004)
-043L             intercept                      0.22 (002)          0.87 (003)   0.94 (005)
-050L             intercept               &minus;0.39 (063)          0.45 (008)   0.92 (006)
-014L             intercept               &minus;0.06 (015)          0.05 (047)   0.92 (007)
-090L             intercept               &minus;0.10 (019)   &minus;0.20 (088)   0.90 (008)
-106L             intercept               &minus;0.06 (016)          0.88 (002)   0.86 (009)
-674L             intercept               &minus;0.03 (014)          0.21 (024)   0.79 (010)
-
-Because we used a Bayesian model, we have a distribution of ratings and thus a
-distribution of concordance statistics. Each sample of the posterior
-distribution fits a growth curve for each child in each study, so each sample
-provides a set of ratings for concordance coefficients. The distribution of
-_W_'s lets us quantify our uncertainty because we can compute _W_'s for each of 
-the 4000 samples from the posterior distribution.
-
-One final matter is how do we assess whether a concordance statistic is 
-meaningful. To tackle this question, we also included a "null rater", a fake 
-parameter that assigned each child in each year a random number. We can use the 
-distribution of _W_'s generated by randomly rating children as a benchmark for 
-assessing whether the other concordance statistics differ meaningfully from 
-chance.
-
-We used the `kendall()` function in the `irr` package (vers.
-0.84, CITATION) to compute concordance statistics.
-
-(ref:kendall-stats) Uncertainty intervals for the Kendall's coefficient of
-concordance. Random ratings provide a baseline of null _W_ statistics. The
-intercept and linear time features are decisively non-null, indicating a
-significant degree of correspondence in children's relative word recognition
-reliability and efficiency over three years of study.
-
-<div class="figure">
-<img src="12-aim1-notebook_files/figure-html/kendall-stats-1.png" alt="(ref:kendall-stats)" width="80%" />
-<p class="caption">(\#fig:kendall-stats)(ref:kendall-stats)</p>
-</div>
-
-
-Figure \@ref(fig:kendall-stats) depicts uncertainty intervals for the Kendall
-_W_'s for these growth curve features. The 90% uncertainty interval of _W_
-statistics from random ratings [0.277--0.391] subsumes the
-intervals for the Time^2^ effect [0.295--0.351] and the Time^3^ effect
-[0.276--0.348], indicating that these values do not differentiate
-children in a longitudinally stable way. That is, the Time^2^ and Time^3^
-features differentiate children across studies as well as random numbers.
-Earlier, we stated that only the intercept and linear terms have psychologically
-meaningful interpretations and that the higher-order terms of these models serve
-to capture the shape of the growth curve data. These statistics support that
-assertion.
-
-Concordance is strongest for the intercept term, _W_\ = 0.585
-[0.573--0.596], followed by the linear time term, _W_\ =
-0.501 [0.483--0.518]. Because these values are from the
-statistics for random ratings, we conclude that there is a credible degree of
-correspondence across studies when we rank children using their average accuracy
-(the intercept) or their growth curve slope (linear time).
-
-### Summary of this section 
-
-Growth curve features reflect individual differences in word recognition
-efficiency and accuracy. By using Kendall's _W_ to measure the degree of
-concordance among growth curve features over time, we can measure whether
-individual differences in lexical processing are stable over time. We found 
-that the intercept and linear time terms were stable over time.
 
 
 
@@ -798,10 +655,7 @@ of the observed data from the model, and the thick lines are the observed data.
 Because the thick line is surrounded by light lines, we visually infer that the
 the model faithfully approximates the observed data.
 
-<div class="figure">
-<img src="12-aim1-notebook_files/figure-html/post-pred-1.png" alt="(ref:post-pred)" width="80%" />
-<p class="caption">(\#fig:post-pred)(ref:post-pred)</p>
-</div>
+![(\#fig:post-pred)(ref:post-pred)](12-aim1-notebook_files/figure-docx/post-pred-1.png)
 
 
 We can ask the model make even more specific posterior predictions. Below we
@@ -831,11 +685,11 @@ ggplot(ppred) +
   guides(color = guide_legend(title = NULL, override.aes = list(alpha = 1))) +
   labs(
     title = "Observed means and 100 simulations of new data",
-    x = "Time after target onset",
+    x = "Time after target onset [ms]",
     y = "Proportion looks to target") 
 ```
 
-<img src="12-aim1-notebook_files/figure-html/posterior-lines-1.png" width="100%" />
+![](12-aim1-notebook_files/figure-docx/posterior-lines-1.png)<!-- -->
 
 Or we can plot the linear predictions. These are posterior predictions of the
 log-odds of looking to target before adding binomial noise.
@@ -859,83 +713,11 @@ ggplot(lpred) +
   guides(color = guide_legend(title = NULL, override.aes = list(alpha = 1))) +
   labs(
     title = "Observed data and 100 posterior predictions",
-    x = "Time after target onset",
+    x = "Time after target onset [ms]",
     y = "Posterior log-odds")
 ```
 
-<img src="12-aim1-notebook_files/figure-html/posterior-mean-lines-1.png" width="100%" />
-
-
-### Simulating data from new participants
-
-This mixed effects model assumes that the each child's growth curve is drawn
-from a distribution of related growth curves, and it tries to infer the
-parameters of that distribution of growth curves (like the scale of individual
-differences in the intercept term or the correlation among growth curve
-features). A natural next step is to ask the model to simulate new samples from
-that distribution of growth curves: That is, predict new data for a
-hypothetical, unobserved child drawn from the same distribution as the `N
-CHILDREN` observed children.This procedure lets us explore the range of
-variability in performance at each age.
-
-Figure \@ref(fig:new-participants) shows the posterior predictions for 1,000
-simulated participants, which demonstrates how the model expects new
-participants to improve longitudinally but also exhibit stable individual
-differences over time. Figure \@ref(fig:new-participants-intervals) shows
-uncertainty intervals for these simulations. The model has learned to predict
-less accurate and more variable performance at age 3 with improving accuracy and
-narrowing variability at age 4 and age 5.
-
-
-(ref:new-participants) Posterior predictions for new _unobserved_ participants.
-Each line represents the predicted performance for a new participant. The three
-dark lines highlight predictions from one single simulated participant. The
-simulated participant shows both longitudinal improvement in word recognition
-and similar relative performance compared to other simulations each year,
-indicating that the model would predict new children to improve year over year
-and show stable individual differences over time.
-
-<div class="figure">
-<img src="12-aim1-notebook_files/figure-html/new-participants-1.png" alt="(ref:new-participants)" width="80%" />
-<p class="caption">(\#fig:new-participants)(ref:new-participants)</p>
-</div>
-
-(ref:new-participants-intervals) Uncertainty intervals for the simulated
-participants. Variability is widest at age 3 and narrowest at age 5,
-consistent with the prediction that children become less variable as they 
-grow older.
-
-<div class="figure">
-<img src="12-aim1-notebook_files/figure-html/new-participants-intervals-1.png" alt="(ref:new-participants-intervals)" width="80%" />
-<p class="caption">(\#fig:new-participants-intervals)(ref:new-participants-intervals)</p>
-</div>
-
-
-One of the predictions was that children would become less variable as they
-grew older and converge on a mature level of performance. We can tackle
-this question by inspecting the ranges of predictions for the simulated
-participants. The claim that children become less variable would imply that the
-range of predictions should be narrower age 5 than for age 4 than age 3. Figure
-\@ref(fig:new-ranges) depicts the range of the predictions, both in terms of the
-90 percentile range (i.e., the range of the middle 90% of the data) and in terms
-of the 50 percentile (interquartile) range. The ranges of performance decrease
-from age 3 to age 4 to age 5, consistent with the hypothesized reduction in
-variability.
-
-(ref:new-ranges) Ranges of predictions for simulated
-participants over the course of a trial. The ranges are most similar during the
-first half of the trial when participants are at chance performance, and the
-ranges are most different at the end of the trial as children reliably fixate on
-the target image. The ranges of performance decreases with each year of the
-study as children show less variability.
-
-<div class="figure">
-<img src="12-aim1-notebook_files/figure-html/new-ranges-1.png" alt="(ref:new-ranges)" width="80%" />
-<p class="caption">(\#fig:new-ranges)(ref:new-ranges)</p>
-</div>
-
-
-### Predicting the future
+![](12-aim1-notebook_files/figure-docx/posterior-mean-lines-1.png)<!-- -->
 
 
 
@@ -943,64 +725,64 @@ study as children show less variability.
 
 
 
-We predicted that individual differences in word recognition at age 3 will be
-more discriminating and predictive future language outcomes than differences
-at age 4 or age 5. To test this hypothesis, we calculated the correlations
-of growth curve features with year 3 expressive vocabulary size and year 2
-receptive vocabulary. (The receptive test was not administered during year 3
-for logistical reasons). As with the concordance statistics, we computed each
-of the statistics for each sample of the posterior distribution so we obtained a
-distribution of correlations.
+
+### Formal model specification
+
+_TJM: Ignore this section for now. It might go to an appendix. Basically, I
+think I need to briefly summarize and justify the priors used in the analysis._
+
+We used moderately informative priors for the main regression effects.
+
+* b ~ Normal(mean = 0, sd = 1)
+
+When we computed the orthogonal polynomial features for Time, they were rescaled
+so that the linear feature ranged from −.5 to .5. Under this scaling a unit
+change in Time^1^ was equal to change from the start to the end of the analysis
+window. The polynomial features for the Time had the following ranges:
+
+
+```r
+d_m %>% 
+  distinct(ot1, ot2, ot3) %>% 
+  tidyr::gather("Feature", "Value") %>% 
+  group_by(Feature) %>% 
+  summarise(Min = min(Value), Max = max(Value), Range = Max - Min) %>% 
+  mutate_if(is.numeric, round, 2) %>% 
+  mutate(Feature = stringr::str_replace(Feature, "ot(\\d)", "Time^\\1^")) %>% 
+  knitr::kable()
+```
 
 
 
+Feature      Min    Max   Range
+--------  ------  -----  ------
+Time^1^    -0.50   0.50    1.00
+Time^2^    -0.33   0.60    0.93
+Time^3^    -0.63   0.63    1.26
 
-Figure \@ref(fig:evt2-gca-cors) shows the correlations of the intercept and
-linear time features with expressive vocabulary size at year 3, and Figure
-\@ref(fig:ppvt4-gca-cors) shows analagous correlations for the receptive
-vocabulary at year 2. For both cases, the strongest correlations were
-found between the growth curve features at year 1. Lexical processing
-efficiency at year 1 correlated with year 3 vocabulary with _r_ =
-.413, 90% UI [0.389--0.438], whereas
-the concurrent lexical processing feature at year 3 only showed a correlation
-of _r_ = .283, [0.259--0.306],
-a difference between year 1 and year 3 of _r_<sub>TP1&minus;TP3</sub>\ =
-.13, [0.097--0.164].
-For the intercept feature, the correlation for year 1, _r_ =
-.391, [0.389--0.438],
-was probably only slightly greater than the correlation for year 2,
-_r_<sub>TP1&minus;TP2</sub>\ = .018,
-[-0.005--0.042] but much considerably greater than
-the concurrent correlation at year 3, _r_<sub>TP1&minus;TP3</sub> =
-.077, [0.054--0.099].
-For year 2 receptive vocabulary, the correlation of year 1 intercept, _r_
-\ = .454, [0.437--0.47],
-was greater than the year 2 correlation, _r_<sub>TP1&minus;TP2</sub> =
-.084, [.084], and
-the correlation for year 1 linear time, _r_\ = .514,
-[0.492--0.538], was likewise greater than the year 2
-correlation, _r_<sub>TP1&minus;TP2</sub> = .225,
-[0.192--0.257].
+Under the Normal(0, 1) prior, before seeing any data, we expect 95% of plausible
+effects to fall in the range ±1.96, which is an adequate range for these
+growth curve models. For example, consider just the effect of Time^1^. If a
+listener starts at chance performance, 25% or -1.1
+logits, and increases to, say, 65% or 0.62, the effect
+of a unit change in Time^1^ would be a change of
+1.72 logits. This magnitude of effect is
+accommodated by our Normal(0, 1) prior. 
 
-(ref:evt2-gca-cors) Uncertainty intervals for the correlations of growth curve
-features at each time point with expressive vocabulary (EVT2 standard scores) at
-year 3. The bottom rows provide intervals for the pairwise differences in
-correlations between time points.
+_Here I would have to also describe the random effects structure.
 
-<div class="figure">
-<img src="12-aim1-notebook_files/figure-html/evt2-gca-cors-1.png" alt="(ref:evt2-gca-cors)" width="80%" />
-<p class="caption">(\#fig:evt2-gca-cors)(ref:evt2-gca-cors)</p>
-</div>
 
-(ref:ppvt4-gca-cors) Uncertainty intervals for the correlations of growth curve
-features at each time point with expressive vocabulary (PPVT4 standard scores)
-at year 2. The bottom row shows pairwise differences between the correlations at
-year 1 and year 2.
-
-<div class="figure">
-<img src="12-aim1-notebook_files/figure-html/ppvt4-gca-cors-1.png" alt="(ref:ppvt4-gca-cors)" width="80%" />
-<p class="caption">(\#fig:ppvt4-gca-cors)(ref:ppvt4-gca-cors)</p>
-</div>
+For the hierarchical part of the model, I used RstanARM's `decov()` prior which
+simultaneously sets a prior of the variances and correlations of the model's
+random effect terms. For these terms, I used the default prior for the variance
+terms and used a weakly informative LKJ(2) prior on the random effect
+correlations. Under LKJ(1) supports all correlations in the range ±1, but under
+LKJ(2) extreme correlations are less plausible. In the figure below, we see that
+the LKJ(2) prior nudges some of the probability mass away from ±1 towards the
+center. The motivation for this kind of prior was *regularization*: We give the
+model a small amount of information to nudge it away from extreme, degenerate
+values.
 
 
 
+![](12-aim1-notebook_files/figure-docx/unnamed-chunk-11-1.png)<!-- -->![](12-aim1-notebook_files/figure-docx/unnamed-chunk-11-2.png)<!-- -->
