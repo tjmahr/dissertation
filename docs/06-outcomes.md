@@ -43,7 +43,10 @@ with clean individual differences.
 (ref:sample-data-plot-cap) Data for two children on the four-image task over 
 the three years of the study.
 
-![(\#fig:sample-data-plot)(ref:sample-data-plot-cap)](./misc/sample-data.png)
+<div class="figure">
+<img src="./misc/sample-data.png" alt="(ref:sample-data-plot-cap)" width="100%" />
+<p class="caption">(\#fig:sample-data-plot)(ref:sample-data-plot-cap)</p>
+</div>
 
 The participant on the left showed substantial gains in processing
 ability from year to year, whereas the child on the right showed

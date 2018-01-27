@@ -15,7 +15,7 @@ and blocks of trials with too few trials. Read in that data.
 
 Plot growth curves to each AOI.
 
-![](15-aim1-notebook_files/figure-docx/by-aoi-prop-1.png)<!-- -->
+<img src="15-aim1-notebook_files/figure-html/by-aoi-prop-1.png" width="100%" />
 
 The looks to target increase year over year which decreases the remaining
 proportion of looks for the other three images each year. To study the relative
@@ -27,7 +27,7 @@ to each AOI versus the unrelated image.
 #> Warning: Removed 10559 rows containing non-finite values (stat_smooth).
 ```
 
-![](15-aim1-notebook_files/figure-docx/by-aoi-logit-1.png)<!-- -->
+<img src="15-aim1-notebook_files/figure-html/by-aoi-logit-1.png" width="100%" />
 
 Each curve is the log odds of looking to the target, phonological foil, and
 semantic foil versus the unrelated word. Positive values mean more looks to an
@@ -151,13 +151,13 @@ We visually confirm that the strong versus weak foils behave differently.
 #> Warning: Removed 48304 rows containing non-finite values (stat_smooth).
 ```
 
-![](15-aim1-notebook_files/figure-docx/by-aoi-logit-foils-1.png)<!-- -->
+<img src="15-aim1-notebook_files/figure-html/by-aoi-logit-foils-1.png" width="100%" />
 
 ```
 #> Warning: Removed 43071 rows containing non-finite values (stat_smooth).
 ```
 
-![](15-aim1-notebook_files/figure-docx/by-aoi-logit-foils-2.png)<!-- -->
+<img src="15-aim1-notebook_files/figure-html/by-aoi-logit-foils-2.png" width="100%" />
 
 What's going on here:
 
@@ -183,7 +183,7 @@ target versus looks to each foil.
 #> Warning: Removed 37498 rows containing non-finite values (stat_smooth).
 ```
 
-![](15-aim1-notebook_files/figure-docx/by-aoi-logit-target-phon-1.png)<!-- -->
+<img src="15-aim1-notebook_files/figure-html/by-aoi-logit-target-phon-1.png" width="100%" />
 
 Curves in both panels attain the same height, so phonological and unrelated foils 
 affect processing equally later in the trial. The strong phonological foils 
@@ -195,7 +195,7 @@ reflecting early looks to the phonological foils.
 #> Warning: Removed 29775 rows containing non-finite values (stat_smooth).
 ```
 
-![](15-aim1-notebook_files/figure-docx/by-aoi-logit-target-semi-1.png)<!-- -->
+<img src="15-aim1-notebook_files/figure-html/by-aoi-logit-target-semi-1.png" width="100%" />
 
 Curves in the two panels do not attain the same height, so the semantic foil
 reduces odds of fixating to the target later on in a trial. There appears to be
@@ -223,7 +223,7 @@ smooth the data. We modeled the looks from 250 to
 time, and created orthogonal polynomials to use as time features for the model
 
 
-![](15-aim1-notebook_files/figure-docx/unnamed-chunk-5-1.png)<!-- -->
+<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-5-1.png" width="80" />
 
 
 ```r

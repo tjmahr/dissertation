@@ -105,7 +105,7 @@ recognition performance.
 
 _TODO: Figure number and caption_
 
-![](12-aim1-notebook_files/figure-docx/curve-features-1.png)<!-- -->
+<img src="12-aim1-notebook_files/figure-html/curve-features-1.png" width="80%" />
 
 
 
@@ -125,7 +125,7 @@ As a mixed-effects model, the model estimated a population-average growth curve
 growth curves for each study. Clearly, on average, the growth curves become
 steeper and achieve higher looking probabilities with each year of the study.
 
-![](12-aim1-notebook_files/figure-docx/average-growth-curves-1.png)<!-- -->
+<img src="12-aim1-notebook_files/figure-html/average-growth-curves-1.png" width="50%" />
 
 We now consider how the curvature of the average growth curves change each year.
 Figure \@ref(fig:effects2) depicts uncertainty intervals with the model's
@@ -141,13 +141,19 @@ visible in figure \@ref(fig:pairwise-effects).
 growth curve features. The intercept and peak features were converted from
 log-odds to proportions to ease interpretation.
 
-![(\#fig:effects2)(ref:effects2)](12-aim1-notebook_files/figure-docx/effects2-1.png)
+<div class="figure">
+<img src="12-aim1-notebook_files/figure-html/effects2-1.png" alt="(ref:effects2)" width="80%" />
+<p class="caption">(\#fig:effects2)(ref:effects2)</p>
+</div>
 
 (ref:pairwise-effects) Uncertainty intervals for the differences between study
 timepoints. Again, the intercept and peak features were converted to
 proportions.
 
-![(\#fig:pairwise-effects)(ref:pairwise-effects)](12-aim1-notebook_files/figure-docx/pairwise-effects-1.png)![(\#fig:pairwise-effects)(ref:pairwise-effects)](12-aim1-notebook_files/figure-docx/pairwise-effects-2.png)
+<div class="figure">
+<img src="12-aim1-notebook_files/figure-html/pairwise-effects-1.png" alt="(ref:pairwise-effects)" width="50%" /><img src="12-aim1-notebook_files/figure-html/pairwise-effects-2.png" alt="(ref:pairwise-effects)" width="50%" />
+<p class="caption">(\#fig:pairwise-effects)(ref:pairwise-effects)</p>
+</div>
 
 
 
@@ -207,7 +213,10 @@ children to improve year over year and show stable individual differences over
 time.
 
 
-![(\#fig:new-participants)(ref:new-participants)](12-aim1-notebook_files/figure-docx/new-participants-1.png)
+<div class="figure">
+<img src="12-aim1-notebook_files/figure-html/new-participants-1.png" alt="(ref:new-participants)" width="80%" />
+<p class="caption">(\#fig:new-participants)(ref:new-participants)</p>
+</div>
 
 
 
@@ -216,7 +225,10 @@ participants. Variability is widest at age 3 and narrowest at age 5,
 consistent with the prediction that children become less variable as they 
 grow older.
 
-![(\#fig:new-participants-intervals)(ref:new-participants-intervals)](12-aim1-notebook_files/figure-docx/new-participants-intervals-1.png)
+<div class="figure">
+<img src="12-aim1-notebook_files/figure-html/new-participants-intervals-1.png" alt="(ref:new-participants-intervals)" width="80%" />
+<p class="caption">(\#fig:new-participants-intervals)(ref:new-participants-intervals)</p>
+</div>
 
 We hypothesized that children would become less variable as they
 grew older and converged on a mature level of performance. We can address
@@ -236,7 +248,10 @@ ranges are most different at the end of the trial as children reliably fixate on
 the target image. The ranges of performance decreases with each year of the
 study as children show less variability.
 
-![(\#fig:new-ranges)(ref:new-ranges)](12-aim1-notebook_files/figure-docx/new-ranges-1.png)
+<div class="figure">
+<img src="12-aim1-notebook_files/figure-html/new-ranges-1.png" alt="(ref:new-ranges)" width="80%" />
+<p class="caption">(\#fig:new-ranges)(ref:new-ranges)</p>
+</div>
 
 The developmental pattern of increasing reliability and decreasing variability was also observed for the growth curve peaks. For the synthetic participants, 
 the model predicted that individual peak probabilities will increase each
@@ -300,7 +315,10 @@ intercept and linear time features are decisively non-null, indicating a
 significant degree of correspondence in children's relative word recognition
 reliability and efficiency over three years of study.
 
-![(\#fig:kendall-stats)(ref:kendall-stats)](12-aim1-notebook_files/figure-docx/kendall-stats-1.png)
+<div class="figure">
+<img src="12-aim1-notebook_files/figure-html/kendall-stats-1.png" alt="(ref:kendall-stats)" width="80%" />
+<p class="caption">(\#fig:kendall-stats)(ref:kendall-stats)</p>
+</div>
 
 We used the `kendall()` function in the `irr` package (vers.
 0.84, CITATION) to compute concordance statistics.
@@ -389,7 +407,10 @@ features at each time point with expressive vocabulary (EVT2 standard scores) at
 year 3. The bottom rows provide intervals for the pairwise differences in
 correlations between time points.
 
-![(\#fig:evt2-gca-cors)(ref:evt2-gca-cors)](12-aim1-notebook_files/figure-docx/evt2-gca-cors-1.png)
+<div class="figure">
+<img src="12-aim1-notebook_files/figure-html/evt2-gca-cors-1.png" alt="(ref:evt2-gca-cors)" width="80%" />
+<p class="caption">(\#fig:evt2-gca-cors)(ref:evt2-gca-cors)</p>
+</div>
 
 Peak looking probabilities from year 1 were strongly correlated with year 2 
 receptive vocabulary, _r_\ = .625, 
@@ -412,7 +433,10 @@ features at each time point with expressive vocabulary (PPVT4 standard scores)
 at year 2. The bottom row shows pairwise differences between the correlations at
 year 1 and year 2.
 
-![(\#fig:ppvt4-gca-cors)(ref:ppvt4-gca-cors)](12-aim1-notebook_files/figure-docx/ppvt4-gca-cors-1.png)
+<div class="figure">
+<img src="12-aim1-notebook_files/figure-html/ppvt4-gca-cors-1.png" alt="(ref:ppvt4-gca-cors)" width="80%" />
+<p class="caption">(\#fig:ppvt4-gca-cors)(ref:ppvt4-gca-cors)</p>
+</div>
 
 **Summary**. Although individual differences in word recognition are stable over
 time, early differences are more significant than later ones. The strongest
@@ -618,11 +642,11 @@ model's fixed effects estimate the means of the distribution. These terms
 estimate the variability around that mean. We did not have any a priori 
 hypotheses about the values of these scales, so do not discuss them any further.
 
-![](12-aim1-notebook_files/figure-docx/posterior-sds-1.png)<!-- -->
+<img src="12-aim1-notebook_files/figure-html/posterior-sds-1.png" width="80%" />
 
 Then the correlations.
 
-![](12-aim1-notebook_files/figure-docx/posterior-cors-1.png)<!-- -->
+<img src="12-aim1-notebook_files/figure-html/posterior-cors-1.png" width="80%" />
 
 
 
@@ -655,7 +679,10 @@ of the observed data from the model, and the thick lines are the observed data.
 Because the thick line is surrounded by light lines, we visually infer that the
 the model faithfully approximates the observed data.
 
-![(\#fig:post-pred)(ref:post-pred)](12-aim1-notebook_files/figure-docx/post-pred-1.png)
+<div class="figure">
+<img src="12-aim1-notebook_files/figure-html/post-pred-1.png" alt="(ref:post-pred)" width="80%" />
+<p class="caption">(\#fig:post-pred)(ref:post-pred)</p>
+</div>
 
 
 We can ask the model make even more specific posterior predictions. Below we
@@ -689,7 +716,7 @@ ggplot(ppred) +
     y = "Proportion looks to target") 
 ```
 
-![](12-aim1-notebook_files/figure-docx/posterior-lines-1.png)<!-- -->
+<img src="12-aim1-notebook_files/figure-html/posterior-lines-1.png" width="100%" />
 
 Or we can plot the linear predictions. These are posterior predictions of the
 log-odds of looking to target before adding binomial noise.
@@ -717,7 +744,7 @@ ggplot(lpred) +
     y = "Posterior log-odds")
 ```
 
-![](12-aim1-notebook_files/figure-docx/posterior-mean-lines-1.png)<!-- -->
+<img src="12-aim1-notebook_files/figure-html/posterior-mean-lines-1.png" width="100%" />
 
 
 
@@ -785,4 +812,4 @@ values.
 
 
 
-![](12-aim1-notebook_files/figure-docx/unnamed-chunk-11-1.png)<!-- -->![](12-aim1-notebook_files/figure-docx/unnamed-chunk-11-2.png)<!-- -->
+<img src="12-aim1-notebook_files/figure-html/unnamed-chunk-11-1.png" width="80%" /><img src="12-aim1-notebook_files/figure-html/unnamed-chunk-11-2.png" width="80%" />

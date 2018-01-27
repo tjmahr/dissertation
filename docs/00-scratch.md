@@ -134,20 +134,25 @@ knitr::include_graphics(
 
 
 
-The caption for Figure \@ref(fig:happy-cat-docx) is defined as a _text reference_
+The caption for Figure \@ref(fig:happy-cat) is defined as a _text reference_
 below and passed to the `fig.cap` chunk option.
 
 (ref:happy-cat-cap) This is a happy cat.
 
 
 
-
-
 ```r
-knitr::include_graphics("./misc/happy-cat-grooming-itself-vector-file.png")
+knitr::include_graphics(
+  rep("./misc/happy-cat-grooming-itself-vector-file.png", 2)
+)
 ```
 
-![(\#fig:happy-cat-docx)(ref:happy-cat-cap)](./misc/happy-cat-grooming-itself-vector-file.png)
+<div class="figure">
+<img src="./misc/happy-cat-grooming-itself-vector-file.png" alt="(ref:happy-cat-cap)" width="30%" /><img src="./misc/happy-cat-grooming-itself-vector-file.png" alt="(ref:happy-cat-cap)" width="30%" />
+<p class="caption">(\#fig:happy-cat)(ref:happy-cat-cap)</p>
+</div>
+
+
 
 
 
@@ -158,9 +163,9 @@ knitr::include_graphics("./misc/happy-cat-grooming-itself-vector-file.png")
 str(list(html = is_html_output(), latex = is_latex_output(),
          word = is_word_output(), width = options("width")[[1]]))
 #> List of 4
-#>  $ html : logi FALSE
+#>  $ html : logi TRUE
 #>  $ latex: logi FALSE
-#>  $ word : logi TRUE
+#>  $ word : logi FALSE
 #>  $ width: int 80
 
 devtools::session_info()
@@ -172,7 +177,7 @@ devtools::session_info()
 #>  language (EN)                        
 #>  collate  English_United States.1252  
 #>  tz       America/Chicago             
-#>  date     2018-01-26
+#>  date     2018-01-27
 #> Packages ----------------------------------------------------------------------
 #>  package   * version date       source        
 #>  backports   1.1.2   2017-12-13 CRAN (R 3.4.3)
@@ -206,10 +211,10 @@ devtools::session_info()
 
 last_four_commits <- git2r::commits(git2r::repository("."), n = 4)
 msgs <- lapply(last_four_commits, methods::show)
+#> [ad8c125] 2018-01-26: regenerate web version
 #> [6e3937f] 2018-01-26: move another specification part
 #> [17614ff] 2018-01-26: clean up synthetic participants section
 #> [07e7838] 2018-01-26: flesh out curve averages
-#> [cf6bd64] 2018-01-26: add peaks to correlations section
 ```
 
 

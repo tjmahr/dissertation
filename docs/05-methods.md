@@ -176,7 +176,10 @@ word (*swing*).
 the semantic foil *drum*, the phonological foil *bee*, and the unrelated
 *swing*.
 
-![(\#fig:sample-vw-screen)(ref:sample-vw-screen-cap)](./misc/rwl-screens/TimePoint1/actual/Block2_17_swing2_bell2_bee2_drum2_UpperRightImage_bell.png)
+<div class="figure">
+<img src="./misc/rwl-screens/TimePoint1/actual/Block2_17_swing2_bell2_bee2_drum2_UpperRightImage_bell.png" alt="(ref:sample-vw-screen-cap)" width="100%" />
+<p class="caption">(\#fig:sample-vw-screen)(ref:sample-vw-screen-cap)</p>
+</div>
 
 
 Specific Procedure: Aim 2 (Referent Selection and Mispronunciations)
@@ -202,7 +205,10 @@ mispronunciations.
 (ref:sample-mp-screen-cap) Example display for a trial in which *duck* 
 is mispronounced as “guck”.
 
-![(\#fig:sample-mp-screen)(ref:sample-mp-screen-cap)](./misc/mp-screens/TimePoint1/actual/Block1_03_MP_bull2_duck2_ImageR_guk.png)
+<div class="figure">
+<img src="./misc/mp-screens/TimePoint1/actual/Block1_03_MP_bull2_duck2_ImageR_guk.png" alt="(ref:sample-mp-screen-cap)" width="100%" />
+<p class="caption">(\#fig:sample-mp-screen)(ref:sample-mp-screen-cap)</p>
+</div>
 
 In a block of trials, there were 12 trials each from the nonword
 condition, correct production condition, and mispronunciation
