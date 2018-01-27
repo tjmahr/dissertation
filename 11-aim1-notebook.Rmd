@@ -236,20 +236,12 @@ n_lost_in_bad_version <- ids_by_version$`Early attention getter` %>%
 ```
 
 Table \@ref(tab:screening-counts) shows the numbers of participants and trials
-excluded at each time point due to unreliable data. There were more children in
+excluded at each timepoint due to unreliable data. There were more children in
 the second timepoint than the first timepoint due to a timing error in the
 initial version of this experiment, leading to the exclusion of
 `r n_lost_in_bad_version` participants from the first timepoint.
 
 ```{r screening-counts, echo = FALSE}
-screening_results <- list(Screened = clean_looks, Raw = looks) %>% 
-  bind_rows(.id = "Dataset") %>% 
-  distinct(Dataset, Study, ResearchID, TrialID) %>% 
-  group_by(Dataset, Study) %>% 
-  summarise(
-    `Num Children` = n_distinct(ResearchID),
-    `Num Trials` = n_distinct(TrialID))
-
 screening_results <- list(Screened = clean_looks, Raw = looks) %>% 
   bind_rows(.id = "Dataset") %>% 
   distinct(Dataset, Study, ResearchID, Basename, TrialID) %>% 
