@@ -223,6 +223,10 @@ clean_looks <- looks %>%
   anti_join(blocks_to_drop, by = c("Study", "Basename")) %>% 
   anti_join(leftover_bad_trials, by = c("Study", "Basename", "TrialNo")) %>% 
   anti_join(too_few_trials_per_condition, by = c("Study", "ResearchID"))
+
+data <- clean_looks %>% 
+  filter(between(Time, times_to_keep[1], times_to_keep[2])) %>% 
+  readr::write_csv("./data/aim2-screened.csv.gz") 
 ```
 
 ```{r bad-version-counts, message = FALSE}
@@ -272,6 +276,77 @@ knitr::kable(
   screening_results2,
   caption = "Eyetracking data before and after data screening.", 
   booktabs = TRUE)
+```
+
+
+
+```{r clean-aim2, out.width = "100%", fig.show = 'hold', fig.height = 3, fig.width = 6, message = FALSE, warning = FALSE, echo = FALSE}
+# Plot the data after partial data screening. We include the curves from the
+# earlier plots in gray.
+
+agg_data <- data %>% 
+  aggregate_looks(
+    resp_def, Study + ResearchID + Condition + Time ~ GazeByImageAOI)
+
+agg_data %>% 
+  mutate(Condition = factor(Condition, c("real", "MP", "nonsense"))) %>% 
+  ggplot() + 
+    aes(x = Time, y = Prop, color = Study) + 
+    geom_hline(size = 2, color = "white", yintercept = .5) +
+    stat_smooth(
+      aes(group = Study), 
+      data = raw_data %>% 
+        mutate(Condition = factor(Condition, c("real", "MP", "nonsense"))), 
+      color = "gray70", se = FALSE) +
+    stat_smooth(se = FALSE) +
+    facet_wrap("Condition") + 
+    labs(
+      x = "Time after noun onset [ms]",
+      y = "Mean prop. looks to familar",
+      caption = "GAM smooth. Screened data drawn over raw data (gray).") +
+    guides(colour = guide_legend(override.aes = list(fill = NA))) + 
+    theme(
+        legend.position = c(0.95, 0.95), 
+        legend.justification = c(1, 1))
+```
+
+## Prepare the dataset for modeling
+
+As in Aim 1, to prepare the data for modeling, we downsampled the data into
+`r opts_model$bin_length`-ms (`r opts_model$bin_width`-frame) bins. We modeled
+the looks from `r opts_model$start_time` to `r opts_model$end_time` ms. Lastly,
+we aggregated looks by child, study, condition and time, and created orthogonal
+polynomials to use as time features for the model.
+
+```{r, echo = FALSE, message = FALSE, warnings = FALSE}
+m_data <- data %>% 
+  select(Study, ResearchID, Condition, TrialID:GazeByImageAOI) %>% 
+  assign_bins(bin_width = opts_model$bin_width, Time, TrialID)
+
+# Compute time at center of each bin
+bin_times <- m_data %>% 
+  distinct(Time, .bin) %>% 
+  group_by(.bin) %>% 
+  mutate(BinTime = round(median(Time), -1)) %>% 
+  ungroup()
+
+# Attach bin times
+binned <- m_data %>% 
+  left_join(bin_times, by = c("Time", ".bin")) %>% 
+  ungroup() %>% 
+  select(-Time) %>% 
+  rename(Time = BinTime) 
+
+d <- binned %>% 
+  aggregate_looks(
+    resp_def, Study + ResearchID + Condition + Time ~ GazeByImageAOI)
+
+d_m <- d %>% 
+  filter(opts_model$start_time <= Time, Time <= opts_model$end_time) %>% 
+  polypoly::poly_add_columns(
+    Time, degree = 3, scale_width = 1, prefix = "ot")
+
+readr::write_csv(d_m, "./data/aim2-model-ready.csv.gz")
 ```
 
 

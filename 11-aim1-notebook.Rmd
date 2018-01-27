@@ -222,6 +222,10 @@ leftover_bad_trials <- missing_data_by_trial %>%
 clean_looks <- looks %>% 
   anti_join(blocks_to_drop, by = c("Study", "ResearchID", "Basename")) %>% 
   anti_join(leftover_bad_trials)
+
+data <- clean_looks %>% 
+  filter(between(Time, times_to_keep[1], times_to_keep[2])) %>% 
+  readr::write_csv("./data/aim1-screened.csv.gz") 
 ```
 
 ```{r bad-version-counts, message = FALSE}
@@ -305,19 +309,19 @@ looks by child, study and time, and created orthogonal polynomials to use as
 time features for the model.
 
 ```{r, echo = FALSE, message = FALSE, warnings = FALSE}
-data <- readr::read_csv("./data/aim1-screened.csv.gz") %>% 
+m_data <- data %>% 
   select(Study, ResearchID, TrialID:GazeByImageAOI) %>% 
   assign_bins(bin_width = opts_model$bin_width, Time, TrialID)
 
 # Compute time at center of each bin
-bin_times <- data %>% 
+bin_times <- m_data %>% 
   distinct(Time, .bin) %>% 
   group_by(.bin) %>% 
   mutate(BinTime = round(median(Time), -1)) %>% 
   ungroup()
 
 # Attach bin times
-binned <- data %>% 
+binned <- m_data %>% 
   left_join(bin_times, by = c("Time", ".bin")) %>% 
   ungroup() %>% 
   select(-Time) %>% 
@@ -336,6 +340,8 @@ d_m <- d %>%
   filter(opts_model$start_time <= Time, Time <= opts_model$end_time) %>% 
   polypoly::poly_add_columns(
     Time, degree = 3, scale_width = 1, prefix = "ot")
+
+readr::write_csv(d_m, "./data/aim1-model-ready.csv.gz")
 ```
 
 
@@ -370,10 +376,6 @@ d_m %>%
   knitr::kable()
 ```
 
-```{r, echo = FALSE}
-readr::write_csv(d_m, "./data/aim1-model-ready.csv.gz")
-```
-
 ```{r raw-aim1, out.width = "50%", fig.show = 'hold', fig.height = 3, fig.width = 3, eval = FALSE}
 # ## Raw data visualization
 # 
@@ -406,10 +408,6 @@ ggplot(raw_data) +
 # Plot the data after partial data screening. We include the curves from the
 # earlier plots in gray. The data-cleaning process slightly increases the average
 # accuracy during the plateau-ed portion of the growth curve.
-
-data <- clean_looks %>% 
-  filter(between(Time, times_to_keep[1], times_to_keep[2])) %>% 
-  readr::write_csv("./data/aim1-screened.csv.gz") 
 
 agg_data <- data %>% 
   aggregate_looks(resp_def, Study + ResearchID + Time ~ GazeByImageAOI)
