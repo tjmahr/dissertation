@@ -1,0 +1,90 @@
+Analysis of referent selection
+===========================================================================
+
+```{r include = FALSE}
+d_m <- readr::read_csv("./data/aim2-model-ready.csv.gz")
+knitr::read_chunk("./helpers.R")
+if (interactive()) source("./helpers.R")
+```
+
+
+## Nonwords versus real words
+
+```{r real-vs-nonword, out.width = "100%", fig.show = 'hold', fig.height = 3, fig.width = 6, message = FALSE, warning = FALSE, echo = FALSE}
+
+d_nonword <- d_m %>% 
+  filter(Condition != "MP") %>% 
+  mutate(
+    Distractor2 = ifelse(Condition == "nonsense", Target, Distractor),
+    Target2 = ifelse(Condition == "nonsense", Distractor, Target),
+    Prop2 = Target2 / (Target2 + Distractor2))
+
+code1 <- c(TimePoint1 = "Age 3", TimePoint2 = "Age 4", TimePoint3 = "Age 5")
+code2 <- c(nonsense = "Nonword", real = "Real word")
+
+d_nonword <- d_nonword %>% 
+  mutate(
+    `Child hears` = factor(code2[Condition], c("Real word", "Nonword")),
+    age = code1[Study])
+
+ggplot(d_nonword) + 
+  aes(x = Time, y = Prop2) + 
+  geom_hline(yintercept = .5, color = "white", size = 2) +
+  # stat_summary(color = "grey50") + 
+  stat_summary(aes(color =  `Child hears`)) + 
+  facet_wrap("age") + 
+  labs(
+    x = "Time after noun onset [ms]",
+    y = "Prop looks to familar image for real words
+and novel image for nonwords")
+  
+
+# m <- glmer(
+#   cbind(Target2, Distractor2) ~
+#     (ot1 + ot2 + ot3) * Condition +
+#     (ot1 + ot2 + ot3 | ResearchID/Condition),
+#   family = binomial,
+#   data = d_nonword %>% filter(Study == "TimePoint3"))
+
+# broom::augment(m, d_m3) %>% 
+#   tjmisc::sample_n_of(9, ResearchID) %>% 
+#   ggplot() + 
+#     aes(x = Time, color = Condition) + 
+#   geom_point(aes(y = Prop)) +
+#   geom_line(aes(y = plogis(.fitted))) +
+#   facet_wrap("ResearchID")
+```
+
+Let's cheat and offset the curves so they start at the same value. This can help
+us see how their heights compare.
+
+```{r}
+ggplot(d_nonword) + 
+  aes(x = Time, y = Prop2, color = Study) + 
+  geom_hline(yintercept = .5, color = "white", size = 2) +
+  # stat_summary(color = "grey50") + 
+  stat_summary(
+    aes(y = Prop2 - .07),
+    data = . %>% filter(Condition == "real", Study == "TimePoint1")) + 
+  stat_summary(
+    aes(y = Prop2 - .04),
+    data = . %>% filter(Condition == "real", Study == "TimePoint3")) + 
+  stat_summary(
+    aes(y = Prop2 + .01),
+    data = . %>% filter(Condition == "real", Study == "TimePoint2")) + 
+  stat_summary(
+    aes(y = Prop2 - .04),
+    data = . %>% filter(Condition == "nonsense", Study == "TimePoint1")) + 
+  stat_summary(
+    aes(y = Prop2 - .09),
+    data = . %>% filter(Condition == "nonsense", Study == "TimePoint2")) + 
+  stat_summary(
+    aes(y = Prop2 - .13),
+    data = . %>% filter(Condition == "nonsense", Study == "TimePoint3")) + 
+  facet_wrap("`Child hears`")  + 
+  labs(
+    y = "Proportion (shifted so first point = .5)"
+  )
+
+```
+
