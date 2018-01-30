@@ -1,12 +1,14 @@
 Analysis of referent selection
 ===========================================================================
 
-```{r include = FALSE}
+```{r, include = FALSE}
 d_m <- readr::read_csv("./data/aim2-model-ready.csv.gz")
 knitr::read_chunk("./helpers.R")
 if (interactive()) source("./helpers.R")
 ```
 
+```{r helpers, include = FALSE}
+```
 
 ## Nonwords versus real words
 
