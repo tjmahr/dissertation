@@ -132,10 +132,10 @@ dummy_data <- d_m %>%
     Primary = 0, 
     Others = 0)
 
-set.seed(11102017)
+set.seed(02062018)
 
 lpred <- dummy_data %>% 
-  tristan::augment_posterior_linpred(model = b, newdata = ., nsamples = 3)
+  tristan::augment_posterior_linpred(model = b, newdata = ., nsamples = 3) 
 
 lpred_lm <- lpred %>% 
   tidyr::nest(-.draw) %>% 
@@ -145,7 +145,9 @@ lpred_lm <- lpred %>%
     auc = purrr::map_dbl(coef, purrr::pluck, 1),
     slope = purrr::map_dbl(coef, purrr::pluck, 2)) %>% 
   select(-model, -coef) %>% 
-  tidyr::unnest(data)
+  tidyr::unnest(data) %>% 
+  # Sort using the AUC values
+  mutate(.draw = forcats::fct_reorder(as.factor(.draw), auc))
 
 
 p1 <- ggplot(lpred_lm) + 
