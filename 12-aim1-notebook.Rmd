@@ -509,6 +509,12 @@ of average looking and in terms of peak accuracy, each year.
 **Summary**. The average growth curve features increased year over year, so that
 children looked to the target more quickly and more reliably.
 
+  - This result is as expected.
+  - It's good that the task scaled with development so that there was room to
+    grow each year.
+  - The growth curve changes each year involved peak accuaracy and steepness of
+    the curve. They reach higher heights, and they hit year 1 peak earlier each
+    year.
 
 
 
@@ -682,6 +688,25 @@ showed increasing looking probability and decreasing variability with each year
 of the study. These simulations confirm the hypothesis that variability would be
 diminish as children converge on a mature level of performance on this task.
 
+
+  - Word recognition performance is a skill where variation is greatest at
+    younger ages.
+  - What mechanisms might come to bear on this? Does variability narrow
+    developmentally for vocabulary?
+  - Children different in their word-learning trajectories, so the early
+    differences in word recognition could be from younger children who are
+    relatively early/late in word-learning. The SDs of the EVT scores narrows a
+    small amount each year, even when we only consider the children who
+    participated at all three years.
+  - (It will be easier to fold this in to the mechanism discussion once we have
+    firmer results for the looks-to-foils analysis.)
+  - If differences in word recognition matter (and they do) and the differences
+    are greatest at younger ages, then they are most informative at younger
+    ages.
+  - Maybe a few words on why individual differences are worth studying?
+
+
+
 ### Are individual differences stable over time?
 
 _TJM: This section is in really good shape._
@@ -835,6 +860,8 @@ w_pts <- w_intervals %>%
 w_uis <- w_intervals %>% 
   split(.$parameter) %>% 
   get_uis()
+
+rm(ws, reduced_data, posterior_w)
 ```
 
 We used the `kendall()` function in the `irr` package (vers.
@@ -867,10 +894,12 @@ tested whether individual differences in lexical processing persisted over
 development. We found that the peak looking probability, average looking
 probability and linear time features were stable over time.
 
-```{r}
-rm(ws, reduced_data, posterior_w)
-```
-
+  - Although the range of variability decreases, individual differences do not
+    wash out.
+  - Lexical processing is a stable ability over the preschool years.
+  - Extrapolating outwards, the differences probably diminish to the point that
+    they are not meaningful. But traces of those early differences can reappear
+    years later on some test scores.
 
 ### Predicting future vocabulary size
 
@@ -893,6 +922,13 @@ if (!exists("fits")) {
 scores <- readr::read_csv("./data-raw/test_scores.csv") %>% 
   select(
     Study, ResearchID, Age, EVT_GSV, EVT_Standard, PPVT_GSV, PPVT_Standard)
+
+# scores %>%
+#   semi_join(
+#     scores %>% count(ResearchID) %>% filter(n == 3), 
+#     by = "ResearchID") %>% 
+#   group_by(Study) %>%
+#   summarise_at(vars(matches("Age"), matches("VT")), .funs = sd, na.rm = TRUE)
 
 wide_scores <- scores %>% 
   tidyr::gather("Test", "Value", -ResearchID, -Study) %>% 
@@ -1132,6 +1168,11 @@ predictors of future vocabulary size were the growth curve features from age 3.
 That is, word recognition performance from age 3 was more strongly correlated
 with age 5 expressive vocabulary than word recognition performance at age 5. A
 similar pattern of results held for predicting receptive vocabulary at age 4.
+
+- This finding is surprising because vocabulary scores from the same week as the
+  eyetracking data are less correlated than scores from two year earlier.
+- This establishes that the differences are greatest and most predictive at
+  younger ages.
 
 ### Relationships with other child-level predictors
 
