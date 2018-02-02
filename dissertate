@@ -230,7 +230,13 @@ wc_rmd_clean <- function() {
 
 #' delete current bookdown files
 clean_site <- function(...) {
-  rmarkdown::clean_site()
+  # Get list of files that would be removed so we can print them later.
+  results <- suppressMessages(bookdown::clean_book(clean = FALSE))
+
+  message("Removing files: ")
+  bookdown::clean_book(clean = TRUE)
+  message(paste0(paste0(" ", results), collapse = "\n"))
+
   if (file.exists("./dissertation.Rmd")) {
     message(" dissertation.Rmd")
     invisible(file.remove("./dissertation.Rmd"))
@@ -266,6 +272,7 @@ str_replace_ext <- function(x, ext, new_ext) {
 reset_site <- function(...) {
   clean_site()
   repo <- git2r::repository(".")
+  message("Resetting docs folder to last commit")
   git2r::checkout(repo, path = "docs/")
 }
 
