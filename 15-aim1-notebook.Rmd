@@ -49,12 +49,14 @@ ggplot(looks_by_aoi) +
   geom_hline(size = 2, color = "white", yintercept = .25) +
   stat_smooth() + 
   facet_grid( ~ AOI) + 
-    labs(x = "Time after target onset [ms]",
-       y = "Proportion looking to image",
-       caption = "GAM smooth on partially screened data") +
+  labs(
+    x = "Time after target onset [ms]",
+    y = "Proportion looking to image",
+    caption = "GAM smooth on partially screened data") +
   theme_grey(base_size = 9) +
-  theme(legend.position = c(0.95, 0.95), 
-        legend.justification = c(1, 1))
+  theme(
+    legend.position = c(0.95, 0.95), 
+    legend.justification = c(1, 1))
 ```
 
 The looks to target increase year over year which decreases the remaining
@@ -68,12 +70,14 @@ ggplot(looks_by_aoi %>% filter(AOI != "Unrelated")) +
   geom_hline(size = 2, color = "white", yintercept = 0) +
   stat_smooth() + 
   facet_grid( ~ AOI) + 
-    labs(x = "Time after target onset [ms]",
-       y = "Log odds looking to word vs. unrelated word",
-       caption = "GAM smooth on partially screened data") +
+  labs(
+    x = "Time after target onset [ms]",
+    y = "Log odds looking to word vs. unrelated word",
+    caption = "GAM smooth on partially screened data") +
   theme_grey(base_size = 9) +
-  theme(legend.position = c(0.95, 0.95), 
-        legend.justification = c(1, 1))
+  theme(
+    legend.position = c(0.95, 0.95), 
+    legend.justification = c(1, 1))
 ```
 
 Each curve is the log odds of looking to the target, phonological foil, and
@@ -106,10 +110,10 @@ trial_info <- bind_rows(
   readr::read_csv("data-raw/rwl_timepoint1_trials.csv.gz"),
   readr::read_csv("data-raw/rwl_timepoint2_trials.csv.gz"),
   readr::read_csv("data-raw/rwl_timepoint3_trials.csv.gz")) %>% 
-  select(TrialID, Target = WordTarget, 
-         PhonologicalFoil = WordPhonologicalFoil,
-         SemanticFoil = WordSemanticFoil, 
-         Unrelated = WordUnrelated)
+  select(
+    TrialID, Target = WordTarget, PhonologicalFoil = WordPhonologicalFoil,
+    SemanticFoil = WordSemanticFoil, 
+    Unrelated = WordUnrelated)
 
 good_phono <- c("bear", "bee", "bell", "dress", "drum", "flag", "fly", 
                 "heart", "horse", "pan", "pear", "pen", "vase")
@@ -180,41 +184,48 @@ phon_data <- bind_rows(strong_phon_looks, weak_phon_looks)
 semy_data <- bind_rows(weak_semy_looks, strong_semy_looks)
 
 looks_by_aoi2 <- phon_data %>% 
-  aggregate_looks(phon_defs, 
-                  Study + ResearchID + PhonFoil + Time ~ GazeByImageAOI) %>% 
+  aggregate_looks(
+    phon_defs, 
+    Study + ResearchID + PhonFoil + Time ~ GazeByImageAOI) %>% 
   rename(AOI = .response_def) %>% 
   select(AOI:Time, PhonFoil, Prop, Primary, PhonologicalFoil, Unrelated) %>% 
-  mutate(AOI = factor(AOI, c("Target", "PhonologicalFoil", 
-                             "SemanticFoil", "Unrelated")))
+  mutate(
+    AOI = factor(
+      AOI, c("Target", "PhonologicalFoil", "SemanticFoil", "Unrelated")))
 
 looks_by_aoi3 <- semy_data %>% 
-  aggregate_looks(semy_defs, 
-                  Study + ResearchID + SemyFoil + Time ~ GazeByImageAOI) %>% 
+  aggregate_looks(
+    semy_defs, Study + ResearchID + SemyFoil + Time ~ GazeByImageAOI) %>% 
   rename(AOI = .response_def) %>% 
   select(AOI:Time, SemyFoil, Prop, Primary, SemanticFoil, Unrelated) %>% 
-  mutate(AOI = factor(AOI, c("Target", "PhonologicalFoil", 
-                             "SemanticFoil", "Unrelated")))
+  mutate(
+    AOI = factor(
+      AOI, c("Target", "PhonologicalFoil", "SemanticFoil", "Unrelated")))
 
 ggplot(looks_by_aoi2 %>% filter(AOI != "Unrelated")) + 
-  aes(x = Time, y = log(Primary / Unrelated), 
-      color = Study, linetype = PhonFoil) + 
+  aes(
+    x = Time, y = log(Primary / Unrelated), 
+    color = Study, linetype = PhonFoil) + 
   geom_hline(size = 2, color = "white", yintercept = 0) +
   stat_smooth() + 
   facet_grid( ~ AOI) + 
-    labs(x = "Time after target onset [ms]",
-       y = "Log odds looking to word vs. unrelated word",
-       caption = "GAM smooth on partially screened data") +
+  labs(
+    x = "Time after target onset [ms]",
+    y = "Log odds looking to word vs. unrelated word",
+    caption = "GAM smooth on partially screened data") +
   theme_grey(base_size = 9) 
 
 ggplot(looks_by_aoi3 %>% filter(AOI != "Unrelated")) + 
-  aes(x = Time, y = log(Primary / Unrelated), 
-      color = Study, linetype = SemyFoil) + 
+  aes(
+    x = Time, y = log(Primary / Unrelated), 
+    color = Study, linetype = SemyFoil) + 
   geom_hline(size = 2, color = "white", yintercept = 0) +
   stat_smooth() + 
   facet_grid( ~ AOI) + 
-    labs(x = "Time after target onset [ms]",
-       y = "Log odds looking to word vs. unrelated word",
-       caption = "GAM smooth on partially screened data") +
+  labs(
+    x = "Time after target onset [ms]",
+    y = "Log odds looking to word vs. unrelated word",
+    caption = "GAM smooth on partially screened data") +
   theme_grey(base_size = 9) 
 ```
 
@@ -240,27 +251,31 @@ target versus looks to each foil.
 ```{r by-aoi-logit-target-phon, out.width = "100%", fig.height=2.5, fig.width=6, echo = FALSE, message = FALSE}
 semantic_target_curves <- looks_by_aoi3 %>% 
   filter(AOI == "Target") %>% 
-  mutate(`Target vs Semantic` = log(Primary / SemanticFoil), 
-         `Target vs Unrelated` = log(Primary / Unrelated)) %>% 
-  tidyr::gather("Comparison", "LogOdds", 
-                `Target vs Semantic`, `Target vs Unrelated`) 
+  mutate(
+    `Target vs Semantic` = log(Primary / SemanticFoil), 
+    `Target vs Unrelated` = log(Primary / Unrelated)) %>% 
+  tidyr::gather(
+    "Comparison", "LogOdds", 
+    `Target vs Semantic`, `Target vs Unrelated`) 
   
 phonological_target_curves <- looks_by_aoi2 %>% 
   filter(AOI == "Target") %>% 
-  mutate(`Target vs Phonological` = log(Primary / PhonologicalFoil), 
-         `Target vs Unrelated` = log(Primary / Unrelated)) %>% 
-  tidyr::gather("Comparison", "LogOdds", 
-                `Target vs Phonological`, `Target vs Unrelated`) 
+  mutate(
+    `Target vs Phonological` = log(Primary / PhonologicalFoil), 
+    `Target vs Unrelated` = log(Primary / Unrelated)) %>% 
+  tidyr::gather(
+    "Comparison", "LogOdds", 
+    `Target vs Phonological`, `Target vs Unrelated`) 
   
 ggplot(phonological_target_curves) + 
-  aes(x = Time, y = LogOdds, 
-      color = Study, linetype = PhonFoil) + 
+  aes(x = Time, y = LogOdds, color = Study, linetype = PhonFoil) + 
   geom_hline(size = 2, color = "white", yintercept = 0) +
   stat_smooth() + 
   facet_grid( ~ Comparison) + 
-    labs(x = "Time after target onset [ms]",
-       y = "Log odds looking",
-       caption = "GAM smooth on partially screened data") +
+  labs(
+    x = "Time after target onset [ms]",
+    y = "Log odds looking",
+    caption = "GAM smooth on partially screened data") +
   theme_grey(base_size = 9) 
 ```
 
@@ -271,14 +286,14 @@ reflecting early looks to the phonological foils.
 
 ```{r by-aoi-logit-target-semi, out.width = "100%", fig.height=2.5, fig.width=6, echo = FALSE, message = FALSE}
 ggplot(semantic_target_curves) + 
-  aes(x = Time, y = LogOdds, 
-      color = Study, linetype = SemyFoil) + 
+  aes(x = Time, y = LogOdds, color = Study, linetype = SemyFoil) + 
   geom_hline(size = 2, color = "white", yintercept = 0) +
   stat_smooth() + 
   facet_grid( ~ Comparison) + 
-    labs(x = "Time after target onset [ms]",
-       y = "Log odds looking",
-       caption = "GAM smooth on partially screened data") +
+  labs(
+    x = "Time after target onset [ms]",
+    y = "Log odds looking",
+    caption = "GAM smooth on partially screened data") +
   theme_grey(base_size = 9) 
 ```
 
@@ -331,16 +346,19 @@ d <- binned %>%
   aggregate_looks(phon_defs, Study + ResearchID + Time ~ GazeByImageAOI)
 
 phon_d <- d %>% 
-  filter(opts_model$start_time <= Time, 
-         Time <= opts_model$end_time) %>% 
-  polypoly::poly_add_columns(Time, degree = 3, 
-                             scale_width = 1, prefix = "ot") %>% 
+  filter(
+    opts_model$start_time <= Time, 
+    Time <= opts_model$end_time) %>% 
+  polypoly::poly_add_columns(
+    Time, degree = 3, scale_width = 1, prefix = "ot") %>% 
   rename(Focus = .response_def)
 
 phon_d %>%
   sample_n_of(9, ResearchID) %>%
   ggplot() +
-    aes(x = Time, y = log(Primary / Unrelated), color = Study, linetype = Focus) +
+    aes(
+      x = Time, y = log(Primary / Unrelated), 
+      color = Study, linetype = Focus) +
     geom_line(aes(group = interaction(Study, Focus))) +
     facet_wrap("ResearchID")
 
