@@ -463,33 +463,118 @@ bayesplot:::ppc_data(okay$y[, 1], sims, group = phon_d$Study) %>%
 <!-- strength of the stimuli. -->
 
 ```{r, eval = FALSE, out.width = "100%", echo = FALSE}
-# Downsample to 50 ms bins
-d <- phon_data %>% 
-  filter(-467 <= Time) %>% 
-  # filter(PhonFoil == "Strong") %>% 
-  assign_bins(bin_width = 3, Time, TrialID) %>% 
-  group_by(TrialID, .bin) %>% 
-  mutate(BinTime = round(median(Time), -1)) %>% 
-  ungroup() %>% 
-  aggregate_looks(phon_defs, Study + ResearchID + BinTime ~ GazeByImageAOI)
-
-ggplot(d %>% filter(.response_def == "PhonologicalFoil")) + 
-  aes(x = BinTime, y = empirical_logit(PhonologicalFoil, Unrelated)) + 
+ggplot(phon_d %>% filter(Focus == "PhonologicalFoil")) + 
+  aes(x = Time, y = empirical_logit(PhonologicalFoil, Unrelated)) + 
   geom_line(aes(group = ResearchID), alpha = .2) + 
   stat_smooth() +
   facet_grid(. ~ Study)
 
-d_m <- d %>% 
-  filter(250 <= BinTime, BinTime <= 1500) %>% 
-  filter(.response_def == "PhonologicalFoil") %>% 
-  polypoly::poly_add_columns(BinTime, degree = 3, 
-                             scale_width = 1, prefix = "ot")
+ggplot(phon_d %>% filter(Focus == "PhonologicalFoil")) + 
+  aes(x = Time, y = empirical_logit(PhonologicalFoil, Unrelated)) + 
+  geom_line(aes(group = interaction(ResearchID, Study)), alpha = .2) + 
+  stat_smooth(aes(color = Study)) 
 
-ggplot(d_m %>% filter(.response_def == "PhonologicalFoil")) + 
-  aes(x = BinTime, y = empirical_logit(PhonologicalFoil, Unrelated)) + 
-  geom_line(aes(group = ResearchID), alpha = .2) + 
-  stat_smooth() +
-  facet_grid(. ~ Study)
+phon_d %>%
+  filter(Focus == "PhonologicalFoil") %>% 
+  sample_n_of(9, ResearchID) %>%
+  ggplot() + 
+    aes(x = Time, y = empirical_logit(PhonologicalFoil, Unrelated)) + 
+    geom_line(aes(group = interaction(ResearchID, Study)), alpha = .2) + 
+    stat_smooth(aes(color = Study)) +
+  facet_wrap("ResearchID")
+
+minp1 <- readr::read_csv("./data-raw/test_scores.csv") %>% 
+  select(Study, ResearchID, MinPair_ProportionCorrect) %>% 
+  filter(Study == "TimePoint1") %>% 
+  mutate(
+    MinP = ntile(MinPair_ProportionCorrect, 4),
+    Cut = cut(MinPair_ProportionCorrect, c(0, .6, .8, 1))) %>% 
+  select(-Study)
+
+table(minp1$Cut)
+
+phon_d %>% 
+  filter(Focus == "PhonologicalFoil") %>% 
+  left_join(minp1) %>% 
+  ggplot() + 
+    aes(x = Time, y = plogis(empirical_logit(PhonologicalFoil, Unrelated))) + 
+    geom_line(aes(group = ResearchID), alpha = .2) +
+    stat_smooth(aes(color = Cut), se = FALSE) +
+    facet_grid(. ~ Study)
+
+phon_d %>% 
+  filter(Focus == "Target") %>% 
+  left_join(minp1) %>% 
+  ggplot() + 
+    aes(x = Time, y = Prop) + 
+    geom_line(aes(group = ResearchID), alpha = .2) +
+    stat_smooth(aes(color = Cut), se = FALSE) +
+    facet_grid(. ~ Study)
+
+phon_d %>% 
+  filter(Focus == "Target") %>% 
+  left_join(minp1) %>% 
+  ggplot() + 
+    aes(x = Time, y = plogis(empirical_logit(Target, Unrelated))) + 
+    geom_line(aes(group = ResearchID), alpha = .2) +
+    stat_smooth(aes(color = Cut), se = FALSE) +
+    facet_grid(. ~ Study)
+
+phon_d %>% 
+  filter(Focus == "PhonologicalFoil") %>% 
+  left_join(minp1) %>% 
+  ggplot() + 
+    aes(x = Time) + 
+    # geom_line(aes(group = ResearchID), alpha = .2) +
+    stat_smooth(
+      aes(color = Cut, y = plogis(empirical_logit(Target, PhonologicalFoil))), 
+      se = FALSE) +
+    stat_smooth(
+      aes(color = Cut, y = plogis(empirical_logit(Target, Unrelated))), 
+      se = FALSE, linetype = "dashed") +
+    facet_grid(Cut ~ Study)
+
+phon_d %>% 
+  filter(Focus == "Target") %>% 
+  left_join(minp1) %>% 
+  ggplot() + 
+    aes(x = Time, y = Prop) + 
+    geom_line(aes(group = ResearchID), alpha = .2) +
+    stat_smooth(aes(color = Cut), se = FALSE) +
+    facet_grid(. ~ Study)
+
+
+evt1 <- readr::read_csv("./data-raw/test_scores.csv") %>% 
+  select(Study, ResearchID, EVT_Standard) %>% 
+  filter(Study == "TimePoint1") %>% 
+  mutate(EVT = ntile(EVT_Standard, 4)) %>% 
+  select(-Study)
+
+gfta1 <- readr::read_csv("./data-raw/scores_for_participant_summary.csv") %>% 
+  select(Study, ResearchID, GFTA_Standard) %>% 
+  filter(Study == "TimePoint1") %>% 
+  mutate(GFTA = ntile(GFTA_Standard, 4)) %>% 
+  select(-Study)
+
+
+phon_d %>% 
+  filter(Focus == "PhonologicalFoil") %>% 
+  left_join(evt1) %>% 
+  ggplot() + 
+    aes(x = Time, y = empirical_logit(PhonologicalFoil, Unrelated)) + 
+    geom_line(aes(group = ResearchID), alpha = .2) + 
+    stat_smooth(aes(color = factor(EVT)), se = FALSE) +
+    facet_grid(. ~ Study)
+
+phon_d %>% 
+  filter(Focus == "PhonologicalFoil") %>% 
+  left_join(gfta1) %>% 
+  ggplot() + 
+    aes(x = Time, y = empirical_logit(PhonologicalFoil, Unrelated)) + 
+    geom_line(aes(group = ResearchID), alpha = .2) + 
+    stat_smooth(aes(color = factor(GFTA)), se = FALSE) +
+    facet_grid(. ~ Study)
+
 
 
 # m <- glmer(
