@@ -52,12 +52,14 @@ ggplot(looks_by_aoi) +
   labs(
     x = "Time after target onset [ms]",
     y = "Proportion looking to image",
-    caption = "GAM smooth on partially screened data") +
+    caption = "GAM smooth") +
   theme_grey(base_size = 9) +
   theme(
     legend.position = c(0.95, 0.95), 
     legend.justification = c(1, 1))
 ```
+
+
 
 The looks to target increase year over year which decreases the remaining
 proportion of looks for the other three images each year. To study the relative
@@ -73,7 +75,7 @@ ggplot(looks_by_aoi %>% filter(AOI != "Unrelated")) +
   labs(
     x = "Time after target onset [ms]",
     y = "Log odds looking to word vs. unrelated word",
-    caption = "GAM smooth on partially screened data") +
+    caption = "GAM smooth") +
   theme_grey(base_size = 9) +
   theme(
     legend.position = c(0.95, 0.95), 
@@ -98,6 +100,11 @@ inhibit interference from competing words. This plot would suggest that they
 show increased sensitive to the target and foils words by looking less to the
 unrelated word as they age and reapportioning those looks to the other three
 lexically relevant words.
+
+
+
+
+
 
 ## Comparing strong versus weak foils
 
@@ -362,34 +369,15 @@ phon_d %>%
     geom_line(aes(group = interaction(Study, Focus))) +
     facet_wrap("ResearchID")
 
-# phon_d %>%
-#   # sample_n_of(50, ResearchID) %>%
-#   ggplot() +
-#     aes(x = Time, y = log(Primary / Unrelated), color = Study, linetype = Focus) +
-#     stat_summary(fun.y = mean, geom = "line")
-```
-
-```{r}
-# library(lme4)
-# m <- glmer(
-#  cbind(Primary, Unrelated) ~
-#         Study * (ot1 + ot2 + ot3) +
-#         (ot1 + ot2 + ot3 | ResearchID) +
-#         (ot1 + ot2 + ot3 | Study:ResearchID),
-#   family = binomial,
-#   data = phon_d %>% filter(Focus == "PhonologicalFoil"))
 
 ```
 
 The final model should looks like this. I'll have to run this for a few days.
 
-```{r}
+```{r, eval = FALSE}
 phon_d <- phon_d %>% 
   filter(Focus == "PhonologicalFoil")
-```
 
-
-```{r, eval = FALSE}
 library(rstanarm)
 options(mc.cores = parallel::detectCores())
 
@@ -451,6 +439,44 @@ bayesplot:::ppc_data(okay$y[, 1], sims, group = phon_d$Study) %>%
     coord_cartesian(xlim = c(0, 1), expand = FALSE) + 
     facet_wrap("group")
 ```
+
+
+## Looks to the phonological foil
+
+```{r}
+n_phon <- phono_foils$strong_foil$Target %>% unique() %>% length()
+```
+
+
+Next, we asked how children's sensitivity to the phonological foils changed over
+developmental time. We only examined trials for which the phonological foil and
+the noun shared the same syllable onset. For example, we kept trials with
+*dress*–*drum*, *fly*–*flag*, or *horse*–*heart*, but we excluded trials
+*kite*–*gift* (feature difference), *bear*–*bread* (onset difference), and
+*ring*–*swing* (rimes). We kept `r n_phon` of the 24 trials.
+
+Because children looked more to the target word with each year of the study,
+they necessarily looked less to the distractors each year.
+
+```{r, echo = FALSE, message = FALSE, out.width="50%", fig.width = 4}
+phon_d %>% 
+  mutate(Focus = factor(Focus, c("Target", "PhonologicalFoil"))) %>% 
+  ggplot() + 
+    aes(x = Time, y = Prop, color = Study) + 
+    geom_hline(yintercept = .25, color = "white", size = 2) +
+    stat_summary() + 
+    facet_wrap("Focus") +
+  labs(
+    x = "Time after target onset [ms]",
+    y = "Proportion looking to image",
+    caption = "Mean +/- SE") +
+  theme_grey() +
+  theme(
+    legend.position = c(0.95, 0.95), 
+    legend.justification = c(1, 1))
+```
+
+
 
 
 
