@@ -37,8 +37,8 @@ General Todos:
 _TJM: I'll have to clean this section up once the order of the main results is
 pinned down. That way this can flow neatly in to the findings._
 
-Looks to the familiar image were analyzed using **Bayesian mixed
-effects logistic regression**. We used *logistic* regression because
+Looks to the familiar image were analyzed using Bayesian mixed
+effects logistic regression. We used *logistic* regression because
 the outcome measurement is a probability (the log-odds of looking to the
 target image versus a distractor). We used *mixed-effects* models
 to estimate a separate growth curve for each child (to
@@ -117,13 +117,15 @@ to the named image over the trial window and the linear time parameter
 corresponds to slope of the growth curve or lexical processing efficiency. We
 also were interested in _peak_ proportion of looks to the target. We derived
 this value by computing the growth curves from the model and taking the median
-of the five highest points on the curve. Figure _TODO_ shows three simulated
-growth curves and how each of these growth curve features relate to word
-recognition performance.
+of the five highest points on the curve. Figure \@ref(fig:curve-features) shows
+three simulated growth curves and how each of these growth curve features relate
+to word recognition performance.
 
-_TODO: Figure number and caption_
+(ref:curve-features) Illustration of the three growth curve features and how
+they describe lexical processing performance. The three curves used are
+simulations of new participants from Year 2.
 
-```{r curve-features, fig.show = 'hold', echo = FALSE, out.width = "80%", fig.height = 5.5, fig.width = 5.5}
+```{r curve-features, fig.cap = "(ref:curve-features)", echo = FALSE, out.width = "80%", fig.height = 5.5, fig.width = 5.5}
 dummy_data <- d_m %>% 
   filter(Study == "TimePoint2") %>% 
   distinct(Study, Time, ot1, ot2, ot3) %>% 
@@ -148,7 +150,6 @@ lpred_lm <- lpred %>%
   tidyr::unnest(data) %>% 
   # Sort using the AUC values
   mutate(.draw = forcats::fct_reorder(as.factor(.draw), auc))
-
 
 p1 <- ggplot(lpred_lm) + 
   aes(x = ot1, y = .posterior_value, group = .draw) + 
@@ -573,9 +574,9 @@ Figure \@ref(fig:new-participants) shows the posterior predictions for 1,000
 simulated participants, which demonstrates how the model expects new
 participants to improve longitudinally but also exhibit stable individual
 differences over time. Figure \@ref(fig:new-participants-intervals) shows
-uncertainty intervals for these simulations. The model learned to predict
-less accurate and more variable performance at age 3 with improving accuracy and
-narrowing variability at age 4 and age 5. 
+uncertainty intervals for these simulations. The model learned to predict less
+accurate and more variable performance at age 3 with improving accuracy and
+narrowing variability at age 4 and age 5.
 
 (ref:new-participants) Posterior predictions for hypothetical *unobserved*
 participants. Each line represents the predicted performance for a new

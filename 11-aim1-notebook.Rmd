@@ -140,9 +140,10 @@ to streamline the experiment for older listeners.
 
 ## Stimuli
 
-_A few sentences to reiterate what the four kinds of images represented_. 
-The four images on each trial consisted of a target noun, a phonological foil, a
-semantic foil, and an unrelated word. A complete list of the items used in the experiment in [Appendix \@ref(vw-experiment-items)](#vw-experiment-items).
+*A few sentences to reiterate what the four kinds of images represented*. The
+four images on each trial consisted of a target noun, a phonological foil, a
+semantic foil, and an unrelated word. A complete list of the items used in the
+experiment in [Appendix \@ref(vw-experiment-items)](#vw-experiment-items).
 
 
 
