@@ -458,7 +458,7 @@ the noun shared the same syllable onset. For example, we kept trials with
 Because children looked more to the target word with each year of the study,
 they necessarily looked less to the distractors each year.
 
-```{r, echo = FALSE, message = FALSE, out.width = "50%", fig.width = 4}
+```{r, echo = FALSE, message = FALSE, out.width = "100%", fig.width = 4}
 phon_d %>% 
   mutate(Focus = factor(Focus, c("Target", "PhonologicalFoil"))) %>% 
   ggplot() + 
@@ -547,7 +547,7 @@ AIC(b2n, b2)
 The model’s predictions are shown in the figure. It captured the trend for
 increased looks to the competitor image with each year of the study.
 
-```{r, echo = FALSE, message = FALSE, out.width = "50%", fig.width = 3}
+```{r, echo = FALSE, message = FALSE, out.width = "80%", fig.width = 5}
 itsadug::plot_smooth(b2, view = "Time", plot_all = "S")
 ```
 
@@ -557,7 +557,7 @@ ms. This result confirms that the looks to the phonological foil increased from
 timepoint 1 and timepoint 2 in the time window immediately following
 presentation of the noun.
 
-```{r, echo = FALSE, message = FALSE, out.width = "50%", fig.width = 3}
+```{r, echo = FALSE, message = FALSE, out.width = "80%", fig.width = 5}
 itsadug::plot_diff(
   b2,
   view = "Time",
@@ -569,7 +569,7 @@ the the intercept difference. The difference line between the two is a straight
 line. The two curves start from the same location and diverge, and that's what
 this straight line captures.
 
-```{r, echo = FALSE, message = FALSE, out.width = "50%", fig.width = 3}
+```{r, echo = FALSE, message = FALSE, out.width = "80%", fig.width = 5}
 itsadug::plot_diff(
   b2,
   view = "Time",
@@ -578,7 +578,7 @@ itsadug::plot_diff(
 
 Timepoint 3 and timepoint 1 differ too. 
 
-```{r, echo = FALSE, message = FALSE, out.width = "50%", fig.width = 3}
+```{r, echo = FALSE, message = FALSE, out.width = "80%", fig.width = 5}
 itsadug::plot_diff(
   b2,
   view = "Time",
@@ -587,7 +587,7 @@ itsadug::plot_diff(
 
 Here we have the data and the model fits.
 
-```{r, echo = FALSE, message = FALSE, out.width = "50%", fig.width = 3}
+```{r, echo = FALSE, message = FALSE, out.width = "80%", fig.width = 4}
 phon_d$fitted_elogit <- predict.gam(b2)
 
 ggplot(phon_d) +
@@ -691,14 +691,14 @@ AIC(s2n, s2)
 The model’s predictions are shown in the figure. It captured the trend for
 increased looks to the competitor image with each year of the study.
 
-```{r, echo = FALSE, message = FALSE, out.width = "50%", fig.width = 3}
+```{r, echo = FALSE, message = FALSE, out.width = "80%", fig.width = 5}
 itsadug::plot_smooth(s2, view = "Time", plot_all = "S")
 ```
 
 We also computed the difference of the curves from different studies. The
 difference from timepoint 1 to timepoint 2 is just a matter of height.
 
-```{r, echo = FALSE, message = FALSE, out.width = "50%", fig.width = 3}
+```{r, echo = FALSE, message = FALSE, out.width = "80%", fig.width = 5}
 itsadug::plot_diff(
   s2,
   view = "Time",
@@ -708,7 +708,7 @@ itsadug::plot_diff(
 The difference from timepoint 2 to timepoint 3 includes a slight bump as the two
 curves diverge from a similar starting position.
 
-```{r, echo = FALSE, message = FALSE, out.width = "50%", fig.width = 3}
+```{r, echo = FALSE, message = FALSE, out.width = "80%", fig.width = 4}
 itsadug::plot_diff(
   s2,
   view = "Time",
@@ -717,7 +717,7 @@ itsadug::plot_diff(
 
 Timepoint 3 and timepoint 1 differ too. 
 
-```{r, echo = FALSE, message = FALSE, out.width = "50%", fig.width = 3}
+```{r, echo = FALSE, message = FALSE, out.width = "80%", fig.width = 5}
 itsadug::plot_diff(
   s2,
   view = "Time",
@@ -726,7 +726,7 @@ itsadug::plot_diff(
 
 Here we have the data and the model fits.
 
-```{r, echo = FALSE, message = FALSE, out.width = "50%", fig.width = 3}
+```{r, echo = FALSE, message = FALSE, out.width = "80%", fig.width = 4}
 semy_d$fitted_elogit <- predict.gam(s2)
 
 ggplot(semy_d) +

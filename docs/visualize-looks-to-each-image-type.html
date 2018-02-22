@@ -697,7 +697,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 n_semy &lt;-<span class="st"> </span>semy_foils<span class="op">$</span>strong_foil<span class="op">$</span>Target <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">unique</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">length</span>()</code></pre></div>
 <p>Next, we asked how children’s sensitivity to the phonological foils changed over developmental time. We only examined trials for which the phonological foil and the noun shared the same syllable onset. For example, we kept trials with <em>dress</em>–<em>drum</em>, <em>fly</em>–<em>flag</em>, or <em>horse</em>–<em>heart</em>, but we excluded trials <em>kite</em>–<em>gift</em> (feature difference), <em>bear</em>–<em>bread</em> (onset difference), and <em>ring</em>–<em>swing</em> (rimes). We kept 13 of the 24 trials.</p>
 <p>Because children looked more to the target word with each year of the study, they necessarily looked less to the distractors each year.</p>
-<p><img src="15-aim1-notebook_files/figure-html/unnamed-chunk-9-1.png" width="50%" /></p>
+<p><img src="15-aim1-notebook_files/figure-html/unnamed-chunk-9-1.png" width="100%" /></p>
 <p>We fit a generalized additive model with restricted maximum likelihood (ref, ref). We included main-effects of study year. These parametric terms work like conventional regression effects and determined the growth curve’s average values. We used timepoint 2 as the reference year, so the model’s intercept represented the average looking probability for timepoint 2. The model’s year effects therefore represented differences between timepoint 2 vs. timepoint 1 and vs. timepoint 3.</p>
 <p>(We used empirical logits and a normal likelihood to compsensate for sparse data.)</p>
 <p>We also included smooth terms for time. These smooth terms fit nonlinear functions of data by weighting and adding small bumps (splines) together—hence the name additive models. We included a smooth term for trial time to represent a general effect of time following noun onset across all studies, and we also included smooth terms for time for each study. As an equation, our model estimated:</p>
@@ -709,9 +709,7 @@ n_semy &lt;-<span class="st"> </span>semy_foils<span class="op">$</span>strong_f
     f4(Time, Study3)      </code></pre>
 <p>The average values for timepoint 1 and timepoint 2 did not significantly differ (stats). The average looks to the phonological foil over the unrelated was significantly higher in year 3 (stats).</p>
 <p>There was a significant smooth term for time in general and for time in timepoint 1. This means that shape of the curves for timepoint2 and timepoint 3 did not differ significantly from the general time trend. In other words, timepoint 2 and timepoint 3 had the same shape but with a difference in height due to different averages.</p>
-<pre><code>#&gt; Warning: package &#39;itsadug&#39; was built under R version 3.4.3
-#&gt; Warning: package &#39;plotfunctions&#39; was built under R version 3.4.3
-#&gt; 
+<pre><code>#&gt; 
 #&gt; Family: gaussian 
 #&gt; Link function: identity 
 #&gt; 
@@ -746,11 +744,11 @@ n_semy &lt;-<span class="st"> </span>semy_foils<span class="op">$</span>strong_f
 <pre><code>#&gt; Summary:
 #&gt;  * S : factor; set to the value(s): TimePoint1, TimePoint2, TimePoint3. 
 #&gt;  * Time : numeric predictor; with 30 values ranging from 250.000000 to 1500.000000.</code></pre>
-<p><img src="15-aim1-notebook_files/figure-html/unnamed-chunk-11-1.png" width="50%" /></p>
+<p><img src="15-aim1-notebook_files/figure-html/unnamed-chunk-11-1.png" width="80%" /></p>
 <p>We also computed the difference of the curves from different studies. The peaks of the timepoint1 and timepoint2 were significantly different from 565 to 970 ms. This result confirms that the looks to the phonological foil increased from timepoint 1 and timepoint 2 in the time window immediately following presentation of the noun.</p>
 <pre><code>#&gt; Summary:
 #&gt;  * Time : numeric predictor; with 100 values ranging from 250.000000 to 1500.000000.</code></pre>
-<p><img src="15-aim1-notebook_files/figure-html/unnamed-chunk-12-1.png" width="50%" /></p>
+<p><img src="15-aim1-notebook_files/figure-html/unnamed-chunk-12-1.png" width="80%" /></p>
 <pre><code>#&gt; 
 #&gt; Time window(s) of significant difference(s):
 #&gt;  565.656566 - 969.696970
@@ -758,22 +756,22 @@ n_semy &lt;-<span class="st"> </span>semy_foils<span class="op">$</span>strong_f
 <p>The difference between the timepoint 2 and the timepoint 3 smooths is driven by the the intercept difference. The difference line between the two is a straight line. The two curves start from the same location and diverge, and that’s what this straight line captures.</p>
 <pre><code>#&gt; Summary:
 #&gt;  * Time : numeric predictor; with 100 values ranging from 250.000000 to 1500.000000.</code></pre>
-<p><img src="15-aim1-notebook_files/figure-html/unnamed-chunk-13-1.png" width="50%" /></p>
+<p><img src="15-aim1-notebook_files/figure-html/unnamed-chunk-13-1.png" width="80%" /></p>
 <pre><code>#&gt; 
 #&gt; Time window(s) of significant difference(s):
 #&gt;  262.626263 - 1500.000000</code></pre>
 <p>Timepoint 3 and timepoint 1 differ too.</p>
 <pre><code>#&gt; Summary:
 #&gt;  * Time : numeric predictor; with 100 values ranging from 250.000000 to 1500.000000.</code></pre>
-<p><img src="15-aim1-notebook_files/figure-html/unnamed-chunk-14-1.png" width="50%" /></p>
+<p><img src="15-aim1-notebook_files/figure-html/unnamed-chunk-14-1.png" width="80%" /></p>
 <pre><code>#&gt; 
 #&gt; Time window(s) of significant difference(s):
 #&gt;  439.393939 - 1323.232323</code></pre>
 <p>Here we have the data and the model fits.</p>
-<p><img src="15-aim1-notebook_files/figure-html/unnamed-chunk-15-1.png" width="50%" /></p>
+<p><img src="15-aim1-notebook_files/figure-html/unnamed-chunk-15-1.png" width="80%" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">itsadug<span class="op">::</span><span class="kw">gamtabs</span>(b2, <span class="dt">type =</span> <span class="st">&quot;html&quot;</span>)</code></pre></div>
-<!-- html table generated in R 3.4.2 by xtable 1.8-2 package -->
-<!-- Thu Feb 22 11:49:02 2018 -->
+<!-- html table generated in R 3.4.3 by xtable 1.8-2 package -->
+<!-- Thu Feb 22 12:53:12 2018 -->
 <table border="1">
 <caption align="bottom">
 </caption>
@@ -974,33 +972,33 @@ s(Time):STimePoint3
 <pre><code>#&gt; Summary:
 #&gt;  * S : factor; set to the value(s): TimePoint1, TimePoint2, TimePoint3. 
 #&gt;  * Time : numeric predictor; with 30 values ranging from 250.000000 to 1800.000000.</code></pre>
-<p><img src="15-aim1-notebook_files/figure-html/unnamed-chunk-19-1.png" width="50%" /></p>
+<p><img src="15-aim1-notebook_files/figure-html/unnamed-chunk-19-1.png" width="80%" /></p>
 <p>We also computed the difference of the curves from different studies. The difference from timepoint 1 to timepoint 2 is just a matter of height.</p>
 <pre><code>#&gt; Summary:
 #&gt;  * Time : numeric predictor; with 100 values ranging from 250.000000 to 1800.000000.</code></pre>
-<p><img src="15-aim1-notebook_files/figure-html/unnamed-chunk-20-1.png" width="50%" /></p>
+<p><img src="15-aim1-notebook_files/figure-html/unnamed-chunk-20-1.png" width="80%" /></p>
 <pre><code>#&gt; 
 #&gt; Time window(s) of significant difference(s):
 #&gt;  250.000000 - 1800.000000</code></pre>
 <p>The difference from timepoint 2 to timepoint 3 includes a slight bump as the two curves diverge from a similar starting position.</p>
 <pre><code>#&gt; Summary:
 #&gt;  * Time : numeric predictor; with 100 values ranging from 250.000000 to 1800.000000.</code></pre>
-<p><img src="15-aim1-notebook_files/figure-html/unnamed-chunk-21-1.png" width="50%" /></p>
+<p><img src="15-aim1-notebook_files/figure-html/unnamed-chunk-21-1.png" width="80%" /></p>
 <pre><code>#&gt; 
 #&gt; Time window(s) of significant difference(s):
 #&gt;  735.353535 - 1596.464646</code></pre>
 <p>Timepoint 3 and timepoint 1 differ too.</p>
 <pre><code>#&gt; Summary:
 #&gt;  * Time : numeric predictor; with 100 values ranging from 250.000000 to 1800.000000.</code></pre>
-<p><img src="15-aim1-notebook_files/figure-html/unnamed-chunk-22-1.png" width="50%" /></p>
+<p><img src="15-aim1-notebook_files/figure-html/unnamed-chunk-22-1.png" width="80%" /></p>
 <pre><code>#&gt; 
 #&gt; Time window(s) of significant difference(s):
 #&gt;  312.626263 - 1800.000000</code></pre>
 <p>Here we have the data and the model fits.</p>
-<p><img src="15-aim1-notebook_files/figure-html/unnamed-chunk-23-1.png" width="50%" /></p>
+<p><img src="15-aim1-notebook_files/figure-html/unnamed-chunk-23-1.png" width="80%" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">itsadug<span class="op">::</span><span class="kw">gamtabs</span>(s2, <span class="dt">type =</span> <span class="st">&quot;html&quot;</span>)</code></pre></div>
-<!-- html table generated in R 3.4.2 by xtable 1.8-2 package -->
-<!-- Thu Feb 22 11:49:20 2018 -->
+<!-- html table generated in R 3.4.3 by xtable 1.8-2 package -->
+<!-- Thu Feb 22 12:53:30 2018 -->
 <table border="1">
 <caption align="bottom">
 </caption>

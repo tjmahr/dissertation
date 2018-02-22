@@ -292,7 +292,7 @@ the noun shared the same syllable onset. For example, we kept trials with
 Because children looked more to the target word with each year of the study,
 they necessarily looked less to the distractors each year.
 
-<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-9-1.png" width="50%" />
+<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-9-1.png" width="100%" />
 
 
 We fit a generalized additive model with restricted maximum likelihood (ref,
@@ -333,8 +333,6 @@ due to different averages.
 
 
 ```
-#> Warning: package 'itsadug' was built under R version 3.4.3
-#> Warning: package 'plotfunctions' was built under R version 3.4.3
 #> 
 #> Family: gaussian 
 #> Link function: identity 
@@ -382,7 +380,7 @@ increased looks to the competitor image with each year of the study.
 #> 	* Time : numeric predictor; with 30 values ranging from 250.000000 to 1500.000000.
 ```
 
-<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-11-1.png" width="50%" />
+<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-11-1.png" width="80%" />
 
 We also computed the difference of the curves from different studies. The peaks
 of the timepoint1 and timepoint2 were significantly different from 565 to 970
@@ -396,7 +394,7 @@ presentation of the noun.
 #> 	* Time : numeric predictor; with 100 values ranging from 250.000000 to 1500.000000.
 ```
 
-<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-12-1.png" width="50%" />
+<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-12-1.png" width="80%" />
 
 ```
 #> 
@@ -416,7 +414,7 @@ this straight line captures.
 #> 	* Time : numeric predictor; with 100 values ranging from 250.000000 to 1500.000000.
 ```
 
-<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-13-1.png" width="50%" />
+<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-13-1.png" width="80%" />
 
 ```
 #> 
@@ -432,7 +430,7 @@ Timepoint 3 and timepoint 1 differ too.
 #> 	* Time : numeric predictor; with 100 values ranging from 250.000000 to 1500.000000.
 ```
 
-<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-14-1.png" width="50%" />
+<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-14-1.png" width="80%" />
 
 ```
 #> 
@@ -442,7 +440,7 @@ Timepoint 3 and timepoint 1 differ too.
 
 Here we have the data and the model fits.
 
-<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-15-1.png" width="50%" />
+<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-15-1.png" width="80%" />
 
 
 
@@ -450,8 +448,8 @@ Here we have the data and the model fits.
 itsadug::gamtabs(b2, type = "html")
 ```
 
-<!-- html table generated in R 3.4.2 by xtable 1.8-2 package -->
-<!-- Thu Feb 22 11:49:02 2018 -->
+<!-- html table generated in R 3.4.3 by xtable 1.8-2 package -->
+<!-- Thu Feb 22 12:53:12 2018 -->
 <table border=1>
 <caption align="bottom">   </caption>
   <tr> <td> A. parametric coefficients </td> <td align="right"> Estimate </td> <td align="right"> Std. Error </td> <td align="right"> t-value </td> <td align="right"> p-value </td> </tr>
@@ -534,7 +532,7 @@ increased looks to the competitor image with each year of the study.
 #> 	* Time : numeric predictor; with 30 values ranging from 250.000000 to 1800.000000.
 ```
 
-<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-19-1.png" width="50%" />
+<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-19-1.png" width="80%" />
 
 We also computed the difference of the curves from different studies. The
 difference from timepoint 1 to timepoint 2 is just a matter of height.
@@ -545,7 +543,7 @@ difference from timepoint 1 to timepoint 2 is just a matter of height.
 #> 	* Time : numeric predictor; with 100 values ranging from 250.000000 to 1800.000000.
 ```
 
-<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-20-1.png" width="50%" />
+<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-20-1.png" width="80%" />
 
 ```
 #> 
@@ -562,7 +560,7 @@ curves diverge from a similar starting position.
 #> 	* Time : numeric predictor; with 100 values ranging from 250.000000 to 1800.000000.
 ```
 
-<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-21-1.png" width="50%" />
+<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-21-1.png" width="80%" />
 
 ```
 #> 
@@ -578,7 +576,7 @@ Timepoint 3 and timepoint 1 differ too.
 #> 	* Time : numeric predictor; with 100 values ranging from 250.000000 to 1800.000000.
 ```
 
-<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-22-1.png" width="50%" />
+<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-22-1.png" width="80%" />
 
 ```
 #> 
@@ -588,7 +586,7 @@ Timepoint 3 and timepoint 1 differ too.
 
 Here we have the data and the model fits.
 
-<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-23-1.png" width="50%" />
+<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-23-1.png" width="80%" />
 
 
 
@@ -601,8 +599,8 @@ Here we have the data and the model fits.
 itsadug::gamtabs(s2, type = "html")
 ```
 
-<!-- html table generated in R 3.4.2 by xtable 1.8-2 package -->
-<!-- Thu Feb 22 11:49:20 2018 -->
+<!-- html table generated in R 3.4.3 by xtable 1.8-2 package -->
+<!-- Thu Feb 22 12:53:30 2018 -->
 <table border=1>
 <caption align="bottom">   </caption>
   <tr> <td> A. parametric coefficients </td> <td align="right"> Estimate </td> <td align="right"> Std. Error </td> <td align="right"> t-value </td> <td align="right"> p-value </td> </tr>

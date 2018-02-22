@@ -171,7 +171,7 @@ str(list(html = is_html_output(), latex = is_latex_output(),
 devtools::session_info()
 #> Session info ------------------------------------------------------------------
 #>  setting  value                       
-#>  version  R version 3.4.2 (2017-09-28)
+#>  version  R version 3.4.3 (2017-11-30)
 #>  system   x86_64, mingw32             
 #>  ui       RTerm                       
 #>  language (EN)                        
@@ -181,44 +181,44 @@ devtools::session_info()
 #> Packages ----------------------------------------------------------------------
 #>  package   * version date       source        
 #>  backports   1.1.2   2017-12-13 CRAN (R 3.4.3)
-#>  base      * 3.4.2   2017-09-28 local         
+#>  base      * 3.4.3   2017-11-30 local         
 #>  bookdown    0.7     2018-02-18 CRAN (R 3.4.3)
-#>  compiler    3.4.2   2017-09-28 local         
-#>  datasets  * 3.4.2   2017-09-28 local         
+#>  compiler    3.4.3   2017-11-30 local         
+#>  datasets  * 3.4.3   2017-11-30 local         
 #>  devtools    1.13.5  2018-02-18 CRAN (R 3.4.3)
 #>  digest      0.6.15  2018-01-28 CRAN (R 3.4.3)
-#>  evaluate    0.10.1  2017-06-24 CRAN (R 3.4.2)
-#>  graphics  * 3.4.2   2017-09-28 local         
-#>  grDevices * 3.4.2   2017-09-28 local         
-#>  highr       0.6     2016-05-09 CRAN (R 3.4.2)
-#>  htmltools   0.3.6   2017-04-28 CRAN (R 3.4.2)
+#>  evaluate    0.10.1  2017-06-24 CRAN (R 3.4.1)
+#>  graphics  * 3.4.3   2017-11-30 local         
+#>  grDevices * 3.4.3   2017-11-30 local         
+#>  highr       0.6     2016-05-09 CRAN (R 3.2.3)
+#>  htmltools   0.3.6   2017-04-28 CRAN (R 3.4.0)
 #>  knitr       1.20    2018-02-20 CRAN (R 3.4.3)
-#>  magrittr    1.5     2014-11-22 CRAN (R 3.4.2)
-#>  memoise     1.1.0   2017-04-21 CRAN (R 3.4.2)
-#>  methods   * 3.4.2   2017-09-28 local         
-#>  parallel    3.4.2   2017-09-28 local         
+#>  magrittr    1.5     2014-11-22 CRAN (R 3.1.2)
+#>  memoise     1.1.0   2017-04-21 CRAN (R 3.3.2)
+#>  methods   * 3.4.3   2017-11-30 local         
+#>  parallel    3.4.3   2017-11-30 local         
 #>  Rcpp        0.12.15 2018-01-20 CRAN (R 3.4.3)
-#>  rmarkdown   1.8     2017-11-17 CRAN (R 3.4.2)
+#>  rmarkdown   1.8     2017-11-17 CRAN (R 3.4.1)
 #>  rprojroot   1.3-2   2018-01-03 CRAN (R 3.4.3)
-#>  stats     * 3.4.2   2017-09-28 local         
+#>  stats     * 3.4.3   2017-11-30 local         
 #>  stringi     1.1.6   2017-11-17 CRAN (R 3.4.2)
 #>  stringr     1.3.0   2018-02-19 CRAN (R 3.4.3)
-#>  tools       3.4.2   2017-09-28 local         
-#>  utils     * 3.4.2   2017-09-28 local         
+#>  tools       3.4.3   2017-11-30 local         
+#>  utils     * 3.4.3   2017-11-30 local         
 #>  withr       2.1.1   2017-12-19 CRAN (R 3.4.3)
 #>  xfun        0.1     2018-01-22 CRAN (R 3.4.3)
 #>  yaml        2.1.16  2017-12-12 CRAN (R 3.4.3)
 
 last_four_commits <- git2r::commits(git2r::repository("."), n = 4)
 msgs <- lapply(last_four_commits, methods::show)
+#> [bccb622] 2018-02-22: rebuild book
 #> [07019a6] 2018-02-20: snapshot
 #> [c992330] 2018-02-16: start working on gam stuf
 #> [57b8bbf] 2018-02-13: plots
-#> [c6e8ec3] 2018-02-13: restyling some code
 ```
 
 
 
 
 
-Built with love using R [Version 3.4.2; @R-base] and the R-packages *bayesplot* [Version 1.4.0.9000; @R-bayesplot], *bookdown* [Version 0.7; @R-bookdown], *dplyr* [Version 0.7.4; @R-dplyr], *ggplot2* [Version 2.2.1; @R-ggplot2], *knitr* [Version 1.20; @R-knitr], *littlelisteners* [Version 0.0.0.9000; @R-littlelisteners], *lme4* [Version 1.1.15; @R-lme4], *rlang* [Version 0.2.0; @R-rlang], *rmarkdown* [Version 1.8; @R-rmarkdown], *rstanarm* [Version 2.17.3; @R-rstanarm], *tjmisc* [Version 0.0.0.9000; @R-tjmisc], and *tristan* [Version 0.0.0.9000; @R-tristan].
+Built with love using R [Version 3.4.3; @R-base] and the R-packages *bayesplot* [Version 1.4.0.9000; @R-bayesplot], *bookdown* [Version 0.7; @R-bookdown], *dplyr* [Version 0.7.4; @R-dplyr], *ggplot2* [Version 2.2.1; @R-ggplot2], *knitr* [Version 1.20; @R-knitr], *littlelisteners* [Version 0.0.0.9000; @R-littlelisteners], *lme4* [Version 1.1.15; @R-lme4], *rlang* [Version 0.1.6; @R-rlang], *rmarkdown* [Version 1.8; @R-rmarkdown], *rstanarm* [Version 2.17.3; @R-rstanarm], *tjmisc* [Version 0.0.0.9000; @R-tjmisc], and *tristan* [Version 0.0.0.9000; @R-tristan].
