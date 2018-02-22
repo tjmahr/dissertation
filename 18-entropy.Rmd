@@ -1,0 +1,39 @@
+Entropy in familiar word recognition
+===========================================================================
+
+```{r include = FALSE}
+d_m <- readr::read_csv("./data/aim1-model-ready.csv.gz")
+knitr::read_chunk("./helpers.R")
+if (interactive()) source("./helpers.R")
+knitr::opts_chunk$set(cache = TRUE)
+```
+
+```{r helpers, include = FALSE, cache = FALSE}
+```
+
+```{r, out.width = "80%"}
+entropy <- function(x, ..., f = log2) {
+  counts <- c(x, ...)
+  p <- counts / sum(counts)
+  weighted <- ifelse(p == 0, 0, p * f(p))
+  -sum(weighted)
+}
+
+d_m <- d_m %>% 
+  group_by(Study, ResearchID, Time) %>% 
+  mutate(
+    entropy = entropy(PhonologicalFoil, SemanticFoil, Target, Unrelated)) %>% 
+  ungroup()
+
+ggplot(d_m) + 
+  aes(x = Time, y = entropy, color = Study) + 
+  stat_summary()
+
+d_m %>% 
+  sample_n_of(9, ResearchID) %>% 
+  ggplot() + 
+    aes(x = Time, y = entropy, color = Study) + 
+    geom_line() + 
+    facet_wrap("ResearchID")
+```
+
