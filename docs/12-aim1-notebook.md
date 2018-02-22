@@ -20,8 +20,8 @@ General Todos:
 _TJM: I'll have to clean this section up once the order of the main results is
 pinned down. That way this can flow neatly in to the findings._
 
-Looks to the familiar image were analyzed using **Bayesian mixed
-effects logistic regression**. We used *logistic* regression because
+Looks to the familiar image were analyzed using Bayesian mixed
+effects logistic regression. We used *logistic* regression because
 the outcome measurement is a probability (the log-odds of looking to the
 target image versus a distractor). We used *mixed-effects* models
 to estimate a separate growth curve for each child (to
@@ -85,9 +85,10 @@ probability.[^3]
 We studied how word recognition changes over time by modeling how growth curves
 change over developmental time. This amounted to studying how the growth curve
 parameters changes year over year. We included dummy-coded indicators for
-Year 1, Year 2, and Year 3 and having these indicators interact with the growth
-curve parameters. We also included random effects to represent child-by-study
-effects.
+Year 1, Year 2, and Year 3 and allowed these indicators interact with the growth
+curve parameters. These year-by-growth-curve terms captured how the shape of the
+growth curves changed each year. We also included random effects to represent
+child-by-year effects.
 
 
 ### Growth curve features as measures of word recognition performance
@@ -99,13 +100,18 @@ to the named image over the trial window and the linear time parameter
 corresponds to slope of the growth curve or lexical processing efficiency. We
 also were interested in _peak_ proportion of looks to the target. We derived
 this value by computing the growth curves from the model and taking the median
-of the five highest points on the curve. Figure _TODO_ shows three simulated
-growth curves and how each of these growth curve features relate to word
-recognition performance.
+of the five highest points on the curve. Figure \@ref(fig:curve-features) shows
+three simulated growth curves and how each of these growth curve features relate
+to word recognition performance.
 
-_TODO: Figure number and caption_
+(ref:curve-features) Illustration of the three growth curve features and how
+they describe lexical processing performance. The three curves used are
+simulations of new participants from Year 2.
 
-<img src="12-aim1-notebook_files/figure-html/curve-features-1.png" width="80%" />
+<div class="figure">
+<img src="12-aim1-notebook_files/figure-html/curve-features-1.png" alt="(ref:curve-features)" width="80%" />
+<p class="caption">(\#fig:curve-features)(ref:curve-features)</p>
+</div>
 
 
 
@@ -157,23 +163,29 @@ proportions.
 
 
 
-The average looking probability (intercept feature) was 0.385 [90% UI: 0.372--0.397] for
-timepoint 1, 0.485 [0.473--0.498] for timepoint 2, and
-0.557 [0.544--0.569] for timepoint 3. The averages increased by
-0.1 [0.087--0.114] from timepoint 1 to timepoint 2
-and by 0.072 [0.058--0.085] from timepoint 2 to
-timepoint 3. The peak looking probability was 0.548 [0.528--0.567]
-for timepoint 1, 0.683 [0.666--0.7] for timepoint 2, and
-0.769 [0.755--0.782] for timepoint 3. The peak values increased
-by 0.135 [0.114--0.156] from timepoint 1 to
-timepoint 2 and by 0.086 [0.069--0.103] from
+The average looking probability (intercept feature) was 0.38 [90% UI: 0.37--0.40] for
+timepoint 1, 0.49 [0.47--0.50] for timepoint 2, and
+0.56 [0.54--0.57] for timepoint 3. The averages increased by
+0.10 [0.09--0.11] from timepoint 1 to timepoint 2
+and by 0.07 [0.06--0.09] from timepoint 2 to
+timepoint 3. The peak looking probability was 0.55 [0.53--0.57]
+for timepoint 1, 0.68 [0.67--0.70] for timepoint 2, and
+0.77 [0.76--0.78] for timepoint 3. The peak values increased
+by 0.13 [0.11--0.16] from timepoint 1 to
+timepoint 2 and by 0.09 [0.07--0.10] from
 timepoint 2 to timepoint 3. These results numerically confirm the hypothesis
 that children would improve in their word recognition reliability, both in terms
 of average looking and in terms of peak accuracy, each year.
 
 **Summary**. The average growth curve features increased year over year, so that
-children's looked to the target more quickly and more reliable.
+children looked to the target more quickly and more reliably.
 
+  - This result is as expected.
+  - It's good that the task scaled with development so that there was room to
+    grow each year.
+  - The growth curve changes each year involved peak accuaracy and steepness of
+    the curve. They reach higher heights, and they hit year 1 peak earlier each
+    year.
 
 
 
@@ -199,9 +211,9 @@ Figure \@ref(fig:new-participants) shows the posterior predictions for 1,000
 simulated participants, which demonstrates how the model expects new
 participants to improve longitudinally but also exhibit stable individual
 differences over time. Figure \@ref(fig:new-participants-intervals) shows
-uncertainty intervals for these simulations. The model learned to predict
-less accurate and more variable performance at age 3 with improving accuracy and
-narrowing variability at age 4 and age 5. 
+uncertainty intervals for these simulations. The model learned to predict less
+accurate and more variable performance at age 3 with improving accuracy and
+narrowing variability at age 4 and age 5.
 
 (ref:new-participants) Posterior predictions for hypothetical *unobserved*
 participants. Each line represents the predicted performance for a new
@@ -255,10 +267,10 @@ study as children show less variability.
 
 The developmental pattern of increasing reliability and decreasing variability was also observed for the growth curve peaks. For the synthetic participants, 
 the model predicted that individual peak probabilities will increase each
-year, peak<sub>TP1</sub>\ = 0.552 
-[90% UI: 0.347--0.774], 
-peak<sub>TP2</sub>\ = 0.692 [0.477--0.861], 
-peak<sub>TP3</sub>\ = 0.776 [0.586--0.909]. Moreover, the range of plausible values for the individual peaks narrowed each
+year, peak<sub>TP1</sub>\ = 0.55 
+[90% UI: 0.35--0.77], 
+peak<sub>TP2</sub>\ = 0.69 [0.48--0.86], 
+peak<sub>TP3</sub>\ = 0.78 [0.59--0.91]. Moreover, the range of plausible values for the individual peaks narrowed each
 for the simulated data. For instance, the difference between the 95^th^
 and 5^th^ percentiles was 0.43 for timepoint 1,
 0.38 for timepoint 2, and 0.32
@@ -269,6 +281,25 @@ curves from 1,000 hypothetical, unobserved participants. The simulated dataset
 showed increasing looking probability and decreasing variability with each year
 of the study. These simulations confirm the hypothesis that variability would be
 diminish as children converge on a mature level of performance on this task.
+
+
+  - Word recognition performance is a skill where variation is greatest at
+    younger ages.
+  - What mechanisms might come to bear on this? Does variability narrow
+    developmentally for vocabulary?
+  - Children different in their word-learning trajectories, so the early
+    differences in word recognition could be from younger children who are
+    relatively early/late in word-learning. The SDs of the EVT scores narrows a
+    small amount each year, even when we only consider the children who
+    participated at all three years.
+  - (It will be easier to fold this in to the mechanism discussion once we have
+    firmer results for the looks-to-foils analysis.)
+  - If differences in word recognition matter (and they do) and the differences
+    are greatest at younger ages, then they are most informative at younger
+    ages.
+  - Maybe a few words on why individual differences are worth studying?
+
+
 
 ### Are individual differences stable over time?
 
@@ -324,9 +355,9 @@ We used the `kendall()` function in the `irr` package (vers.
 0.84, CITATION) to compute concordance statistics.
 Figure \@ref(fig:kendall-stats) depicts uncertainty intervals for the Kendall
 _W_'s for these growth curve features. The 90% uncertainty interval of _W_
-statistics from random ratings [0.275--0.391] subsumes the
-intervals for the Time^2^ effect [0.295--0.351] and the Time^3^ effect
-[0.276--0.348], indicating that these values do not differentiate
+statistics from random ratings [0.28--0.39] subsumes the
+intervals for the Time^2^ effect [0.30--0.35] and the Time^3^ effect
+[0.28--0.35], indicating that these values do not differentiate
 children in a longitudinally stable way. That is, the Time^2^ and Time^3^
 features differentiate children across studies as well as random numbers.
 Earlier, we stated that only the intercept, linear time, and peak features have
@@ -334,10 +365,10 @@ psychologically meaningful interpretations and that the higher-order features of
 these models serve to capture the shape of the growth curve data. These
 statistics support that assertion.
 
-Concordance is strongest for the peak feature, _W_\ = 0.587 
-[0.572--0.601] and the intercept term, _W_\ = 0.585
-[0.573--0.596], followed by the linear time term, _W_\ =
-0.501 [0.483--0.518]. Because these values are removed 
+Concordance is strongest for the peak feature, _W_\ = 0.59 
+[0.57--0.60] and the intercept term, _W_\ = 0.58
+[0.57--0.60], followed by the linear time term, _W_\ =
+0.50 [0.48--0.52]. Because these values are removed 
 from the statistics for random ratings, we conclude that there is a credible
 degree of correspondence across studies when we rank children using their peak
 looking probability, average look probability (the intercept) or their growth
@@ -350,11 +381,12 @@ tested whether individual differences in lexical processing persisted over
 development. We found that the peak looking probability, average looking
 probability and linear time features were stable over time.
 
-
-```r
-rm(ws, reduced_data, posterior_w)
-```
-
+  - Although the range of variability decreases, individual differences do not
+    wash out.
+  - Lexical processing is a stable ability over the preschool years.
+  - Extrapolating outwards, the differences probably diminish to the point that
+    they are not meaningful. But traces of those early differences can reappear
+    years later on some test scores.
 
 ### Predicting future vocabulary size
 
@@ -372,7 +404,7 @@ at age 4 or age 5. To test this hypothesis, we calculated the correlations
 of growth curve features with year 3 expressive vocabulary size and year 2
 receptive vocabulary. (The receptive test was not administered during year 3
 for logistical reasons). As with the concordance analysis, we computed each
-the correlations for each sample of the posterior distribution to obtain a
+of the correlations for each sample of the posterior distribution to obtain a
 distribution of correlations.
 
 Figure \@ref(fig:evt2-gca-cors) shows the correlations of the peak looking
@@ -382,25 +414,25 @@ analagous correlations for the receptive vocabulary at year 2. For all cases,
 the strongest correlations were found between the growth curve features 
 at year 1.
 Growth curve peaks from year 1 correlated with year 3 vocabulary with _r_ =
-.519, 90% UI [.498--.54], but
+.52, 90% UI [.50--.54], but
 the concurrent peaks from year 3 showed a correlation
-of just _r_ = .311, [.293--.328],
+of just _r_ = .31, [.29--.33],
 a difference between year 1 and year 3 of _r_<sub>TP1&minus;TP3</sub>\ =
-.209, [.18--.236].
+.21, [.18--.24].
 A similar pattern held for lexical processing efficiency values. Linear time
 features from year 1 correlated with year 3 vocabulary with *r* =
-.413, 90% UI [.389--.438],
+.41, 90% UI [.39--.44],
 whereas the concurrent lexical processing values from year 3 only showed a
-correlation of *r* = .283,
-[.259--.306], a difference of *r*<sub>TP1−TP3</sub>\ =
-.13, [.097--.164].
+correlation of *r* = .28,
+[.26--.31], a difference of *r*<sub>TP1−TP3</sub>\ =
+.13, [.10--.16].
 For the average looking probabilities, the correlation for year 1, _r_ =
-.391, [.389--.438],
+.39, [.39--.44],
 was probably only slightly greater than the correlation for year 2,
-_r_<sub>TP1&minus;TP2</sub>\ = .018,
-[&minus;.005--.042] but considerably greater than
+_r_<sub>TP1&minus;TP2</sub>\ = .02,
+[&minus;.01--.04] but considerably greater than
 the concurrent correlation at year 3, _r_<sub>TP1&minus;TP3</sub> =
-.077, [.054--.099].
+.08, [.05--.10].
 
 (ref:evt2-gca-cors) Uncertainty intervals for the correlations of growth curve
 features at each time point with expressive vocabulary (EVT2 standard scores) at
@@ -413,20 +445,20 @@ correlations between time points.
 </div>
 
 Peak looking probabilities from year 1 were strongly correlated with year 2 
-receptive vocabulary, _r_\ = .625, 
-[.606--.643], and this correlation was much greater
+receptive vocabulary, _r_\ = .62, 
+[.61--.64], and this correlation was much greater
 than the correlation observed for the year 2 growth curve peaks,
-*r*<sub>TP1−TP2</sub> = .258,
-[.258].
+*r*<sub>TP1−TP2</sub> = .26,
+[.26].
 The correlation of year 1 average looking probabilities, _r_
-\ = .454, [.437--.47],
+\ = .45, [.44--.47],
 was greater than the year 2 correlation, _r_<sub>TP1&minus;TP2</sub> =
-.084, [.084], and
+.08, [.08], and
 the correlation for year 1 linear time features, 
-_r_\ = .514,
-[.492--.538], was likewise greater than the year 2
-correlation, _r_<sub>TP1&minus;TP2</sub> = .225,
-[.192--.257].
+_r_\ = .51,
+[.49--.54], was likewise greater than the year 2
+correlation, _r_<sub>TP1&minus;TP2</sub> = .22,
+[.19--.26].
 
 (ref:ppvt4-gca-cors) Uncertainty intervals for the correlations of growth curve
 features at each time point with expressive vocabulary (PPVT4 standard scores)
@@ -443,7 +475,12 @@ time, early differences are more significant than later ones. The strongest
 predictors of future vocabulary size were the growth curve features from age 3.
 That is, word recognition performance from age 3 was more strongly correlated
 with age 5 expressive vocabulary than word recognition performance at age 5. A
-similar pattern of results held for predicting receoptive vocabulary at age 4.
+similar pattern of results held for predicting receptive vocabulary at age 4.
+
+- This finding is surprising because vocabulary scores from the same week as the
+  eyetracking data are less correlated than scores from two year earlier.
+- This establishes that the differences are greatest and most predictive at
+  younger ages.
 
 ### Relationships with other child-level predictors
 
@@ -812,4 +849,4 @@ values.
 
 
 
-<img src="12-aim1-notebook_files/figure-html/unnamed-chunk-11-1.png" width="80%" /><img src="12-aim1-notebook_files/figure-html/unnamed-chunk-11-2.png" width="80%" />
+<img src="12-aim1-notebook_files/figure-html/unnamed-chunk-10-1.png" width="80%" /><img src="12-aim1-notebook_files/figure-html/unnamed-chunk-10-2.png" width="80%" />
