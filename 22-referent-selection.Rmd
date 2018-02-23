@@ -13,7 +13,6 @@ if (interactive()) source("./helpers.R")
 ## Nonwords versus real words
 
 ```{r real-vs-nonword, out.width = "100%", fig.show = 'hold', fig.height = 3, fig.width = 6, message = FALSE, warning = FALSE, echo = FALSE}
-
 d_nonword <- d_m %>% 
   filter(Condition != "MP") %>% 
   mutate(
@@ -88,5 +87,14 @@ ggplot(d_nonword) +
     y = "Proportion (shifted so first point = .5)"
   )
 
+```
+
+
+```{r}
+d_mp <- d_m %>% 
+  filter(Condition == "MP")
+ggplot(d_mp) + 
+  aes(x = Time, y = Prop, color = Study) + 
+  stat_summary()
 ```
 
