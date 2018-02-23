@@ -476,42 +476,13 @@ phon_d %>%
       legend.justification = c(1, 1))
 ```
 
+To account for the sparseness of the data, we used the empirical logit
+transformation [refs]. This transformation adds .5 to the looking counts. For
+example, a time-frame with 4 looks to the phonological foil and 1 look to the
+foil has (conventional) logit of log(4/1) = 1.39 and empirical logit of log(4.5/1.5) = 1.10.
+This transformation fills in 0 values, and it dampens the extremeness of some
+probabilities that happen in sparse count data.
 
-We fit a generalized additive model with restricted maximum likelihood (ref,
-ref). We included main-effects of study year. These parametric terms work like
-conventional regression effects and determined the growth curve's average
-values. We used timepoint 2 as the reference year, so the model's intercept
-represented the average looking probability for timepoint 2. The model's year
-effects therefore represented differences between timepoint 2 vs. timepoint 1
-and vs. timepoint 3.
-
-(We used empirical logits and a normal likelihood to compsensate for sparse data.)
-
-We also included smooth terms for time. These smooth terms fit nonlinear
-functions of data by weighting and adding small bumps (splines) together---hence
-the name additive models. We included a smooth term for trial time to represent
-a general effect of time following noun onset across all studies, and we also
-included smooth terms for time for each study. As an equation, our model
-estimated:
-
-```
-emp. logit(phonological vs unrelated) = 
-  α + β1*Study1 + β2*Study3 +   [growth curve averages]
-  f1(Time) +                    [general shape]
-  f2(Time, Study1) +            [study-specific shape]
-    f3(Time, Study2) + 
-    f4(Time, Study3)      
-```
-
-The average values for timepoint 1 and timepoint 2 did not significantly differ
-(stats). The average looks to the phonological foil over the unrelated was
-significantly higher in year 3 (stats).
-
-There was a significant smooth term for time in general and for time in
-timepoint 1. This means that shape of the curves for timepoint2 and timepoint 3
-did not differ significantly from the general time trend. In other words,
-timepoint 2 and timepoint 3 had the same shape but with a difference in height
-due to different averages.
 
 ```{r, echo = FALSE, message = FALSE, out.width = "80%", fig.width = 6}
 library(mgcv)
@@ -537,29 +508,149 @@ b2 <- gam(
   data = phon_d, 
   method = "REML")
 summary(b2)
-plot(b2, pages = 1)
-# gam.check(b2)
-# anova(b2n, b2)
 
-AIC(b2n, b2)
+# b2r <- bam(
+#   elog ~ S + s(Time) + s(Time, by = S) + s(Time, R, bs = "fs", m = 1, k = 5), 
+#   data = phon_d)
+# readr::write_rds(b2r, "./data/aim1-phon-random-smooths.gz")
+b2r <- readr::read_rds("./data/aim1-phon-random-smooths.gz")
+summary(b2r)
+
+plot(b2r, pages = 1)
+```
+
+
+
+We fit a generalized additive model with restricted maximum likelihood
+[@Wood2017; @Soskuthy2017 for a tutorial for linguists; see Box 1]. 
+We included main-effects of study year. These parametric terms work like
+conventional regression effects and determined the growth curve's average
+values. We used timepoint 2 as the reference year, so the model's intercept
+represented the average looking probability for timepoint 2. The model's year
+effects therefore represented differences between timepoint 2 vs. timepoint 1
+and vs. timepoint 3.
+
+```{block2, type = "infobox"}
+**Box 1: The Intuition Behind Generalized Additive Models**.
+
+[work in progress]
+
+In these analyses, the outcome of interest is a value that changes over time in
+a nonlinear way. We model these time series by building a set of features, or a
+*basis*, to represent time values. In the familiar word recognition analyses, we
+used a polynomial basis which expressed time as the weighted sum of a linear
+trend, a quadratic trend and cubic trend. That is:
+
+P(to target) = α + β1*Linear + β2*Quadratic + β3*Cubic [growth curve averages] 
+
+But another way to think about the polynomial terms is as a basis: A set of
+features that work together to approximate a nonlinear functio of time. Under
+this framework, the model might be described as:
+
+P(to target) = α + f(Time)
+
+This is the way to think about generalized additive models. These fit nonlinear
+functions of predictor variables by using *smooth* terms. These smooth terms fit
+nonlinear functions of data by weighting and adding small bumps (splines)
+together---hence the name additive models.
+
+(plot of splines and weighted splines approximating a curve)
+```
+
+We also included smooth terms for time. These smooth terms fit nonlinear
+functions of data by weighting and adding small bumps (splines) together---hence
+the name additive models. We included a smooth term for trial time to represent
+a general effect of time following noun onset across all studies, and we also
+included smooth terms for time for each study. As an equation, our model
+estimated:
+
+```
+emp. logit(phonological vs unrelated) = 
+  α + β1*Study1 + β2*Study3 +   [growth curve averages]
+  f1(Time) +                    [general shape]
+  f2(Time, Study1) +            [study-specific shapes]
+  f3(Time, Study2) + 
+  f4(Time, Study3)      
+```
+
+```{r, echo = FALSE}
+para <- broom::tidy(b2, parametric = TRUE) 
+
+tp2 <- para %>% 
+  filter(term == "(Intercept)") %>% 
+  pull(estimate) %>% 
+  printy::fmt_fix_digits(2)
+
+tp2_prop <- para %>% 
+  filter(term == "(Intercept)") %>% 
+  pull(estimate) %>% 
+  plogis() %>% 
+  printy::fmt_fix_digits(2) %>% 
+  printy::fmt_leading_zero() 
+
+tp1_p <- para %>% 
+  filter(term == "STimePoint1") %>% 
+  pull(p.value) %>% 
+  printy::fmt_p_value(digits = 2)
+
+tp2_est <- para %>% 
+  filter(term == "(Intercept)") %>% 
+  pull(estimate) 
+
+tp3_est <- para %>% 
+  filter(term == "STimePoint3") %>% 
+  pull(estimate) 
+
+tp3_prop <- (tp2_est + tp3_est) %>% 
+  plogis() %>% 
+  printy::fmt_fix_digits(2) %>% 
+  printy::fmt_leading_zero() 
+
+tp3 <- (tp2_est + tp3_est) %>% 
+  printy::fmt_fix_digits(2)
+
+tp3_p <- para %>% 
+  filter(term == "STimePoint3") %>% 
+  pull(p.value) %>% 
+  printy::fmt_p_value()
 ```
 
 The model’s predictions are shown in the figure. It captured the trend for
-increased looks to the competitor image with each year of the study.
+increased looks to the competitor image with each year of the study. [describe
+the shape some more]
 
 ```{r, echo = FALSE, message = FALSE, out.width = "80%", fig.width = 5}
 itsadug::plot_smooth(b2, view = "Time", plot_all = "S")
 ```
 
+The average looks to the phonological foil over the unrelated for timepoint 2
+was `r tp2` emp. logits, `r tp2_prop` proportion units. The averages for
+timepoint 1 and timepoint 2 did not significantly differ, *p* = `r tp1_p`, but
+the average value was significantly greater at timepoint 3, `r tp3` emp. logits,
+`r tp3_prop` proportion units, *p* `r tp1_p`.
+
+```{r}
+anova(b2r)
+```
+
+Each smooth term represents a batch of coefficients. Each coefficient in a
+smooth contributes to the shape of the curve, so the coefficients are
+tested jointly like a batch of effects in an ANOVA. There was a significant
+smooth term for time in general, (f-test stats) and for timepoint 1, (f-test
+stats). In contrast, the smooths timepoint 2 and timepoint 3 did not differ
+significantly from the general time smooth, (p timepoint2), (p timepoint2). 
+Thus, timepoint 2 and timepoint 3 had essentially the same same shape, the
+observed difference stemming from the timepoint 3 being higher on average.
+
 We also computed the difference of the curves from different studies. The peaks
-of the timepoint1 and timepoint2 were significantly different from 565 to 970
+of the timepoint 1 and timepoint 2 were significantly different from 500 to 1045
 ms. This result confirms that the looks to the phonological foil increased from
 timepoint 1 and timepoint 2 in the time window immediately following
-presentation of the noun.
+presentation of the noun. [The difference at the end...]
 
 ```{r, echo = FALSE, message = FALSE, out.width = "80%", fig.width = 5}
 itsadug::plot_diff(
-  b2,
+  b2r,
   view = "Time",
   comp = list(S = c("TimePoint2", "TimePoint1")))
 ```
@@ -571,7 +662,7 @@ this straight line captures.
 
 ```{r, echo = FALSE, message = FALSE, out.width = "80%", fig.width = 5}
 itsadug::plot_diff(
-  b2,
+  b2r,
   view = "Time",
   comp = list(S = c("TimePoint3", "TimePoint2")))
 ```
@@ -580,15 +671,15 @@ Timepoint 3 and timepoint 1 differ too.
 
 ```{r, echo = FALSE, message = FALSE, out.width = "80%", fig.width = 5}
 itsadug::plot_diff(
-  b2,
+  b2r,
   view = "Time",
   comp = list(S = c("TimePoint3", "TimePoint1")))
 ```
 
 Here we have the data and the model fits.
 
-```{r, echo = FALSE, message = FALSE, out.width = "80%", fig.width = 4}
-phon_d$fitted_elogit <- predict.gam(b2)
+```{r, echo = FALSE, message = FALSE, out.width = "80%", fig.width = 6}
+phon_d$fitted_elogit <- predict.gam(b2r)
 
 ggplot(phon_d) +
   aes(x = Time, y = fitted_elogit, color = Study) +
@@ -599,10 +690,23 @@ ggplot(phon_d) +
     caption = "Lines: GAM fit. Point-ranges: Obs. Mean ± SE")
 ```
 
+Talking points:
+
+  - The children at timepoint1 may not be incrementally activating the cohorts.
+    The children in timepoint 2 and 3 certainly are.
+  - Incremental activation and early commitments to partial information goes up 
+    with age.
 
 ```{r, results = "asis"}
-itsadug::gamtabs(b2, type = "html")
+itsadug::gamtabs(b2r, type = "html")
 ```
+
+
+
+
+
+
+
 
 
 ## Looks to the semantic foil

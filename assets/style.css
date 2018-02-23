@@ -12,3 +12,13 @@ pre {
 pre code {
   white-space: inherit;
 }
+div.infobox {
+    margin: 2em 0 !important;
+    padding: 1em;
+    color: #494e52;
+    font-size: .80em !important;
+    text-indent: initial;
+    background-color: #eef7fa;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px rgba(82,173,200,0.25);
+}
