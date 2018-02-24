@@ -2,7 +2,7 @@
 --- 
 title: "My dissertation"
 author: "Tristan Mahr"
-date: "2018-02-22"
+date: "2018-02-24"
 documentclass: book
 github-repo: tjmahr/dissertation
 link-citations: yes
@@ -27,6 +27,6 @@ doing so, I worked all the kinks required to generate a nice
 a... uh... _functional_ 
 [Word document version](https://tjmahr.github.io/dissertation/dissertation.docx).
 
-- Last compiled: 2018-02-22 12:44:45
+- Last compiled: 2018-02-24 11:34:34
 
 \mainmatter

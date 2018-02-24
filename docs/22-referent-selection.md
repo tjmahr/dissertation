@@ -51,3 +51,16 @@ ggplot(d_nonword) +
 
 <img src="22-referent-selection_files/figure-html/unnamed-chunk-3-1.png" width="80" />
 
+
+
+```r
+d_mp <- d_m %>% 
+  filter(Condition == "MP")
+ggplot(d_mp) + 
+  aes(x = Time, y = Prop, color = Study) + 
+  stat_summary()
+#> No summary function supplied, defaulting to `mean_se()
+```
+
+<img src="22-referent-selection_files/figure-html/unnamed-chunk-4-1.png" width="80" />
+

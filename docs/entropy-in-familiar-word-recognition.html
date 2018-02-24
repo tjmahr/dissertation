@@ -32,8 +32,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="mp-experiment-items.html">
-<link rel="next" href="references.html">
+<link rel="prev" href="visualize-looks-to-each-image-type.html">
+<link rel="next" href="aim-2-method.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -236,33 +236,47 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="related-work" class="section level1">
-<h1><span class="header-section-number">C</span> Related Work</h1>
-<p>In this section, I clarify relationships between this project and other word recognition research reported from our lab. In short, our lab has reported results about the two-image and four-image experiments from cross-sectional samples, describing child-level measures that predict performance in these tasks. In contrast, my dissertation 1) focuses on the longitudinal development of word recognition and 2) engages with the fine-grained details of lexical processing.</p>
-<p><span class="citation">Law and Edwards (<a href="#ref-MPPaper">2015</a>)</span> analyzed a different version of the mispronunciation experiment on a different sample of children (<em>n</em> = 34, 30-46 months old). This earlier version included both real word and the mispronunciation of the real word in the same block of trial. For example, a child would hear “dog” and “tog” during the same session of the experiment. This design might subtly temper the effect of mispronounced stimuli by allowing the listener to compare the mispronunciation to its correctly produced counterpart. The version of the experiment in Specific Aim 2 separates the real words and mispronunciations so that a child never hears a familiar word and its mispronunciation during the same block of trials. With this design, there is no explicit point of comparison for the mispronunciation, and the child has to rely on his or her own lexical representations when processing these words.</p>
-<p><span class="citation">Law et al. (<a href="#ref-RWLPaper">2016</a>)</span> analyzed data from the four-image experiment in Specific Aim 1. This study featured a diverse cross-sectional sample of 60 children, half of whom received the experiment in African American English and half received it in Mainstream American English. The sample ranged in age from 28 to 60 months. The study “borrowed” data from 23 participants from Year 1 of the longitudinal study to enrich parts of the samples demographics. For this manuscript, we analyzed how vocabulary and maternal education predicted looking patterns, including relative looks to the semantic and phonological foils.</p>
-<p>Mahr and Edwards (under review) was the manuscript I originally authored for my preliminary examinations. The paper analyzes the same kinds of relations as <span class="citation">Weisleder and Fernald (<a href="#ref-Weisleder2013">2013</a>)</span> which showed that lexical processing efficiency mediated the effect of language input on future vocabulary size. In particular, I asked whether word recognition performance on the four-image task of Specific Aim 1, vocabulary size, and home language input data from Year 1 predicted vocabulary size at Year 2. The paper only examined looks to the familiar image from one year of the study, so it did not analyze any lexical competition effects or the development of word recognition within children.</p>
+<div id="entropy-in-familiar-word-recognition" class="section level1">
+<h1><span class="header-section-number">Chapter 12</span> Entropy in familiar word recognition</h1>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">entropy &lt;-<span class="st"> </span><span class="cf">function</span>(x, ..., <span class="dt">f =</span> log2) {
+  counts &lt;-<span class="st"> </span><span class="kw">c</span>(x, ...)
+  p &lt;-<span class="st"> </span>counts <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(counts)
+  weighted &lt;-<span class="st"> </span><span class="kw">ifelse</span>(p <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">0</span>, p <span class="op">*</span><span class="st"> </span><span class="kw">f</span>(p))
+  <span class="op">-</span><span class="kw">sum</span>(weighted)
+}
+
+d_m &lt;-<span class="st"> </span>d_m <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(Study, ResearchID, Time) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(
+    <span class="dt">entropy =</span> <span class="kw">entropy</span>(PhonologicalFoil, SemanticFoil, Target, Unrelated)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ungroup</span>()
+
+<span class="kw">ggplot</span>(d_m) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> entropy, <span class="dt">color =</span> Study) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">stat_summary</span>()
+<span class="co">#&gt; No summary function supplied, defaulting to `mean_se()</span></code></pre></div>
+<p><img src="18-entropy_files/figure-html/unnamed-chunk-3-1.png" width="80%" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+d_m <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">sample_n_of</span>(<span class="dv">9</span>, ResearchID) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> entropy, <span class="dt">color =</span> Study) <span class="op">+</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">facet_wrap</span>(<span class="st">&quot;ResearchID&quot;</span>)</code></pre></div>
+<p><img src="18-entropy_files/figure-html/unnamed-chunk-3-2.png" width="80%" /></p>
 
 </div>
-<h3>References</h3>
-<div id="refs" class="references">
-<div id="ref-MPPaper">
-<p>Law, F., II, &amp; Edwards, J. R. (2015). Effects of vocabulary size on online lexical processing by preschoolers. <em>Language Learning and Development</em>, <em>11</em>(4), 331–355. doi:<a href="https://doi.org/10.1080/15475441.2014.961066">10.1080/15475441.2014.961066</a></p>
-</div>
-<div id="ref-RWLPaper">
-<p>Law, F., II, Mahr, T., Schneeberg, A., &amp; Edwards, J. R. (2016). Vocabulary size and auditory word recognition in preschool children. <em>Applied Psycholinguistics</em>. doi:<a href="https://doi.org/10.1017/S0142716416000126">10.1017/S0142716416000126</a></p>
-</div>
-<div id="ref-Weisleder2013">
-<p>Weisleder, A., &amp; Fernald, A. (2013). Talking to children matters: Early language experience strengthens processing and builds vocabulary. <em>Psychological Science</em>, <em>24</em>(11), 2143–52. doi:<a href="https://doi.org/10.1177/0956797613488145">10.1177/0956797613488145</a></p>
-</div>
+
+
+
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="mp-experiment-items.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="visualize-looks-to-each-image-type.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="aim-2-method.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
