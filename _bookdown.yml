@@ -5,3 +5,4 @@ before_chapter_script: ["./R/knitr-helpers.R"]
 language:
   ui:
     chapter_name: "Chapter "
+delete_merged_file: true

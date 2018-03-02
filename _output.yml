@@ -16,6 +16,9 @@ bookdown::gitbook:
         <li><a href="https://tjmahr.github.io/" target="blank">Tristan Mahr</a></li>
     download: ["pdf", "epub", "docx"]
     split_bib: false
+  # https://rmarkdown.rstudio.com/html_document_format.html#markdown_extensions
+  # md_extensions: -tex_math_single_backslash+fenced_divs
+  md_extensions: -tex_math_single_backslash
 # bookdown::pdf_book:
 #   includes:
 #     in_header: "assets/preamble.tex"
