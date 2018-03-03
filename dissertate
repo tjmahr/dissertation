@@ -262,6 +262,16 @@ clean_site <- function(...) {
     message(" ", file)
     invisible(file.remove(file))
   }
+
+  # clean up data from canceled knittings
+  render_rds <- list.files("./", pattern = "render[0-9a-f]+.rds")
+  bookdown <- list.files("./", pattern = "bookdown[0-9a-f]+")
+  canceled <- c(render_rds, bookdown)
+
+  for (file in canceled) {
+    message(" ", file)
+    invisible(file.remove(file))
+  }
 }
 
 str_replace_ext <- function(x, ext, new_ext) {
