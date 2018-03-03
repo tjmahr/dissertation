@@ -22,3 +22,8 @@ div.infobox {
     border-radius: 4px;
     box-shadow: 0 1px 1px rgba(82,173,200,0.25);
 }
+
+div.infobox img {
+    display: block;
+    margin: 0 auto;
+}
