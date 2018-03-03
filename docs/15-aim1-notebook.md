@@ -223,235 +223,205 @@ to collapse to remove this distinction and include more items in the analysis.
 #> 
 ```
 
-As in the earlier models, we downsampled the data into
-50-ms (3-frame) bins in order to
-smooth the data. We modeled the looks from 250 to
-1500 ms. Lastly, we aggregated looks by child, study and
-time, and created orthogonal polynomials to use as time features for the model
-
-
-
-```
-#> Warning: Removed 3 rows containing missing values (geom_path).
-```
-
-<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-5-1.png" width="80" />
-
-The final model should looks like this. I'll have to run this for a few days.
-
-
-```r
-# phon_d <- phon_d %>% 
-#   filter(Focus == "PhonologicalFoil")
-# 
-# library(rstanarm)
-# options(mc.cores = parallel::detectCores())
-# 
-# m <- stan_glmer(
-#  cbind(Primary, Unrelated) ~ 
-#         Study * (ot1 + ot2 + ot3) + 
-#         (ot1 + ot2 + ot3 | ResearchID) + 
-#         (ot1 + ot2 + ot3 | Study:ResearchID),
-#   family = binomial,
-#   prior = normal(0, 1, autoscale = FALSE),
-#   prior_intercept = normal(0, 2),
-#   prior_covariance = decov(2, 1, 1),
-#   control = list(adapt_delta = .99),
-#   data = phon_d)
-# readr::write_rds(m, "./data/stan_aim1_phon_model2.rds.gz")
-```
-
-For this model structure, we estimate two growth curves simultaneously for each
-year of the study. Each growth curve is the log-odds of fixating on a certain
-image relative to the unrelated image. We use an indicator variable *focus* to
-record whether the image is the target or the phonological foil. 
-
-Actually, I am not sure I need to estimate two growth curves simulataneously
-yet. I could just estimate log-odds of looking to Phonological vs Unrelated
-directly. This would let me estimate year over year changes, the time course of
-the effects and maybe some individual differences in looks to the phonological
-foil. I could posterior-predict looks at each time bin and see how the 
-intervals compare to zero.
-
-
-Hmmm, this is not working quite right yet.
-
-
-
-
 ## Looks to the phonological foil
 
 
-```r
-n_phon <- phono_foils$strong_foil$Target %>% unique() %>% length()
-n_semy <- semy_foils$strong_foil$Target %>% unique() %>% length()
-```
+
+
 
 Next, we asked how children's sensitivity to the phonological foils changed over
 developmental time. We only examined trials for which the phonological foil and
-the noun shared the same syllable onset. For example, we kept trials with
-*dress*–*drum*, *fly*–*flag*, or *horse*–*heart*, but we excluded trials
-*kite*–*gift* (feature difference), *bear*–*bread* (onset difference), and
-*ring*–*swing* (rimes). We kept 13 of the 24 trials.
+the noun shared the same syllable onset. For example, this criterion included
+trials with *dress*–*drum*, *fly*–*flag*, or *horse*–*heart*, but it excluded
+trials *kite*–*gift* (feature difference), *bear*–*bread* (onset difference),
+and *ring*–*swing* (rimes). We kept 13 of the 24 trials.
 
-Because children looked more to the target word with each year of the study,
-they necessarily looked less to the distractors each year.
+The outcome measure for these analyses was the log-odds of fixating on the
+phonological foil versus the unrelated image. Because children looked more to
+the target word with each year of the study, they necessarily looked less to the
+distractors each year. Figure N below illustrates how the proportions of looks
+to the phonological foils declined each year. Therefore, we examined the effect
+of the phonological foil in comparison to the unrelated foil. For example, on
+the trials where the target is *fly*, we study the effect of the phonological
+foil *flag* by looking at when and to what to degree the children fixate on
+*flag* more than the unrelated image *pen*. If a window of time of shows a
+consistent advantage for the phonological foil over the unrelated image, we can
+conclude that the children were sensitive to the phonological foil. By studying
+the time course of fixations to the phonological foil versus the unrelated
+image, we can identify when the phonological foil affected word recognition most
+significantly.
 
-<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-9-1.png" width="100%" />
-
-To account for the sparseness of the data, we used the empirical logit
-transformation [refs]. This transformation adds .5 to the looking counts. For
-example, a time-frame with 4 looks to the phonological foil and 1 look to the
-unrelated image has (conventional) logit of log(4/1) = 1.39 and empirical logit
-of log(4.5/1.5) = 1.10. This transformation fills in 0 values, and it dampens
-the extremeness of some probabilities that happen in sparse count data.
+As in the previous models, we downsampled the data into
+50-ms (3-frame) bins in order to
+smooth the data. We modeled the looks from 250 to
+1500 ms. Lastly, we aggregated looks by child, study and
+time.
 
 
 
-We fit a generalized additive model with restricted maximum likelihood
-[@Wood2017; @Soskuthy2017 for a tutorial for linguists; see Box 1]. 
-We included main-effects of study year. These *parametric* terms work like
-conventional regression effects and determined the growth curve's average
-values. We used timepoint 2 as the reference year, so the model's intercept
-represented the average looking probability for timepoint 2. The model's year
-effects therefore represented differences between timepoint 2 vs. timepoint 1
-and timepoint 2 vs. timepoint 3.
+<img src="15-aim1-notebook_files/figure-html/declining-phon-props-1.png" width="80%" />
 
-\BeginKnitrBlock{infobox}<div class="infobox">**Box 1: The Intuition Behind Generalized Additive Models**.
+To account for the sparseness of the data, we used the empirical log-odds (or
+empirical logit) transformation [@Barr2008]. This transformation adds .5 to
+the looking counts. For example, a time-frame with 4 looks to the phonological
+foil and 1 look to the unrelated image has a conventional log-odds of
+log(4/1) = 1.39 and empirical log-odds of log(4.5/1.5) = 1.10. This
+transformation fills in 0 values, and it dampens the extremeness of some
+probabilities that arise in sparse count data. 
 
-[work in progress]
+
+
+We fit a generalized additive model with fast restricted maximum likelihood
+estimation [@Wood2017; @Soskuthy2017 for a tutorial for linguists]. Box 1
+provides a brief overview of these models. We fit the models using the R package
+`mgcv` [vers. 1.8.23; @Wood2017] with support from the
+tools in the `itsadug` package [vers. 2.3;
+@itsadug]. 
+
+
+<div class = "infobox">
+**Box 1: The Intuition Behind Generalized Additive Models**.
 
 In these analyses, the outcome of interest is a value that changes over time in
 a nonlinear way. We model these time series by building a set of features to
-represent time values. In the previous familiar word recognition analyses, we
-used a set of polynomial featurs which expressed time as the weighted sum of a
-linear trend, a quadratic trend and cubic trend. That is:
+represent time values. In the growth curve analyses of familiar word
+recognition, we used a set of polynomial features which expressed time as the
+weighted sum of a linear trend, a quadratic trend and cubic trend. That is:
 
-P(to target) = α + β1*Linear + β2*Quadratic + β3*Cubic
+$$
+\text{log-odds}(\mathit{looking}) = 
+  \alpha + \beta_1 * \textit{Time}^1 +
+           \beta_2 * \textit{Time}^2 +
+           \beta_3 * \textit{Time}^3
+$$
 
-But another way to think about the polynomial terms is as a *basis*: A set of
-features that work together to approximate a nonlinear function of time. Under
-this framework, the model can be expressed as:
+But another way to think about the polynomial terms is as *basis functions*: A
+set of features that combine to approximate some nonlinear function of
+time. Under this framework, the model can be expressed as:
 
-P(to target) = α + f(Time)
-
+$$
+\text{log-odds}(\mathit{looking}) = 
+  \alpha + f(\textit{Time})
+$$
+  
 This is the idea behind generalized additive models and their *smooth terms*.
-These smooths fit nonlinear functions of data by weighting and adding small
-bumps (typically, a spline basis) together---hence the name additive models.
+These smooths fit nonlinear functions of data by weighting and adding 
+simple functions together. The figures below show 9 basis functions from a
+"thin-plate spline" and how they can be weighted and summed to fit a growth
+curve.
 
-(plot of splines and weighted splines approximating a curve)
+<img src="15-aim1-notebook_files/figure-html/infobox-1-figs-1.png" width="66%" />
 
-Each one of these bumps is weighted by a model coefficient, but the individual
-bumps in the basis are typically not important. It is the whole set of bumps
-that approximate the curvature of the data, so we statistically evaluate the
-whole batch of coefficienct simultaneously. This joint testing is similar to how
-one might test a batch of effects in an ANOVA. If the batch of effects jointly
-improve model fit, we infer that we observed a significant smooth effect in a 
-predictor. (Not quite sure this is 100% accurate yet.)</div>\EndKnitrBlock{infobox}
+Each of these basis functions is weighted by a model coefficient, but the
+individual basis functions are not a priori meaningful. Rather, it is the whole
+set of functions that approximate the curvature of the data---i.e.,
+*f*(Time))---so we statistically evaluate the whole batch of coefficients
+simultaneously. This joint testing is similar to how one might test a batch of
+effects in an ANOVA. If the batch of effects jointly improve model fit, we infer
+that there is a significant smooth or shape effect. (Not quite sure this is 100%
+accurate yet.)
 
-We included a *smooth* term for time. We included a smooth term for trial time
-to represent a general effect of time following noun onset across all studies,
-and we also included smooth terms for time for each study. These study-specific
-smooths estimate how the shape of the data differs in each individual study. As
-an equation, our model estimated:
+Smooth terms come with an estimated degrees of freedom (EDF). These values
+provide a sense of how many degrees of freedom the smooth consumed. An EDF of 1
+is a perfectly straight line, indicating no smoothing. Higher EDF values
+indicate that the smooth term captured more curvature from the data.
+
+<!-- The other important thing to know about generalized additive models is that -->
+<!-- wigglyness is penalized. With so many functions, one might worry about -->
+<!-- overfitting the data and including incidental wiggliness into *f*(Time). These -->
+<!-- models, however, include a smoothing parameter that -->
+</div>
+
+
+The model included main effects of study year. These *parametric* terms
+work like conventional regression effects and determined the growth curve's
+average values. We used age 4 as the reference year, so the model's intercept
+represented the average looking probability at age 4. The model's year effects
+therefore represented differences between age 4 vs. age 3 and age 4 vs. age 5.
+
+The model also included *smooth* terms to represent the time course of the data.
+We included a smooth term for trial time to represent a general effect of time
+following noun onset across all studies, and we also included smooth terms for
+time for each study. These study-specific smooths estimate how the shape of the
+data differs in each individual study. Each of these smooths used 10 knots (9
+basis functions). We also included child-level "random smooths" to represent
+child-level variation in growth curve shapes. Because we have much as less data
+at the child level than at the study level, these random smooths only included 5
+knots (4 basis functions). We can think of these simpler splines as coarse
+adjustments in growth curve shape to capture child-level variation from limited
+data. Altogether, the model contained the following terms:
 
 ```
-emp. logit(phonological vs unrelated) = 
+emp. log-odds(phonological vs. unrelated) = 
   α + β1*Study1 + β2*Study3 +   [growth curve averages]
-  f1(Time) +                    [general shape]
-  f2(Time, Study1) +            [study-specific shapes]
-  f3(Time, Study2) + 
-  f4(Time, Study3)      
+  f1(Time) +                    [general smooth]
+  f2(Time, Age-3) +             [study-specific smooths]
+  f3(Time, Age-4) + 
+  f4(Time, Age-5) + 
+  f5(Time, Child-ID)            [by-child random smooths]
 ```
 
 
 
 The model’s fitted values are shown in Figure N. These are the average empirical
-logits of fixating on the phonological foil versus the unrelated image for each
-year of the study. The model captured the trend for increased looks to the
-competitor image with each year of the study. During timepoint 2 and
-timepoint 3, the shape rises from a baseline to the peak around 800 ms and these
-curves slope downwards until a level beneath the initial baseline. The shape at
-timepoint 1 does not have a steady rise from baseline and shows a very small
-peak around 800 ms.
+log-odds of fixating on the phonological foil versus the unrelated image for
+each year of the study. The model captured the trend for increased looks to the
+competitor image with each year of the study. At age 4 and age 5, the shape
+rises from a baseline to the peak around 800 ms. These curves slope downwards
+and eventually fall beneath the initial baseline. The shape at age 3 does not
+have a steady rise from baseline and shows a very small peak around 800 ms.
+
+<img src="15-aim1-notebook_files/figure-html/phon-vs-unre-fits-1.png" width="80%" />
+
+The average looks to the phonological foil over the unrelated for age 4 was
+0.17 emp. log-odds, .54 proportion units. The averages for age 3 and
+age 4 did not significantly differ, *p* = .43 but the average value was
+significantly greater at age 5, 0.33 emp. log-odds, .58 proportion
+units, *p* .43. Visually, this effect shows up in the almost constant
+height difference between the age-4 and the age-5 curves.
+
+There was a significant smooth term for time in general, estimated degrees of
+freedom (EDF) = 6.78, *p* < .001, and for the age-3 smooth,
+EDF = 4.39, *p* < .001. In contrast, the age-4 and age-5 smooths
+did not differ significantly from the general time smooth, age-4 EDF =
+1.00, age-4 *p* = .195, age-5 EDF = 1.00, age-5 *p* =
+.394. The shapes of the age-4 and age-5 growth curves showed the same general
+shape but with different heights.
+
+We also computed the difference between the growth curves from successive
+studies. These are shown in Figure N. The curves of the age-3 and age-4 were
+significantly different from 500 to 1050 ms. This result confirms that the looks
+to the phonological foil increased from age 3 and age 4 during the time window
+immediately following presentation of the noun. The similarity between the
+phonological foil and the target occurs early in the trial. Given
+the 150--300 ms time required to execute an eye movement in response to speech,
+the time window for these differences indicates that children became more
+sensitive to the phonological similarities between the foil and the target from
+age 3 to age 4.
+
+The two curves also differed significantly after 1250 ms. The effect reflects
+how the looks to phonological foil decreased as the trial progresses. After an
+incorrect look to the foil, the children on average corrected their gaze and
+looked even less to the phonological foil. We do not observe this degree of
+correction during age 3 presumably because children hardly looked to the
+phonological foil early on.
+
+<img src="15-aim1-notebook_files/figure-html/phon-diff-curves-1.png" width="80%" />
+
+In contrast, the difference between the age-4 and age-5 smooths is driven
+primarily by the intercept difference and a linear diverging trend---that is,
+the distance between the two grows slightly over time. The same general
+curvature was observed for the two studies, reflecting the same general looking
+behavior at both time points. Children showed an early increase in looks to the
+phonological foil relative to the unrelated image but after receiving
+disqualifying information from the rest of the word, the looks to the
+phonological foil rapidly decrease. The primary difference between age-4 and
+age-5 is that the foil effect was more pronounced at age 5.
 
 
-```
-#> Summary:
-#> 	* S : factor; set to the value(s): TimePoint1, TimePoint2, TimePoint3. 
-#> 	* Time : numeric predictor; with 30 values ranging from 250.000000 to 1500.000000.
-```
-
-<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-13-1.png" width="80%" />
-
-The average looks to the phonological foil over the unrelated for timepoint 2
-was 0.15 emp. logits, .54 proportion units. The averages for
-timepoint 1 and timepoint 2 did not significantly differ, *p* = .46 but
-the average value was significantly greater at timepoint 3, 0.29 emp. logits,
-.57 proportion units, *p* .46. Visually, this effect shows up in
-the almost constant height difference between the timepoint 3 and the
-timepoint 2 curves.
 
 
 
-Each smooth term represents a batch of coefficients. Each coefficient in a
-smooth contributes to the shape of the curve, so the coefficients are tested
-jointly like a batch of effects in an ANOVA. There was a significant smooth term
-for time in general, (f-test stats) and for timepoint 1, (f-test stats). In
-contrast, the smooths for timepoint 2 and timepoint 3 did not differ
-significantly from the general time smooth, (p timepoint2), (p timepoint2).
-Thus, timepoint 2 and timepoint 3 had essentially the same same shape but with
-different heights.
-
-[kinda rough here] We also computed the difference of the curves from
-different studies. The peaks of the timepoint 1 and timepoint 2 were
-significantly different from 565 to 970 ms. This result confirms that the looks
-to the phonological foil increased from timepoint 1 and timepoint 2 in the time
-window immediately following presentation of the noun. The two curves also
-differed significantly after 1250 ms. The effect reflects how the looks to
-phonological foil decreased as the trial progresses. The similarity between the
-phonological foil and the target occurs early in the trial, so we observed
-increased looks to the phonological foil early in the trial. After an incorrect
-look to the foil, the children on average correct their gaze and look even less
-to the phonological foil. We do not observe this degree of correction during
-timepoint 1 because children hardly looked to the phonological foil early on.
-
-[Note that we also fit random smooths for each participant.]
-
-
-```
-#> Summary:
-#> 	* Time : numeric predictor; with 100 values ranging from 250.000000 to 1500.000000.
-```
-
-<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-15-1.png" width="80%" />
-
-```
-#> 
-#> Time window(s) of significant difference(s):
-#> 	565.656566 - 969.696970
-#> 	1247.474747 - 1500.000000
-```
-
-The difference between the timepoint 2 and the timepoint 3 smooths is driven by
-the the intercept difference. The difference line between the two is a straight
-line. The two curves start from the same location and slowly diverge. The same
-looking behavior is observed for these two studies, but the foil effect is more
-pronounced at timepoint 3.
-
-
-```
-#> Summary:
-#> 	* Time : numeric predictor; with 100 values ranging from 250.000000 to 1500.000000.
-```
-
-<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-16-1.png" width="80%" />
-
-```
-#> 
-#> Time window(s) of significant difference(s):
-#> 	262.626263 - 1500.000000
-```
 
 Talking points:
 
@@ -480,28 +450,10 @@ Talking points:
   - Incremental activation and early commitments to partial information goes up 
     with age.
 
-*** 
-
-Timepoint 3 and timepoint 1 differ too. 
-
-
-```
-#> Summary:
-#> 	* Time : numeric predictor; with 100 values ranging from 250.000000 to 1500.000000. 
-#> 	* R : factor; set to the value(s): 001L.
-```
-
-<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-17-1.png" width="80%" />
-
-```
-#> 
-#> Time window(s) of significant difference(s):
-#> 	363.636364 - 1323.232323
-```
 
 Here we have the data and the model fits.
 
-<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-18-1.png" width="80%" />
+<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-9-1.png" width="80%" />
 
 
 
@@ -509,8 +461,8 @@ Here we have the data and the model fits.
 itsadug::gamtabs(b2r, type = "html")
 ```
 
-<!-- html table generated in R 3.4.2 by xtable 1.8-2 package -->
-<!-- Sat Feb 24 11:37:40 2018 -->
+<!-- html table generated in R 3.4.3 by xtable 1.8-2 package -->
+<!-- Sat Mar 03 11:53:26 2018 -->
 <table border=1>
 <caption align="bottom">   </caption>
   <tr> <td> A. parametric coefficients </td> <td align="right"> Estimate </td> <td align="right"> Std. Error </td> <td align="right"> t-value </td> <td align="right"> p-value </td> </tr>
@@ -551,7 +503,7 @@ the similarity was perceptual (*sword*–*pen*) or too abstract (*swan*–*bee*)
 kept 13 of the 24 trials.
 
 
-<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-21-1.png" width="80%" />
+<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-12-1.png" width="80%" />
 
 ```
 #> 
@@ -583,7 +535,7 @@ kept 13 of the 24 trials.
 #> -REML =  47702  Scale est. = 1.2714    n = 30976
 ```
 
-<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-21-2.png" width="80%" />
+<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-12-2.png" width="80%" />
 
 ```
 #>            df      AIC
@@ -601,7 +553,7 @@ increased looks to the competitor image with each year of the study.
 #> 	* Time : numeric predictor; with 30 values ranging from 250.000000 to 1800.000000.
 ```
 
-<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-22-1.png" width="80%" />
+<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-13-1.png" width="80%" />
 
 We also computed the difference of the curves from different studies. The
 difference from timepoint 1 to timepoint 2 is just a matter of height.
@@ -612,7 +564,7 @@ difference from timepoint 1 to timepoint 2 is just a matter of height.
 #> 	* Time : numeric predictor; with 100 values ranging from 250.000000 to 1800.000000.
 ```
 
-<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-23-1.png" width="80%" />
+<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-14-1.png" width="80%" />
 
 ```
 #> 
@@ -629,7 +581,7 @@ curves diverge from a similar starting position.
 #> 	* Time : numeric predictor; with 100 values ranging from 250.000000 to 1800.000000.
 ```
 
-<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-24-1.png" width="80%" />
+<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-15-1.png" width="80%" />
 
 ```
 #> 
@@ -645,7 +597,7 @@ Timepoint 3 and timepoint 1 differ too.
 #> 	* Time : numeric predictor; with 100 values ranging from 250.000000 to 1800.000000.
 ```
 
-<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-25-1.png" width="80%" />
+<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-16-1.png" width="80%" />
 
 ```
 #> 
@@ -655,7 +607,7 @@ Timepoint 3 and timepoint 1 differ too.
 
 Here we have the data and the model fits.
 
-<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-26-1.png" width="80%" />
+<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-17-1.png" width="80%" />
 
 
 
@@ -668,8 +620,8 @@ Here we have the data and the model fits.
 itsadug::gamtabs(s2, type = "html")
 ```
 
-<!-- html table generated in R 3.4.2 by xtable 1.8-2 package -->
-<!-- Sat Feb 24 11:37:55 2018 -->
+<!-- html table generated in R 3.4.3 by xtable 1.8-2 package -->
+<!-- Sat Mar 03 11:53:44 2018 -->
 <table border=1>
 <caption align="bottom">   </caption>
   <tr> <td> A. parametric coefficients </td> <td align="right"> Estimate </td> <td align="right"> Std. Error </td> <td align="right"> t-value </td> <td align="right"> p-value </td> </tr>
@@ -718,14 +670,14 @@ itsadug::gamtabs(s2, type = "html")
 #> `geom_smooth()` using method = 'gam'
 ```
 
-<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-28-1.png" width="100%" />
+<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-19-1.png" width="100%" />
 
 ```
 #> Joining, by = "ResearchID"
 #> `geom_smooth()` using method = 'gam'
 ```
 
-<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-28-2.png" width="100%" />
+<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-19-2.png" width="100%" />
 
 ```
 #> Parsed with column specification:
@@ -746,21 +698,21 @@ itsadug::gamtabs(s2, type = "html")
 #> `geom_smooth()` using method = 'gam'
 ```
 
-<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-28-3.png" width="100%" />
+<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-19-3.png" width="100%" />
 
 ```
 #> Joining, by = "ResearchID"
 #> `geom_smooth()` using method = 'gam'
 ```
 
-<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-28-4.png" width="100%" />
+<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-19-4.png" width="100%" />
 
 ```
 #> Joining, by = "ResearchID"
 #> `geom_smooth()` using method = 'gam'
 ```
 
-<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-28-5.png" width="100%" />
+<img src="15-aim1-notebook_files/figure-html/unnamed-chunk-19-5.png" width="100%" />
 
 
 

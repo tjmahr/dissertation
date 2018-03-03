@@ -32,8 +32,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="entropy-in-familiar-word-recognition.html">
-<link rel="next" href="analysis-of-referent-selection.html">
+<link rel="prev" href="analysis-of-referent-selection.html">
+<link rel="next" href="vw-experiment-items.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -237,125 +237,29 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="aim-2-method" class="section level1">
-<h1><span class="header-section-number">Chapter 13</span> Aim 2: Method</h1>
-<div id="visual-stimuli" class="section level2">
-<h2><span class="header-section-number">13.1</span> Visual stimuli</h2>
-<p>The images used in the experiment consisted of color photographs on gray backgrounds. These images were piloted in a preschool classroom to ensure that children consistently used the same label for familiar objects and did not consistently use the same label for novel/unfamiliar objects.</p>
-</div>
-<div id="coding-notebook" class="section level2">
-<h2><span class="header-section-number">13.2</span> Coding Notebook</h2>
-<p>Here is the first look at the raw, unscreened, unbinned data.</p>
-<p><img src="21-aim1-notebook_files/figure-html/raw-aim2-1.png" width="100%" /><img src="21-aim1-notebook_files/figure-html/raw-aim2-2.png" width="100%" /></p>
-<p>Observations:</p>
-<ul>
-<li>Probability of looking to familiar image given real word increased in year 3. Kind of unexpected that they could improve noticeably on this simple two-image task.</li>
-<li>Probability of looking to unfamiliar given a nonword increases each year.</li>
-<li>Probability of looking to familiar given a mispronunciation increased</li>
-<li>250 to 1500 looks like a reasonable analysis window.</li>
-<li>Before the onset of the target word, there appears to be some looking preferences—maybe—for the familiar at timepoint 1 and unfamiliar in timepoint 3.</li>
-<li>The “peak” growth curve feature will need to be flipped for the nonword trials.</li>
-</ul>
-<div id="data-screening-1" class="section level3">
-<h3><span class="header-section-number">13.2.1</span> Data screening</h3>
-<p>We will use the missing data window and missing data threshold as Aim 1. We need to add a new rule for minimum trials per condition. Let’s go with 6.</p>
-<pre><code>#&gt; $bin_width
-#&gt; [1] 3
-#&gt; 
-#&gt; $start_time
-#&gt; [1] 250
-#&gt; 
-#&gt; $end_time
-#&gt; [1] 1500
-#&gt; 
-#&gt; $bin_length
-#&gt; [1] 50</code></pre>
-<p>After mapping the gaze coordinates onto the onscreen images, we performed data screening. As in Aim 1, we considered the time window from 0 to 2000 ms after noun onset. We identified a trial as <em>unreliable</em> if at least 50% of the looks were missing during the time window. We excluded an entire block of trials if it had fewer than 18 reliable trials. As an additional criterion, we excluded participants who failed to provide at least 6 reliable trials per experimental condition.</p>
-<p>Table <a href="aim-2-method.html#tab:mp-screening-counts">13.1</a> shows the numbers of participants and trials excluded at each timepoint due to unreliable data. As with the experiment in Aim 1, there were more children in the second timepoint than the first timepoint due to a timing error in the initial version of this experiment, leading to the exclusion of 30 participants from the first timepoint.</p>
-<table>
-<caption><span id="tab:mp-screening-counts">Table 13.1: </span>Eyetracking data before and after data screening.</caption>
-<thead>
-<tr class="header">
-<th align="left">Dataset</th>
-<th align="left">Study</th>
-<th align="right">N Children</th>
-<th align="right">N Blocks</th>
-<th align="right">N Trials</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">Raw</td>
-<td align="left">TimePoint1</td>
-<td align="right">177</td>
-<td align="right">341</td>
-<td align="right">12245</td>
-</tr>
-<tr class="even">
-<td align="left"></td>
-<td align="left">TimePoint2</td>
-<td align="right">181</td>
-<td align="right">349</td>
-<td align="right">12600</td>
-</tr>
-<tr class="odd">
-<td align="left"></td>
-<td align="left">TimePoint3</td>
-<td align="right">164</td>
-<td align="right">325</td>
-<td align="right">11736</td>
-</tr>
-<tr class="even">
-<td align="left">Screened</td>
-<td align="left">TimePoint1</td>
-<td align="right">162</td>
-<td align="right">305</td>
-<td align="right">9062</td>
-</tr>
-<tr class="odd">
-<td align="left"></td>
-<td align="left">TimePoint2</td>
-<td align="right">170</td>
-<td align="right">320</td>
-<td align="right">10031</td>
-</tr>
-<tr class="even">
-<td align="left"></td>
-<td align="left">TimePoint3</td>
-<td align="right">157</td>
-<td align="right">306</td>
-<td align="right">10113</td>
-</tr>
-<tr class="odd">
-<td align="left">Raw − Screened</td>
-<td align="left">TimePoint1</td>
-<td align="right">15</td>
-<td align="right">36</td>
-<td align="right">3183</td>
-</tr>
-<tr class="even">
-<td align="left"></td>
-<td align="left">TimePoint2</td>
-<td align="right">11</td>
-<td align="right">29</td>
-<td align="right">2569</td>
-</tr>
-<tr class="odd">
-<td align="left"></td>
-<td align="left">TimePoint3</td>
-<td align="right">7</td>
-<td align="right">19</td>
-<td align="right">1623</td>
-</tr>
-</tbody>
-</table>
-<p><img src="21-aim1-notebook_files/figure-html/clean-aim2-1.png" width="100%" /></p>
-</div>
-</div>
-<div id="prepare-the-dataset-for-modeling-1" class="section level2">
-<h2><span class="header-section-number">13.3</span> Prepare the dataset for modeling</h2>
-<p>As in Aim 1, to prepare the data for modeling, we downsampled the data into 50-ms (3-frame) bins. We modeled the looks from 250 to 1500 ms. Lastly, we aggregated looks by child, study, condition and time, and created orthogonal polynomials to use as time features for the model.</p>
+<div id="quick-testing-sandbox" class="section level1">
+<h1><span class="header-section-number">Chapter 15</span> Quick testing sandbox</h1>
+<p><em>This is a chapter for quickly previewing and testing how content appears</em></p>
+<p>We fit a generalized additive model with fast restricted maximum likelihood estimation [<span class="citation">Wood (<a href="#ref-Wood2017">2017</a>)</span>; <span class="citation">Sóskuthy (<a href="#ref-Soskuthy2017">2017</a>)</span> for a tutorial for linguists; see Box 1]. We included main effects of study year. These <em>parametric</em> terms work like conventional regression effects and determined the growth curve’s average values. We used age-4 as the reference year, so the model’s intercept represented the average looking probability at age 4. The model’s year effects therefore represented differences between age 4 vs. age 3 and age 4 vs. age 5.</p>
+<p>We included a <em>smooth</em> term for time. We included a smooth term for trial time to represent a general effect of time following noun onset across all studies, and we also included smooth terms for time for each study. These study-specific smooths estimate how the shape of the data differs in each individual study. As an equation, our model estimated: [<span class="citation">Barr (<a href="#ref-Barr2008">2008</a>)</span>;] <span class="citation">(vers. 2.3; van Rij et al., <a href="#ref-itsadug">2017</a>)</span></p>
 
+</div>
+
+
+
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-Wood2017">
+<p>Wood, S. N. (2017). <em>Generalized additive models: An introduction with R</em> (2nd ed.). CRC Press.</p>
+</div>
+<div id="ref-Soskuthy2017">
+<p>Sóskuthy, M. (2017). Generalised additive mixed models for dynamic analysis in linguistics: a practical introduction. Retrieved from <a href="http://arxiv.org/abs/1703.05339" class="uri">http://arxiv.org/abs/1703.05339</a></p>
+</div>
+<div id="ref-Barr2008">
+<p>Barr, D. J. (2008). Analyzing ‘visual world’ eyetracking data using multilevel logistic regression. <em>Journal of Memory and Language</em>, <em>59</em>(4), 457–474. doi:<a href="https://doi.org/10.1016/j.jml.2007.09.002">10.1016/j.jml.2007.09.002</a></p>
+</div>
+<div id="ref-itsadug">
+<p>van Rij, J., Wieling, M., Baayen, R. H., &amp; van Rijn, H. (2017). itsadug: Interpreting time series and autocorrelated data using gamms.</p>
 </div>
 </div>
             </section>
@@ -363,8 +267,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           </div>
         </div>
       </div>
-<a href="entropy-in-familiar-word-recognition.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="analysis-of-referent-selection.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="analysis-of-referent-selection.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="vw-experiment-items.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
