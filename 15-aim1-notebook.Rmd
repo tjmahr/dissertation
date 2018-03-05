@@ -858,11 +858,11 @@ ggplot(differences) +
   geom_ribbon(aes(ymin = fit - CI, ymax = fit + CI), alpha = .2) +
   geom_line(size = 1) +
   labs(
-      color = "Study",
-      fill = "Study",
-      x = "Time after target onset [ms]",
-      y = "Difference in emp. log-odds",
-      caption = "Estimated difference with 95% interval") + 
+    color = "Study",
+    fill = "Study",
+    x = "Time after target onset [ms]",
+    y = "Difference in emp. log-odds",
+    caption = "Estimated difference with 95% interval") + 
   facet_wrap("comparison")
 ```
 
@@ -1013,6 +1013,15 @@ s2 <- gam(
   method = "REML")
 summary(s2)
 plot(s2, pages = 1)
+
+# s2r <- bam(
+#   elog ~ S + s(Time) + s(Time, by = S) + s(Time, R, bs = "fs", m = 1, k = 5),
+#   data = semy_d,
+#   method = "REML")
+# summary(s2r)
+# plot(s2r, pages = 1)
+# readr::write_rds(s2r, "./data/aim1-semy-random-smooths.rds.gz")
+s2r <- readr::read_rds("./data/aim1-semy-random-smooths.rds.gz")
 # gam.check(s2)
 # anova(b2n, b2)
 
@@ -1022,8 +1031,31 @@ AIC(s2n, s2)
 The model’s predictions are shown in the figure. It captured the trend for
 increased looks to the competitor image with each year of the study.
 
-```{r, echo = FALSE, message = FALSE, out.width = "80%", fig.width = 5}
-itsadug::plot_smooth(s2, view = "Time", plot_all = "S")
+```{r semy-vs-unre-fits, echo = FALSE, warning = FALSE, message = FALSE, out.width = "80%", fig.width = 5, fig.height = 4, results = "hide"}
+itsadug::plot_smooth(s2r, view = "Time", plot_all = "S")
+
+s2r %>% 
+  get_predictions(
+    cond = list(
+      Time = unique(semy_d$Time), 
+      S = unique(semy_d$S)),
+    rm.ranef = TRUE) %>% 
+  left_join(recode_studies) %>% 
+  ggplot() + 
+    aes(x = Time, y = fit, fill = Age) + 
+    geom_hline(size = 2, yintercept = 0, color = "white") +
+    geom_ribbon(aes(ymin = fit - CI, ymax = fit + CI), alpha = .2) +
+    geom_line(aes(color = Age), size = 1) + 
+    labs(
+      color = "Study",
+      fill = "Study",
+      x = "Time after target onset [ms]",
+      y = "Emp. log-odds(Sem. vs. Unrelated)",
+      caption = "Fitted values with 95% interval") + 
+    theme(
+    legend.position = c(0.05, 0.95), 
+    legend.justification = c(0, 1))
+
 ```
 
 We also computed the difference of the curves from different studies. The
@@ -1069,6 +1101,69 @@ ggplot(semy_d) +
     caption = "Lines: GAM fit. Point-ranges: Obs. Mean ± SE")
 ```
 
+
+```{r phon-diff-curves, echo = FALSE, message = FALSE, out.width = "80%", fig.width = 5, fig.height = 3, results = "hide"}
+age5_age4 <- s2r %>% 
+  get_difference(
+    comp = list(S = c("TimePoint3", "TimePoint2")), 
+    cond = list(Time = unique(semy_d$Time)), 
+    rm.ranef = TRUE) %>% 
+  mutate(comparison = "Age 5 − Age 4")
+  
+age4_age3 <- s2r %>% 
+  get_difference(
+    comp = list(S = c("TimePoint2", "TimePoint1")), 
+    cond = list(Time = unique(semy_d$Time)), 
+    rm.ranef = TRUE) %>% 
+  mutate(comparison = "Age 4 − Age 3")  
+
+rle_lengths <- function(xs) rle(xs)[["lengths"]]
+
+differences <- bind_rows(age5_age4, age4_age3) %>% 
+  rename(fit = difference) %>% 
+  mutate(
+    upper = fit + CI, 
+    lower = fit - CI,
+    no_zero = 0 > upper | 0 < lower) %>% 
+  group_by(comparison) %>% 
+  arrange(comparison, Time) %>% 
+  mutate(
+    streak = rep(seq_along(rle_lengths(no_zero)), rle_lengths(no_zero))) %>% 
+  ungroup()
+
+sig_regions <- differences %>% 
+  filter(no_zero) %>% 
+  group_by(comparison, streak) %>% 
+  summarize(min = min(Time), max = max(Time)) %>% 
+  ungroup()
+
+ggplot(differences) + 
+  aes(x = Time, y = fit) + 
+  geom_hline(size = 2, yintercept = 0, color = "white") +
+  geom_vline(
+    aes(xintercept = min), data = sig_regions, 
+    color = "blue", alpha = .5, linetype = "dashed") +
+  geom_vline(
+    aes(xintercept = max), data = sig_regions, 
+    color = "blue", alpha = .5, linetype = "dashed") +
+  geom_segment(
+      aes(x = min, xend = max, group = streak), y = -Inf, yend = -Inf,
+      data = sig_regions, color = "blue",  alpha = .5, size = 1) + 
+  geom_segment(
+      aes(x = min, xend = max, group = streak), y = Inf, yend = Inf,
+      data = sig_regions, color = "blue",  alpha = .5, size = 1.1) + 
+  geom_ribbon(aes(ymin = fit - CI, ymax = fit + CI), alpha = .2) +
+  geom_line(size = 1) +
+  labs(
+    color = "Study",
+    fill = "Study",
+    x = "Time after target onset [ms]",
+    y = "Difference in emp. log-odds",
+    caption = "Estimated difference with 95% interval") + 
+  facet_wrap("comparison")
+
+
+```
 
 
 
