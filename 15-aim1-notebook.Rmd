@@ -558,6 +558,14 @@ basis <- polypoly::poly_melt(basis_matrix) %>%
     data.frame(Time = times, observation = seq_along(times)), 
     by = "observation")
 
+t1_poly <- lm(Prop ~ poly(Time, 3), data = t1_fam)
+
+poly_basis <- polypoly::poly_melt(poly(t1_fam$Time, 3)) %>% 
+  mutate(observation = as.numeric(observation)) %>% 
+  left_join(
+    data.frame(Time = times, observation = seq_along(times)), 
+    by = "observation")
+
 p1 <- ggplot(basis) + 
   aes(x = Time, y = value) + 
   geom_line(aes(color = degree)) + 
@@ -570,7 +578,23 @@ p1 <- ggplot(basis) +
     plot.background = element_rect(fill = "#eef7fa", colour = "#eef7fa"),
     panel.background = element_rect(fill = "#E5EAEF"))
 
+p1_poly <- ggplot(poly_basis) + 
+  aes(x = Time, y = value) + 
+  geom_line(aes(color = degree)) + 
+  # ylim(c(-2, 2)) + 
+  guides(color = FALSE) + 
+  ggtitle("Basis functions (time features)") + 
+  labs(y = NULL) +
+  theme_grey(base_size = 9)
+
 weighted <- (basis_matrix %*% diag(coef(t1_gam)[-1])) %>% 
+  polypoly::poly_melt() %>% 
+  mutate(observation = as.numeric(observation)) %>% 
+  left_join(
+    data.frame(Time = times, observation = seq_along(times)), 
+    by = "observation")
+
+poly_weighted <- (poly(t1_fam$Time, 3) %*% diag(coef(t1_poly)[-1])) %>% 
   polypoly::poly_melt() %>% 
   mutate(observation = as.numeric(observation)) %>% 
   left_join(
@@ -590,10 +614,22 @@ p2 <- ggplot(weighted) +
     plot.background = element_rect(fill = "#eef7fa", colour = "#eef7fa"),
     panel.background = element_rect(fill = "#E5EAEF"))
 
+p2_poly <- ggplot(poly_weighted) + 
+  aes(x = Time, y = value) + 
+  geom_line(aes(color = factor(degree))) + 
+  stat_summary(fun.y = sum, color = "#0074D9", geom = "line", size = 1.25) + 
+  ylim(c(-.2, .2)) + 
+  guides(color = FALSE) + 
+  ggtitle("Weighted basis functions") + 
+  labs(y = NULL) +
+  theme_grey(base_size = 9) 
+
 p3 <- cowplot::plot_grid(p1, p2)
+p3_poly <- cowplot::plot_grid(p1_poly, p2_poly)
 print(p3)
 # ggsave("./misc/basis-raw.png", p1,  width = 3, height = 3)
 # ggsave("./misc/basis-weighted.png", p2, width = 3, height = 3)
+# cowplot::ggsave("./misc/basis-both.png", p3, width = 6, height = 3)
 # cowplot::ggsave("./misc/basis-both.png", p3, width = 6, height = 3)
 ```
 
@@ -1102,7 +1138,7 @@ ggplot(semy_d) +
 ```
 
 
-```{r phon-diff-curves, echo = FALSE, message = FALSE, out.width = "80%", fig.width = 5, fig.height = 3, results = "hide"}
+```{r semy-diff-curves, echo = FALSE, message = FALSE, out.width = "80%", fig.width = 5, fig.height = 3, results = "hide"}
 age5_age4 <- s2r %>% 
   get_difference(
     comp = list(S = c("TimePoint3", "TimePoint2")), 

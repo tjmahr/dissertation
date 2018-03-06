@@ -140,7 +140,8 @@ knitr::include_graphics("./misc/happy-cat-grooming-itself-vector-file.png")
 
 ## Custom blocks
 
-```{block2, type = "infobox"}
+\Begin{infobox}
+<div class = "infobox">
 **Okay**. This book is made with bookdown, an R package/tool-chain for creating
 a books in multiple formats. This chapter is just a placeholder section and some
 scratch-paper so that I have some examples on-hand of how to use bookdown's
@@ -151,8 +152,8 @@ Some text for this block.
 - a list item
 - another item
 - end the list with a blank line
-```
-
+</div>
+\End{infobox}
 
 ## Debug info
 

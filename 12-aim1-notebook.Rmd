@@ -5,24 +5,34 @@ Analysis of familiar word recognition
 d_m <- readr::read_csv("./data/aim1-model-ready.csv.gz")
 knitr::read_chunk("./helpers.R")
 if (interactive()) source("./helpers.R")
-knitr::opts_chunk$set(cache = TRUE)
 ```
 
 ```{r helpers, include = FALSE, cache = FALSE}
 ```
 
-```{r, include = FALSE, cache = FALSE}
+```{r, include = FALSE}
 library(rstanarm)
 library(bayesplot)
 theme_set(theme_grey())
 library(stringr)
 library(ggstance)
+knitr::opts_chunk$set(cache = TRUE)
+```
+
+```{r, include = FALSE}
 parse_text <- function(x) parse(text = x)
 
 b <- readr::read_rds("./data/stan_aim1_cubic_model.rds.gz")
 b$stan_function <- "stan_glmer"
 
 nsamples <- nrow(as.data.frame(b))
+
+convert_study_to_age <- function(xs) {
+  factor(
+    xs, 
+    levels = c("TimePoint1", "TimePoint2", "TimePoint3"), 
+    labels = c("Age 3", "Age 4", "Age 5"))
+}
 ```
 
 
@@ -69,22 +79,22 @@ differently, we modeled the probability of looking to the target during an
 eyetracking task as:
 
 $$
-\text{log-odds}(\mathit{looking}) = \beta_0 + \beta_1 * \textit{Time}^1 +  \beta_2 * \textit{Time}^2 +   \beta_3 * \textit{Time}^3
+\text{log-odds}(\mathit{looking}) = β_0 + β_1 * \textit{Time}^1 + β_2 * \textit{Time}^2 +   β_3 * \textit{Time}^3
 $$
 
-That the time terms are *orthogonal* means that $\textit{Time}^1$, $\textit{Time}^2$ and
-$\textit{Time}^3$ are transformed so that they are uncorrelated. Under this
-formulation, the parameters $\beta_0$ and $\beta_1$ have a direct
-interpretation in terms of lexical processing performance. The
-intercept, $\beta_0$, measures the area under the growth curve—or the
-probability of fixating on the target word averaged over the whole
-window. We can think of $\beta_0$ as a measure of 
-*word recognition reliability*. The linear time parameter, $\beta_1$,
-estimates the steepness of the growth curve—or how the probability of
-fixating changes from frame to frame. We can think of $\beta_1$ as a
-measure of *processing efficiency*, because growth curves with stronger
-linear features exhibit steeper frame-by-frame increases in looking
-probability.[^3]
+That the time terms are *orthogonal* means that $\textit{Time}^1$,
+$\textit{Time}^2$ and $\textit{Time}^3$ are transformed so that they are
+uncorrelated. Under this formulation, the parameters $β_0$ and $β_1$
+have a direct interpretation in terms of lexical processing performance. The
+intercept, $β_0$, measures the area under the growth curve—or the
+probability of fixating on the target word averaged over the whole window. We
+can think of $β_0$ as a measure of *word recognition reliability*. The
+linear time parameter, $β_1$, estimates the steepness of the growth
+curve—or how the probability of fixating changes from frame to frame. We can
+think of $β_1$ as a measure of *processing efficiency*, because growth
+curves with stronger linear features exhibit steeper frame-by-frame increases in
+looking probability.[^3]
+
 
 [^3]: The polynomial other terms are less important—or rather, they have
     do not map as neatly onto behavioral descriptions as the accuracy
@@ -101,9 +111,9 @@ probability.[^3]
 
 We studied how word recognition changes over time by modeling how growth curves
 change over developmental time. This amounted to studying how the growth curve
-parameters changes year over year. We included dummy-coded indicators for
-Year 1, Year 2, and Year 3 and allowed these indicators interact with the growth
-curve parameters. These year-by-growth-curve terms captured how the shape of the
+parameters changes year over year. We included dummy-coded indicators for Age 3,
+Age 4, and Age 5 and allowed these indicators interact with the growth curve
+parameters. These year-by-growth-curve terms captured how the shape of the
 growth curves changed each year. We also included random effects to represent
 child-by-year effects.
 
@@ -123,7 +133,7 @@ to word recognition performance.
 
 (ref:curve-features) Illustration of the three growth curve features and how
 they describe lexical processing performance. The three curves used are
-simulations of new participants from Year 2.
+simulations of new participants at Age&nbsp;4.
 
 ```{r curve-features, fig.cap = "(ref:curve-features)", echo = FALSE, out.width = "80%", fig.height = 5.5, fig.width = 5.5}
 dummy_data <- d_m %>% 
@@ -168,7 +178,6 @@ p1 <- ggplot(lpred_lm) +
     axis.text.x = element_blank(),
     axis.title.y = element_text(colour = "white"),
     axis.ticks.x = element_blank())
-
 
 p2 <- ggplot(lpred_lm) + 
   aes(x = ot1, y = .posterior_value, group = .draw) + 
@@ -229,11 +238,16 @@ _TJM: This is a bit rough still._
 
 As a mixed-effects model, the model estimated a population-average growth curve
 (the "fixed" effects) and how individual children deviated from average (the
-"random" effects). Figure _TODO_ shows 200 posterior samples of those average
+"random" effects). Figure \@ref(fig:average-growth-curves) shows 200 posterior samples of the average
 growth curves for each study. Clearly, on average, the growth curves become
 steeper and achieve higher looking probabilities with each year of the study.
 
-```{r average-growth-curves, fig.cap = "", echo = FALSE, out.width = "50%", fig.height=3, fig.width=4}
+(ref:average-growth-curves) The model estimated an average word
+recognition growth for each study, and the colored lines represent 200
+posterior samples of these growth curves. The thick dark lines represent
+the observed average growth curve in each study.
+
+```{r average-growth-curves, fig.cap = "(ref:average-growth-curves)", echo = FALSE, out.width = "50%", fig.height = 3, fig.width = 4}
 dummy_data <- d_m %>% 
   distinct(Study, Time, ot1, ot2, ot3) %>% 
   mutate(
@@ -255,12 +269,13 @@ peaks <- lpred %>%
   mutate(peek_accuracy = peek_accuracy) %>% 
   tidyr::spread(Study, peek_accuracy) %>% 
   select(
-    `Peak~~(TP1)` = TimePoint1,
-    `Peak~~(TP2)` = TimePoint2,
-    `Peak~~(TP3)` = TimePoint3)
+    `Peak~~(Age~~3)` = TimePoint1,
+    `Peak~~(Age~~4)` = TimePoint2,
+    `Peak~~(Age~~5)` = TimePoint3)
 
-lpred %>% 
+p <- lpred %>% 
   tjmisc::sample_n_of(200, .draw) %>% 
+  mutate(Study = convert_study_to_age(Study)) %>% 
   ggplot() + 
     aes(x = Time, y = plogis(.posterior_value), color = Study) +
     geom_hline(yintercept = .25, color = "white", size = 2) +
@@ -269,7 +284,9 @@ lpred %>%
       alpha = .1) +
     stat_summary(
       aes(y = Prop, group = Study), 
-      data = d_m, fun.y = "mean", geom = "line", 
+      data = d_m %>% 
+        mutate(Study = convert_study_to_age(Study)), 
+      fun.y = "mean", geom = "line", 
       color = "#111111", size = 1) + 
     theme(
       legend.position = c(.01, .99), 
@@ -278,22 +295,23 @@ lpred %>%
     guides(
       color = guide_legend(title = NULL, override.aes = list(alpha = 1))) +
     labs(
-      title = "Observed means and 200 posterior predictions of means",
+      title = "Observed means and 200 posterior fits",
       x = "Time after target onset [ms]",
       y = "Proportion looks to target")
+print(p)
 ```
 
-We now consider how the curvature of the average growth curves change each year.
-Figure \@ref(fig:effects2) depicts uncertainty intervals with the model's
-average effects of each timepoint on the growth curve features. The intercept
-and linear time effects increased each year, confirming that children become
-more reliable and faster at recognizing words as they grow older. The peak
-accuracy also increased each year. For each effect, the change from year\ 1 to
-year\ 2 is approximately the same as the change from year\ 2 to year\ 3, as
-visible in figure \@ref(fig:pairwise-effects).
+We now describe how the curvature of the average growth curves change
+each year. Figure \@ref(fig:effects2) depicts uncertainty intervals with
+the model's average effects of each timepoint on the growth curve
+features. The intercept and linear time effects increased each year,
+confirming that children become more reliable and faster at recognizing
+words as they grow older. The peak accuracy also increased each year.
+For each effect, the change from age 3 to age 4 is approximately the
+same as the change from age 4 to age 5, as visible in
+Figure \@ref(fig:pairwise-effects).
 
-
-(ref:effects2) Uncertainty intervals for the effects of study timepoints on
+(ref:effects2) Uncertainty intervals for the effects of study years on
 growth curve features. The intercept and peak features were converted from
 log-odds to proportions to ease interpretation.
 
@@ -302,18 +320,18 @@ log-odds to proportions to ease interpretation.
 draws <- as.data.frame(b) %>% 
   as_tibble() %>% 
   transmute(
-    `Intercept~~(TP1)` = `(Intercept)`,
-    `Intercept~~(TP2)` = `(Intercept)` + StudyTimePoint2,
-    `Intercept~~(TP3)` = `(Intercept)` + StudyTimePoint3,
-    `Time~~(TP1)` = ot1,
-    `Time~~(TP2)` = ot1 + `ot1:StudyTimePoint2`,
-    `Time~~(TP3)` = ot1 + `ot1:StudyTimePoint3`,
-    `Time^2~~(TP1)` = ot2,
-    `Time^2~~(TP2)` = ot2 + `ot2:StudyTimePoint2`,
-    `Time^2~~(TP3)` = ot2 + `ot2:StudyTimePoint3`,
-    `Time^3~~(TP1)` = ot3,
-    `Time^3~~(TP2)` = ot3 + `ot3:StudyTimePoint2`,
-    `Time^3~~(TP3)` = ot3 + `ot3:StudyTimePoint3`) %>% 
+    `Intercept~~(Age~~3)` = `(Intercept)`,
+    `Intercept~~(Age~~4)` = `(Intercept)` + StudyTimePoint2,
+    `Intercept~~(Age~~5)` = `(Intercept)` + StudyTimePoint3,
+    `Time~~(Age~~3)` = ot1,
+    `Time~~(Age~~4)` = ot1 + `ot1:StudyTimePoint2`,
+    `Time~~(Age~~5)` = ot1 + `ot1:StudyTimePoint3`,
+    `Time^2~~(Age~~3)` = ot2,
+    `Time^2~~(Age~~4)` = ot2 + `ot2:StudyTimePoint2`,
+    `Time^2~~(Age~~5)` = ot2 + `ot2:StudyTimePoint3`,
+    `Time^3~~(Age~~3)` = ot3,
+    `Time^3~~(Age~~4)` = ot3 + `ot3:StudyTimePoint2`,
+    `Time^3~~(Age~~5)` = ot3 + `ot3:StudyTimePoint3`) %>% 
   bind_cols(peaks)
 
 logodds <- draws %>% 
@@ -361,7 +379,11 @@ proportions.
 ```{r pairwise-effects, fig.cap = "(ref:pairwise-effects)", fig.show = 'hold', echo = FALSE, out.width = "50%", fig.height = c(4, 3), fig.width = c(4, 4)}
 clean_names <- . %>% 
   stringr::str_replace_all("[()]", "") %>% 
-  stringr::str_replace("~~", "_")
+  stringr::str_replace("Age~~", "Age ") %>% 
+  stringr::str_replace("~~", "_") %>% 
+  stringr::str_replace("TP1", "Age 3") %>% 
+  stringr::str_replace("TP2", "Age 4") %>% 
+  stringr::str_replace("TP3", "Age 5")
 
 pairwise <- draws %>% 
   mutate_at(vars(starts_with("Intercept"), starts_with("Peak")), plogis) %>% 
@@ -376,7 +398,11 @@ pairwise <- draws %>%
     . %>% select(-.draw, -parameter) %>% 
       mcmc_intervals_data(prob = 0.5, prob_outer = 0.9) %>% 
       rename(pair = parameter)) %>% 
-  bind_rows(.id = "parameter")
+  bind_rows(.id = "parameter") %>% 
+  mutate(
+    pair = pair %>% 
+      stringr::str_replace_all("Age ", "Age~~") %>%
+      factor(c("Age~~4-Age~~3", "Age~~5-Age~~4", "Age~~5-Age~~3")))
 
 ggplot(pairwise %>% filter(!(parameter %in% c("Peak", "Intercept")))) + 
   aes(y = forcats::fct_rev(pair)) +
@@ -387,6 +413,7 @@ ggplot(pairwise %>% filter(!(parameter %in% c("Peak", "Intercept")))) +
   facet_wrap(
     "parameter", ncol = 1, strip.position = "left", 
     labeller = label_parsed) + 
+  scale_y_discrete(labels = parse_text) + 
   labs(
     x = NULL, y = NULL, 
     title = "Differences in average effects",
@@ -394,7 +421,10 @@ ggplot(pairwise %>% filter(!(parameter %in% c("Peak", "Intercept")))) +
   theme(
     strip.placement = "outside", 
     strip.background = element_rect(fill = NA),
-    axis.text.y = element_text(size = rel(1.2)))
+    axis.text.y = element_text(size = rel(1.2)),
+    strip.text.y = element_text(
+      size = rel(1.4), 
+      margin = margin(0, 10, 0, 5, "pt")))
 
 ggplot(pairwise %>% filter(parameter %in% c("Peak", "Intercept"))) + 
   aes(y = forcats::fct_rev(pair)) +
@@ -412,7 +442,10 @@ ggplot(pairwise %>% filter(parameter %in% c("Peak", "Intercept"))) +
   theme(
     strip.placement = "outside", 
     strip.background = element_rect(fill = NA),
-    axis.text.y = element_text(size = rel(1.2)))
+    axis.text.y = element_text(size = rel(1.2)),
+    strip.text.y = element_text(
+      size = rel(1.4), 
+      margin = margin(0, 10, 0, 5, "pt")))
 ```
 
 ```{r, include = FALSE}
@@ -1477,6 +1510,42 @@ ggplot(lpred) +
 
 
 ### Formal model specification
+
+<div class = "infobox">
+
+**Box 1: A brief comment about priors.**
+
+Bayesian models require prior information (“priors”). Priors are also
+commonly referred to as "prior beliefs", and Bayesian techniques are
+criticized or dismissed for smuggling subjectivity into the scientific
+enterprise. I find this unfortunate on two grounds. First, *belief*
+overstates things. As George Box said, "all models are wrong, but some
+are useful" [cite], so no part of a statistical model should be called
+a "belief" when the whole thing is a convenient fiction. That's why I
+prefer the term *prior information*. [Hat tip Gelman?] Second, other
+parts of the statistical model are also subjective: likelihood
+functions, what kind of ANOVA, what to covary, whether to transform
+measurements, whether a *p* = .07 is a "marginal" effect or no effect at
+all, and so on. This subjectivity seems reasonable, provided that we
+scientists are open about modeling decisions.
+
+For these models, I will use weakly to moderately informative priors.
+For example, suppose *x* and *y* are scaled to mean 0 and standard
+deviation 1. A weakly informative prior for the effect of *x* on *y*
+might be Normal(0, 5)—a normal distribution with mean 0 and standard
+deviation 5. If we fit a regression model and observed an effect size
+of 12 SD units, our first assumption would be that something went wrong
+with our software. The weakly informative prior captures this level of
+prior information. A moderately informative prior would be Normal(0, 1).
+This prior information captures our disciplinary experience that effect
+sizes greater than ±1 relatively uncommon in child language research. A
+strongly informative prior for this effect might be something like
+Normal(.4, .1) which says that our model should be very skeptical of
+negative effects and of effects larger than .8. For this project, I will
+default to the first two levels of prior information.
+
+</div>
+
 
 _TJM: Ignore this section for now. It might go to an appendix. Basically, I
 think I need to briefly summarize and justify the priors used in the analysis._

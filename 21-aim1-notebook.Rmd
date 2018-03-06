@@ -11,12 +11,6 @@ ensure that children consistently used the same label for familiar
 objects and did not consistently use the same label for novel/unfamiliar
 objects.
 
-
-
-
-
-
-
 ## Coding Notebook
 
 ```{r include = FALSE}
@@ -26,6 +20,10 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 ```
 
 ```{r helpers, message = FALSE, warning = FALSE}
+```
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(cache = TRUE)
 ```
 
 ```{r, message = FALSE, warnings = FALSE, include = FALSE}

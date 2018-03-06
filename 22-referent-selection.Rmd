@@ -1,5 +1,5 @@
 Analysis of referent selection
-===========================================================================
+=======================================================================
 
 ```{r, include = FALSE}
 d_m <- readr::read_csv("./data/aim2-model-ready.csv.gz")
@@ -8,6 +8,10 @@ if (interactive()) source("./helpers.R")
 ```
 
 ```{r helpers, include = FALSE}
+```
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(cache = TRUE)
 ```
 
 ## Nonwords versus real words
