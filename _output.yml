@@ -19,16 +19,6 @@ bookdown::gitbook:
   # https://rmarkdown.rstudio.com/html_document_format.html#markdown_extensions
   # md_extensions: -tex_math_single_backslash+fenced_divs
   md_extensions: -tex_math_single_backslash
-# bookdown::pdf_book:
-#   includes:
-#     in_header: "assets/preamble.tex"
-#   latex_engine: xelatex
-#   keep_tex: yes
-#   citation_package: natbib
-#   pandoc_args: [
-#     "--csl", "./assets/apa.csl",
-#     "--bibliography", "./assets/refs"
-#   ]
 bookdown::epub_book:
     pandoc_args: [
     "--csl", "./assets/apa.csl",
@@ -50,5 +40,10 @@ bookdown::tufte_book2:
   citation_package: natbib
   pandoc_args: [
     "--csl", "./assets/apa.csl",
-    "--bibliography", "./assets/refs"
+    "--bibliography", "./assets/refs.bib"
   ]
+huskydown::thesis_pdf:
+  latex_engine: xelatex
+  includes:
+    in_header: assets/preamble3.tex
+  template: assets/template.tex

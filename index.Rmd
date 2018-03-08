@@ -1,19 +1,34 @@
 --- 
-title: "My dissertation"
+title: "Development of word recognition in preschoolers"
 author: "Tristan Mahr"
 date: "`r Sys.Date()`"
 documentclass: book
-github-repo: tjmahr/dissertation
-link-citations: yes
-biblio-style: apalike
-panflute-filters: fix-apa-ampersands
 site: bookdown::bookdown_site
-affiliation: Department of Communication Sciences and Disorder, University of Wisconsin--Madison
+github-repo: tjmahr/dissertation
+panflute-filters: fix-apa-ampersands
+bibliography: ["assets/refs.bib", "assets/packages.bib"]
+csl: assets/apa.csl
+link-citations: yes
+
+affiliation: Department of Communication Sciences and Disorders, University of Wisconsin--Madison
+year: 2018
+school: University of Wisconsin--Madison
+program: Communication Sciences and Disorders
+chair: "Name of my committee chair"
+signature: ["committee member 1", "committee member 2"]
+abstract: |
+  "Here is my abstract"
+acknowledgments: |
+  "My acknowledgments"
+dedication: |
+  For Penny
+lot: true
+lof: true
 ---
 
 \frontmatter
 
-# Development of word recognition in preschoolers {-}
+# Preface {-}
 
 This book, when finished, will contain my dissertation research. 
 

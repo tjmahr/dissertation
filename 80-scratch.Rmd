@@ -1,4 +1,8 @@
-# Scratch paper
+(PART\*) Miscellany {#part-misc .unnumbered}
+========================================================================
+
+Scratch paper
+========================================================================
 
 This book is made with bookdown, an R package/tool-chain for creating a books in
 multiple formats. This chapter is just a placeholder section and some
@@ -27,7 +31,8 @@ knitr::read_chunk("./R/knitr-helpers.R")
 ```{r set-options, tidy = FALSE}
 ```
 
-## Bookdown cheatsheet
+Bookdown cheatsheet
+------------------------------------------------------------------------
 
 ### Cross-references to sections {#manual-section-label-demo}
 
@@ -138,7 +143,9 @@ knitr::include_graphics(
 knitr::include_graphics("./misc/happy-cat-grooming-itself-vector-file.png")
 ```
 
-## Custom blocks
+
+Custom blocks
+------------------------------------------------------------------------
 
 \Begin{infobox}
 <div class = "infobox">
@@ -154,34 +161,3 @@ Some text for this block.
 - end the list with a blank line
 </div>
 \End{infobox}
-
-## Debug info
-
-```{r}
-str(list(html = is_html_output(), latex = is_latex_output(),
-         word = is_word_output(), width = options("width")[[1]]))
-
-devtools::session_info()
-
-last_four_commits <- git2r::commits(git2r::repository("."), n = 4)
-msgs <- lapply(last_four_commits, methods::show)
-```
-
-
-
-```{r include = FALSE}
-# automatically create a bib database for R packages
-knitr::write_bib(c(
-  .packages(), 'bookdown', 'knitr', 'rmarkdown', "lme4", 
-  "rstanarm", "dplyr", "ggplot2", "littlelisteners", "tristan", 
-  "bayesplot", "tjmisc", "rlang"), './assets/packages.bib')
-
-# dir.create("./docs/")
-# dir.create("./docs/assets/")
-# file.copy(
-#   list.files("./assets/", full.names = TRUE), 
-#   file.path("./docs/assets", list.files("./assets/")), 
-#   overwrite = TRUE)
-```
-
-Built with love using `r papaja::cite_r("./assets/packages.bib")`.

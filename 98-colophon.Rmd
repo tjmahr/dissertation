@@ -1,0 +1,68 @@
+\backmatter
+
+# Colophon {-}
+
+## Debug info
+
+```{r}
+str(list(html = is_html_output(), latex = is_latex_output(),
+         word = is_word_output(), width = options("width")[[1]]))
+
+devtools::session_info()
+
+last_four_commits <- git2r::commits(git2r::repository("."), n = 4)
+msgs <- lapply(last_four_commits, methods::show)
+```
+
+
+
+```{r include = FALSE}
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown', "lme4", 
+  "rstanarm", "dplyr", "ggplot2", "littlelisteners", "tristan", 
+  "bayesplot", "tjmisc", "rlang"), './assets/packages.bib')
+
+# dir.create("./docs/")
+# dir.create("./docs/assets/")
+# file.copy(
+#   list.files("./assets/", full.names = TRUE), 
+#   file.path("./docs/assets", list.files("./assets/")), 
+#   overwrite = TRUE)
+```
+
+Built with love using `r papaja::cite_r("./assets/packages.bib")`.
+
+
+***
+
+This is the original colophon from the huskydown package. I need to
+reword and note my modifications.
+
+> This document is set in [EB
+> Garamond](https://github.com/georgd/EB-Garamond), [Source Code
+> Pro](https://github.com/adobe-fonts/source-code-pro/) and
+> [Lato](http://www.latofonts.com/lato-free-fonts/). The body text is
+> set at 11pt with $\familydefault$.
+
+> It was written in R Markdown and $\LaTeX$, and rendered into PDF
+> using [huskydown](https://github.com/benmarwick/huskydown) and
+> [bookdown](https://github.com/rstudio/bookdown).
+
+> This document was typeset using the XeTeX typesetting system, and the
+> [University of Washington Thesis
+> class](http://staff.washington.edu/fox/tex/) class created by Jim Fox.
+> Under the hood, the [University of Washington Thesis LaTeX
+> template](https://github.com/UWIT-IAM/UWThesis) is used to ensure that
+> documents conform precisely to submission standards. Other elements of
+> the document formatting source code have been taken from the [Latex,
+> Knitr, and RMarkdown templates for UC Berkeley's graduate
+> thesis](https://github.com/stevenpollack/ucbthesis), and [Dissertate:
+> a LaTeX dissertation template to support the production and
+> typesetting of a PhD dissertation at Harvard, Princeton, and
+> NYU](https://github.com/suchow/Dissertate)
+
+> The source files for this thesis, along with all the data files, have
+> been organised into an R package, xxx, which is available at
+> <https://github.com/xxx/xxx>. A hard copy of the thesis can be found
+> in the University of Washington library.
