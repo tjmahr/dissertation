@@ -18,10 +18,10 @@ and blocks of trials with too few trials. Read in that data.
 data <- readr::read_csv("./data/aim1-screened.csv.gz")
 
 recode_studies <- tibble::tribble(
-  ~S, ~Study, ~Age,
-  "TimePoint1", "TimePoint1", "Age 3",
-  "TimePoint2", "TimePoint2", "Age 4",
-  "TimePoint3", "TimePoint3", "Age 5",
+  ~S, ~S2, ~Study, ~Age,
+  "TimePoint1", "TimePoint1", "TimePoint1", "Age 3",
+  "TimePoint2", "TimePoint2", "TimePoint2", "Age 4",
+  "TimePoint3", "TimePoint3", "TimePoint3", "Age 5",
 )
 
 convert_study_to_age <- function(xs) {
@@ -55,13 +55,14 @@ looks_by_aoi <- data %>%
   aggregate_looks(defs, Study + ResearchID + Time ~ GazeByImageAOI) %>% 
   rename(AOI = .response_def) %>% 
   select(AOI:Time, Prop, Primary, Unrelated) %>% 
-  mutate(AOI = factor(AOI, c("Target", "PhonologicalFoil", 
-                             "SemanticFoil", "Unrelated")))
+  mutate(
+    AOI = AOI %>% 
+      factor(c("Target", "PhonologicalFoil", "SemanticFoil", "Unrelated")))
   
 ggplot(looks_by_aoi) + 
   aes(x = Time, y = Prop, color = Study) + 
   geom_hline(size = 2, color = "white", yintercept = .25) +
-  stat_smooth() + 
+  stat_smooth(method = "gam", formula = y ~ s(x)) + 
   facet_grid( ~ AOI) + 
   labs(
     x = "Time after target onset [ms]",
@@ -73,18 +74,16 @@ ggplot(looks_by_aoi) +
     legend.justification = c(1, 1))
 ```
 
-
-
 The looks to target increase year over year which decreases the remaining
 proportion of looks for the other three images each year. To study the relative
 propensity of looking to each image, we instead can use the log-odds of looking
 to each AOI versus the unrelated image.
 
-```{r by-aoi-logit, out.width = "100%", fig.height=2.5, fig.width=6, echo = FALSE, message = FALSE}
+```{r by-aoi-logit, out.width = "100%", fig.height = 2.5, fig.width = 6, echo = FALSE, message = FALSE}
 ggplot(looks_by_aoi %>% filter(AOI != "Unrelated")) + 
   aes(x = Time, y = log(Primary / Unrelated), color = Study) + 
   geom_hline(size = 2, color = "white", yintercept = 0) +
-  stat_smooth() + 
+  stat_smooth(method = "gam", formula = y ~ s(x)) + 
   facet_grid( ~ AOI) + 
   labs(
     x = "Time after target onset [ms]",
@@ -132,7 +131,9 @@ trial_info <- bind_rows(
   readr::read_csv("data-raw/rwl_timepoint2_trials.csv.gz"),
   readr::read_csv("data-raw/rwl_timepoint3_trials.csv.gz")) %>% 
   select(
-    TrialID, Target = WordTarget, PhonologicalFoil = WordPhonologicalFoil,
+    TrialID, 
+    Target = WordTarget, 
+    PhonologicalFoil = WordPhonologicalFoil,
     SemanticFoil = WordSemanticFoil, 
     Unrelated = WordUnrelated)
 
@@ -228,7 +229,7 @@ ggplot(looks_by_aoi2 %>% filter(AOI != "Unrelated")) +
     x = Time, y = log(Primary / Unrelated),
     color = Study, linetype = PhonFoil) +
   geom_hline(size = 2, color = "white", yintercept = 0) +
-  stat_smooth() +
+  stat_smooth(method = "gam", formula = y ~ s(x)) +
   facet_grid( ~ AOI) +
   labs(
     x = "Time after target onset [ms]",
@@ -241,7 +242,7 @@ ggplot(looks_by_aoi3 %>% filter(AOI != "Unrelated")) +
     x = Time, y = log(Primary / Unrelated),
     color = Study, linetype = SemyFoil) +
   geom_hline(size = 2, color = "white", yintercept = 0) +
-  stat_smooth() +
+  stat_smooth(method = "gam", formula = y ~ s(x)) +
   facet_grid( ~ AOI) +
   labs(
     x = "Time after target onset [ms]",
@@ -252,24 +253,25 @@ ggplot(looks_by_aoi3 %>% filter(AOI != "Unrelated")) +
 
 What's going on here:
 
-- The weak phonological foils are indeed weaker than the strong foils.
-- The strong semantic foils appear stronger than the weak ones. The strong
-  foils show a growth curve pattern of increasing looks away from baseline and
-  there a developmental difference among the growth curves for each time
-  point.
-- Children have a lower advantage for the target (vs unrelated) in weak foil
-  trials because... why? My reading is that if the semantic or phonological
-  foil is effective, children will look at it instead of the unrelated image.
-  Conversely, if the semantic or phonological foil are less effective,
-  children will look more to the unrelated image, which pulls down the ratio
-  of looks to target versus the unrelated image.
+  - The weak phonological foils are indeed weaker than the strong foils.
+  - The strong semantic foils appear stronger than the weak ones. The
+    strong foils show a growth curve pattern of increasing looks away
+    from baseline and there a developmental difference among the growth
+    curves for each time point.
+  - Children have a lower advantage for the target (vs unrelated) in
+    weak foil trials because... why? My reading is that if the semantic
+    or phonological foil is effective, children will look at it instead
+    of the unrelated image. Conversely, if the semantic or phonological
+    foil are less effective, children will look more to the unrelated
+    image, which pulls down the ratio of looks to target versus the
+    unrelated image.
 
 In the above plots, we fixed the denominator to be the number of looks to the
 unrelated image and varied the numerator. In the plots below, we fix the
 numerator to be the looks to the target and vary the denominator to looks to
 target versus looks to each foil.
 
-```{r by-aoi-logit-target-phon, out.width = "100%", fig.height=2.5, fig.width=6, echo = FALSE, message = FALSE}
+```{r by-aoi-logit-target-phon, out.width = "100%", fig.height = 2.5, fig.width = 6, echo = FALSE, message = FALSE}
 semantic_target_curves <- looks_by_aoi3 %>% 
   filter(AOI == "Target") %>% 
   mutate(
@@ -291,7 +293,7 @@ phonological_target_curves <- looks_by_aoi2 %>%
 ggplot(phonological_target_curves) + 
   aes(x = Time, y = LogOdds, color = Study, linetype = PhonFoil) + 
   geom_hline(size = 2, color = "white", yintercept = 0) +
-  stat_smooth() + 
+  stat_smooth(method = "gam", formula = y ~ s(x)) +
   facet_grid( ~ Comparison) + 
   labs(
     x = "Time after target onset [ms]",
@@ -300,16 +302,16 @@ ggplot(phonological_target_curves) +
   theme_grey(base_size = 9) 
 ```
 
-Curves in both panels attain the same height, so phonological and unrelated foils 
-affect processing equally later in the trial. The strong phonological foils 
-curves in the Target vs Phonological comparison rise later than the weak foils, 
-reflecting early looks to the phonological foils.
+Curves in both panels attain the same height, so phonological and unrelated
+foils affect processing equally later in the trial. The strong phonological
+foils curves in the Target vs Phonological comparison rise later than the weak
+foils, reflecting early looks to the phonological foils.
 
-```{r by-aoi-logit-target-semi, out.width = "100%", fig.height=2.5, fig.width=6, echo = FALSE, message = FALSE}
+```{r by-aoi-logit-target-semi, out.width = "100%", fig.height = 2.5, fig.width = 6, echo = FALSE, message = FALSE}
 ggplot(semantic_target_curves) + 
   aes(x = Time, y = LogOdds, color = Study, linetype = SemyFoil) + 
   geom_hline(size = 2, color = "white", yintercept = 0) +
-  stat_smooth() + 
+  stat_smooth(method = "gam", formula = y ~ s(x)) +
   facet_grid( ~ Comparison) + 
   labs(
     x = "Time after target onset [ms]",
@@ -324,9 +326,7 @@ no difference in strong and weak foils in Year 2 and Year 3, so I might be able
 to collapse to remove this distinction and include more items in the analysis.
 
 
-## Preparing data for the model
-
-```{r, echo = FALSE}
+```{r, echo = FALSE, results = "hide"}
 opts_model <- list(
   bin_width = 3,
   start_time = 250,
@@ -365,8 +365,6 @@ phon_d <- d %>%
   filter(
     opts_model$start_time <= Time, 
     Time <= opts_model$end_time) %>% 
-  polypoly::poly_add_columns(
-    Time, degree = 3, scale_width = 1, prefix = "ot") %>% 
   rename(Focus = .response_def)
 
 # phon_d %>%
@@ -384,34 +382,36 @@ n_phon <- phono_foils$strong_foil$Target %>% unique() %>% length()
 n_semy <- semy_foils$strong_foil$Target %>% unique() %>% length()
 ```
 
-Next, we asked how children's sensitivity to the phonological foils changed over
-developmental time. We only examined trials for which the phonological foil and
-the noun shared the same syllable onset. For example, this criterion included
-trials with *dress*–*drum*, *fly*–*flag*, or *horse*–*heart*, but it excluded
-trials *kite*–*gift* (feature difference), *bear*–*bread* (onset difference),
-and *ring*–*swing* (rimes). We kept `r n_phon` of the 24 trials.
+Next, we asked how children's sensitivity to the phonological foils
+changed over developmental time. We only examined trials for which the
+phonological foil and the noun shared the same syllable onset. For
+example, this criterion included trials with *dress*–*drum*,
+*fly*–*flag*, or *horse*–*heart*, but it excluded trials *kite*–*gift*
+(feature difference), *bear*–*bread* (onset difference), and
+*ring*–*swing* (rimes). We kept `r n_phon` of the 24 trials.
 
-The outcome measure for these analyses was the log-odds of fixating on the
-phonological foil versus the unrelated image. Because children looked more to
-the target word with each year of the study, they necessarily looked less to the
-distractors each year. Figure N below illustrates how the proportions of looks
-to the phonological foils declined each year. Therefore, we examined the effect
-of the phonological foil in comparison to the unrelated foil. For example, on
-the trials where the target is *fly*, we study the effect of the phonological
-foil *flag* by looking at when and to what to degree the children fixate on
-*flag* more than the unrelated image *pen*. If a window of time of shows a
-consistent advantage for the phonological foil over the unrelated image, we can
-conclude that the children were sensitive to the phonological foil. By studying
-the time course of fixations to the phonological foil versus the unrelated
-image, we can identify when the phonological foil affected word recognition most
+The outcome measure for these analyses was the log-odds of fixating on
+the phonological foil versus the unrelated image. Because children
+looked more to the target word with each year of the study, they
+necessarily looked less to the distractors each year. Figure N below
+illustrates how the proportions of looks to the phonological foils
+declined each year. Therefore, we examined the effect of the
+phonological foil in comparison to the unrelated foil. For example, on
+the trials where the target is *fly*, we study the effect of the
+phonological foil *flag* by looking at when and to what to degree the
+children fixate on *flag* more than the unrelated image *pen*. If a
+window of time of shows a consistent advantage for the phonological foil
+over the unrelated image, we can conclude that the children were
+sensitive to the phonological foil. By studying the time course of
+fixations to the phonological foil versus the unrelated image, we can
+identify when the phonological foil affected word recognition most
 significantly.
 
 As in the previous models, we downsampled the data into
-`r opts_model$bin_length`-ms (`r opts_model$bin_width`-frame) bins in order to
-smooth the data. We modeled the looks from `r opts_model$start_time` to
-`r opts_model$end_time` ms. Lastly, we aggregated looks by child, study and
-time.
-
+`r opts_model$bin_length`-ms (`r opts_model$bin_width`-frame) bins in
+order to smooth the data. We modeled the looks from
+`r opts_model$start_time` to `r opts_model$end_time` ms. Lastly, we
+aggregated looks by child, study and time.
 
 
 ```{r declining-phon-props, echo = FALSE, message = FALSE, out.width = "80%", fig.width = 5, fig.height = 3.5}
@@ -424,25 +424,25 @@ phon_d %>%
   ggplot() + 
     aes(x = Time, y = Prop, color = Study) + 
     geom_hline(yintercept = .25, color = "white", size = 2) +
-    stat_summary(fun.data = mean_se) + 
+    stat_summary(fun.y = "mean", geom = "line", size = 1) +
     facet_wrap("Focus") +
     labs(
       x = "Time after target onset [ms]",
-      y = "Proportion looking to image",
-      caption = "Mean ± SE") +
+      y = "Mean proportion looking to image") +
     theme_grey() +
     theme(
       legend.position = c(0.95, 0.95), 
       legend.justification = c(1, 1))
 ```
 
-To account for the sparseness of the data, we used the empirical log-odds (or
-empirical logit) transformation [@Barr2008]. This transformation adds .5 to
-the looking counts. For example, a time-frame with 4 looks to the phonological
-foil and 1 look to the unrelated image has a conventional log-odds of
-log(4/1) = 1.39 and empirical log-odds of log(4.5/1.5) = 1.10. This
-transformation fills in 0 values, and it dampens the extremeness of some
-probabilities that arise in sparse count data. 
+To account for the sparseness of the data, we used the empirical
+log-odds (or empirical logit) transformation [@Barr2008]. This
+transformation adds .5 to the looking counts. For example, a time-frame
+with 4 looks to the phonological foil and 1 look to the unrelated image
+has a conventional log-odds of log(4/1) = 1.39 and empirical log-odds of
+log(4.5/1.5) = 1.10. This transformation fills in 0 values, and it
+dampens the extremeness of some probabilities that arise in sparse count
+data.
 
 ```{r, echo = FALSE, message = FALSE, include = FALSE, out.width = "80%", fig.width = 6}
 library(mgcv)
@@ -456,7 +456,7 @@ phon_d <- phon_d %>%
     elog = lookr::empirical_logit(PhonologicalFoil, Unrelated))
 
 # Base model with no study effect
-b2n <- gam(
+b2n <- bam(
   elog ~ s(Time), 
   data = phon_d, 
   method = "REML")
@@ -467,15 +467,15 @@ phon_d$S2 <- as.ordered(phon_d$S)
 contrasts(phon_d$S2) <- "contr.treatment"
 contrasts(phon_d$S2)
 
-b2 <- bam(
-  elog ~ S + s(Time) + s(Time, by = S), 
-  data = phon_d, 
-  method = "REML")
-# summary(b2)
-
-# b2_ordered <- gam(
-#   elog ~ S2 + s(Time) + s(Time, by = S2), 
+# b2 <- bam(
+#   elog ~ S + s(Time) + s(Time, by = S), 
 #   data = phon_d, 
+#   method = "REML")
+# # summary(b2)
+
+# b2_ordered <- bam(
+#   elog ~ S2 + s(Time) + s(Time, by = S2),
+#   data = phon_d,
 #   method = "REML")
 # summary(b2_ordered)
 # plot(b2_ordered, pages = 1)
@@ -484,28 +484,46 @@ b2 <- bam(
 #   elog ~ S + s(Time) + s(Time, by = S) + s(Time, R, bs = "fs", m = 1, k = 5), 
 #   data = phon_d)
 # readr::write_rds(b2r, "./data/aim1-phon-random-smooths.rds.gz")
-b2r <- readr::read_rds("./data/aim1-phon-random-smooths.rds.gz")
-summary(b2r)
+# b2r <- readr::read_rds("./data/aim1-phon-random-smooths.rds.gz")
+# summary(b2r)
+# plot(b2r, pages = 1)
 
-plot(b2r, pages = 1)
+# b2r_ordered <- bam(
+#   elog ~ S2 + s(Time) + s(Time, by = S2) + s(Time, R, bs = "fs", m = 1, k = 5),
+#   data = phon_d)
+
+
+# plot(b2r_ordered2, pages = 1)
+# readr::write_rds(b2r_ordered, "./data/aim1-phon-random-smooths2.rds.gz")
+b2r_ordered <- readr::read_rds("./data/aim1-phon-random-smooths2.rds.gz")
+summary(b2r_ordered)
+# plot(b2r_ordered, pages = 1)
+# report <- itsadug::report_stats(b2r)
+# report[3, 2]
 ```
 
-We fit a generalized additive model with fast restricted maximum likelihood
-estimation [@Wood2017; @Soskuthy2017 for a tutorial for linguists]. Box 1
-provides a brief overview of these models. We fit the models using the R package
-`mgcv` [vers. `r packageVersion("mgcv")`; @Wood2017] with support from the
-tools in the `itsadug` package [vers. `r packageVersion("itsadug")`;
-@itsadug]. 
+We fit a generalized additive model with fast restricted maximum
+likelihood estimation [@Wood2017; @Soskuthy2017 for a tutorial for
+linguists]. Box 1 provides a brief overview of these models. We fit the
+models using the R package `mgcv` [vers. `r packageVersion("mgcv")`;
+@Wood2017] with support from the tools in the `itsadug` package [vers.
+`r packageVersion("itsadug")`; @itsadug].
 
 
+
+
+
+\Begin{infobox}
 <div class = "infobox">
+
 **Box 1: The Intuition Behind Generalized Additive Models**.
 
-In these analyses, the outcome of interest is a value that changes over time in
-a nonlinear way. We model these time series by building a set of features to
-represent time values. In the growth curve analyses of familiar word
-recognition, we used a set of polynomial features which expressed time as the
-weighted sum of a linear trend, a quadratic trend and cubic trend. That is:
+In these analyses, the outcome of interest is a value that changes over
+time in a nonlinear way. We model these time series by building a set of
+features to represent time values. In the growth curve analyses of
+familiar word recognition, we used a set of polynomial features which
+expressed time as the weighted sum of a linear trend, a quadratic trend
+and cubic trend. That is:
 
 $$
 \text{log-odds}(\mathit{looking}) = 
@@ -514,20 +532,20 @@ $$
            \beta_3 * \textit{Time}^3
 $$
 
-But another way to think about the polynomial terms is as *basis functions*: A
-set of features that combine to approximate some nonlinear function of
-time. Under this framework, the model can be expressed as:
+But another way to think about the polynomial terms is as *basis
+functions*: A set of features that combine to approximate some nonlinear
+function of time. Under this framework, the model can be expressed as:
 
 $$
 \text{log-odds}(\mathit{looking}) = 
   \alpha + f(\textit{Time})
 $$
   
-This is the idea behind generalized additive models and their *smooth terms*.
-These smooths fit nonlinear functions of data by weighting and adding 
-simple functions together. The figures below show 9 basis functions from a
-"thin-plate spline" and how they can be weighted and summed to fit a growth
-curve.
+This is the idea behind generalized additive models and their *smooth
+terms*. These smooths fit nonlinear functions of data by weighting and
+adding simple functions together. The figures below show 9 basis
+functions from a "thin-plate spline" and how they can be weighted and
+summed to fit a growth curve.
 
 ```{r infobox-1-figs, message = FALSE, echo = FALSE, out.width = "66%", fig.width = 6, fig.height = 3}
 library(mgcv)
@@ -635,57 +653,70 @@ print(p3)
 # cowplot::ggsave("./misc/basis-both.png", p3, width = 6, height = 3)
 ```
 
-Each of these basis functions is weighted by a model coefficient, but the
-individual basis functions are not a priori meaningful. Rather, it is the whole
-set of functions that approximate the curvature of the data---i.e.,
-*f*(Time))---so we statistically evaluate the whole batch of coefficients
-simultaneously. This joint testing is similar to how one might test a batch of
-effects in an ANOVA. If the batch of effects jointly improve model fit, we infer
-that there is a significant smooth or shape effect. (Not quite sure this is 100%
-accurate yet.)
+Each of these basis functions is weighted by a model coefficient, but
+the individual basis functions are not a priori meaningful. Rather, it
+is the whole set of functions that approximate the curvature of the
+data---i.e., *f*(Time))---so we statistically evaluate the whole batch
+of coefficients simultaneously. This joint testing is similar to how one
+might test a batch of effects in an ANOVA. If the batch of effects
+jointly improve model fit, we infer that there is a significant smooth
+or shape effect.
 
-Smooth terms come with an estimated degrees of freedom (EDF). These values
-provide a sense of how many degrees of freedom the smooth consumed. An EDF of 1
-is a perfectly straight line, indicating no smoothing. Higher EDF values
-indicate that the smooth term captured more curvature from the data.
+Smooth terms come with an estimated degrees of freedom (EDF). These
+values provide a sense of how many degrees of freedom the smooth
+consumed. An EDF of 1 is a perfectly straight line, indicating no
+smoothing. Higher EDF values indicate that the smooth term captured more
+curvature from the data.
 
 <!-- The other important thing to know about generalized additive models is that -->
 <!-- wigglyness is penalized. With so many functions, one might worry about -->
 <!-- overfitting the data and including incidental wiggliness into *f*(Time). These -->
 <!-- models, however, include a smoothing parameter that -->
 </div>
-
+\End{infobox}
 
 The model included main effects of study year. These *parametric* terms
-work like conventional regression effects and determined the growth curve's
-average values. We used age 4 as the reference year, so the model's intercept
-represented the average looking probability at age 4. The model's year effects
-therefore represented differences between age 4 vs. age 3 and age 4 vs. age 5.
+work like conventional regression effects and determined the growth
+curve's average values. The model used age 4 as the reference year, so
+the model's intercept represented the average looking probability at
+age 4. The model's year effects therefore represented differences
+between age 4 vs. age 3 and age 4 vs. age 5.
 
-The model also included *smooth* terms to represent the time course of the data.
-We included a smooth term for trial time to represent a general effect of time
-following noun onset across all studies, and we also included smooth terms for
-time for each study. These study-specific smooths estimate how the shape of the
-data differs in each individual study. Each of these smooths used 10 knots (9
-basis functions). We also included child-level "random smooths" to represent
-child-level variation in growth curve shapes. Because we have much as less data
-at the child level than at the study level, these random smooths only included 5
-knots (4 basis functions). We can think of these simpler splines as coarse
-adjustments in growth curve shape to capture child-level variation from limited
-data. Altogether, the model contained the following terms:
+The model also included *smooth* terms to represent the time course of
+the data. As with the parametric effects, age 4 served as the reference
+year. The model estimated a smooth for age 4 and it estimated
+*difference smooths* to capture how the curvature at age 3 and age 5
+differed from the age 4 curvature. Each of these study-level smooths
+used 10 knots (9 basis functions). We also included child-level *random
+smooths* to represent child-level variation in growth curve shapes.
+Because we have much as less data at the child level than at the study
+level, these random smooths only included 5 knots (4 basis functions).
+We can think of these simpler splines as coarse adjustments in growth
+curve shape to capture child-level variation from limited data.
+Altogether, the model contained the following terms:
 
 ```
 emp. log-odds(phonological vs. unrelated) = 
-  α + β1*Study1 + β2*Study3 +   [growth curve averages]
-  f1(Time) +                    [general smooth]
-  f2(Time, Age-3) +             [study-specific smooths]
-  f3(Time, Age-4) + 
-  f4(Time, Age-5) + 
-  f5(Time, Child-ID)            [by-child random smooths]
+  α + β1*Age-4 + β2*Age-5 +   [growth curve averages]
+  f1(Time, Age-4) +           [reference smooth]
+  f2(Time, Age-4 - Age-3) +   [difference smooths]
+  f3(Time, Age-4 - Age-5) + 
+  f4(Time, Child-ID)          [by-child random smooths]
 ```
 
 ```{r, echo = FALSE}
-b2r_summary <- summary.gam(b2r)
+# prints p-value in markdown as "*p* < .001" or "*p* = [whatever]" 
+format_p_value <- function(p, digits = 3) {
+  formatted <- printy::fmt_p_value(p, digits)
+  less_than <- stringr::str_detect(formatted, "<")
+  if (less_than) {
+    paste0("*p*&nbsp;", formatted)
+  } else {
+    paste0("*p*&nbsp;= ", formatted)
+  }
+}
+
+b2r_summary <- summary.gam(b2r_ordered)
 
 para <- b2r_summary$p.table %>% 
   as.data.frame() %>% 
@@ -705,16 +736,16 @@ tp2_prop <- para %>%
   printy::fmt_leading_zero() 
 
 tp1_p <- para %>% 
-  filter(term == "STimePoint1") %>% 
+  filter(term == "S2TimePoint1") %>% 
   pull(p.value) %>% 
-  printy::fmt_p_value(digits = 2)
+  format_p_value(digits = 2)
 
 tp2_est <- para %>% 
   filter(term == "(Intercept)") %>% 
   pull(estimate) 
 
 tp3_est <- para %>% 
-  filter(term == "STimePoint3") %>% 
+  filter(term == "S2TimePoint3") %>% 
   pull(estimate) 
 
 tp3_prop <- (tp2_est + tp3_est) %>% 
@@ -726,72 +757,89 @@ tp3 <- (tp2_est + tp3_est) %>%
   printy::fmt_fix_digits(2)
 
 tp3_p <- para %>% 
-  filter(term == "STimePoint3") %>% 
+  filter(term == "S2TimePoint3") %>% 
   pull(p.value) %>% 
-  printy::fmt_p_value()
+  format_p_value()
 
+
+# itsadug::report_stats(b2r_ordered, b2r_summary)
 smooths <- b2r_summary$s.table %>% 
   as.data.frame() %>% 
   setNames(c("edf", "Ref.df", "F", "p.value")) %>% 
   tibble::rownames_to_column("term")
 
-s_time_p <- smooths %>% 
+s_tp2_p <- smooths %>% 
   filter(term == "s(Time)") %>% 
   pull(p.value) %>% 
-  printy::fmt_p_value()
+  format_p_value()
 
-s_time_edf <- smooths %>% 
+s_tp2_edf <- smooths %>% 
   filter(term == "s(Time)") %>% 
   pull(edf) %>% 
   printy::fmt_fix_digits(2)
 
 s_tp1_edf <- smooths %>% 
-  filter(term == "s(Time):STimePoint1") %>% 
+  filter(term == "s(Time):S2TimePoint1") %>% 
   pull(edf) %>% 
   printy::fmt_fix_digits(2)
 
 s_tp1_p <- smooths %>% 
-  filter(term == "s(Time):STimePoint1") %>% 
+  filter(term == "s(Time):S2TimePoint1") %>% 
   pull(p.value) %>% 
-  printy::fmt_p_value()
-
-s_tp2_edf <- smooths %>% 
-  filter(term == "s(Time):STimePoint2") %>% 
-  pull(edf) %>% 
-  printy::fmt_fix_digits(2)
-
-s_tp2_p <- smooths %>% 
-  filter(term == "s(Time):STimePoint2") %>% 
-  pull(p.value) %>% 
-  printy::fmt_p_value()
+  format_p_value()
 
 s_tp3_edf <- smooths %>% 
-  filter(term == "s(Time):STimePoint3") %>% 
+  filter(term == "s(Time):S2TimePoint3") %>% 
   pull(edf) %>% 
   printy::fmt_fix_digits(2)
 
 s_tp3_p <- smooths %>% 
-  filter(term == "s(Time):STimePoint3") %>% 
+  filter(term == "s(Time):S2TimePoint3") %>% 
   pull(p.value) %>% 
-  printy::fmt_p_value()
-
-
+  format_p_value()
 ```
 
-The model’s fitted values are shown in Figure N. These are the average empirical
-log-odds of fixating on the phonological foil versus the unrelated image for
-each year of the study. The model captured the trend for increased looks to the
-competitor image with each year of the study. At age 4 and age 5, the shape
-rises from a baseline to the peak around 800 ms. These curves slope downwards
-and eventually fall beneath the initial baseline. The shape at age 3 does not
-have a steady rise from baseline and shows a very small peak around 800 ms.
+The model’s fitted values are shown in
+Figure \@ref(fig:phon-vs-unre-fits). These are the average empirical
+log-odds of fixating on the phonological foil versus the unrelated image
+for each year of the study. The model captured the trend for increased
+looks to the competitor image with each year of the study. At age 4 and
+age 5, the shape rises from a baseline to the peak around 800 ms. These
+curves slope downwards and eventually fall beneath the initial baseline.
+The shape at age 3 does not have a steady rise from baseline and shows a
+very small peak around 800 ms.
 
-```{r phon-vs-unre-fits, echo = FALSE, warning = FALSE, message = FALSE, out.width = "80%", fig.width = 5, fig.height = 4, results = "hide"}
-b2r %>% 
+(ref:phon-vs-unre-fits) Means for each year of the study estimated by
+the generalized additive model. The left figure compares the model
+estimates to the observed means and standard errors, and the right
+figure visualizes the estimated means and their 95% confidence
+intervals. With each year of the study, children looked increasingly
+more to the phonological foil, relative to unrelated image, during and
+after the target noun.
+
+```{r phon-vs-unre-fits, fig.cap = "(ref:phon-vs-unre-fits)", echo = FALSE, warning = FALSE, message = FALSE, out.width = "80%", fig.width = 6, fig.height = 4, results = "hide"}
+phon_d$fitted_elogit <- predict.gam(b2r_ordered)
+
+p1 <- phon_d %>% 
+  left_join(recode_studies, by = c("Study", "S", "S2")) %>% 
+  ggplot() +
+    aes(x = Time, y = fitted_elogit, color = Age) +
+    geom_hline(size = 2, yintercept = 0, color = "white") +
+    stat_summary(aes(y = elog), alpha = .7) +
+    stat_summary(fun.y = "mean", geom = "line", size = 1) +
+    coord_cartesian(ylim = c(-.35, .85)) +
+    labs(
+      x = "Time after target onset [ms]",
+      y = "Emp. log-odds(Phon. vs. Unrelated)",
+      caption = "Lines: Model fits. Points: Obs. means ± SE") +
+    theme_grey(base_size = 10) +
+    guides(color = FALSE) 
+
+p2 <- b2r_ordered %>% 
   get_predictions(
     cond = list(
       Time = unique(phon_d$Time), 
-      S = unique(phon_d$S)),
+      S2 = unique(phon_d$S2)),
     rm.ranef = TRUE) %>% 
   left_join(recode_studies) %>% 
   ggplot() + 
@@ -799,61 +847,50 @@ b2r %>%
     geom_hline(size = 2, yintercept = 0, color = "white") +
     geom_ribbon(aes(ymin = fit - CI, ymax = fit + CI), alpha = .2) +
     geom_line(aes(color = Age), size = 1) + 
+    coord_cartesian(ylim = c(-.35, .85)) +
     labs(
       color = "Study",
       fill = "Study",
       x = "Time after target onset [ms]",
-      y = "Emp. log-odds(Phon. vs. Unrelated)",
-      caption = "Fitted values with 95% interval") + 
+      y = NULL,
+      caption = "Fitted means with 95% interval") + 
+    theme_grey(base_size = 10) + 
     theme(
-    legend.position = c(0.95, 0.95), 
-    legend.justification = c(1, 1))
+      legend.position = c(0.975, 0.975), 
+      legend.justification = c(1, 1)) 
+
+p3 <- cowplot::plot_grid(p1, p2)
+print(p3)
 ```
 
-The average looks to the phonological foil over the unrelated for age 4 was
-`r tp2` emp. log-odds, `r tp2_prop` proportion units. The averages for age 3 and
-age 4 did not significantly differ, *p* = `r tp1_p` but the average value was
-significantly greater at age 5, `r tp3` emp. log-odds, `r tp3_prop` proportion
-units, *p* `r tp1_p`. Visually, this effect shows up in the almost constant
-height difference between the age-4 and the age-5 curves.
+The average looks to the phonological foil over the unrelated for age 4
+was `r tp2` emp. log-odds, `r tp2_prop` proportion units. The averages
+for age 3 and age 4 did not significantly differ, `r tp1_p` but the
+average value was significantly greater at age 5, `r tp3` emp. log-odds,
+`r tp3_prop` proportion units, `r tp3_p`. Visually, this effect shows up
+in the almost constant height difference between the age-4 and the age-5
+curves.
 
-There was a significant smooth term for time in general, estimated degrees of
-freedom (EDF) = `r s_time_edf`, *p* `r s_time_p`, and for the age-3 smooth,
-EDF = `r s_tp1_edf`, *p* `r s_tp1_p`. In contrast, the age-4 and age-5 smooths
-did not differ significantly from the general time smooth, age-4 EDF =
-`r s_tp2_edf`, age-4 *p* = `r s_tp2_p`, age-5 EDF = `r s_tp3_edf`, age-5 *p* =
-`r s_tp3_p`. The shapes of the age-4 and age-5 growth curves showed the same general
-shape but with different heights.
+(ref:phon-diff-curves) Differences in the average looks to the
+phonological foil versus the unrelated image between age 4 and the other
+ages. Plotted line is estimated difference and the shaded region is
+the 95% confidence around that difference. Blue boxes highlight regions
+where the 95% interval excludes zero. From age 3 to age 4, children
+become more sensitive to the phonological foil during and after the
+target noun. The curves for age 3 and age 4 have largely the same shape,
+but they steadily diverge over time.
 
-We also computed the difference between the growth curves from successive
-studies. These are shown in Figure N. The curves of the age-3 and age-4 were
-significantly different from 500 to 1050 ms. This result confirms that the looks
-to the phonological foil increased from age 3 and age 4 during the time window
-immediately following presentation of the noun. The similarity between the
-phonological foil and the target occurs early in the trial. Given
-the 150--300 ms time required to execute an eye movement in response to speech,
-the time window for these differences indicates that children became more
-sensitive to the phonological similarities between the foil and the target from
-age 3 to age 4.
-
-The two curves also differed significantly after 1250 ms. The effect reflects
-how the looks to phonological foil decreased as the trial progresses. After an
-incorrect look to the foil, the children on average corrected their gaze and
-looked even less to the phonological foil. We do not observe this degree of
-correction during age 3 presumably because children hardly looked to the
-phonological foil early on.
-
-```{r phon-diff-curves, echo = FALSE, message = FALSE, out.width = "80%", fig.width = 5, fig.height = 3, results = "hide"}
-age5_age4 <- b2r %>% 
+```{r phon-diff-curves, fig.cap = "(ref:phon-diff-curves)", echo = FALSE, message = FALSE, out.width = "80%", fig.width = 5, fig.height = 3, results = "hide"}
+age5_age4 <- b2r_ordered %>% 
   get_difference(
-    comp = list(S = c("TimePoint3", "TimePoint2")), 
+    comp = list(S2 = c("TimePoint3", "TimePoint2")), 
     cond = list(Time = unique(phon_d$Time)), 
     rm.ranef = TRUE) %>% 
   mutate(comparison = "Age 5 − Age 4")
   
-age4_age3 <- b2r %>% 
+age4_age3 <- b2r_ordered %>% 
   get_difference(
-    comp = list(S = c("TimePoint2", "TimePoint1")), 
+    comp = list(S2 = c("TimePoint2", "TimePoint1")), 
     cond = list(Time = unique(phon_d$Time)), 
     rm.ranef = TRUE) %>% 
   mutate(comparison = "Age 4 − Age 3")  
@@ -904,20 +941,43 @@ ggplot(differences) +
   facet_wrap("comparison")
 ```
 
-In contrast, the difference between the age-4 and age-5 smooths is driven
-primarily by the intercept difference and a linear diverging trend---that is,
-the distance between the two grows slightly over time. The same general
-curvature was observed for the two studies, reflecting the same general looking
-behavior at both time points. Children showed an early increase in looks to the
-phonological foil relative to the unrelated image but after receiving
-disqualifying information from the rest of the word, the looks to the
-phonological foil rapidly decrease. The primary difference between age-4 and
-age-5 is that the foil effect was more pronounced at age 5.
+There was a significant smooth term for time at age 4, estimated degrees
+of freedom (EDF) = `r s_tp2_edf`, `r s_tp2_p`.
+Figure \@ref(fig:phon-diff-curves) visualizes how and when the smooths
+from other studies differed from the age-4 smooth.
 
+The age-3 and age-4 significantly differed, EDF = `r s_tp1_edf`,
+`r s_tp1_p`. In particular, the curves are significantly different
+from 500 to 1050 ms. This result confirms that the looks to the
+phonological foil increased from age 3 and age 4 during the time window
+immediately following presentation of the noun. The similarity between
+the phonological foil and the target occurs early in the trial. Given
+the 150--300 ms time required to execute an eye movement in response to
+speech, the time window for these differences indicates that children
+became more sensitive to the phonological similarities between the foil
+and the target from age 3 to age 4.
 
+The age-3 and age-4 curves also differed significantly after 1250 ms.
+The effect reflects how the looks to phonological foil decreased as the
+trial progresses. After an incorrect look to the foil, the children on
+average corrected their gaze and looked even less to the phonological
+foil. We do not observe this degree of correction during age 3
+presumably because children hardly looked to the phonological foil early
+on.
 
-
-
+The age-4 and age-5 smooths also significantly differed, EDF =
+`r s_tp3_edf`, `r s_tp3_p`, although the low EDF values indicates that
+the shape of the difference was a flat line. Thus, the difference
+between the age-4 and age-5 smooths is driven primarily by the intercept
+difference and a linear diverging trend---that is, the distance between
+the two grows slightly over time. The same general curvature was
+observed for the two studies, reflecting the same general looking
+behavior at both time points. Children showed an early increase in looks
+to the phonological foil relative to the unrelated image but after
+receiving disqualifying information from the rest of the word, the looks
+to the phonological foil rapidly decrease. The primary difference
+between age-4 and age-5 is that the foil effect becomes more pronounced
+at age 5.
 
 Talking points:
 
@@ -949,21 +1009,11 @@ Talking points:
 
 Here we have the data and the model fits.
 
-```{r, echo = FALSE, message = FALSE, out.width = "80%", fig.width = 6}
-phon_d$fitted_elogit <- predict.gam(b2r)
 
-ggplot(phon_d) +
-  aes(x = Time, y = fitted_elogit, color = Study) +
-  stat_summary(aes(y = elog)) +
-  stat_summary(fun.y = "mean", geom = "line") +
-  labs(
-    y = "empirical logit",
-    caption = "Lines: GAM fit. Point-ranges: Obs. Mean ± SE")
-```
 
 
 ```{r, results = "asis"}
-itsadug::gamtabs(b2r, type = "html")
+itsadug::gamtabs(b2r_ordered, type = "html")
 ```
 
 
@@ -989,7 +1039,6 @@ noun were part of the same category. We kept trials, for example, with
 the similarity was perceptual (*sword*–*pen*) or too abstract (*swan*–*bee*). We
 kept `r n_semy` of the 24 trials.
 
-
 ```{r, echo = FALSE, message = FALSE, out.width = "80%", fig.width = 6}
 semy_data <- strong_semy_looks %>% 
   select(Study, ResearchID, TrialID:GazeByImageAOI) %>% 
@@ -1013,22 +1062,17 @@ semy_d <- binned %>%
   aggregate_looks(semy_defs, Study + ResearchID + Time ~ GazeByImageAOI)
 
 semy_d <- semy_d %>% 
-  filter(
-    250 <= Time,
-    Time <= 1800
-  ) %>%
-  # polypoly::poly_add_columns(
-  #   Time, degree = 3, scale_width = 1, prefix = "ot") %>% 
+  filter(250 <= Time, Time <= 1800) %>%
   rename(Focus = .response_def)
 
-semy_d %>%
-  sample_n_of(9, ResearchID) %>%
-  ggplot() +
-    aes(
-      x = Time, y = log(Primary / Unrelated), 
-      color = Study, linetype = Focus) +
-    geom_line(aes(group = interaction(Study, Focus))) +
-    facet_wrap("ResearchID")
+# semy_d %>%
+#   sample_n_of(9, ResearchID) %>%
+#   ggplot() +
+#     aes(
+#       x = Time, y = log(Primary / Unrelated), 
+#       color = Study, linetype = Focus) +
+#     geom_line(aes(group = interaction(Study, Focus))) +
+#     facet_wrap("ResearchID")
 
 semy_d <- semy_d %>% 
   mutate(
@@ -1037,25 +1081,27 @@ semy_d <- semy_d %>%
     SR = interaction(S, R),
     elog = lookr::empirical_logit(SemanticFoil, Unrelated))
 
+# Include intercepts and smooths for studies
+semy_d$S2 <- as.ordered(semy_d$S) 
+contrasts(semy_d$S2) <- "contr.treatment"
+contrasts(semy_d$S2)
+
 # Base model with no study effect
-s2n <- gam(
+s2n <- bam(
   elog ~ s(Time), 
-  data = semy_d, 
-  method = "REML")
+  data = semy_d)
 # summary(b2n)
 
 # Include intercepts and smooths for studies
-s2 <- gam(
-  elog ~ S + s(Time) + s(Time, by = S), 
-  data = semy_d, 
-  method = "REML")
+s2 <- bam(
+  elog ~ S2 + s(Time) + s(Time, by = S2), 
+  data = semy_d)
 summary(s2)
 plot(s2, pages = 1)
 
-# s2r <- bam(
-#   elog ~ S + s(Time) + s(Time, by = S) + s(Time, R, bs = "fs", m = 1, k = 5),
-#   data = semy_d,
-#   method = "REML")
+s2r <- bam(
+  elog ~ S2 + s(Time) + s(Time, by = S2) + s(Time, R, bs = "fs", m = 1, k = 5),
+  data = semy_d)
 # summary(s2r)
 # plot(s2r, pages = 1)
 # readr::write_rds(s2r, "./data/aim1-semy-random-smooths.rds.gz")
@@ -1369,44 +1415,3 @@ semy_d %>%
 #   data = d_m)
 # summary(m)
 ```
-
-```{r, eval = FALSE, echo = FALSE}
-library(lme4)
-fx <- . %>% 
-  glmer(
-    cbind(PhonologicalFoil, Unrelated) ~
-      (ot1 + ot2 + ot3) +
-      (ot1 + ot2 + ot3 | ResearchID),
-    family = binomial,
-    data = .)
-
-by_study <- d_m %>% 
-  tidyr::nest(-Study) %>% 
-  mutate(model = purrr::map(data, fx))
-
-
-lapply(by_study$model, summary)
-
-by_study <- by_study %>% 
-  mutate(data = purrr::map2(model, data, broom::augment))
-
-
-
-data
-size = 10
-tidyr::unnest(by_study, data) %>% 
-  sample_n_of(12, ResearchID) %>% 
-  ggplot() + 
-  aes(x = BinTime, y = .fitted, color = Study) + 
-  geom_point() + 
-  geom_line(aes(group = interaction(ResearchID, Study))) + 
-  facet_wrap("ResearchID")
-```
-
-## Interim summary
-
-* Visual evidence that the semantic foil and phonological foil become more 
-  relevant (compared to unrelated foil) each year. 
-* Our previous distinction between strong and weak foils still applies, 
-  although it might be better to exclude only the (a priori) weakest foils, 
-  like the rime phonological foils.
