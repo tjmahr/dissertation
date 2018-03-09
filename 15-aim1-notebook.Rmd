@@ -1,7 +1,7 @@
 # Visualize looks to each image type
 
-We continue our exploration of the raw data by aggregating looks to each image 
-type. 
+We continue our exploration of the raw data by aggregating looks to each
+image type. 
 
 ```{r include = FALSE}
 knitr::read_chunk("./helpers.R")
@@ -16,12 +16,14 @@ and blocks of trials with too few trials. Read in that data.
 
 ```{r, message = FALSE, warnings = FALSE, echo = FALSE, message = FALSE}
 data <- readr::read_csv("./data/aim1-screened.csv.gz")
+
 recode_studies <- tibble::tribble(
   ~S, ~Study, ~Age,
   "TimePoint1", "TimePoint1", "Age 3",
   "TimePoint2", "TimePoint2", "Age 4",
   "TimePoint3", "TimePoint3", "Age 5",
 )
+
 convert_study_to_age <- function(xs) {
   factor(
     xs, 
@@ -32,7 +34,7 @@ convert_study_to_age <- function(xs) {
 
 Plot growth curves to each AOI.
 
-```{r by-aoi-prop, out.width = "100%", fig.height=2.5, fig.width=6, echo = FALSE, message = FALSE}
+```{r by-aoi-prop, out.width = "100%", fig.height = 2.5, fig.width = 6, echo = FALSE, message = FALSE}
 resp_def <- create_response_def(
   primary = "Target",
   others = c("PhonologicalFoil", "SemanticFoil", "Unrelated"),

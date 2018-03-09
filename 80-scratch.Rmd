@@ -4,18 +4,18 @@
 Scratch paper
 ========================================================================
 
-This book is made with bookdown, an R package/tool-chain for creating a books in
-multiple formats. This chapter is just a placeholder section and some
-scratch-paper so that I have some examples on-hand of how to use bookdown's
-syntax and features.
+This book is made with bookdown, an R package/tool-chain for creating a
+books in multiple formats. This chapter is just a placeholder section
+and some scratch-paper so that I have some examples on-hand of how to
+use bookdown's syntax and features.
 
 ***
 
-This is _a book_ written in **Markdown**. You can use anything that
+This is *a book* written in **Markdown**. You can use anything that
 Pandoc's Markdown supports, e.g., a math equation $a^2 + b^2 = c^2$.
 
-For now, you have to install the development versions of **bookdown** from
-Github:
+For now, you have to install the development versions of **bookdown**
+from Github:
 
 
 ```{r, eval = FALSE}
@@ -126,12 +126,10 @@ knitr::include_graphics(
 happy_cat_ref <- ifelse(is_word_output(), "happy-cat-docx", "happy-cat")
 ```
 
-
-The caption for Figure \@ref(fig:`r happy_cat_ref`) is defined as a _text reference_
-below and passed to the `fig.cap` chunk option.
+The caption for Figure \@ref(fig:`r happy_cat_ref`) is defined as a *text
+reference* below and passed to the `fig.cap` chunk option.
 
 (ref:happy-cat-cap) This is a happy cat.
-
 
 ```{r happy-cat, fig.cap = "(ref:happy-cat-cap)", echo = !is_word_output(), eval = !is_word_output(), out.width = "30%", fig.show = "hold"}
 knitr::include_graphics(
@@ -149,15 +147,17 @@ Custom blocks
 
 \Begin{infobox}
 <div class = "infobox">
-**Okay**. This book is made with bookdown, an R package/tool-chain for creating
-a books in multiple formats. This chapter is just a placeholder section and some
-scratch-paper so that I have some examples on-hand of how to use bookdown's
-syntax and features.
+
+**Okay**. This book is made with bookdown, an R package/tool-chain for
+creating a books in multiple formats. This chapter is just a placeholder
+section and some scratch-paper so that I have some examples on-hand of
+how to use bookdown's syntax and features.
 
 Some text for this block.
 
-- a list item
-- another item
-- end the list with a blank line
+  - a list item
+  - another item
+  - end the list with a blank line
+
 </div>
 \End{infobox}

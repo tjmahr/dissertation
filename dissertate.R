@@ -171,7 +171,7 @@ wc_rmd_diff <- function() {
            Change = ifelse(Change == "+0", "", Change)) %>%
     select(File, Words, Change) %>%
     arrange(File) %>%
-    print()
+    print(n = Inf)
 }
 
 #' count words in rmd files and save
