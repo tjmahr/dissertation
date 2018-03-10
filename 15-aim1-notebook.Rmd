@@ -1211,7 +1211,7 @@ grew older. The semantic foil shows a clear advantage over the unrelated image
 at age 3, which was not the case for the phonological foil at age 3.
 
 (ref:semy-vs-unre-fits) With each year of the study, children looked more to the
-semantic foil, relative to the unrelated image, with peak looking occuring after
+semantic foil, relative to the unrelated image, with peak looking occurring after
 the target noun. Both figures show means for each year estimated by the
 generalized additive model. The left compares model estimates to observed means
 and standard errors, and the right visualizes estimated means and their 95%
