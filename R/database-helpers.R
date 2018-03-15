@@ -1,5 +1,6 @@
 library(dplyr, warn.conflicts = FALSE)
 library(L2TDatabase)
+library(readr)
 
 create_directory <- function(path) {
   if (!dir.exists(path)) {
@@ -206,6 +207,25 @@ get_eyetracking_looks <- function() {
 }
 
 
+# Download participant abilities from an item-response analysis of
+# age-3 minimal pairs data
+get_tp1_minpair_scores <- function() {
+  "https://github.com/LearningToTalk/MinPairItemResponse/raw/master/data" %>%
+    file.path("minpair-abilities.csv") %>%
+    read_csv(
+      col_types = cols(
+        Model = col_character(),
+        ResearchID = col_character(),
+        coef = col_double(),
+        ranef = col_double(),
+        fitted = col_double(),
+        PPVT_GSV = col_integer(),
+        MinPair_Age = col_integer(),
+        Correct = col_integer(),
+        Trials = col_integer(),
+        Proportion = col_double())) %>%
+    verbosely_write_csv("./data-raw/age3-minpair-fits.csv")
+}
 
 
 # Partition a long dataframe by each task x study, and convert into
