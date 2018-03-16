@@ -66,5 +66,3 @@ White, K. S., & Morgan, J. L. (2008). Sub-segmental detail in early
 lexical representations. *Journal of Memory and Language*, *59*(1),
 114–132.
 doi:[10.1016/j.jml.2008.03.001](https://doi.org/10.1016/j.jml.2008.03.001)
-
-

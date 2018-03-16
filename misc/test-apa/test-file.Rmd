@@ -5,7 +5,7 @@ bibliography:
   - ./assets/book.bib
   - ./assets/packages.bib
 csl: ./assets/apa.csl
-panflute-filters: fix-apa-ampersands
+panflute-filters: ./assets/fix-apa-ampersands
 ---
 
 A related complication is the apparent predictive validity of word
