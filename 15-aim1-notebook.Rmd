@@ -579,7 +579,7 @@ adding simple functions together. The figures below show 9 basis
 functions from a "thin-plate spline" and how they can be weighted and
 summed to fit a growth curve.
 
-```{r infobox-1-figs, message = FALSE, echo = FALSE, out.width = "66%", fig.width = 6, fig.height = 3}
+```{r infobox-1-figs, message = FALSE, echo = FALSE, out.width = "66%", fig.width = 6, fig.height = 3, fig.align = "center"}
 library(mgcv)
 library(ggplot2)
 library(dplyr)
@@ -730,14 +730,16 @@ We can think of these simpler splines as coarse adjustments in growth
 curve shape to capture child-level variation from limited data.
 Altogether, the model contained the following terms:
 
-```
-emp. log-odds(phonological vs. unrelated) = 
-  α + β1*Age-4 + β2*Age-5 +   [growth curve averages]
-  f1(Time, Age-4) +           [reference smooth]
-  f2(Time, Age-4 - Age-3) +   [difference smooths]
-  f3(Time, Age-4 - Age-5) + 
-  f4(Time, Child-ID)          [by-child random smooths]
-```
+`r insert_html_math()`
+\begin{align*}
+   \text{emp. log-odds}(\mathit{phonological\ vs.\ unrelated}) =\    
+   & \alpha + \beta_1\text{Age3} + \beta_2\text{Age5} +\ &\text{[growth curve averages]} \\
+   & f_1(\text{Time}, \text{Age4})\ +                    &\text{[reference smooth]} \\ 
+   & f_2(\text{Time}, \text{Age4} - \text{Age3})\ +      &\text{[difference smooths]} \\ 
+   & f_3(\text{Time}, \text{Age4} - \text{Age5})\ +      & \\ 
+   & f_i(\text{Time}, \text{Child}_i)                    &\text{[by-child random smooths]} \\
+\end{align*}
+`r insert_html_math()`
 
 ```{r, echo = FALSE}
 # prints p-value in markdown as "*p* < .001" or "*p* = [whatever]" 
@@ -1048,23 +1050,6 @@ Talking points:
     The children in timepoint 2 and 3 certainly are.
   - Incremental activation and early commitments to partial information goes up 
     with age.
-
-
-Here we have the data and the model fits.
-
-
-
-
-```{r, results = "asis"}
-# itsadug::gamtabs(b2r, type = "html")
-```
-
-
-
-
-
-
-
 
 
 ## Looks to the semantic foil
@@ -1406,18 +1391,258 @@ year indicates that the semantic representations of words have strengthened.
 
 
 
+## Individual differences in competitor sensitivity
+
+I asked whether children differed reliably in their sensitivity to the
+phonological and semantic foils based on speech perception and
+vocabulary measures.
+
+As a measure of speech perception, I used scores from a minimal
+discrimination task administered during the first year of the study.
+[citations] The task is essentially an ABX discrimination task: A
+picture of a familar object is shown and labeled (e.g., "car"), another
+object is shown and labeled ("jar"), and then both images are shown and
+one of the two is named. The child then indicated which word they heard
+by tapping on the image on a touch-screen. 
+
+I derived speech perception by fitting a hierarchical item-response
+model. This logistic-regression model estimates the probability of child
+*i* correctly choosing word *j* on word-pair *k*. See equation below for
+term-by-term description of the model. The model's intercept term
+represents the average participant's probability of correctly answering
+for an average item. By-child random intercepts capture a child's
+deviation from the overall average, so they estimate the child's
+*ability*. By-word and by-word-in-pair random intercepts capture the
+relative difficulty of particular items on the experiment. The
+by-word-in-pair effects were necessary because four words appeared in
+more than one word pair (e.g., *juice*--*goose* and *juice*--*moose*).
+The model also controlled for the children's ages and receptive
+vocabulary scores (PPVT-4 growth scale values). These predictors were
+transformed to have mean 0 and standard deviation 1, so the the model's
+intercept reflected a child with average age and average vocabulary. The
+by-child intercepts therefore reflect a child's ability after
+controlling for age and receptive vocabulary.
+
+`r insert_html_math()`
+\begin{align*}
+   \text{log-odds}(\mathit{choosing\ correct\ word}) =\    
+   & \alpha\ +                  &\text{[average participant ability]} \\
+   & \alpha_i\ +                &\text{[difference of participant}\ i
+                                       \text{'s ability from average]} \\ 
+   & \alpha_j\ +                &\text{[word}\ j\text{'s difficulty]} \\
+   & \alpha_{j,k}\ +            &\text{[word}\ j
+                                       \text{'s difficulty in word-pair}\ k] \\
+   & \beta_{1}\text{Age}\ +     &\text{[participant-level predictors]} \\ 
+   & \beta_{2}\text{Vocabulary} & \\
+\end{align*}
+`r insert_html_math()`
+
+I tested whether phonemic discrimination ability at age-3 predicted
+looks to the phonological foil over the unrelated image by modifying the
+generalized additive model from earlier. In particular, I included a
+smooth term for the phonemic discrimination ability score and a "smooth
+interaction" between the smooth of time and phonemic ability. These
+smooth interaction terms are analogous to interaction terms in linear
+models. In this case, the interaction term allows the ability score to
+change the shape of the time trend. The model was therefore:
+
+$$
+\begin{align*}
+   \text{emp. log-odds}(\mathit{phonological\ vs.\ unrelated}) =\    
+   & \alpha +\ &\text{[growth curve average]} \\
+   & f_1(\text{Time})\ +                    &\text{[time smooth]} \\ 
+   & f_2(\text{Ability})\ +                 &\text{[ability smooth]} \\ 
+   & f_3(\text{Time} * \text{Ability})\ +   &\text{[interaction smooth]} \\
+   & f_i(\text{Time}, \text{Child}_i)       &\text{[by-child random smooths]} \\
+\end{align*}
+$$
+
+```{r fit-phon-minp-model}
+ppvt <- readr::read_csv(file = "./data-raw/test_scores.csv") %>% 
+  filter(Study == "TimePoint1") %>% 
+  select(ResearchID, PPVT_Age, PPVT_GSV, EVT_Age, PPVT_GSV) 
+
+minp <- readr::read_csv(file = "./data-raw/age3-minpair-fits.csv") %>% 
+  filter(Model == "base + age + ppvt") %>% 
+  left_join(ppvt) %>% 
+  mutate(PPVT_Age = ifelse(is.na(PPVT_Age), MinPair_Age, PPVT_Age))
+
+minp <- minp %>% 
+  modelr::add_residuals(
+    model = lm(PPVT_GSV ~ PPVT_Age + fitted, .),
+    var = "PPVT_GSV_Adj")
+
+# ggplot(minp) + 
+#   aes(x = coef, y = PPVT_GSV) + 
+#   geom_point()
+# 
+# ggplot(minp) + 
+#   aes(x = fitted, y = PPVT_GSV_Adj) + 
+#   geom_point()
+
+phon_d_minp <- phon_d %>% 
+  filter(S == "TimePoint1") %>% 
+  inner_join(minp, by = "ResearchID") %>% 
+  mutate(
+    ability = as.vector(scale(coef)), 
+    ppvt = as.vector(scale(PPVT_GSV_Adj)))
+
+b2_age3 <- bam(
+  elog ~ s(Time) + s(Time, R, bs = "fs", m = 1, k = 5),
+  data = phon_d_minp)
+summary(b2_age3)
+# plot(b2_age3, pages = 1)
+
+b2_age3_minp <- bam(
+  elog ~ s(Time) + 
+    s(ability) + 
+    ti(Time, ability) + 
+    s(Time, R, bs = "fs", m = 1, k = 5),
+  data = phon_d_minp)
+
+b2_age3_ppvt <- bam(
+  elog ~ s(Time) + 
+    s(ppvt) + 
+    ti(Time, ppvt) + 
+    s(Time, R, bs = "fs", m = 1, k = 5),
+  data = phon_d_minp)
+# b2_age3_minp_a -> b2_age3_minp
+
+summary(b2_age3_ppvt)
+
+plot(b2_age3_ppvt, pages = 1, scale = FALSE)
+# compareML(b2_age3, b2_age3_ppvt)
 
 
 
 
-## Look for individual differences in competitor sensitivity
+n_phon_minp <- phon_d_minp %>% pull(ResearchID) %>% unique() %>% length()
+# summary(b2_age3_minp)
+# # plot(b2_age3_minp, pages = 1, scale = FALSE)
+# b2_age3_minp
 
-[...put this on hold for a while...]
 
-<!-- Let's just run with all the foils. There's a trade-off here about sparsity and -->
-<!-- strength of the stimuli. -->
+# anova(b2_age3, b2_age3_minp)
+# AIC(b2_age3, b2_age3_minp)
+comparison <- compareML(b2_age3, b2_age3_minp, print.output = FALSE)
 
-```{r, eval = TRUE, out.width = "100%", echo = FALSE}
+format_chi_squared <- function(comparison) {
+  comp_df <- levels(comparison$table$Df)[2] %>% 
+    as.numeric() %>% 
+    round(2)
+  
+  comp_diff <- levels(comparison$table$Difference)[2] %>% 
+    as.numeric() %>% 
+    round(2)
+  
+  comp_p <- levels(comparison$table$p.value)[2] %>% 
+    as.numeric() %>% 
+    format_p_value()
+  
+  sprintf("_&chi;_<sup>2</sup>(%s)&nbsp;= %s, %s", 
+          comp_df, comp_diff, comp_p)
+}
+
+chi_phon <- format_chi_squared(comparison)
+# compareML(b2_age3, b2_age3_minp,  suggest.report = TRUE)
+# plot(b2_age3_minp, pages = 1)
+# summary(b2_age3_minp)
+```
+
+The model included data from `r n_phon_minp` participants; these were
+children with eyetracking data, receptive vocabulary and phonological
+discrimination data age 3. There was not a significant smooth effect for
+phonological discrimination ability, [edf], [p]. The interaction
+smooth between time and ability was significant, [edf], [p]. Model
+comparison between the model and a reduced model (without the ability
+main effect or its interaction with time) supported inclusion of the
+predictor, `r chi_phon`.
+
+I examined the contribution of the interaction term by visualizing
+model-predicted growth curves for an average participant at different
+phonological ability scores. Figure X shows how looks to phonological
+foil apparently increased with discrimination ability. The left panel
+shows how early looking to the phonological foil become more pronounced
+as phonological discrimination increases. This nonlinear interaction,
+however, becomes more unstable at extreme values. In particular,
+children with very low phonological discrimination abilities (2 SD below
+average) showed roughly the same estimated growth curves as children
+with above average (+1 SD) discrimination scores. For the middle 68% of
+the children, we observe a sensible and interpretable effect, but this
+effect term is poorly behaved at very low abilities scores. Therefore, a
+conservative conclusion from this model would be that differences in
+phonological discrimination predicted early looks to the phonological
+foil, but the direction of this effect was not consistent at low ability
+scores.
+
+```{r}
+smooth_times <- modelr::seq_range(unique(phon_d_minp$Time), 100)
+pp <- get_predictions(
+  b2_age3_minp, 
+  cond = list(
+    ability = c(-2, -1, 0, 1, 2),
+    Time = smooth_times), 
+  rm.ranef = TRUE) 
+
+pp %>% 
+  mutate(
+    panel = ifelse(ability %in% c(-2, 2), "Very low or very high", "Typical"),
+    ability = factor(
+      ability, labels = c("-2 SD", "-1 SD", "Mean", "+1 SD", "+2 SD"))) %>% 
+  ggplot() + 
+    aes(x = Time, y = fit, color = ability, fill = ability) + 
+    geom_hline(yintercept = 0, size = 2, color = "white") +
+    geom_line() + 
+    labs(color = "Phonological\ndiscrimination") + 
+  facet_wrap("panel")
+
+pp2 <- get_predictions(
+  b2_age3_ppvt, 
+  cond = list(
+    ppvt = c(-2, -1, 0, 1, 2),
+    Time = smooth_times), 
+  rm.ranef = TRUE) 
+
+pp2 %>% 
+  mutate(
+    panel = ifelse(ppvt %in% c(-2, 2), "Very low or very high", "Typical"),
+    ppvt = factor(
+      ppvt, labels = c("-2 SD", "-1 SD", "Mean", "+1 SD", "+2 SD"))) %>% 
+  ggplot() + 
+    aes(x = Time, y = fit, color = ppvt, fill = ppvt) + 
+    geom_hline(yintercept = 0, size = 2, color = "white") +
+    geom_line() + 
+    labs(color = "Phonological\ndiscrimination") 
+
+
+```
+
+
+
+```{r, eval = FALSE, out.width = "100%", echo = FALSE}
+
+  
+plot_error(pp$Time, pp$fit, pp$CI, shade=TRUE, xpd=TRUE)
+
+
+ggplot(phon_d_minp) + aes(x = ability) + geom_histogram()
+
+predict
+plot_smooth(b2_age3_minp, view="Time", cond=list(coef=c(-1,0,1)), rm.ranef=TRUE)
+
+predict(b2_age3_minp, )
+
+phon_d %>% 
+  filter(Focus == "PhonologicalFoil") %>% 
+  left_join(minp) %>% 
+  ggplot() + 
+    aes(x = Time, y = plogis(empirical_logit(PhonologicalFoil, Unrelated))) + 
+    geom_line(aes(group = ResearchID), alpha = .2) +
+    stat_smooth(aes(color = MinP), se = FALSE) +
+    facet_grid(. ~ Study)  + 
+    ggtitle("To phon foil by minimal pairs")
+
+
 # ggplot(phon_d %>% filter(Focus == "PhonologicalFoil")) + 
 #   aes(x = Time, y = empirical_logit(PhonologicalFoil, Unrelated)) + 
 #   geom_line(aes(group = ResearchID), alpha = .2) + 
