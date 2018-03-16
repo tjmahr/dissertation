@@ -746,16 +746,7 @@ diminish as children converge on a mature level of performance on this task.
 _TJM: This section is in really good shape._
 
 ```{r compute-kendalls, include = FALSE}
-fits <- readr::read_csv("./data/fits.csv.gz") %>%
-  semi_join(d_m)
-
-peaks <- readr::read_csv("./data/peaks.csv.gz") %>%
-  rename(.posterior_value = Peak_Logit) %>% 
-  mutate(coef = "peak_logit") %>% 
-  semi_join(d_m)
-
-fits <- bind_rows(fits, peaks)
-rm(peaks)
+fits <- readr::read_csv("./data/aim1-gca-features.csv.gz")
 
 # Compute Kendall's coefficient of correspondence
 tidy_kendall <- . %>%
@@ -941,16 +932,7 @@ _TJM: This section is in good shape._
 
 ```{r vocab correlations, include = FALSE}
 if (!exists("fits")) {
-  fits <- readr::read_csv("./data/fits.csv.gz") %>%
-    semi_join(d_m)
-
-  peaks <- readr::read_csv("./data/peaks.csv.gz") %>%
-    rename(.posterior_value = Peak_Logit) %>% 
-    mutate(coef = "peak_logit") %>% 
-    semi_join(d_m)
-
-  fits <- bind_rows(fits, peaks)
-  rm(peaks)
+  fits <- readr::read_csv("./data/aim1-gca-features.csv.gz")
 }
 
 scores <- readr::read_csv("./data-raw/test_scores.csv") %>% 
