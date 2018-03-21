@@ -624,7 +624,7 @@ model estimates to observed means and standard errors, and the right
 visualizes estimated means and their 95% confidence intervals.
 
 ```{r phon-vs-unre-fits, fig.cap = "(ref:phon-vs-unre-fits)", echo = FALSE, warning = FALSE, message = FALSE, out.width = "80%", fig.width = 6, fig.height = 4, results = "hide"}
-phon_d$fitted_elogit <- predict.gam(b2r)
+# phon_d$fitted_elogit <- predict.gam(b2r)
 
 avg <- b2r %>% 
   get_predictions(
@@ -974,7 +974,7 @@ and standard errors, and the right visualizes estimated means and their 95%
 confidence intervals.
 
 ```{r semy-vs-unre-fits, fig.cap = "(ref:semy-vs-unre-fits)", echo = FALSE, warning = FALSE, message = FALSE, out.width = "80%", fig.width = 6, fig.height = 4, results = "hide"}
-semy_d$fitted_elogit <- predict.gam(s2r)
+# semy_d$fitted_elogit <- predict.gam(s2r)
 
 avg <- s2r %>% 
   get_predictions(
@@ -1271,13 +1271,7 @@ b2_age3_minp <- bam(
     s(Time, R, bs = "fs", m = 1, k = 5),
   data = phon_d_minp)
 
-b2_age3_ppvt <- bam(
-  elog ~ s(Time) + 
-    s(ppvt) + 
-    ti(Time, ppvt) + 
-    s(Time, R, bs = "fs", m = 1, k = 5),
-  data = phon_d_minp)
-# b2_age3_minp_a -> b2_age3_minp
+
 
 summary(b2_age3_ppvt)
 
@@ -1325,26 +1319,30 @@ children with eyetracking data, receptive vocabulary and phonological
 discrimination data age 3. There was not a significant smooth effect for
 phonological discrimination ability, [edf], [p]. The interaction
 smooth between time and ability was significant, [edf], [p]. Model
-comparison between the model and a reduced model (without the ability
-main effect or its interaction with time) supported inclusion of the
-predictor, `r chi_phon`.
+comparison between the model and a reduced model (without the Ability
+and Ability × Time effects) supported inclusion of the predictor,
+`r chi_phon`.
 
-I examined the contribution of the interaction term by visualizing
+To examine the contribution of the interaction term, I visualized
 model-predicted growth curves for an average participant at different
-phonological ability scores. Figure X shows how looks to phonological
+phonological ability scores. Figure X shows how looks to phonological
 foil apparently increased with discrimination ability. The left panel
 shows how early looking to the phonological foil become more pronounced
 as phonological discrimination increases. This nonlinear interaction,
 however, becomes more unstable at extreme values. In particular,
 children with very low phonological discrimination abilities (2 SD below
 average) showed roughly the same estimated growth curves as children
-with above average (+1 SD) discrimination scores. For the middle 68% of
-the children, we observe a sensible and interpretable effect, but this
-effect term is poorly behaved at very low abilities scores. Therefore, a
-conservative conclusion from this model would be that differences in
-phonological discrimination predicted early looks to the phonological
-foil, but the direction of this effect was not consistent at low ability
-scores.
+with above average (+1 SD) discrimination scores. For the middle 68% of
+children, we observe a sensible and interpretable effect, but this
+effect term is poorly behaved at very low abilities scores. In
+particular, children with low phonemic discrimination are predicted to
+be especially sensitive to the phonological foil. Such a finding
+contradicts my prior expectation that phonological discrimination would
+be related to processing of word onsets, so I interpret as a modeling
+artefact. A conservative conclusion from this model would be that
+differences in phonological discrimination predicted early looks to the
+phonological foil, but the direction of this effect was not consistent
+at low ability scores.
 
 ```{r}
 smooth_times <- modelr::seq_range(unique(phon_d_minp$Time), 100)
@@ -1366,27 +1364,37 @@ pp %>%
     geom_line() + 
     labs(color = "Phonological\ndiscrimination") + 
   facet_wrap("panel")
-
-pp2 <- get_predictions(
-  b2_age3_ppvt, 
-  cond = list(
-    ppvt = c(-2, -1, 0, 1, 2),
-    Time = smooth_times), 
-  rm.ranef = TRUE) 
-
-pp2 %>% 
-  mutate(
-    panel = ifelse(ppvt %in% c(-2, 2), "Very low or very high", "Typical"),
-    ppvt = factor(
-      ppvt, labels = c("-2 SD", "-1 SD", "Mean", "+1 SD", "+2 SD"))) %>% 
-  ggplot() + 
-    aes(x = Time, y = fit, color = ppvt, fill = ppvt) + 
-    geom_hline(yintercept = 0, size = 2, color = "white") +
-    geom_line() + 
-    labs(color = "Phonological\ndiscrimination") 
-
-
 ```
+
+
+```{r}
+b2_age3_ppvt <- bam(
+  elog ~ s(Time) + 
+    s(ppvt) + 
+    ti(Time, ppvt) + 
+    s(Time, R, bs = "fs", m = 1, k = 5),
+  data = phon_d_minp)
+summary(b2_age3_ppvt)
+
+# b2_age3_ppvt_0 <- bam(
+#   elog ~ ppvt + s(Time) + s(Time, R, bs = "fs", m = 1, k = 5),
+#   data = phon_d_minp)
+# summary(b2_age3_ppvt_0)
+# 
+# b2_age3_ppvt_1 <- bam(
+#   elog ~ ability + s(Time) + s(Time, R, bs = "fs", m = 1, k = 5),
+#   data = phon_d_minp)
+# summary(b2_age3_ppvt_1)
+
+# b2_age3_minp_a -> b2_age3_minp
+```
+
+To test the role of receptive vocabulary, I also fit analogous models
+using growth scale value scores from the PPVT-4, a receptive vocabulary
+test. I first adjusted these scores in a regression model to control
+for--that is, partial out the effects of---age and predicted accuracy on
+the phonological discrimination task.
+
 
 
 
