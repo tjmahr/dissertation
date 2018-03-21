@@ -17,7 +17,7 @@ recode_studies <- tibble::tribble(
   ~S,           ~S2,          ~Study,       ~Age,
   "TimePoint1", "TimePoint1", "TimePoint1", "Age 3",
   "TimePoint2", "TimePoint2", "TimePoint2", "Age 4",
-  "TimePoint3", "TimePoint3", "TimePoint3", "Age 5",
+  "TimePoint3", "TimePoint3", "TimePoint3", "Age 5"
 )
 
 convert_study_to_age <- function(xs) {
@@ -1228,7 +1228,7 @@ $$
 \end{align*}
 $$
 
-```{r fit-phon-minp-model}
+```{r fit-phon-minp-model, echo = FALSE}
 ppvt <- readr::read_csv(file = "./data-raw/test_scores.csv") %>% 
   filter(Study == "TimePoint1") %>% 
   select(ResearchID, PPVT_Age, PPVT_GSV, EVT_Age, PPVT_GSV) 
@@ -1258,6 +1258,13 @@ phon_d_minp <- phon_d %>%
     ability = as.vector(scale(coef)), 
     ppvt = as.vector(scale(PPVT_GSV_Adj)))
 
+semy_d_minp <- semy_d %>% 
+  filter(S == "TimePoint1") %>% 
+  inner_join(minp, by = "ResearchID") %>% 
+  mutate(
+    ability = as.vector(scale(coef)), 
+    ppvt = as.vector(scale(PPVT_GSV_Adj)))
+
 b2_age3 <- bam(
   elog ~ s(Time) + s(Time, R, bs = "fs", m = 1, k = 5),
   data = phon_d_minp)
@@ -1271,11 +1278,9 @@ b2_age3_minp <- bam(
     s(Time, R, bs = "fs", m = 1, k = 5),
   data = phon_d_minp)
 
+# summary(b2_age3_ppvt)
 
-
-summary(b2_age3_ppvt)
-
-plot(b2_age3_ppvt, pages = 1, scale = FALSE)
+# plot(b2_age3_ppvt, pages = 1, scale = FALSE)
 # compareML(b2_age3, b2_age3_ppvt)
 
 
@@ -1344,7 +1349,7 @@ differences in phonological discrimination predicted early looks to the
 phonological foil, but the direction of this effect was not consistent
 at low ability scores.
 
-```{r}
+```{r, echo = FALSE}
 smooth_times <- modelr::seq_range(unique(phon_d_minp$Time), 100)
 pp <- get_predictions(
   b2_age3_minp, 
@@ -1367,7 +1372,7 @@ pp %>%
 ```
 
 
-```{r}
+```{r, echo = FALSE, eval = FALSE}
 b2_age3_ppvt <- bam(
   elog ~ s(Time) + 
     s(ppvt) + 
@@ -1386,184 +1391,64 @@ summary(b2_age3_ppvt)
 #   data = phon_d_minp)
 # summary(b2_age3_ppvt_1)
 
-# b2_age3_minp_a -> b2_age3_minp
+semy_age3 <- bam(
+  elog ~ s(Time) + s(Time, R, bs = "fs", m = 1, k = 5),
+  data = semy_d_minp)
+summary(semy_age3)
+# plot(b2_age3, pages = 1)
+
+semy_age3_minp <- bam(
+  elog ~ s(Time) + 
+    s(ability) + 
+    ti(Time, ability) + 
+    s(Time, R, bs = "fs", m = 1, k = 5),
+  data = semy_d_minp)
+summary(semy_age3_minp)
+
+semy_age3_ppvt <- bam(
+  elog ~ s(Time) + 
+    s(ppvt) + 
+    ti(Time, ppvt) + 
+    s(Time, R, bs = "fs", m = 1, k = 5),
+  data = semy_d_minp)
+summary(semy_age3_ppvt)
+
+semy_age3_ppvt_0 <- bam(
+  elog ~ s(Time) + 
+    ppvt + 
+    s(Time, R, bs = "fs", m = 1, k = 5),
+  data = semy_d_minp)
+summary(semy_age3_ppvt_0)
+
+semy_age3_minp_0 <- bam(
+  elog ~ s(Time) + 
+    ability + 
+    s(Time, R, bs = "fs", m = 1, k = 5),
+  data = semy_d_minp)
+summary(semy_age3_minp_0)
 ```
 
-To test the role of receptive vocabulary, I also fit analogous models
-using growth scale value scores from the PPVT-4, a receptive vocabulary
-test. I first adjusted these scores in a regression model to control
-for--that is, partial out the effects of---age and predicted accuracy on
-the phonological discrimination task.
+To test the role of receptive vocabulary, I also fit analogous models using
+growth scale value scores from the PPVT-4, a receptive vocabulary test. I first
+adjusted these scores in a regression model to control for--that is, partial out
+the effects of---age and predicted accuracy on the phonological discrimination
+task. There was not a significant smooth effect for receptive vocabulary, [edf],
+[p], or a significant interaction smooth between time and receptive vocabulary,
+[edf], [p]. Receptive vocabulary was not related to looks to the phonological
+foil at age 3.
 
+I tested the same two predictors on looks to the semantic foil at age 3. These
+child-level factors did not show any parametric effects, smooth effects or
+smooth interactions with time. Thus, children later looks to the semantic foil
+were not reliably related to phonological discrimination or receptive
+vocabulary.
 
+Talking points :
 
-
-```{r, eval = FALSE, out.width = "100%", echo = FALSE}
-
-  
-plot_error(pp$Time, pp$fit, pp$CI, shade=TRUE, xpd=TRUE)
-
-
-ggplot(phon_d_minp) + aes(x = ability) + geom_histogram()
-
-predict
-plot_smooth(b2_age3_minp, view="Time", cond=list(coef=c(-1,0,1)), rm.ranef=TRUE)
-
-predict(b2_age3_minp, )
-
-phon_d %>% 
-  filter(Focus == "PhonologicalFoil") %>% 
-  left_join(minp) %>% 
-  ggplot() + 
-    aes(x = Time, y = plogis(empirical_logit(PhonologicalFoil, Unrelated))) + 
-    geom_line(aes(group = ResearchID), alpha = .2) +
-    stat_smooth(aes(color = MinP), se = FALSE) +
-    facet_grid(. ~ Study)  + 
-    ggtitle("To phon foil by minimal pairs")
-
-
-# ggplot(phon_d %>% filter(Focus == "PhonologicalFoil")) + 
-#   aes(x = Time, y = empirical_logit(PhonologicalFoil, Unrelated)) + 
-#   geom_line(aes(group = ResearchID), alpha = .2) + 
-#   stat_smooth() +
-#   facet_grid(. ~ Study)
-# 
-# ggplot(phon_d %>% filter(Focus == "PhonologicalFoil")) + 
-#   aes(x = Time, y = empirical_logit(PhonologicalFoil, Unrelated)) + 
-#   geom_line(aes(group = interaction(ResearchID, Study)), alpha = .2) + 
-#   stat_smooth(aes(color = Study)) 
-# 
-# phon_d %>%
-#   filter(Focus == "PhonologicalFoil") %>% 
-#   sample_n_of(9, ResearchID) %>%
-#   ggplot() + 
-#     aes(x = Time, y = empirical_logit(PhonologicalFoil, Unrelated)) + 
-#     geom_line(aes(group = interaction(ResearchID, Study)), alpha = .2) + 
-#     stat_smooth(aes(color = Study)) +
-#   facet_wrap("ResearchID")
-# 
-minp1 <- readr::read_csv("./data-raw/test_scores.csv") %>% 
-  select(Study, ResearchID, MinPair_ProportionCorrect) %>% 
-  filter(Study == "TimePoint1") %>% 
-  mutate(
-    MinP = ntile(MinPair_ProportionCorrect, 4),
-    Cut = cut(MinPair_ProportionCorrect, c(0, .6, .8, 1))) %>% 
-  select(-Study)
-
-# table(minp1$Cut)
- 
-phon_d %>% 
-  filter(Focus == "PhonologicalFoil") %>% 
-  left_join(minp1) %>% 
-  ggplot() + 
-    aes(x = Time, y = plogis(empirical_logit(PhonologicalFoil, Unrelated))) + 
-    geom_line(aes(group = ResearchID), alpha = .2) +
-    stat_smooth(aes(color = Cut), se = FALSE) +
-    facet_grid(. ~ Study)  + 
-    ggtitle("To phon foil by minimal pairs")
-
-phon_d %>% 
-  filter(Focus == "Target") %>% 
-  left_join(minp1) %>% 
-  ggplot() + 
-    aes(x = Time, y = Prop) + 
-    geom_line(aes(group = ResearchID), alpha = .2) +
-    stat_smooth(aes(color = Cut), se = FALSE) +
-    facet_grid(. ~ Study) + 
-   ggtitle("Prop to target by minimal pairs")
-
-# phon_d %>% 
-#   filter(Focus == "Target") %>% 
-#   left_join(minp1) %>% 
-#   ggplot() + 
-#     aes(x = Time, y = plogis(empirical_logit(Target, Unrelated))) + 
-#     geom_line(aes(group = ResearchID), alpha = .2) +
-#     stat_smooth(aes(color = Cut), se = FALSE) +
-#     facet_grid(. ~ Study)
-
-# phon_d %>% 
-#   filter(Focus == "PhonologicalFoil") %>% 
-#   left_join(minp1) %>% 
-#   ggplot() + 
-#     aes(x = Time) + 
-#     # geom_line(aes(group = ResearchID), alpha = .2) +
-#     stat_smooth(
-#       aes(color = Cut, y = plogis(empirical_logit(Target, PhonologicalFoil))), 
-#       se = FALSE) +
-#     stat_smooth(
-#       aes(color = Cut, y = plogis(empirical_logit(Target, Unrelated))), 
-#       se = FALSE, linetype = "dashed") +
-#     facet_grid(Cut ~ Study)
-
-# phon_d %>% 
-#   filter(Focus == "Target") %>% 
-#   left_join(minp1) %>% 
-#   ggplot() + 
-#     aes(x = Time, y = Prop) + 
-#     geom_line(aes(group = ResearchID), alpha = .2) +
-#     stat_smooth(aes(color = Cut), se = FALSE) +
-#     facet_grid(. ~ Study)
-
-
-evt1 <- readr::read_csv("./data-raw/test_scores.csv") %>% 
-  select(Study, ResearchID, EVT_Standard) %>% 
-  filter(Study == "TimePoint1") %>% 
-  mutate(EVT = ntile(EVT_Standard, 4)) %>% 
-  select(-Study)
-
-# gfta1 <- readr::read_csv("./data-raw/scores_for_participant_summary.csv") %>% 
-#   select(Study, ResearchID, GFTA_Standard) %>% 
-#   filter(Study == "TimePoint1") %>% 
-#   mutate(GFTA = ntile(GFTA_Standard, 4)) %>% 
-#   select(-Study)
-
-
-phon_d %>% 
-  filter(Focus == "PhonologicalFoil") %>% 
-  left_join(evt1) %>% 
-  ggplot() + 
-    aes(x = Time, y = empirical_logit(PhonologicalFoil, Unrelated)) + 
-    geom_line(aes(group = ResearchID), alpha = .2) + 
-    stat_smooth(aes(color = factor(EVT)), se = FALSE) +
-    facet_grid(. ~ Study)
-
-# phon_d %>% 
-#   filter(Focus == "PhonologicalFoil") %>% 
-#   left_join(gfta1) %>% 
-#   ggplot() + 
-#     aes(x = Time, y = empirical_logit(PhonologicalFoil, Unrelated)) + 
-#     geom_line(aes(group = ResearchID), alpha = .2) + 
-#     stat_smooth(aes(color = factor(GFTA)), se = FALSE) +
-#     facet_grid(. ~ Study)
-
-
-
-semy_d %>% 
-  filter(Focus == "SemanticFoil") %>% 
-  left_join(evt1) %>% 
-  ggplot() + 
-    aes(x = Time, y = empirical_logit(SemanticFoil, Unrelated)) + 
-    geom_line(aes(group = ResearchID), alpha = .2) + 
-    stat_smooth(aes(color = factor(EVT)), se = FALSE) +
-    facet_grid(. ~ Study)
-
-semy_d %>% 
-  filter(Focus == "SemanticFoil") %>% 
-  left_join(minp1) %>% 
-  ggplot() + 
-    aes(x = Time, y = empirical_logit(SemanticFoil, Unrelated)) + 
-    geom_line(aes(group = ResearchID), alpha = .2) + 
-    stat_smooth(aes(color = Cut), se = FALSE) +
-    facet_grid(. ~ Study)
-
-# m <- glmer(
-#   cbind(PhonologicalFoil, Unrelated) ~ 
-#     (ot1 + ot2 + ot3) * Study + 
-#     (ot1 + ot2 + ot3 | ResearchID), 
-#   family = binomial,
-#   data = d_m)
-# summary(m)
-```
+* I tested whether two child-level features predicted looks to the competitor image at age 3. 
+* One a priori expectation was that looks to the phonological foil would relate to phonological discrimination ability, because children who can reliably discriminate one-feature phonetic differences between words would have richer phonological or phonetic representations that supported word recognition.
+* The expectation was tenuously supported by a generalized additive model where children with greater discrimination abilities showed more early looks to the phonological foil. However, this model showed an unexpected effect for children with the lowest discrimination scores, so this model is interpreted cautiously.
+* The other a prior expectation was that looks to semantic foil would relate to looks to the receptive vocabulary. However, neigther predicted related to looks the semantic foil.
 
 
 
