@@ -13,16 +13,16 @@ build command from package to website. The Build button became "Build
 Book" as a result. I deleted the package infrastructure stuff after
 that.
 
-**Change the output to make Github publishing easier**: I added
+**Change the output to make GitHub publishing easier**: I added
 `output_dir: "docs"` to `_bookdown.yml` so that the site would be
-generated in that folder. I did that so that I could publish to Github
-sites without using a gh-pages branch. (On Github, go to settings,
-Github pages, find the docs folder in the dropdown box.)
+generated in that folder. I did that so that I could publish to GitHub
+sites without using a gh-pages branch. (On GitHub, go to settings,
+GitHub pages, find the docs folder in the dropdown box.)
 
-I deleted Yihui's travis and deployment scripts because I didn't need a
+I deleted Yihui's Travis and deployment scripts because I didn't need a
 remote computer to push updates to the gh-pages any more.
 
-**Modularize**: I moved all the output information from yaml header to
+**Modularize**: I moved all the output information from YAML header to
 the `_output.yml` file. I also added `bookdown::word_document2: default`
 to get a Word file output too. I moved as much of the root-levels to
 assets as possible and updated references to these files to use the
@@ -54,11 +54,11 @@ This bookdown file was originally a fork of
 I unforked from that repository by
 
   - Renaming this repository
-  - Using Github + (plus) button \>\> Import repository and imported the
+  - Using GitHub + (plus) button \>\> Import repository and imported the
     URL of this repository
   - Now I had a fresh copy of the repository without any forking-history
     from the from the demo book.
-  - Updated the Github settings to match the old repository's.
+  - Updated the GitHub settings to match the old repository's.
   - Deleted the old, renamed copy of the repository.
   - Deleted all the non-master branches that were also imported.
 

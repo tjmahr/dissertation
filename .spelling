@@ -1,0 +1,115 @@
+# markdown-spellcheck spelling configuration file
+# Format - lines beginning # are comments
+# global dictionary is at the start, file overrides afterwards
+# one word per line, to define a file override use ' - filename'
+# where filename is relative to this configuration file
+Mahr
+tjmahr
+bookdown
+RStudio
+dropdown
+YAML
+APA
+eyetracking
+priori
+timepoint
+ANOVA
+downsampled
+distractors
+logit
+PPVT-4
+Weismer
+UW-Madison
+Kaushanskaya
+Kaplan
+McMurray
+e.g.
+nonwords
+dissociations
+AAE
+EVT-2
+GFTA-2
+distractor
+i.e.
+Tobii
+eyetracker
+natively
+coarticulatory
+SES
+deblinking
+dataset
+oversamples
+TJM
+frequentist
+timepoints
+UI
+interquartile
+vers
+covary
+logits
+LKJ
+ - index.Rmd
+documentclass
+bookdown
+bookdown_site
+github-repo
+panflute-filters
+fix-apa-ampersands
+refs.bib
+packages.bib
+csl
+apa.csl
+lof
+frontmatter
+pdf
+mainmatter
+ - README.md
+gh-pages
+Yihui's
+unforked
+ - 01-prospectus.Rmd
+F31
+ - 02-specific-aims.Rmd
+Weisleder2013
+WhiteMorgan2008
+MPPaper
+shoop
+cheem
+McMurray2012
+ - 11-aim1-notebook.Rmd
+aim1-method
+OSF_Statement
+RWLPaper
+sample-vw-screen
+sample-vw-screen-cap2
+T60XL
+vw-experiment-items
+ - 10-aim1-part.Rmd
+part-aim1
+ - 12-aim1-notebook.Rmd
+GelmanHill
+RethinkingBook
+Mirman2014
+textit
+beta_0
+beta_1
+beta_2
+beta_3
+effects2
+TP1
+TP2
+TP3
+th
+SDs
+_W_
+_J_
+_I_
+kendall-stats
+evt2-gca-cors
+ppvt4-gca-cors
+_r_
+_x_-axis
+_y_-axis
+Gelman
+RStanARM's
+_Here

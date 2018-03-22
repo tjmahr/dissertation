@@ -48,15 +48,15 @@ _TJM: I'll have to clean this section up once the order of the main results is
 pinned down. That way this can flow neatly in to the findings._
 
 Looks to the familiar image were analyzed using Bayesian mixed
-effects logistic regression. We used *logistic* regression because
+effects logistic regression. I used *logistic* regression because
 the outcome measurement is a probability (the log-odds of looking to the
-target image versus a distractor). We used *mixed-effects* models
+target image versus a distractor). I used *mixed-effects* models
 to estimate a separate growth curve for each child (to
 measure individual differences in word recognition) but also treat each
 child's individual growth curve as a draw from a distribution of related
 curves.
 
-We used *Bayesian* techniques to study a generative model of the
+I used *Bayesian* techniques to study a generative model of the
 data. Instead of reporting and describing a single, best-fitting model
 of some data, Bayesian methods consider an entire distribution of
 plausible models that are consistent with the data and any prior
@@ -73,27 +73,32 @@ models).[^2]
     Bayesian statistics is illustrated in texts by @GelmanHill and 
     @RethinkingBook.
 
-The eyetracking growth curves were fit using an orthogonal cubic polynomial
-function of time [a now-conventional approach; see @Mirman2014]. Put
-differently, we modeled the probability of looking to the target during an
-eyetracking task as:
+The eyetracking growth curves were fit using an orthogonal cubic
+polynomial function of time [a now-conventional approach; see
+@Mirman2014]. Put differently, I modeled the probability of looking to
+the target during an eyetracking task as:
 
 $$
-\text{log-odds}(\mathit{looking}) = β_0 + β_1 * \textit{Time}^1 + β_2 * \textit{Time}^2 +   β_3 * \textit{Time}^3
+\text{log-odds}(\textit{looking}) = 
+  \beta_0 + 
+  \beta_1 * \textit{Time}^1 + 
+  \beta_2 * \textit{Time}^2 + 
+  \beta_3 * \textit{Time}^3
 $$
 
-That the time terms are *orthogonal* means that $\textit{Time}^1$,
-$\textit{Time}^2$ and $\textit{Time}^3$ are transformed so that they are
-uncorrelated. Under this formulation, the parameters $β_0$ and $β_1$
-have a direct interpretation in terms of lexical processing performance. The
-intercept, $β_0$, measures the area under the growth curve—or the
-probability of fixating on the target word averaged over the whole window. We
-can think of $β_0$ as a measure of *word recognition reliability*. The
-linear time parameter, $β_1$, estimates the steepness of the growth
-curve—or how the probability of fixating changes from frame to frame. We can
-think of $β_1$ as a measure of *processing efficiency*, because growth
-curves with stronger linear features exhibit steeper frame-by-frame increases in
-looking probability.[^3]
+That the time terms are *orthogonal* means that $\\textit{Time}^1$,
+$\textit{Time}^2$ and $\textit{Time}^3$ are transformed so that they
+are uncorrelated. Under this formulation, the parameters $\beta_0$ and
+$\beta_1$ have a direct interpretation in terms of lexical processing
+performance. The intercept, $\beta_0$, measures the area under the
+growth curve—or the probability of fixating on the target word averaged
+over the whole window. We can think of $\beta_0$ as a measure of *word
+recognition reliability*. The linear time parameter, $\beta_1$,
+estimates the steepness of the growth curve—or how the probability of
+fixating changes from frame to frame. We can think of $\beta_1$ as a
+measure of *processing efficiency*, because growth curves with stronger
+linear features exhibit steeper frame-by-frame increases in looking
+probability.[^3]
 
 
 [^3]: The polynomial other terms are less important—or rather, they have
@@ -109,7 +114,7 @@ looking probability.[^3]
     the looks to target start to increase from baseline and the point
     when the looks to target stops increasing.
 
-We studied how word recognition changes over time by modeling how growth curves
+To study how word recognition changes over time, I modeled how the growth curves
 change over developmental time. This amounted to studying how the growth curve
 parameters changes year over year. We included dummy-coded indicators for Age 3,
 Age 4, and Age 5 and allowed these indicators interact with the growth curve
@@ -546,7 +551,7 @@ children looked to the target more quickly and more reliably.
   - This result is as expected.
   - It's good that the task scaled with development so that there was room to
     grow each year.
-  - The growth curve changes each year involved peak accuaracy and steepness of
+  - The growth curve changes each year involved peak accuracy and steepness of
     the curve. They reach higher heights, and they hit year 1 peak earlier each
     year.
 
@@ -729,7 +734,7 @@ diminish as children converge on a mature level of performance on this task.
     developmentally for vocabulary?
   - Children different in their word-learning trajectories, so the early
     differences in word recognition could be from younger children who are
-    relatively early/late in word-learning. The SDs of the EVT scores narrows a
+    relatively early/late in word-learning. The SDs of the EVT-2 scores narrows a
     small amount each year, even when we only consider the children who
     participated at all three years.
   - (It will be easier to fold this in to the mechanism discussion once we have
@@ -1071,7 +1076,7 @@ distribution of correlations.
 Figure \@ref(fig:evt2-gca-cors) shows the correlations of the peak looking
 probability, average looking probability and linear time features with
 expressive vocabulary size at year 3, and Figure \@ref(fig:ppvt4-gca-cors) shows
-analagous correlations for the receptive vocabulary at year 2. For all cases,
+analogous correlations for the receptive vocabulary at year 2. For all cases,
 the strongest correlations were found between the growth curve features 
 at year 1.
 Growth curve peaks from year 1 correlated with year 3 vocabulary with _r_ =
@@ -1096,7 +1101,7 @@ the concurrent correlation at year 3, _r_<sub>TP1&minus;TP3</sub> =
 `r  int_evt_tp3_pts[["TP1 - TP3"]]`, [`r int_evt_tp3_uis[["TP1 - TP3"]]`].
 
 (ref:evt2-gca-cors) Uncertainty intervals for the correlations of growth curve
-features at each time point with expressive vocabulary (EVT2 standard scores) at
+features at each time point with expressive vocabulary (EVT-2 standard scores) at
 year 3. The bottom rows provide intervals for the pairwise differences in
 correlations between time points.
 
@@ -1150,7 +1155,7 @@ correlation, _r_<sub>TP1&minus;TP2</sub> = `r ot1_ppvt_tp2_pts[["TP1 - TP2"]]`,
 [`r ot1_ppvt_tp2_uis[["TP1 - TP2"]]`].
 
 (ref:ppvt4-gca-cors) Uncertainty intervals for the correlations of growth curve
-features at each time point with expressive vocabulary (PPVT4 standard scores)
+features at each time point with expressive vocabulary (PPVT-4 standard scores)
 at year 2. The bottom row shows pairwise differences between the correlations at
 year 1 and year 2.
 
@@ -1564,7 +1569,7 @@ accommodated by our Normal(0, 1) prior.
 _Here I would have to also describe the random effects structure.
 
 
-For the hierarchical part of the model, I used RstanARM's `decov()` prior which
+For the hierarchical part of the model, I used RStanARM's `decov()` prior which
 simultaneously sets a prior of the variances and correlations of the model's
 random effect terms. For these terms, I used the default prior for the variance
 terms and used a weakly informative LKJ(2) prior on the random effect
