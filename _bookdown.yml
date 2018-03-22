@@ -14,6 +14,7 @@ rmd_files:
   - 04-hypotheses.Rmd
   - 10-aim1-part.Rmd
   - 11-aim1-notebook.Rmd
+  - 12-aim1-notebook.Rmd
   - 15-aim1-notebook.Rmd
   - 80-scratch.Rmd
   - 81-test.Rmd
