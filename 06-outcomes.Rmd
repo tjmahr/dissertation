@@ -29,7 +29,7 @@ Two other relevant measures include an articulation test administered at
 Year 1 and Year 3 [GFTA-2, @GFTA2] and phonological awareness given at
 Year 2 and Year 3 [CTOPP-2, @CTOPP2]. They are relevant because they
 draw on a child’s phonological knowledge of words, but I limit their
-consideration for only post-hoc, exploratory analyses because they
+consideration for only post hoc, exploratory analyses because they
 measure a child’s speech production performance.
 
 Sample Data
