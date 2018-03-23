@@ -78,14 +78,16 @@ see that the LKJ(2) prior nudges some of the probability mass away from
 nudge it away from extreme, degenerate values.
 
 ```{r, include = FALSE, fig.height = 3, fig.width = 5}
-lkj1 <- rstanarm::stan_glmer(
+library(rstanarm)
+
+lkj1 <- stan_glmer(
   Sepal.Length ~ 1 + (Sepal.Width + Petal.Length | Species), 
   prior = normal(0, 1),
   prior_covariance = decov(1,1,1,1),
   data = iris, 
   prior_PD = TRUE)
 
-lkj2 <- rstanarm::stan_glmer(
+lkj2 <- stan_glmer(
   Sepal.Length ~ 1 + (Sepal.Width + Petal.Length | Species), 
   prior = normal(0, 1),
   prior_covariance = decov(2,1,1,1),
@@ -103,12 +105,15 @@ correlations <- bind_rows(
 
 
 ```{r lkj-prior, echo = FALSE, out.width = "50%", fig.height = 3, fig.width = 4}
+library(ggplot2)
+
 ggplot(correlations %>% filter(!is.na(var2))) + 
   aes(x = sdcor) + 
   geom_histogram(binwidth = .1, boundary = 0) + 
   facet_wrap("Model", labeller = label_both) +
   labs(
-    x = NULL, y = "Num. prior samples", 
+    x = NULL, 
+    y = "Num. prior samples", 
     caption = "12,000 prior samples drawn per model")
 
 ggplot(correlations %>% filter(!is.na(var2))) + 
@@ -116,7 +121,8 @@ ggplot(correlations %>% filter(!is.na(var2))) +
   geom_density() + 
   facet_wrap("Model", labeller = label_both) +
   labs(
-    x = NULL, y = "Num. prior samples", 
+    x = NULL, 
+    y = "Num. prior samples", 
     caption = "12,000 prior samples drawn per model")
 ```
 
