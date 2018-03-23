@@ -6,3 +6,4 @@ _book
 _bookdown_files
 rsconnect
 l2t_db.cnf
+node_modules
