@@ -1,10 +1,11 @@
 (PART\*) Prospectus {#part-prospectus .unnumbered}
-===================
+========================================================================
 
-Front Matter
-============
+Prospectus Preamble
+========================================================================
 
-### About This Document {#about-this-document .unnumbered}
+About This Document {#about-this-document .unnumbered}
+------------------------------------------------------------------------
 
 This document outlines the research questions, data, and methods for my
 dissertation. This proposal started out as a grant-writing project, so
@@ -14,20 +15,27 @@ considerably.
 
 Date of oral presentation of dissertation proposal: April 3, 2017.
 
-### Dissertation Committee Members {#dissertation-committee-members .unnumbered}
+Dissertation Committee Members {#committee-members .unnumbered}
+------------------------------------------------------------------------
 
--   Jan Edwards, primary mentor and chair, Department of Hearing and
+  - Jan Edwards, primary mentor and chair, Department of Hearing and
     Speech Sciences, University of Maryland
--   Susan Ellis Weismer, official advisor at UW-Madison, Department of
+    
+  - Susan Ellis Weismer, advisor at UW-Madison, Department of
     Communication Sciences and Disorders
--   Margarita Kaushanskaya, Department of Communication Sciences and
+    
+  - Margarita Kaushanskaya, Department of Communication Sciences and
     Disorders
--   Audra Sterling, Department of Communication Sciences and Disorders
--   David Kaplan, Department of Educational Psychology
--   Bob McMurray, Department of Psychological and Brain Sciences,
+    
+  - Audra Sterling, Department of Communication Sciences and Disorders
+  
+  - David Kaplan, Department of Educational Psychology
+  
+  - Bob McMurray, Department of Psychological and Brain Sciences,
     University of Iowa
 
-### Planned Dissertation Format {#planned-dissertation-format .unnumbered}
+Planned Dissertation Format {#planned-dissertation-format .unnumbered}
+------------------------------------------------------------------------
 
 Two thematically related manuscripts, one for each specific aim, to be
 completed by Summer 2018.

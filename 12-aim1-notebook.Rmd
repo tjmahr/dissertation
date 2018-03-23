@@ -1493,7 +1493,7 @@ ggplot(ppred) +
 Or we can plot the linear predictions. These are posterior predictions of the
 log-odds of looking to target before adding binomial noise.
 
-```{r posterior-mean-lines, out.width = "100%", fig.height=4, fig.width=5}
+```{r posterior-mean-lines, out.width = "100%", fig.height = 4, fig.width = 5}
 lpred <- d_m %>% 
   sample_n_of(8, ResearchID) %>% 
   tristan::augment_posterior_linpred(b, newdata = ., nsamples = 100)

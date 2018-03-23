@@ -1,5 +1,5 @@
 Specific Aims
-=============
+========================================================================
 
 Individual differences in language ability are apparent as soon as
 children start talking, but it is difficult to identify children at risk
@@ -41,7 +41,7 @@ psychological mechanisms that underlie changes in word recognition
 behavior.
 
 Specific Aim 1 (Familiar Word Recognition and Lexical Competition)
-------------------------------------------------------------------
+------------------------------------------------------------------------
 
 **To characterize the development of familiar word recognition and
 lexical competition, I will analyze data from a visual world paradigm
@@ -62,7 +62,7 @@ Changes in sensitivity to competing words can reveal how lexical
 competition emerges as a byproduct of learning new words.
 
 Specific Aim 2 (Referent Selection and Mispronunciations)
----------------------------------------------------------
+-----------------------------------------------------------------------
 
 **To characterize how fast referent selection develops longitudinally, I
 will analyze data from a looking-while-listening mispronunciation
@@ -90,7 +90,7 @@ differences in vocabulary and speech perception predict responses to
 mispronunciations and novel words.
 
 Summary
--------
+------------------------------------------------------------------------
 
 This project investigates how word recognition develops during the
 preschool years. There has been no research studying word recognition

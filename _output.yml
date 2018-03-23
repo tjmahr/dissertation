@@ -1,5 +1,7 @@
+# Settings for each of the output formats
+
 bookdown::gitbook:
-  css: ./assets/style.css
+  css: "./assets/style.css"
   pandoc_args: [
     "--csl", "./assets/apa.csl",
     "--bibliography", "./assets/refs.bib",
@@ -10,22 +12,16 @@ bookdown::gitbook:
   config:
     toc:
       before: |
-        <li><a href="./">My dissertation</a></li>
+        <li><a href="./">Word Recognition in Preschoolers</a></li>
       after: |
         <li><a href="https://github.com/rstudio/bookdown" target="blank">Created with bookdown</a></li>
         <li><a href="https://tjmahr.github.io/" target="blank">Tristan Mahr</a></li>
-    download: ["pdf", "epub", "docx"]
+    download:
+      - "pdf"
     split_bib: false
   # https://rmarkdown.rstudio.com/html_document_format.html#markdown_extensions
-  # md_extensions: -tex_math_single_backslash+fenced_divs
   md_extensions: -tex_math_single_backslash
-bookdown::epub_book:
-    pandoc_args: [
-    "--csl", "./assets/apa.csl",
-    "--bibliography", "./assets/refs.bib",
-    "--filter", "pandoc-citeproc",
-    "--filter", "./assets/fix-apa-ampersands.py"
-  ]
+
 bookdown::word_document2:
   pandoc_args: [
     "--csl", "./assets/apa.csl",
@@ -33,17 +29,28 @@ bookdown::word_document2:
     "--filter", "pandoc-citeproc",
     "--filter", "./assets/fix-apa-ampersands.py"
   ]
-bookdown::tufte_book2:
-  includes:
-    in_header: "assets/preamble2.tex"
-  latex_engine: xelatex
-  citation_package: natbib
-  pandoc_args: [
-    "--csl", "./assets/apa.csl",
-    "--bibliography", "./assets/refs.bib"
-  ]
+
 huskydown::thesis_pdf:
   latex_engine: xelatex
   includes:
     in_header: assets/preamble3.tex
   template: assets/template.tex
+
+
+# bookdown::epub_book:
+#     pandoc_args: [
+#     "--csl", "./assets/apa.csl",
+#     "--bibliography", "./assets/refs.bib",
+#     "--filter", "pandoc-citeproc",
+#     "--filter", "./assets/fix-apa-ampersands.py"
+#   ]
+
+# bookdown::tufte_book2:
+#   includes:
+#     in_header: "assets/preamble2.tex"
+#   latex_engine: xelatex
+#   citation_package: natbib
+#   pandoc_args: [
+#     "--csl", "./assets/apa.csl",
+#     "--bibliography", "./assets/refs.bib"
+#   ]

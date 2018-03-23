@@ -32,15 +32,6 @@ lof: true
 
 This book, when finished, will contain my dissertation research. 
 
-## Updates  {-}
-
-- 2017-08-18: I migrated what I wrote for my dissertation proposal. In 
-doing so, I worked all the kinks required to generate a nice 
-[web version](https://tjmahr.github.io/dissertation/), a lovely 
-[pdf version](https://tjmahr.github.io/dissertation/dissertation.pdf), and 
-a... uh... _functional_ 
-[Word document version](https://tjmahr.github.io/dissertation/dissertation.docx).
-
 - Last compiled: `r Sys.time()`
 
 \mainmatter
