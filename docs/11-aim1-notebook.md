@@ -1,6 +1,6 @@
 
 Method {#aim1-method}
-===========================================================================
+=======================================================================
 
 
 
@@ -8,35 +8,39 @@ Method {#aim1-method}
 
 
 
-## Participants
 
-The participants were 28–39 months-old at Time 1,
-39–52 at Time 2, and 51–65 at Time 3. Approximately, 180 children
-participated at Time 1, 170 at Time 2, and 160 at Time 3. Of these
-children, approximately 20 were identified by their parents as late
-talkers. Prospective families were interviewed over telephone before
-participating in the study. Children were not scheduled for testing if a parent
-reported language problems, vision problems, developmental delays, or an
-individualized education program for the child. Recruitment and data
-collection occurred at two Learning to Talk lab sites—one at the
-University of Wisconsin–Madison and the other at the University of
-Minnesota.
+
+Participants
+-----------------------------------------------------------------------
+
+The participants were 28–39 months-old at Time 1, 39–52 at Time 2,
+and 51–65 at Time 3. Approximately, 180 children participated at
+Time 1, 170 at Time 2, and 160 at Time 3. Of these children,
+approximately 20 were identified by their parents as late talkers.
+Prospective families were interviewed over telephone before
+participating in the study. Children were not scheduled for testing if a
+parent reported language problems, vision problems, developmental
+delays, or an individualized education program for the child.
+Recruitment and data collection occurred at two Learning to Talk lab
+sites—one at the University of Wisconsin–Madison and the other at the
+University of Minnesota.
 
 [^1]: [Appendix \@ref(related-work)](#related-work) describes how this 
       dissertation relates to other work from our lab.
 
-Table \@ref(tab:participant-info) summarizes the cohort of children in each year
-of testing. The numbers and summary statistics here are general, describing
-children who participated at each year, but whose data may have been excluded
-from the analyses. Some potential reasons for exclusion include: excessive
-missing data during eyetracking, experiment or technology error, developmental
-concerns not identified until later in study, or a failed hearing screening.
-Final sample sizes will depend on the measures needed for an analysis and the
-results from data screening checks. For each project aim, I will disclose all
-measurements and data exclusions following guidelines by the Center for Open
-Science [@OSF_Statement].
+Table \@ref(tab:participant-info) summarizes the cohort of children in
+each year of testing. The numbers and summary statistics here are
+general, describing children who participated at each year, but whose
+data may have been excluded from the analyses. Some potential reasons
+for exclusion include: excessive missing data during eyetracking,
+experiment or technology error, developmental concerns not identified
+until later in study, or a failed hearing screening. Final sample sizes
+will depend on the measures needed for an analysis and the results from
+data screening checks. For each project aim, I will disclose all
+measurements and data exclusions following guidelines by the Center for
+Open Science [@OSF_Statement].
 
-                                          Year 1             Year 2             Year 3
+                                          Year 1 (Age 3)     Year 2 (Age 4)     Year 3 (Age 5)
 ----------------------------------------- ------------------ ------------------ ------------------
 N                                         184                175                160
 Boys, Girls                               94, 90             89, 86             82, 78
@@ -48,11 +52,10 @@ EVT-2 standard score: Mean (SD)           115 (18)           118 (16)           
 PPVT-4 standard score: Mean (SD)          113 (17)           120 (16)           —
 GFTA-2 standard score: Mean (SD)          92 (13)            —                  91 (13)
 
-Table: (\#tab:participant-info) Participant characteristics. Education levels:
-_Low_: less than high school, or high school; _Middle_: trade school, technical
-or associates degree, some college, or college degree; and _High_: graduate
-degree.
-
+Table: (\#tab:participant-info) Participant characteristics. Education
+levels: *Low*: less than high school, or high school; *Middle*: trade
+school, technical or associates degree, some college, or college degree;
+and *High*: graduate degree.
 
 ### Special case data screening
 
@@ -61,7 +64,9 @@ children who have to be excluded for other reasons, like being diagnosed with a
 language disorder at TimePoint 3.)
 
 
-## Procedure
+
+Procedure
+-----------------------------------------------------------------------
 
 This experiment used a version of the Visual World Paradigm for word recognition
 experiments [@RWLPaper]. In eyetracking studies with toddlers, two familiar
@@ -85,7 +90,10 @@ the semantic foil *drum*, the phonological foil *bee*, and the unrelated
 <p class="caption">(\#fig:sample-vw-screen)(ref:sample-vw-screen-cap2)</p>
 </div>
 
-## Experiment Administration
+
+
+Experiment Administration
+-----------------------------------------------------------------------
 
 Children participating in the study were tested over two lab visits
 (i.e., on different dates). The first portion of each visit involved
@@ -135,14 +143,15 @@ Year 1 and Year 2, an attention-getter (e.g., *check it out*!) played 1 s
 following the end of the target noun. These reinforcers were dropped in Year 3
 to streamline the experiment for older listeners.
 
-## Stimuli
+
+
+Stimuli
+-----------------------------------------------------------------------
 
 *A few sentences to reiterate what the four kinds of images represented*. The
 four images on each trial consisted of a target noun, a phonological foil, a
 semantic foil, and an unrelated word. A complete list of the items used in the
 experiment in [Appendix \@ref(vw-experiment-items)](#vw-experiment-items).
-
-
 
 The stimuli were recorded in both Mainstream American English (MAE) and African
 American English (AAE), so that the experiment could accommodate the child's
@@ -169,9 +178,8 @@ four images (a target, a phonological foil, a semantic foil and an unrelated
 word) and having the student point to the named image. The pictures had to be
 recognized by at least 80% of students in each classroom.
 
-
-
-## Data screening
+Data screening
+-----------------------------------------------------------------------
 
 
 
@@ -203,32 +211,26 @@ initial version of this experiment, leading to the exclusion of
 27 participants from the first timepoint.
 
 
-Table: (\#tab:screening-counts)Eyetracking data before and after data screening. For convenience, the number of exclusions are included as Raw &minus; Screened.
+Table: (\#tab:screening-counts)Eyetracking data before and after data screening. For convenience, the number of exclusions are included as Raw - Screened.
 
-Dataset                Study         N Children   N Blocks   N Trials
----------------------  -----------  -----------  ---------  ---------
-Raw                    TimePoint1           178        332       7967
-                       TimePoint2           180        347       8327
-                       TimePoint3           163        322       7724
-Screened               TimePoint1           163        291       5951
-                       TimePoint2           165        305       6421
-                       TimePoint3           156        295       6483
-Raw &minus; Screened   TimePoint1            15         41       2016
-                       TimePoint2            15         42       1906
-                       TimePoint3             7         27       1241
-
-
+Dataset    Study         N Children   N Blocks   N Trials
+---------  -----------  -----------  ---------  ---------
+Raw        TimePoint1           178        332       7967
+           TimePoint2           180        347       8327
+           TimePoint3           163        322       7724
+Screened   TimePoint1           163        291       5951
+           TimePoint2           165        305       6421
+           TimePoint3           156        295       6483
+NA         TimePoint1            15         41       2016
+           TimePoint2            15         42       1906
+           TimePoint3             7         27       1241
 
 
 
 
 
-
-
-
-
-
-## Prepare the dataset for modeling
+Prepare the dataset for modeling
+-----------------------------------------------------------------------
 
 
 

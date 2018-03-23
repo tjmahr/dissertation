@@ -32,8 +32,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="mp-experiment-items.html">
-<link rel="next" href="colophon.html">
+<link rel="prev" href="quick-testing-sandbox.html">
+<link rel="next" href="vw-experiment-items.html">
 <style type="text/css">
 p.abstract{
   text-align: center;
@@ -210,25 +210,70 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="related-work" class="section level1">
-<h1><span class="header-section-number">D</span> Related Work</h1>
-<p>In this section, I clarify relationships between this project and other word recognition research reported from our lab. In short, our lab has reported results about the two-image and four-image experiments from cross-sectional samples, describing child-level measures that predict performance in these tasks. In contrast, my dissertation 1) focuses on the longitudinal development of word recognition and 2) engages with the fine-grained details of lexical processing.</p>
-<p><span class="citation">Law &amp; Edwards (<a href="#ref-MPPaper">2015</a>)</span> analyzed a different version of the mispronunciation experiment on a different sample of children (<em>n</em> = 34, 30-46 months old). This earlier version included both real word and the mispronunciation of the real word in the same block of trial. For example, a child would hear “dog” and “tog” during the same session of the experiment. This design might subtly temper the effect of mispronounced stimuli by allowing the listener to compare the mispronunciation to its correctly produced counterpart. The version of the experiment in Specific Aim 2 separates the real words and mispronunciations so that a child never hears a familiar word and its mispronunciation during the same block of trials. With this design, there is no explicit point of comparison for the mispronunciation, and the child has to rely on his or her own lexical representations when processing these words.</p>
-<p><span class="citation">Law et al. (<a href="#ref-RWLPaper">2016</a>)</span> analyzed data from the four-image experiment in Specific Aim 1. This study featured a diverse cross-sectional sample of 60 children, half of whom received the experiment in African American English and half received it in Mainstream American English. The sample ranged in age from 28 to 60 months. The study “borrowed” data from 23 participants from Year 1 of the longitudinal study to enrich parts of the samples demographics. For this manuscript, we analyzed how vocabulary and maternal education predicted looking patterns, including relative looks to the semantic and phonological foils.</p>
-<p>Mahr and Edwards (in press) was the manuscript I originally authored for my preliminary examinations. The paper analyzes the same kinds of relations as <span class="citation">Weisleder &amp; Fernald (<a href="#ref-Weisleder2013">2013</a>)</span> which showed that lexical processing efficiency mediated the effect of language input on future vocabulary size. In particular, I asked whether word recognition performance on the four-image task of Specific Aim 1, vocabulary size, and home language input data from Year 1 predicted vocabulary size at Year 2. The paper only examined looks to the familiar image from one year of the study, so it did not analyze any lexical competition effects or the development of word recognition within children.</p>
+<div id="aim1-gca-models" class="section level1">
+<h1><span class="header-section-number">A</span> Computational Details for Specific Aim 1</h1>
+<div id="growth-curve-analysis-models" class="section level2">
+<h2><span class="header-section-number">A.1</span> Growth Curve Analysis Models</h2>
+<p>The models were fit in R (version) with RStanARM (version).</p>
+<p>When I computed the orthogonal polynomial features for Time, they were rescaled so that the linear feature ranged from −.5 to .5. Under this scaling a unit change in Time<sup>1</sup> was equal to change from the start to the end of the analysis window. The polynomial features for the Time had the following ranges:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Feature</th>
+<th align="right">Min</th>
+<th align="right">Max</th>
+<th align="right">Range</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Time<sup>1</sup></td>
+<td align="right">−0.50</td>
+<td align="right">0.50</td>
+<td align="right">1.00</td>
+</tr>
+<tr class="even">
+<td align="left">Time<sup>2</sup></td>
+<td align="right">−0.33</td>
+<td align="right">0.60</td>
+<td align="right">0.93</td>
+</tr>
+<tr class="odd">
+<td align="left">Time<sup>3</sup></td>
+<td align="right">−0.63</td>
+<td align="right">0.63</td>
+<td align="right">1.26</td>
+</tr>
+</tbody>
+</table>
+<p>Here is the code used to fit the model with RStanARM. It took about 24 hours to run the model.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(rstanarm)
+<span class="kw">options</span>(<span class="dt">mc.cores =</span> parallel<span class="op">::</span><span class="kw">detectCores</span>())
 
+m &lt;-<span class="st"> </span><span class="kw">stan_glmer</span>(
+  <span class="kw">cbind</span>(Primary, Others) <span class="op">~</span>
+<span class="st">    </span>(ot1 <span class="op">+</span><span class="st"> </span>ot2 <span class="op">+</span><span class="st"> </span>ot3) <span class="op">*</span><span class="st"> </span>Study <span class="op">+</span>
+<span class="st">    </span>(ot1 <span class="op">+</span><span class="st"> </span>ot2 <span class="op">+</span><span class="st"> </span>ot3 <span class="op">|</span><span class="st"> </span>ResearchID<span class="op">/</span>Study),
+  <span class="dt">family =</span> binomial,
+  <span class="dt">prior =</span> <span class="kw">normal</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">autoscale =</span> <span class="ot">FALSE</span>),
+  <span class="dt">prior_intercept =</span> <span class="kw">normal</span>(<span class="dv">0</span>, <span class="dv">2</span>),
+  <span class="dt">prior_covariance =</span> <span class="kw">decov</span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">1</span>),
+  <span class="dt">data =</span> d_m)
 
+readr<span class="op">::</span><span class="kw">write_rds</span>(m, <span class="st">&quot;./data/stan_aim1_cubic_model.rds.gz&quot;</span>)</code></pre></div>
+<p>We used moderately informative priors for the main regression effects.</p>
+<ul>
+<li>b ~ Normal(mean = 0, sd = 1)</li>
+</ul>
+<p>Under the Normal(0, 1) prior, before seeing any data, we expect 95% of plausible effects to fall in the range ±1.96, which is an adequate range for these growth curve models. For example, consider just the effect of Time<sup>1</sup>. If a listener starts at chance performance, 25% or -1.1 logits, and increases to, say, 65% or 0.62, the effect of a unit change in Time<sup>1</sup> would be a change of 1.72 logits. This magnitude of effect is accommodated by our Normal(0, 1) prior.</p>
+<p><em>Here I would have to also describe the random effects structure.</em></p>
+<p>For the hierarchical part of the model, I used RStanARM’s <code>decov()</code> prior which simultaneously sets a prior of the variances and correlations of the model’s random effect terms. For these terms, I used the default prior for the variance terms and used a weakly informative LKJ(2) prior on the random effect correlations. The difference between LKJ(1) and LKJ(2) is that under LKJ(2) extreme correlations are less plausible. In the figure below, we see that the LKJ(2) prior nudges some of the probability mass away from ±1 towards the center. The motivation for this kind of prior was <em>regularization</em>: We give the model a small amount of information to nudge it away from extreme, degenerate values.</p>
+<p><img src="90-appendix_files/figure-html/lkj-prior-1.png" width="50%" /><img src="90-appendix_files/figure-html/lkj-prior-2.png" width="50%" /></p>
+<div class="infobox">
+<p><strong>Box 1: A brief comment about priors.</strong></p>
+<p>Bayesian models require prior information (“priors”). Priors are also commonly referred to as “prior beliefs”, and Bayesian techniques are criticized or dismissed for smuggling subjectivity into the scientific enterprise. I find this unfortunate on two grounds. First, <em>belief</em> overstates things. As George Box said, “all models are wrong, but some are useful” [cite], so no part of a statistical model should be called a “belief” when the whole thing is a convenient fiction. That’s why I prefer the term <em>prior information</em>. [Hat tip Gelman?] Second, other parts of the statistical model are also subjective: likelihood functions, what kind of ANOVA, what to covary, whether to transform measurements, whether a <em>p</em> = .07 is a “marginal” effect or no effect at all, and so on. This subjectivity seems reasonable, provided that we scientists are open about modeling decisions.</p>
+<p>For these models, I will use weakly to moderately informative priors. For example, suppose <em>x</em> and <em>y</em> are scaled to mean 0 and standard deviation 1. A weakly informative prior for the effect of <em>x</em> on <em>y</em> might be Normal(0, 5)—a normal distribution with mean 0 and standard deviation 5. If we fit a regression model and observed an effect size of 12 SD units, our first assumption would be that something went wrong with our software. The weakly informative prior captures this level of prior information. A moderately informative prior would be Normal(0, 1). This prior information captures our disciplinary experience that effect sizes greater than ±1 relatively uncommon in child language research. A strongly informative prior for this effect might be something like Normal(.4, .1) which says that our model should be very skeptical of negative effects and of effects larger than .8. For this project, I will default to the first two levels of prior information.</p>
 </div>
-<h3>References</h3>
-<div id="refs" class="references">
-<div id="ref-MPPaper">
-<p>Law, F., II, &amp; Edwards, J. R. (2015). Effects of vocabulary size on online lexical processing by preschoolers. <em>Language Learning and Development</em>, <em>11</em>(4), 331–355. doi:<a href="https://doi.org/10.1080/15475441.2014.961066">10.1080/15475441.2014.961066</a></p>
-</div>
-<div id="ref-RWLPaper">
-<p>Law, F., II, Mahr, T., Schneeberg, A., &amp; Edwards, J. R. (2016). Vocabulary size and auditory word recognition in preschool children. <em>Applied Psycholinguistics</em>. doi:<a href="https://doi.org/10.1017/S0142716416000126">10.1017/S0142716416000126</a></p>
-</div>
-<div id="ref-Weisleder2013">
-<p>Weisleder, A., &amp; Fernald, A. (2013). Talking to children matters: Early language experience strengthens processing and builds vocabulary. <em>Psychological Science</em>, <em>24</em>(11), 2143–52. doi:<a href="https://doi.org/10.1177/0956797613488145">10.1177/0956797613488145</a></p>
 </div>
 </div>
             </section>
@@ -236,8 +281,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           </div>
         </div>
       </div>
-<a href="mp-experiment-items.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="colophon.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="quick-testing-sandbox.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="vw-experiment-items.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

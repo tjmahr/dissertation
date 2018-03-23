@@ -1,9 +1,10 @@
 
 Significance
-============
+========================================================================
+
 
 Public Health Significance
---------------------------
+------------------------------------------------------------------------
 
 Vocabulary size in preschool is a robust predictor of later language
 development, and early language skills predict early literacy skills at
@@ -15,10 +16,11 @@ to known or novel words—has been shown to predict later language
 outcomes. We do not know how this ability develops over time, and we do
 not know when word recognition is most predictive of future outcomes.
 This project will provide an integrated account of how word recognition
-and its relationship with vocabulary size change from age 3 to age 5.
+and its relationship with vocabulary size change from age 3 to age 5.
+
 
 Scientific Significance
------------------------
+------------------------------------------------------------------------
 
 ### Lexical Processing Dynamics
 
@@ -181,8 +183,8 @@ concurrent processing.
 
 A related complication is the apparent predictive validity of word
 recognition measures. @MarchmanFernald2008 found that vocabulary size
-and lexical processing efficiency at age 2 jointly predicted working
-memory scores and expressive language scores at age 8. This result would
+and lexical processing efficiency at age 2 jointly predicted working
+memory scores and expressive language scores at age 8. This result would
 suggest domain-general processing advantages influence word learning.
 @Fernald2012 also found that late talkers who looked more quickly to a
 named word at 18 months showed larger gains in vocabulary by 30 months
@@ -198,73 +200,16 @@ recognition, vocabulary size, and speech perception. In particular, I
 will ask how individual differences in word recognition change over time
 alongside differences in vocabulary. I can also which features of word
 recognition (fast referent selection, lexical competition, etc.) are
-most predictive of vocabulary outcomes at age 5. The additional measures
+most predictive of vocabulary outcomes at age 5. The additional measures
 of speech perception can also help clarify the specific effects of
 vocabulary size on word recognition.
-
-### Computational Modeling
-
-One way to bolster a theory of word recognition is to implement the
-theory in a computational model and simulate human behavior with the
-model. If the model can produce responses like those of human listeners,
-then the behavioral data support the model and the model’s underlying
-theory. Models have adjustable parameters, and these generally
-correspond to plausible psychological constructs like the inhibition
-strength among competing units or a learning rate for modifying
-connections. Part of the simulation process therefore is to ask under
-what conditions a model simulates human behavior, and then interpret the
-simulations in terms of psychological mechanisms.
-
-Here is a hypothetical example of this modeling strategy: Suppose we
-want to investigate the finding that a larger vocabulary size predicts
-more efficient word recognition. We would ask under which parameters
-(i.e., model settings) a model with a large lexicon outperforms one with
-a smaller lexicon at word recognition. It might be the case that these
-results occur only when parameters are set so that the representations
-of speech sounds are comparatively noisier in a model with fewer words.
-In this scenario, the models provide a plausible psychological
-interpretation for the empirical findings: Children develop better
-representations of speech sounds as they learn words, and these better
-representations enable more efficient word recognition. Granted, this
-example is just a hypothetical case, but it illustrates how I intend to
-use computational models as a way to describe word recognition trends
-and variation in terms of psychological mechanisms and processing
-parameters.
-
-The TRACE model of speech perception and word recognition [@TRACE] is
-well suited for this kind of simulation work. TRACE can simulate a dozen
-or so empirical results from speech perception literature [@jTRACE,
-Table 1], and it has been used to simulate word-recognition data from
-adults [@Allopenna1998], adults with aphasia [@Mirman2011], and toddlers
-[@TRACE_Mispro].
-
-@McMurray2010 used TRACE to simulate word recognition results from
-adolescents with specific language impairment (SLI). They mapped certain
-theories about SLI onto different model parameters. To test the theory
-that listeners with SLI have impairments in acoustic perception, for
-example, they varied three of the model’s parameters: amount of noise
-added to the model’s mock-speech input (acoustic resolution), temporal
-spread of acoustic features in the input (temporal resolution), and rate
-of decay in the model’s acoustic feature detectors (perceptual memory).
-Other theories of SLI (and other model parameters) provided a closer fit
-to the observed data than the perceptual deficit theory. Specifically,
-lexical decay—“the ability to maintain words in memory” (p. 23)—was the
-most important model parameter, implying that individual differences in
-word recognition for listeners with SLI are rooted in lexical processes,
-as opposed to perceptual or phonological ones.
-
-This example shows how simulations with TRACE recast word recognition
-performance in terms of psychological processes. For this project, I
-will use TRACE to describe how cognitive processes and representations
-need to change to simulate the development of word recognition in
-preschoolers.
 
 ### Summary
 
 This project studies word recognition in children over three years, so
 it will provide the first longitudinal study of word recognition in
 preschoolers. Children in this cohort cover a range of vocabulary scores
-at Time 1, and this variability allows one to investigate individual
+at Time 1, and this variability allows one to investigate individual
 differences in vocabulary and word recognition over time and assess the
 predictive value of these measures. Furthermore, this project studies
 word recognition in two experimental tasks that can tap into different
@@ -275,7 +220,4 @@ mispronunciations enables me to study how fast referent selection
 develops over time as well. I will use mixed effects modeling to study
 not just gross measures of accuracy or interference from distractors,
 but the time course and lexical dynamics of word recognition using
-growth curve analyses. These empirical models of the longitudinal word
-recognition data will be supported by computational models, so that the
-developmental changes can be described by plausible psychological
-mechanisms of word recognition.
+growth curve analyses. 

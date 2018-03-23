@@ -2,24 +2,29 @@
 title: "Development of word recognition in preschoolers"
 author: "Tristan Mahr"
 date: "`r Sys.Date()`"
-documentclass: book
-site: bookdown::bookdown_site
-github-repo: tjmahr/dissertation
-panflute-filters: fix-apa-ampersands
+documentclass: "book"
+site: "bookdown::bookdown_site"
+github-repo: "tjmahr/dissertation"
+panflute-filters: "fix-apa-ampersands"
 bibliography: ["assets/refs.bib", "assets/packages.bib"]
-csl: assets/apa.csl
+csl: "assets/apa.csl"
 link-citations: yes
 
-affiliation: Department of Communication Sciences and Disorders, University of Wisconsin--Madison
+# Data for the PDF version
 year: 2018
-school: University of Wisconsin--Madison
-program: Communication Sciences and Disorders
+affiliation: > 
+  Department of Communication Sciences and Disorders, 
+  University of Wisconsin--Madison"
+school: "University of Wisconsin--Madison"
+program: "Communication Sciences and Disorders"
 chair: "Name of my committee chair"
-signature: ["committee member 1", "committee member 2"]
+signature: 
+  - "committee member 1"
+  - "committee member 2"
 abstract: |
-  "Here is my abstract"
+  Here is my abstract
 acknowledgments: |
-  "My acknowledgments"
+  My acknowledgments
 dedication: |
   For Penny
 lot: true

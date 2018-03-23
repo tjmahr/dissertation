@@ -1,32 +1,43 @@
 
 --- 
-title: "My dissertation"
+title: "Development of word recognition in preschoolers"
 author: "Tristan Mahr"
-date: "2018-03-03"
-documentclass: book
-github-repo: tjmahr/dissertation
+date: "2018-03-23"
+documentclass: "book"
+site: "bookdown::bookdown_site"
+github-repo: "tjmahr/dissertation"
+panflute-filters: "fix-apa-ampersands"
+bibliography: ["assets/refs.bib", "assets/packages.bib"]
+csl: "assets/apa.csl"
 link-citations: yes
-biblio-style: apalike
-panflute-filters: fix-apa-ampersands
-site: bookdown::bookdown_site
-affiliation: Department of Communication Sciences and Disorder, University of Wisconsin--Madison
+
+# Data for the PDF version
+year: 2018
+affiliation: > 
+  Department of Communication Sciences and Disorders, 
+  University of Wisconsin--Madison"
+school: "University of Wisconsin--Madison"
+program: "Communication Sciences and Disorders"
+chair: "Name of my committee chair"
+signature: 
+  - "committee member 1"
+  - "committee member 2"
+abstract: |
+  Here is my abstract
+acknowledgments: |
+  My acknowledgments
+dedication: |
+  For Penny
+lot: true
+lof: true
 ---
 
 \frontmatter
 
-# Development of word recognition in preschoolers {-}
+# Preface {-}
 
 This book, when finished, will contain my dissertation research. 
 
-## Updates  {-}
-
-- 2017-08-18: I migrated what I wrote for my dissertation proposal. In 
-doing so, I worked all the kinks required to generate a nice 
-[web version](https://tjmahr.github.io/dissertation/), a lovely 
-[pdf version](https://tjmahr.github.io/dissertation/dissertation.pdf), and 
-a... uh... _functional_ 
-[Word document version](https://tjmahr.github.io/dissertation/dissertation.docx).
-
-- Last compiled: 2018-03-03 11:50:04
+- Last compiled: 2018-03-23 09:48:30
 
 \mainmatter
