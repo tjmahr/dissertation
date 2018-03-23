@@ -33,13 +33,10 @@ convert_study_to_age <- function(xs) {
 }
 ```
 
-<!-- General Todos: -->
 
-<!-- * Determine and use consistent terminology for the studies and growth curve -->
-<!--   features. -->
-<!-- * Make sure axis labels and legend labels are consistent. -->
 
-## Growth curve analysis
+Growth curve analysis
+------------------------------------------------------------------------
 
 Looks to the familiar image were analyzed using Bayesian mixed
 effects logistic regression. I used *logistic* regression because
@@ -235,7 +232,8 @@ cowplot::plot_grid(
 
 
 
-### Year over year changes in word recognition performance
+Year over year changes in word recognition performance
+------------------------------------------------------------------------
 
 The mixed-effects model estimated a population-average growth curve
 ("fixed" effects) and how individual children deviated from average
@@ -508,7 +506,7 @@ props <- props %>%
     parameter = parameter %>% 
       stringr::str_replace("~~.", "_") %>% 
       stringr::str_replace("\\)", "")) %>% 
-  tidyr::separate(parameter, into = c("parameter", "study"))
+  tidyr::separate(parameter, sep = "_", into = c("parameter", "study"))
 
 prop_diffs <- pairwise %>% 
   filter(parameter %in% c("Intercept", "Peak"))
@@ -516,12 +514,14 @@ prop_diffs <- pairwise %>%
 prop_list1 <- props %>% 
   filter(parameter == "Intercept") %>% 
   split(.$study) %>% 
-  set_names(str_extract, "TP.")
+  set_names(str_extract, "Age~~.") %>% 
+  set_names(str_replace, "~~", "")
 
 prop_list2 <- props %>% 
   filter(parameter == "Peak") %>% 
   split(.$study) %>% 
-  set_names(str_extract, "TP.")
+  set_names(str_extract, "Age~~.") %>% 
+  set_names(str_replace, "~~", "")
 
 int_pts <- get_pts(prop_list1)
 int_uis <- get_uis(prop_list1)
@@ -531,12 +531,12 @@ peak_uis <- get_uis(prop_list2)
 diff_list1 <- prop_diffs %>% 
   filter(parameter == "Intercept") %>% 
   split(.$pair) %>% 
-  set_names(str_replace, "-", "_")
+  set_names(str_replace_all, ".+(\\d).+(\\d).+", "Age\\1_\\2")
 
 diff_list2 <- prop_diffs %>% 
   filter(parameter == "Peak") %>% 
   split(.$pair) %>% 
-  set_names(str_replace, "-", "_")
+  set_names(str_replace_all, ".+(\\d).+(\\d).+", "Age\\1_\\2")
 
 int_dpts <- get_pts(diff_list1)
 int_duis <- get_uis(diff_list1)
@@ -544,34 +544,28 @@ peak_dpts <- get_pts(diff_list2)
 peak_duis <- get_uis(diff_list2)
 ```
 
-The average looking probability (intercept feature) was `r int_pts$TP1`
-[90% UI: `r int_uis$TP1`] at age 3, `r int_pts$TP2`
-[`r int_uis$TP2`] at age 4, and `r int_pts$TP3` [`r int_uis$TP3`] at
-age 5. The averages increased by `r int_dpts$TP2_TP1`
-[`r int_duis$TP2_TP1`] from age 3 to age 4 and by `r int_dpts$TP3_TP2`
-[`r int_duis$TP3_TP2`] from age 4 to age 5. The peak looking
-probability was `r peak_pts$TP1` [`r peak_uis$TP1`] at age 3,
-`r peak_pts$TP2` [`r peak_uis$TP2`] at age 4, and `r peak_pts$TP3`
-[`r peak_uis$TP3`] at age 5. The peak values increased by
-`r peak_dpts$TP2_TP1` [`r peak_duis$TP2_TP1`] from age 3 to age 4 and
-by `r peak_dpts$TP3_TP2` [`r peak_duis$TP3_TP2`] from age 4 to age 5.
+The average looking probability (intercept feature) was `r int_pts$Age3`
+[90% UI: `r int_uis$Age3`] at age 3, `r int_pts$Age4`
+[`r int_uis$Age4`] at age 4, and `r int_pts$Age5` [`r int_uis$Age5`] at
+age 5. The averages increased by `r int_dpts$Age4_3`
+[`r int_duis$Age4_3`] from age 3 to age 4 and by `r int_dpts$Age5_4`
+[`r int_duis$Age5_4`] from age 4 to age 5. The peak looking
+probability was `r peak_pts$Age3` [`r peak_uis$Age3`] at age 3,
+`r peak_pts$Age4` [`r peak_uis$Age4`] at age 4, and `r peak_pts$Age5`
+[`r peak_uis$Age5`] at age 5. The peak values increased by
+`r peak_dpts$Age4_3` [`r peak_duis$Age4_3`] from age 3 to age 4 and
+by `r peak_dpts$Age5_4` [`r peak_duis$Age5_4`] from age 4 to age 5.
 These results numerically confirm the hypothesis that children would
 improve in their word recognition reliability, both in terms of average
 looking and in terms of peak accuracy, each year.
 
-**Summary**. The average growth curve features increased year over year, so that
-children looked to the target more quickly and more reliably.
-
-  - This result is as expected.
-  - It's good that the task scaled with development so that there was room to
-    grow each year.
-  - The growth curve changes each year involved peak accuracy and steepness of
-    the curve. They reach higher heights, and they hit year 1 peak earlier each
-    year.
+**Summary**. The average growth curve features increased year over year,
+so that children looked to the target more quickly and more reliably.
 
 
 
-### Exploring plausible ranges of performance over time
+Exploring plausible ranges of performance over time
+------------------------------------------------------------------------
 
 ```{r, include = FALSE}
 dummy_data <- d_m %>% 
@@ -585,6 +579,7 @@ lpred <- dummy_data %>%
   tristan::augment_posterior_linpred(b, newdata = ., nsamples = 1000)
 
 new_peaks <- lpred %>% 
+  mutate(Study = convert_study_to_age(Study)) %>% 
   distinct(.draw, .posterior_value, Study) %>% 
   group_by(Study, .draw) %>% 
   top_n(5, .posterior_value) %>% 
@@ -597,15 +592,18 @@ new_peaks <- lpred %>%
 
 new_peaks_pts <- new_peaks %>% 
   split(.$parameter) %>% 
-  get_pts()
+  get_pts() %>% 
+  set_names(str_replace, " ", "")
 
 new_peaks_uis <- new_peaks %>% 
   split(.$parameter) %>% 
-  get_uis()
+  get_uis() %>% 
+  set_names(str_replace, " ", "")
 
 new_peaks_diff <- new_peaks %>% 
   split(.$parameter) %>% 
-  lapply(function(l) round(l$hh - l$ll, 2))
+  lapply(function(l) round(l$hh - l$ll, 2)) %>% 
+  set_names(str_replace, " ", "")
 ```
 
 Bayesian models are generative; they describe how the data could have
@@ -667,7 +665,7 @@ consistent with the prediction that children become less variable as
 they grow older.
 
 ```{r new-participants-intervals, echo = FALSE, fig.cap = "(ref:new-participants-intervals)", fig.width = 6, fig.height = 3, out.width = "80%"}
-ggplot(lpred) + 
+ggplot(lpred %>% mutate(Study = convert_study_to_age(Study))) + 
   aes(x = Time, y = plogis(.posterior_value), color = Study) +
   geom_hline(yintercept = .25, size = 2, color = "white") +
   stat_summary(
@@ -721,7 +719,7 @@ by_draw <- lpred %>%
   select(-matches("^..th$")) %>% 
   ungroup() %>% 
   tidyr::gather("range", "extent", -Study, -Time) %>% 
-  mutate(range = factor(range, levels = unique(rev(sort(range))))) 
+  mutate(range = factor(range, levels = unique(rev(sort(range)))))
   
 ggplot(by_draw %>% mutate(Study = convert_study_to_age(Study))) +
   aes(x = Time, y = extent, color = Study) +
@@ -742,42 +740,26 @@ The developmental pattern of increasing reliability and decreasing
 variability was also observed for the growth curve peaks. For the
 synthetic participants, the model predicted that individual peak
 probabilities will increase each year, peak<sub>3</sub> =
-`r new_peaks_pts$TimePoint1` [90% UI: `r new_peaks_uis$TimePoint1`],
-peak<sub>4</sub> = `r new_peaks_pts$TimePoint2`
-[`r new_peaks_uis$TimePoint2`], peak<sub>5</sub> =
-`r new_peaks_pts$TimePoint3` [`r new_peaks_uis$TimePoint3`]. Moreover,
-the range of plausible values for the individual peaks narrowed each for
-the simulated data. For instance, the difference between the 95^th^
-and 5^th^ percentiles was `r new_peaks_diff$TimePoint1` for age 3,
-`r new_peaks_diff$TimePoint2` for age 4, and
-`r new_peaks_diff$TimePoint3` for age 5.
+`r new_peaks_pts$Age3` [90% UI: `r new_peaks_uis$Age3`],
+peak<sub>4</sub> = `r new_peaks_pts$Age4` [`r new_peaks_uis$Age4`],
+peak<sub>5</sub> = `r new_peaks_pts$Age5` [`r new_peaks_uis$Age5`].
+Moreover, the range of plausible values for the individual peaks
+narrowed each for the simulated data. For instance, the difference
+between the 95^th^ and 5^th^ percentiles was `r new_peaks_diff$Age3` for
+age 3, `r new_peaks_diff$Age4` for age 4, and `r new_peaks_diff$Age5`
+for age 5.
 
 **Summary**. I used the model's random effects estimates to simulate
 growth curves from 1,000 hypothetical, unobserved participants. The
 simulated dataset showed increasing looking probability and decreasing
-variability with each year of the study. These simulations confirm the
+variability with each year of the study. These simulations confirmed the
 hypothesis that variability would be diminish as children converge on a
 mature level of performance on this task.
 
-  - Word recognition performance is a skill where variation is greatest
-    at younger ages.
-  - What mechanisms might come to bear on this? Does variability narrow
-    developmentally for vocabulary?
-  - Children different in their word-learning trajectories, so the early
-    differences in word recognition could be from younger children who
-    are relatively early/late in word-learning. The SDs of the EVT-2
-    scores narrows a small amount each year, even when we only consider
-    the children who participated at all three years.
-  - (It will be easier to fold this in to the mechanism discussion once
-    we have firmer results for the looks-to-foils analysis.)
-  - If differences in word recognition matter (and they do) and the
-    differences are greatest at younger ages, then they are most
-    informative at younger ages.
-  - Maybe a few words on why individual differences are worth studying?
 
 
-
-### Are individual differences stable over time?
+Are individual differences stable over time?
+------------------------------------------------------------------------
 
 ```{r compute-kendalls, include = FALSE}
 fits <- readr::read_csv("./data/aim1-gca-features.csv.gz")
@@ -892,14 +874,16 @@ three years of study.
 
 ```{r kendall-stats, fig.cap = "(ref:kendall-stats)", echo = FALSE, out.width = "80%", fig.height = 3, fig.width = 6}
 subtitle <- glue::glue(
-  "Kendall's W. Raters: 3 time points. Items: {n_rated} children.")
+  "Kendall's W. Raters: 3 timepoints. Items: {n_rated} children.")
 
 w_intervals <- posterior_w %>% 
   rename(
     Intercept = `intercept`, `Time` = ot1, `Time^2` = ot2, `Time^3` = ot3,
     Peak = peak_logit, `Random~ratings` = `random numbers`) %>% 
   mcmc_intervals_data(prob_outer = .9, prob = .5) %>% 
-  mutate(parameter = forcats::fct_rev(parameter)) 
+  mutate(
+    parameter = factor(parameter, c(
+      "Random~ratings", "Time^3", "Time^2", "Time", "Intercept", "Peak"))) 
 
 ggplot(w_intervals) + 
   aes(y = parameter) +
@@ -927,7 +911,7 @@ rm(ws, reduced_data, posterior_w)
 ```
 
 We used the `kendall()` function in the irr R package
-(vers. `r packageVersion("irr")`, CITATION) to compute concordance
+[vers. `r packageVersion("irr")`; @irr] to compute concordance
 statistics. Figure \@ref(fig:kendall-stats) depicts uncertainty intervals
 for the Kendall *W*'s for these growth curve features. The 90%
 uncertainty interval of *W* statistics from random ratings
@@ -952,24 +936,18 @@ across studies when ranking children using their peak looking
 probability, average look probability (the intercept) or their growth
 curve slope (linear time).
 
-**Summary**. Growth curve features reflect individual differences in
-word recognition reliability and efficiency. By using Kendall's *W* to
+**Summary**. Growth curve features reflected individual differences in
+word recognition performance. By using Kendall's *W* to
 measure the degree of concordance among growth curve features over
-developmental time, I tested whether individual differences in lexical
+time, I tested whether individual differences in lexical
 processing persisted over development. I found that the peak looking
 probability, average looking probability and linear time features were
 stable over time.
 
-  - Although the range of variability decreases, individual differences
-    do not wash out.
-  - Lexical processing is a stable ability over the preschool years.
-  - Extrapolating outwards, the differences probably diminish to the
-    point that they are not meaningful. But traces of those early
-    differences can reappear years later on some test scores.
 
 
-
-### Predicting future vocabulary size
+Predicting future vocabulary size
+------------------------------------------------------------------------
 
 ```{r vocab correlations, include = FALSE}
 if (!exists("fits")) {
@@ -1093,13 +1071,14 @@ ot1_ppvt_tp2_pts <- get_cor_pts(ot1_ppvt_tp2_data)
 ot1_ppvt_tp2_uis <- get_cor_uis(ot1_ppvt_tp2_data)
 ```
 
-I hypothesized that individual differences in word recognition at age&nbsp;3 will be
-more discriminating and predictive future language outcomes than differences
-at age&nbsp;4 or age&nbsp;5. To test this hypothesis, we calculated the correlations
-of growth curve features with age&nbsp;5 expressive vocabulary size and age&nbsp;4
-receptive vocabulary. (The receptive test was not administered during the last year of the study
-for logistical reasons.) As with the concordance analysis, I computed each
-of the correlations for each sample of the posterior distribution to obtain a
+I hypothesized that individual differences in word recognition at age 3
+will be more discriminating and predictive future language outcomes than
+differences at age 4 or age 5. To test this hypothesis, we calculated
+the correlations of growth curve features with age 5 expressive
+vocabulary size and age 4 receptive vocabulary. (The receptive test was
+not administered during the last year of the study for logistical
+reasons.) As with the concordance analysis, I computed each of the
+correlations for each sample of the posterior distribution to obtain a
 distribution of correlations.
 
 Figure \@ref(fig:evt2-gca-cors) shows the correlations of the peak
@@ -1139,6 +1118,15 @@ standard scores) at age 5. The bottom rows provide intervals for the
 pairwise differences in correlations between timepoints.
 
 ```{r evt2-gca-cors, fig.cap = "(ref:evt2-gca-cors)", out.width = "80%", fig.height = 3, fig.width = 6, echo = FALSE}
+study_map <- c(
+  "TimePoint1" = "paste(Age, phantom(l), 3)", 
+  "TimePoint2" = "paste(Age, phantom(l), 4)", 
+  "TimePoint3" = "paste(Age, phantom(l), 5)", 
+  "TP1 - TP2" = "paste(Age, phantom(l), 3)-paste(Age, phantom(l), 4)", 
+  "TP2 - TP3" = "paste(Age, phantom(l), 4)-paste(Age, phantom(l), 5)", 
+  "TP1 - TP3" = "paste(Age, phantom(l), 3)-paste(Age, phantom(l), 5)"
+)
+
 plot_names <- c(
   intercept = "Avg. Probability", 
   ot1 = "Linear Time",
@@ -1148,27 +1136,31 @@ main_diffs <- main_diffs %>%
   mutate(plot_coef = plot_names[coef] %>% 
            factor(c("Peak Probability", "Avg. Probability", "Linear Time")))
 
-ggplot(main_diffs %>% filter(variable == "r_TimePoint3_EVT_Standard")) + 
-  aes(y = forcats::fct_rev(Study)) +
-  geom_vline(xintercept = 0, size = 2, color = "white") +
-  geom_point(aes(x = m), size = 3, shape = 3) + 
-  geom_segment(
-    aes(y = Study, yend = Study, x = min_x, xend = max_x), 
-    data = . %>% 
-      group_by(plot_coef) %>% 
-      mutate(min_x = min(ll), max_x = max(hh)) %>% 
-      ungroup(),
-    size = .25, color = "white") +
-  ggstance::geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
-  ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
-  facet_wrap("plot_coef") +
-  labs(
-    x = NULL, 
-    y = NULL, 
-    caption = "90% and 50% intervals") + 
-  ggtitle(
-    "Correlations of curve features and expressive vocabulary at timepoint 3") + 
-  theme(title = element_text(size = rel(.9)))
+main_diffs %>% 
+  filter(variable == "r_TimePoint3_EVT_Standard") %>% 
+  mutate(PlotStudy = factor(study_map[Study], levels = rev(study_map))) %>% 
+  ggplot() + 
+    aes(y = PlotStudy) +
+    geom_vline(xintercept = 0, size = 2, color = "white") +
+    geom_point(aes(x = m), size = 3, shape = 3) + 
+    geom_segment(
+      aes(y = PlotStudy, yend = PlotStudy, x = min_x, xend = max_x), 
+      data = . %>% 
+        group_by(plot_coef) %>% 
+        mutate(min_x = min(ll), max_x = max(hh)) %>% 
+        ungroup(),
+      size = .25, color = "white") +
+    ggstance::geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
+    ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
+    scale_y_discrete(labels = parse_text) + 
+    facet_wrap("plot_coef") +
+    labs(
+      x = NULL, 
+      y = " ", 
+      caption = constants$cap_median_90_50) + 
+    ggtitle(
+      "Correlations of curve features and expressive vocabulary at age 5") + 
+    theme(title = element_text(size = rel(.9)))
 ```
 
 Peak looking probabilities from age 3 were strongly correlated with
@@ -1196,12 +1188,13 @@ differences between the correlations from timepoints.
 main_diffs %>% 
   filter(variable == "r_TimePoint2_PPVT_Standard") %>% 
   filter(Study %in% c("TimePoint1", "TimePoint2", "TP1 - TP2")) %>% 
+  mutate(PlotStudy = factor(study_map[Study], levels = rev(study_map))) %>% 
   ggplot() + 
-    aes(y = forcats::fct_rev(Study)) +
+    aes(y = PlotStudy) +
     geom_vline(xintercept = 0, size = 2, color = "white") +
     geom_point(aes(x = m), size = 3, shape = 3) + 
     geom_segment(
-      aes(y = Study, yend = Study, x = min_x, xend = max_x), 
+      aes(y = PlotStudy, yend = PlotStudy, x = min_x, xend = max_x), 
       data = . %>% 
         group_by(plot_coef) %>% 
         mutate(min_x = min(ll), max_x = max(hh)) %>% 
@@ -1209,12 +1202,78 @@ main_diffs %>%
       size = .25, color = "white") +
     ggstance::geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
     ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
+    scale_y_discrete(labels = parse_text) + 
     facet_wrap("plot_coef") +
-    labs(x = NULL, y = NULL, caption = "90% and 50% intervals") + 
+    labs(x = NULL, y = " ", caption = constants$cap_median_90_50) + 
     ggtitle(
-      "Correlations of curve features and receptive vocabulary at timepoint 2") + 
+      "Correlations of curve features and receptive vocabulary at age 4") + 
     theme(title = element_text(size = rel(.9)))
 ```
+
+**Summary**. Although individual differences in word recognition were
+stable over time, early differences were more significant than later
+ones. The strongest predictors of future vocabulary size were the growth
+curve features from age 3.
+
+<!-- ### Relationships with other child-level predictors -->
+
+<!-- _TJM: This is where I would analyze the other test scores as we have discussed._ -->
+
+
+Discussion
+------------------------------------------------------------------------
+
+In the preceding analyses, I analyzed many aspects of children's
+recognition of familiar words. First, I examined how children's looking
+patterns *on average* changed year over year. Children's word
+recognition improved each year: The growth curves grew steeper, reached
+higher peaks, and increased in their average value each year. This
+result was unsurprising, but it was valueable because it confirmed that
+this word recognition task scaled with development. The task was simple
+enough that children could recognize words at age&nbsp;3, but challenging
+enough for children's performance to improve each year.
+
+After establishing how the averages changed each year, I next asked how
+variability changed each year. To tackle this question, I used posterior
+predictive inference to have the model simulate samples of data, and in
+particular, to simulate new participants. The range of performance
+narrowed each year, so that children were most variable at age 3 and
+least variable at age 5. This result is consistent with a model of
+development children vary widely early on and converge on a more mature
+level of performance. From this perspective, word recognition as a skill
+is like articulation where most children grow out of immature speech
+patterns by grade school. An alternative outcome would have been
+troubling: Word recognition differences that expanded with age, the
+emergence of a word recognition "gap".
+
+Although the range of individual differences decreased with age,
+differences did not disappear over time. When children at each age were
+ranked using growth curve features, we found a high degree of
+correspondence among these ratings. Children who were faster or more
+accurate at age 3 remained relatively fast or accurate at age 5. Thus,
+differences in word recognition were longitudinally stable over the
+preschool years. Extrapolating forwards in time, these differences
+likely would become smaller and smaller until they are irrelevant.
+Alternatively, they might matter in more adverse listening conditions.
+It is conceivable that children's differences would re-emerge in a more
+difficult word recognition task. [_Study Bob's paper on older children._]
+
+
+***
+
+  - the vocabulary results
+  - Stitch these pieces together
+  - The shape and structure of words do not change with age. The amount
+    of information needed to identify a word from a closed set is
+    constant with age. So it makes sense that word recognition
+    development follows a trajectory where differences narrow. As a skill, word
+    recognition is a necessary foundation to later more sophisticated
+    degrees of language comprehension. If word recognition is such a foundation,
+    then slow listerners might show challenges in these more difficulty
+    comprehension situations. 
+
+
+*** 
 
 **Summary**. Although individual differences in word recognition are
 stable over time, early differences are more significant than later
@@ -1224,22 +1283,43 @@ age 3 was more strongly correlated with age 5 expressive vocabulary than
 word recognition performance at age 5. A similar pattern of results held
 for predicting receptive vocabulary at age 4.
 
-  - This finding is surprising because vocabulary scores from the same
-    week as the eyetracking data are less correlated than scores from
-    two year earlier.
-  - This establishes that the differences are greatest and most
-    predictive at younger ages.
 
-<!-- ### Relationships with other child-level predictors -->
 
-<!-- _TJM: This is where I would analyze the other test scores as we have discussed._ -->
 
 
-### Discussion
+<!-- The growth curve changes each year involved peak accuracy and steepness -->
+<!-- of the curve. They reach higher heights, and they hit year 1 peak -->
+<!-- earlier each year. -->
 
+  <!-- - Word recognition performance is a skill where variation is greatest -->
+  <!--   at younger ages. -->
+  <!-- - What mechanisms might come to bear on this? Does variability narrow -->
+  <!--   developmentally for vocabulary? -->
+  <!-- - Children different in their word-learning trajectories, so the early -->
+  <!--   differences in word recognition could be from younger children who -->
+  <!--   are relatively early/late in word-learning. The SDs of the EVT-2 -->
+  <!--   scores narrows a small amount each year, even when we only consider -->
+  <!--   the children who participated at all three years. -->
+  <!-- - (It will be easier to fold this in to the mechanism discussion once -->
+  <!--   we have firmer results for the looks-to-foils analysis.) -->
+  <!-- - If differences in word recognition matter (and they do) and the -->
+  <!--   differences are greatest at younger ages, then they are most -->
+  <!--   informative at younger ages. -->
+  <!-- - Maybe a few words on why individual differences are worth studying? -->
 
+<!--   - Although the range of variability decreases, individual differences -->
+<!--     do not wash out. -->
+<!--   - Lexical processing is a stable ability over the preschool years. -->
+<!--   - Extrapolating outwards, the differences probably diminish to the -->
+<!--     point that they are not meaningful. But traces of those early -->
+<!--     differences can reappear years later on some test scores. -->
 
 
+  <!-- - This finding is surprising because vocabulary scores from the same -->
+  <!--   week as the eyetracking data are less correlated than scores from -->
+  <!--   two year earlier. -->
+  <!-- - This establishes that the differences are greatest and most -->
+  <!--   predictive at younger ages. -->
 
 
 
@@ -1284,236 +1364,6 @@ for predicting receptive vocabulary at age 4.
 
 
 
-## Bayesian model results
-
-
-
-
-
-The output below contains the model quick view, a summary of the fixed effect
-terms, and a summary of the priors used.
-
-```{r, eval = FALSE}
-b
-
-summary(b, pars = names(fixef(b)))
-
-prior_summary(b)
-```
-
-
-
-
-
-
-Let's try to understand our model by making some plots.
-
-
-
-
-
-### Plot the intervals for the random effect parameters
-
-These are the parameters governing the random effect distributions. First, we
-plot the standard deviations. Recall that in our hierarchical model we suppose 
-that each growth curve is drawn from a population of related curves. The 
-model's fixed effects estimate the means of the distribution. These terms
-estimate the variability around that mean. We did not have any a priori 
-hypotheses about the values of these scales, so do not discuss them any further.
-
-```{r posterior-sds, echo = FALSE, out.width = "80%", fig.height = 2.5, fig.width = 5}
-sdcors <- tristan::draw_var_corr(b)
-sdcors_wide <- sdcors %>% 
-  select(.draw, .parameter, sdcor) %>% 
-  tidyr::spread(.parameter, sdcor) %>% 
-  select(-.draw)
-
-# Create the mathematical labels for parameters
-group_info <- sdcors %>% 
-  select(.parameter:var2) %>% 
-  distinct()
-group_info$group <- group_info$grp %>% 
-  stringr::str_replace("Study:ResearchID", "Child-Study") %>% 
-  stringr::str_replace("ResearchID", "Child") 
-
-group_info$r <- ifelse(
-  is.na(group_info$var2), "", 
-  paste0(",", group_info$var2))
-
-group_info$sym <- ifelse(is.na(group_info$var2), "sigma", "rho")
-
-group_info$var1 <- ifelse(
-  group_info$var1 == "(Intercept)", "Intercept", 
-  group_info$var1)
-
-group_info$math <- sprintf(
-  "%s[list(%s%s)]", group_info$sym, group_info$var1, group_info$r)
-
-group_info$class <- ifelse(is.na(group_info$var2), "scale", "correlation")
-group_info <- group_info %>% 
-  select(group, class, var1, var2, parameter = .parameter, math) %>% 
-  mutate(parameter = as.factor(parameter))
-
-intervals <- as.data.frame(sdcors_wide) %>% 
-  mcmc_intervals_data() %>% 
-  left_join(group_info, by = "parameter") %>% 
-  mutate(math = forcats::fct_rev(math))
-
-ggplot(intervals %>% filter(class == "scale")) + 
-  aes(y = math) +
-  # Draw medians with + then draw white horizontal lines over the horizontal 
-  # parts of the + symbols
-  geom_point(aes(x = m), size = 3, shape = 3) +
-  geom_hline(aes(yintercept = as.numeric(parameter)), color = "white") +
-  geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
-  geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
-  scale_y_discrete(labels = parse_text) +
-  facet_wrap("group", ncol = 1, strip.position = "left") + 
-  theme(
-    strip.placement = "outside", 
-    strip.background = element_rect(fill = NA),
-    axis.text.y = element_text(size = rel(1.2))) +
-  labs(
-    x = NULL, y = NULL, 
-    title = "Random effect scales", 
-    caption = "Posterior median with 90% and 50% intervals")
-```
-
-Then the correlations.
-
-```{r posterior-cors, echo = FALSE, out.width = "80%", fig.height = 3, fig.width = 5}
-ggplot(intervals %>% filter(class == "correlation")) + 
-  aes(y = math) +
-  geom_vline(xintercept = 0, size = 2, color = "white") +
-  # Draw medians with + then draw white horizontal lines over the horizontal 
-  # parts of the + symbols
-  geom_point(aes(x = m), size = 3, shape = 3) +
-  geom_hline(aes(yintercept = as.numeric(parameter)), color = "white") +
-  geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
-  geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
-  scale_y_discrete(labels = parse_text) +
-  facet_wrap("group", ncol = 1, strip.position = "left") + 
-  theme(
-    strip.placement = "outside", 
-    strip.background = element_rect(fill = NA),
-    axis.text.y = element_text(size = rel(1.2))) +
-  labs(
-    x = NULL, y = NULL, 
-    title = "Random effect correlations", 
-    caption = "Posterior median with 90% and 50% intervals")
-```
-
-
-
-
-
-
-
-
-
-### Posterior predictive checks
-
-Bayesian models are generative; they describe how the data could have been
-generated. One way to evaluate the model is to have it simulate new
-observations. If the simulated data closely resembles the observed data, then we
-have some confidence that our model has learned an approximation of how the data
-could have been generated. Figure \@ref(fig:post-pred) depicts the density of
-the observed data from each year of the study versus 200 posterior simulations.
-Because the simulations closely track the density of the observed data, we can
-infer that the model has learned how to generate data from each year of the
-study.
-
-(ref:post-pred) Posterior predictive density for the observed data from each
-year of the study. The _x_-axis represents the outcome measure---the proportion
-of looks to the target image---and the _y_-axis is the density of those values
-at year. At age 3, there is a large density of looks around chance performance
-(.25) with a rightward skew (above-chance looks are common). At age 4 and age 5,
-a bimodal distribution emerges, reflecting how looks start at chance and
-reliably increase to above-chance performance. Each light line is a simulation
-of the observed data from the model, and the thick lines are the observed data.
-Because the thick line is surrounded by light lines, we visually infer that the
-the model faithfully approximates the observed data.
-
-```{r post-pred, fig.cap = "(ref:post-pred)", echo = FALSE, out.width = "80%", fig.height=3, fig.width=6}
-sims <- rstanarm::posterior_predict(b, draws = 200, seed = "09272017")
-n_trials <- data_frame(y_id = seq_along(b$y[, 1]), n_trials = rowSums(b$y))
-
-bayesplot:::ppc_data(b$y[, 1], sims, group = d_m$Study) %>% 
-  left_join(n_trials, by = "y_id") %>% 
-  mutate(prop = value / n_trials) %>% 
-  ggplot() +
-    aes(x = prop) +
-    stat_density(
-      aes_(group = ~ rep_id),
-      data = function(x) dplyr::filter(x, !.data$is_y),
-      geom = "line", position = "identity", size = .25, alpha = .1, 
-      color = constants$col_blue_highlight) +
-    stat_density(
-      data = function(x) dplyr::filter(x, .data$is_y),
-      geom = "line", position = "identity", size = 1) + 
-    labs(
-      x = "Proportion of looks", 
-      y = "Density",
-      title = "Observed data and 200 posterior simulations") + 
-    coord_cartesian(xlim = c(0, 1), expand = FALSE) + 
-    facet_wrap("group")
-```
-
-
-We can ask the model make even more specific posterior predictions. Below we
-plot the posterior predictions for random participants. This is the model
-simulating new data for these participants.
-
-```{r posterior-lines, out.width = "100%", fig.height=4, fig.width=5}
-set.seed(09272017)
-
-ppred <- d_m %>% 
-  sample_n_of(8, ResearchID) %>% 
-  tristan::augment_posterior_predict(b, newdata = ., nsamples = 100) %>% 
-  mutate(trials = Primary + Others)
-
-ggplot(ppred) + 
-  aes(x = Time, y = Prop, color = Study, group = Study) + 
-  geom_line(aes(y = .posterior_value / trials, 
-                group = interaction(.draw, Study)), 
-            alpha = .20) + 
-  geom_line(size = 1, color = "grey50") + 
-  facet_wrap("ResearchID") + 
-  theme(
-    legend.position = c(.95, 0), 
-    legend.justification = c(1, 0),
-    legend.margin = margin(0)) +
-  guides(color = guide_legend(title = NULL, override.aes = list(alpha = 1))) +
-  labs(
-    title = "Observed means and 100 simulations of new data",
-    x = "Time after target onset [ms]",
-    y = "Proportion looks to target") 
-```
-
-Or we can plot the linear predictions. These are posterior predictions of the
-log-odds of looking to target before adding binomial noise.
-
-```{r posterior-mean-lines, out.width = "100%", fig.height = 4, fig.width = 5}
-lpred <- d_m %>% 
-  sample_n_of(8, ResearchID) %>% 
-  tristan::augment_posterior_linpred(b, newdata = ., nsamples = 100)
-
-ggplot(lpred) + 
-  aes(x = Time, y = .posterior_value, color = Study) +
-  geom_line(aes(group = interaction(Study, ResearchID, .draw)), 
-            alpha = .1) +
-  facet_wrap("ResearchID") + 
-  geom_point(aes(y = qlogis(Prop)), shape = 1) + 
-  theme(
-    legend.position = c(.95, 0), 
-    legend.justification = c(1, 0),
-    legend.margin = margin(0)) +
-  guides(color = guide_legend(title = NULL, override.aes = list(alpha = 1))) +
-  labs(
-    title = "Observed data and 100 posterior predictions",
-    x = "Time after target onset [ms]",
-    y = "Posterior log-odds")
-```
 
 
 

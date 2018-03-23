@@ -83,9 +83,9 @@ data.
 I fit a generalized additive model with fast restricted maximum
 likelihood estimation [@Wood2017; @Soskuthy2017 for a tutorial for
 linguists]. Box 1 provides a brief overview of these models. I used the
-R package `mgcv` [vers. 1.8.23; @Wood2017] with
-support from the tools in the `itsadug` package [vers.
-2.3; @itsadug].
+mgcv R package [vers. 1.8.23; @Wood2017] with
+support from the tools in the itsadug R package
+[vers. 2.3; @itsadug].
 
 
 
@@ -173,8 +173,9 @@ curve shape to capture child-level variation from limited data.
 Altogether, the model contained the following terms:
 
 $$
+\small
 \begin{align*}
-   \text{emp. log-odds}(\mathit{phonological\ vs.\ unrelated}) =\    
+   \text{emp. log-odds}(\mathit{phon.\ vs.\ unrelated}) =\    
    & \alpha + \beta_1\text{Age3} + \beta_2\text{Age5} +\ &\text{[growth curve averages]} \\
    & f_1(\text{Time}, \text{Age4})\ +                    &\text{[reference smooth]} \\ 
    & f_2(\text{Time}, \text{Age4} - \text{Age3})\ +      &\text{[difference smooths]} \\ 
@@ -426,6 +427,7 @@ by-child intercepts therefore reflect a child's ability after
 controlling for age and receptive vocabulary.
 
 $$
+\small
 \begin{align*}
    \text{log-odds}(\mathit{choosing\ correct\ word}) =\    
    & \alpha\ +                  &\text{[average participant ability]} \\
@@ -449,8 +451,9 @@ models. In this case, the interaction term allows the ability score to
 change the shape of the time trend. The model was therefore:
 
 $$
+\small
 \begin{align*}
-   \text{emp. log-odds}(\mathit{phonological\ vs.\ unrelated}) =\    
+   \text{emp. log-odds}(\mathit{phon.\ vs.\ unrelated}) =\    
    & \alpha +\ &\text{[growth curve average]} \\
    & f_1(\text{Time})\ +                    &\text{[time smooth]} \\ 
    & f_2(\text{Ability})\ +                 &\text{[ability smooth]} \\ 

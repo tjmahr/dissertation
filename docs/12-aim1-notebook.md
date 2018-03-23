@@ -8,13 +8,10 @@ Analysis of familiar word recognition
 
 
 
-<!-- General Todos: -->
 
-<!-- * Determine and use consistent terminology for the studies and growth curve -->
-<!--   features. -->
-<!-- * Make sure axis labels and legend labels are consistent. -->
 
-## Growth curve analysis
+Growth curve analysis
+------------------------------------------------------------------------
 
 Looks to the familiar image were analyzed using Bayesian mixed
 effects logistic regression. I used *logistic* regression because
@@ -116,7 +113,8 @@ are simulations of new participants at Age 4.
 
 
 
-### Year over year changes in word recognition performance
+Year over year changes in word recognition performance
+------------------------------------------------------------------------
 
 The mixed-effects model estimated a population-average growth curve
 ("fixed" effects) and how individual children deviated from average
@@ -164,34 +162,28 @@ proportions.
 
 
 
-The average looking probability (intercept feature) was 
-[90% UI: ] at age 3, 
-[] at age 4, and  [] at
-age 5. The averages increased by 
-[] from age 3 to age 4 and by 
-[] from age 4 to age 5. The peak looking
-probability was  [] at age 3,
- [] at age 4, and 
-[] at age 5. The peak values increased by
- [] from age 3 to age 4 and
-by  [] from age 4 to age 5.
+The average looking probability (intercept feature) was 0.38
+[90% UI: 0.37--0.40] at age 3, 0.49
+[0.47--0.50] at age 4, and 0.56 [0.54--0.57] at
+age 5. The averages increased by 0.10
+[0.09--0.11] from age 3 to age 4 and by 0.07
+[0.06--0.09] from age 4 to age 5. The peak looking
+probability was 0.55 [0.53--0.57] at age 3,
+0.68 [0.67--0.70] at age 4, and 0.77
+[0.76--0.78] at age 5. The peak values increased by
+0.13 [0.11--0.16] from age 3 to age 4 and
+by 0.09 [0.07--0.10] from age 4 to age 5.
 These results numerically confirm the hypothesis that children would
 improve in their word recognition reliability, both in terms of average
 looking and in terms of peak accuracy, each year.
 
-**Summary**. The average growth curve features increased year over year, so that
-children looked to the target more quickly and more reliably.
-
-  - This result is as expected.
-  - It's good that the task scaled with development so that there was room to
-    grow each year.
-  - The growth curve changes each year involved peak accuracy and steepness of
-    the curve. They reach higher heights, and they hit year 1 peak earlier each
-    year.
+**Summary**. The average growth curve features increased year over year,
+so that children looked to the target more quickly and more reliably.
 
 
 
-### Exploring plausible ranges of performance over time
+Exploring plausible ranges of performance over time
+------------------------------------------------------------------------
 
 
 
@@ -270,41 +262,25 @@ variability was also observed for the growth curve peaks. For the
 synthetic participants, the model predicted that individual peak
 probabilities will increase each year, peak<sub>3</sub> =
 0.55 [90% UI: 0.35--0.77],
-peak<sub>4</sub> = 0.69
-[0.48--0.86], peak<sub>5</sub> =
-0.78 [0.59--0.91]. Moreover,
-the range of plausible values for the individual peaks narrowed each for
-the simulated data. For instance, the difference between the 95^th^
-and 5^th^ percentiles was 0.43 for age 3,
-0.38 for age 4, and
-0.32 for age 5.
+peak<sub>4</sub> = 0.69 [0.48--0.86],
+peak<sub>5</sub> = 0.78 [0.59--0.91].
+Moreover, the range of plausible values for the individual peaks
+narrowed each for the simulated data. For instance, the difference
+between the 95^th^ and 5^th^ percentiles was 0.43 for
+age 3, 0.38 for age 4, and 0.32
+for age 5.
 
 **Summary**. I used the model's random effects estimates to simulate
 growth curves from 1,000 hypothetical, unobserved participants. The
 simulated dataset showed increasing looking probability and decreasing
-variability with each year of the study. These simulations confirm the
+variability with each year of the study. These simulations confirmed the
 hypothesis that variability would be diminish as children converge on a
 mature level of performance on this task.
 
-  - Word recognition performance is a skill where variation is greatest
-    at younger ages.
-  - What mechanisms might come to bear on this? Does variability narrow
-    developmentally for vocabulary?
-  - Children different in their word-learning trajectories, so the early
-    differences in word recognition could be from younger children who
-    are relatively early/late in word-learning. The SDs of the EVT-2
-    scores narrows a small amount each year, even when we only consider
-    the children who participated at all three years.
-  - (It will be easier to fold this in to the mechanism discussion once
-    we have firmer results for the looks-to-foils analysis.)
-  - If differences in word recognition matter (and they do) and the
-    differences are greatest at younger ages, then they are most
-    informative at younger ages.
-  - Maybe a few words on why individual differences are worth studying?
 
 
-
-### Are individual differences stable over time?
+Are individual differences stable over time?
+------------------------------------------------------------------------
 
 
 
@@ -356,7 +332,7 @@ three years of study.
 </div>
 
 We used the `kendall()` function in the irr R package
-(vers. 0.84, CITATION) to compute concordance
+[vers. 0.84; @irr] to compute concordance
 statistics. Figure \@ref(fig:kendall-stats) depicts uncertainty intervals
 for the Kendall *W*'s for these growth curve features. The 90%
 uncertainty interval of *W* statistics from random ratings
@@ -381,24 +357,18 @@ across studies when ranking children using their peak looking
 probability, average look probability (the intercept) or their growth
 curve slope (linear time).
 
-**Summary**. Growth curve features reflect individual differences in
-word recognition reliability and efficiency. By using Kendall's *W* to
+**Summary**. Growth curve features reflected individual differences in
+word recognition performance. By using Kendall's *W* to
 measure the degree of concordance among growth curve features over
-developmental time, I tested whether individual differences in lexical
+time, I tested whether individual differences in lexical
 processing persisted over development. I found that the peak looking
 probability, average looking probability and linear time features were
 stable over time.
 
-  - Although the range of variability decreases, individual differences
-    do not wash out.
-  - Lexical processing is a stable ability over the preschool years.
-  - Extrapolating outwards, the differences probably diminish to the
-    point that they are not meaningful. But traces of those early
-    differences can reappear years later on some test scores.
 
 
-
-### Predicting future vocabulary size
+Predicting future vocabulary size
+------------------------------------------------------------------------
 
 
 
@@ -406,13 +376,14 @@ stable over time.
 
 
 
-I hypothesized that individual differences in word recognition at age&nbsp;3 will be
-more discriminating and predictive future language outcomes than differences
-at age&nbsp;4 or age&nbsp;5. To test this hypothesis, we calculated the correlations
-of growth curve features with age&nbsp;5 expressive vocabulary size and age&nbsp;4
-receptive vocabulary. (The receptive test was not administered during the last year of the study
-for logistical reasons.) As with the concordance analysis, I computed each
-of the correlations for each sample of the posterior distribution to obtain a
+I hypothesized that individual differences in word recognition at age 3
+will be more discriminating and predictive future language outcomes than
+differences at age 4 or age 5. To test this hypothesis, we calculated
+the correlations of growth curve features with age 5 expressive
+vocabulary size and age 4 receptive vocabulary. (The receptive test was
+not administered during the last year of the study for logistical
+reasons.) As with the concordance analysis, I computed each of the
+correlations for each sample of the posterior distribution to obtain a
 distribution of correlations.
 
 Figure \@ref(fig:evt2-gca-cors) shows the correlations of the peak
@@ -482,6 +453,71 @@ differences between the correlations from timepoints.
 <p class="caption">(\#fig:ppvt4-gca-cors)(ref:ppvt4-gca-cors)</p>
 </div>
 
+**Summary**. Although individual differences in word recognition were
+stable over time, early differences were more significant than later
+ones. The strongest predictors of future vocabulary size were the growth
+curve features from age 3.
+
+<!-- ### Relationships with other child-level predictors -->
+
+<!-- _TJM: This is where I would analyze the other test scores as we have discussed._ -->
+
+
+Discussion
+------------------------------------------------------------------------
+
+In the preceding analyses, I analyzed many aspects of children's
+recognition of familiar words. First, I examined how children's looking
+patterns *on average* changed year over year. Children's word
+recognition improved each year: The growth curves grew steeper, reached
+higher peaks, and increased in their average value each year. This
+result was unsurprising, but it was valueable because it confirmed that
+this word recognition task scaled with development. The task was simple
+enough that children could recognize words at age&nbsp;3, but challenging
+enough for children's performance to improve each year.
+
+After establishing how the averages changed each year, I next asked how
+variability changed each year. To tackle this question, I used posterior
+predictive inference to have the model simulate samples of data, and in
+particular, to simulate new participants. The range of performance
+narrowed each year, so that children were most variable at age 3 and
+least variable at age 5. This result is consistent with a model of
+development children vary widely early on and converge on a more mature
+level of performance. From this perspective, word recognition as a skill
+is like articulation where most children grow out of immature speech
+patterns by grade school. An alternative outcome would have been
+troubling: Word recognition differences that expanded with age, the
+emergence of a word recognition "gap".
+
+Although the range of individual differences decreased with age,
+differences did not disappear over time. When children at each age were
+ranked using growth curve features, we found a high degree of
+correspondence among these ratings. Children who were faster or more
+accurate at age 3 remained relatively fast or accurate at age 5. Thus,
+differences in word recognition were longitudinally stable over the
+preschool years. Extrapolating forwards in time, these differences
+likely would become smaller and smaller until they are irrelevant.
+Alternatively, they might matter in more adverse listening conditions.
+It is conceivable that children's differences would re-emerge in a more
+difficult word recognition task. [_Study Bob's paper on older children._]
+
+
+***
+
+  - the vocabulary results
+  - Stitch these pieces together
+  - The shape and structure of words do not change with age. The amount
+    of information needed to identify a word from a closed set is
+    constant with age. So it makes sense that word recognition
+    development follows a trajectory where differences narrow. As a skill, word
+    recognition is a necessary foundation to later more sophisticated
+    degrees of language comprehension. If word recognition is such a foundation,
+    then slow listerners might show challenges in these more difficulty
+    comprehension situations. 
+
+
+*** 
+
 **Summary**. Although individual differences in word recognition are
 stable over time, early differences are more significant than later
 ones. The strongest predictors of future vocabulary size were the growth
@@ -490,22 +526,43 @@ age 3 was more strongly correlated with age 5 expressive vocabulary than
 word recognition performance at age 5. A similar pattern of results held
 for predicting receptive vocabulary at age 4.
 
-  - This finding is surprising because vocabulary scores from the same
-    week as the eyetracking data are less correlated than scores from
-    two year earlier.
-  - This establishes that the differences are greatest and most
-    predictive at younger ages.
 
-<!-- ### Relationships with other child-level predictors -->
 
-<!-- _TJM: This is where I would analyze the other test scores as we have discussed._ -->
 
 
-### Discussion
+<!-- The growth curve changes each year involved peak accuracy and steepness -->
+<!-- of the curve. They reach higher heights, and they hit year 1 peak -->
+<!-- earlier each year. -->
 
+  <!-- - Word recognition performance is a skill where variation is greatest -->
+  <!--   at younger ages. -->
+  <!-- - What mechanisms might come to bear on this? Does variability narrow -->
+  <!--   developmentally for vocabulary? -->
+  <!-- - Children different in their word-learning trajectories, so the early -->
+  <!--   differences in word recognition could be from younger children who -->
+  <!--   are relatively early/late in word-learning. The SDs of the EVT-2 -->
+  <!--   scores narrows a small amount each year, even when we only consider -->
+  <!--   the children who participated at all three years. -->
+  <!-- - (It will be easier to fold this in to the mechanism discussion once -->
+  <!--   we have firmer results for the looks-to-foils analysis.) -->
+  <!-- - If differences in word recognition matter (and they do) and the -->
+  <!--   differences are greatest at younger ages, then they are most -->
+  <!--   informative at younger ages. -->
+  <!-- - Maybe a few words on why individual differences are worth studying? -->
 
+<!--   - Although the range of variability decreases, individual differences -->
+<!--     do not wash out. -->
+<!--   - Lexical processing is a stable ability over the preschool years. -->
+<!--   - Extrapolating outwards, the differences probably diminish to the -->
+<!--     point that they are not meaningful. But traces of those early -->
+<!--     differences can reappear years later on some test scores. -->
 
 
+  <!-- - This finding is surprising because vocabulary scores from the same -->
+  <!--   week as the eyetracking data are less correlated than scores from -->
+  <!--   two year earlier. -->
+  <!-- - This establishes that the differences are greatest and most -->
+  <!--   predictive at younger ages. -->
 
 
 
@@ -550,147 +607,6 @@ for predicting receptive vocabulary at age 4.
 
 
 
-## Bayesian model results
-
-
-
-
-
-The output below contains the model quick view, a summary of the fixed effect
-terms, and a summary of the priors used.
-
-
-```r
-b
-
-summary(b, pars = names(fixef(b)))
-
-prior_summary(b)
-```
-
-
-
-
-
-
-Let's try to understand our model by making some plots.
-
-
-
-
-
-### Plot the intervals for the random effect parameters
-
-These are the parameters governing the random effect distributions. First, we
-plot the standard deviations. Recall that in our hierarchical model we suppose 
-that each growth curve is drawn from a population of related curves. The 
-model's fixed effects estimate the means of the distribution. These terms
-estimate the variability around that mean. We did not have any a priori 
-hypotheses about the values of these scales, so do not discuss them any further.
-
-<img src="12-aim1-notebook_files/figure-html/posterior-sds-1.png" width="80%" />
-
-Then the correlations.
-
-<img src="12-aim1-notebook_files/figure-html/posterior-cors-1.png" width="80%" />
-
-
-
-
-
-
-
-
-
-### Posterior predictive checks
-
-Bayesian models are generative; they describe how the data could have been
-generated. One way to evaluate the model is to have it simulate new
-observations. If the simulated data closely resembles the observed data, then we
-have some confidence that our model has learned an approximation of how the data
-could have been generated. Figure \@ref(fig:post-pred) depicts the density of
-the observed data from each year of the study versus 200 posterior simulations.
-Because the simulations closely track the density of the observed data, we can
-infer that the model has learned how to generate data from each year of the
-study.
-
-(ref:post-pred) Posterior predictive density for the observed data from each
-year of the study. The _x_-axis represents the outcome measure---the proportion
-of looks to the target image---and the _y_-axis is the density of those values
-at year. At age 3, there is a large density of looks around chance performance
-(.25) with a rightward skew (above-chance looks are common). At age 4 and age 5,
-a bimodal distribution emerges, reflecting how looks start at chance and
-reliably increase to above-chance performance. Each light line is a simulation
-of the observed data from the model, and the thick lines are the observed data.
-Because the thick line is surrounded by light lines, we visually infer that the
-the model faithfully approximates the observed data.
-
-<div class="figure">
-<img src="12-aim1-notebook_files/figure-html/post-pred-1.png" alt="(ref:post-pred)" width="80%" />
-<p class="caption">(\#fig:post-pred)(ref:post-pred)</p>
-</div>
-
-
-We can ask the model make even more specific posterior predictions. Below we
-plot the posterior predictions for random participants. This is the model
-simulating new data for these participants.
-
-
-```r
-set.seed(09272017)
-
-ppred <- d_m %>% 
-  sample_n_of(8, ResearchID) %>% 
-  tristan::augment_posterior_predict(b, newdata = ., nsamples = 100) %>% 
-  mutate(trials = Primary + Others)
-
-ggplot(ppred) + 
-  aes(x = Time, y = Prop, color = Study, group = Study) + 
-  geom_line(aes(y = .posterior_value / trials, 
-                group = interaction(.draw, Study)), 
-            alpha = .20) + 
-  geom_line(size = 1, color = "grey50") + 
-  facet_wrap("ResearchID") + 
-  theme(
-    legend.position = c(.95, 0), 
-    legend.justification = c(1, 0),
-    legend.margin = margin(0)) +
-  guides(color = guide_legend(title = NULL, override.aes = list(alpha = 1))) +
-  labs(
-    title = "Observed means and 100 simulations of new data",
-    x = "Time after target onset [ms]",
-    y = "Proportion looks to target") 
-```
-
-<img src="12-aim1-notebook_files/figure-html/posterior-lines-1.png" width="100%" />
-
-Or we can plot the linear predictions. These are posterior predictions of the
-log-odds of looking to target before adding binomial noise.
-
-
-```r
-lpred <- d_m %>% 
-  sample_n_of(8, ResearchID) %>% 
-  tristan::augment_posterior_linpred(b, newdata = ., nsamples = 100)
-
-ggplot(lpred) + 
-  aes(x = Time, y = .posterior_value, color = Study) +
-  geom_line(aes(group = interaction(Study, ResearchID, .draw)), 
-            alpha = .1) +
-  facet_wrap("ResearchID") + 
-  geom_point(aes(y = qlogis(Prop)), shape = 1) + 
-  theme(
-    legend.position = c(.95, 0), 
-    legend.justification = c(1, 0),
-    legend.margin = margin(0)) +
-  guides(color = guide_legend(title = NULL, override.aes = list(alpha = 1))) +
-  labs(
-    title = "Observed data and 100 posterior predictions",
-    x = "Time after target onset [ms]",
-    y = "Posterior log-odds")
-```
-
-<img src="12-aim1-notebook_files/figure-html/posterior-mean-lines-1.png" width="100%" />
 
 
 

@@ -171,6 +171,251 @@ default to the first two levels of prior information.
 
 </div>
 
+
+
+
+
+## Additional model results
+
+The output below contains the model quick view, a summary of the fixed effect
+terms, and a summary of the priors used.
+
+```{r, eval = FALSE}
+b
+
+summary(b, pars = names(fixef(b)))
+
+prior_summary(b)
+```
+
+### Plot the intervals for the random effect parameters
+
+These are the parameters governing the random effect distributions. First, we
+plot the standard deviations. Recall that in our hierarchical model we suppose 
+that each growth curve is drawn from a population of related curves. The 
+model's fixed effects estimate the means of the distribution. These terms
+estimate the variability around that mean. We did not have any a priori 
+hypotheses about the values of these scales, so do not discuss them any further.
+
+```{r posterior-sds, echo = FALSE, eval = FALSE, out.width = "80%", fig.height = 2.5, fig.width = 5}
+b <- readr::read_rds("./data/stan_aim1_cubic_model.rds.gz")
+b$stan_function <- "stan_glmer"
+
+sdcors <- tristan::draw_var_corr(b)
+sdcors_wide <- sdcors %>% 
+  select(.draw, .parameter, sdcor) %>% 
+  tidyr::spread(.parameter, sdcor) %>% 
+  select(-.draw)
+
+# Create the mathematical labels for parameters
+group_info <- sdcors %>% 
+  select(.parameter:var2) %>% 
+  distinct()
+group_info$group <- group_info$grp %>% 
+  stringr::str_replace("Study:ResearchID", "Child-Study") %>% 
+  stringr::str_replace("ResearchID", "Child") 
+
+group_info$r <- ifelse(
+  is.na(group_info$var2), "", 
+  paste0(",", group_info$var2))
+
+group_info$sym <- ifelse(is.na(group_info$var2), "sigma", "rho")
+
+group_info$var1 <- ifelse(
+  group_info$var1 == "(Intercept)", "Intercept", 
+  group_info$var1)
+
+group_info$math <- sprintf(
+  "%s[list(%s%s)]", group_info$sym, group_info$var1, group_info$r)
+
+group_info$class <- ifelse(is.na(group_info$var2), "scale", "correlation")
+group_info <- group_info %>% 
+  select(group, class, var1, var2, parameter = .parameter, math) %>% 
+  mutate(parameter = as.factor(parameter))
+
+intervals <- as.data.frame(sdcors_wide) %>% 
+  mcmc_intervals_data() %>% 
+  left_join(group_info, by = "parameter") %>% 
+  mutate(math = forcats::fct_rev(math))
+
+ggplot(intervals %>% filter(class == "scale")) + 
+  aes(y = math) +
+  # Draw medians with + then draw white horizontal lines over the horizontal 
+  # parts of the + symbols
+  geom_point(aes(x = m), size = 3, shape = 3) +
+  geom_hline(aes(yintercept = as.numeric(parameter)), color = "white") +
+  geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
+  geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
+  scale_y_discrete(labels = parse_text) +
+  facet_wrap("group", ncol = 1, strip.position = "left") + 
+  theme(
+    strip.placement = "outside", 
+    strip.background = element_rect(fill = NA),
+    axis.text.y = element_text(size = rel(1.2))) +
+  labs(
+    x = NULL, y = NULL, 
+    title = "Random effect scales", 
+    caption = "Posterior median with 90% and 50% intervals")
+```
+
+Then the correlations.
+
+```{r posterior-cors, eval = FALSE, echo = FALSE, out.width = "80%", fig.height = 3, fig.width = 5}
+ggplot(intervals %>% filter(class == "correlation")) + 
+  aes(y = math) +
+  geom_vline(xintercept = 0, size = 2, color = "white") +
+  # Draw medians with + then draw white horizontal lines over the horizontal 
+  # parts of the + symbols
+  geom_point(aes(x = m), size = 3, shape = 3) +
+  geom_hline(aes(yintercept = as.numeric(parameter)), color = "white") +
+  geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
+  geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
+  scale_y_discrete(labels = parse_text) +
+  facet_wrap("group", ncol = 1, strip.position = "left") + 
+  theme(
+    strip.placement = "outside", 
+    strip.background = element_rect(fill = NA),
+    axis.text.y = element_text(size = rel(1.2))) +
+  labs(
+    x = NULL, y = NULL, 
+    title = "Random effect correlations", 
+    caption = "Posterior median with 90% and 50% intervals")
+```
+
+
+### Posterior predictive checks
+
+Bayesian models are generative; they describe how the data could have been
+generated. One way to evaluate the model is to have it simulate new
+observations. If the simulated data closely resembles the observed data, then we
+have some confidence that our model has learned an approximation of how the data
+could have been generated. Figure \@ref(fig:post-pred) depicts the density of
+the observed data from each year of the study versus 200 posterior simulations.
+Because the simulations closely track the density of the observed data, we can
+infer that the model has learned how to generate data from each year of the
+study.
+
+(ref:post-pred) Posterior predictive density for the observed data from each
+year of the study. The _x_-axis represents the outcome measure---the proportion
+of looks to the target image---and the _y_-axis is the density of those values
+at year. At age 3, there is a large density of looks around chance performance
+(.25) with a rightward skew (above-chance looks are common). At age 4 and age 5,
+a bimodal distribution emerges, reflecting how looks start at chance and
+reliably increase to above-chance performance. Each light line is a simulation
+of the observed data from the model, and the thick lines are the observed data.
+Because the thick line is surrounded by light lines, we visually infer that the
+the model faithfully approximates the observed data.
+
+```{r post-pred, eval = FALSE, fig.cap = "(ref:post-pred)", echo = FALSE, out.width = "80%", fig.height = 3, fig.width = 6}
+sims <- rstanarm::posterior_predict(b, draws = 200, seed = "09272017")
+n_trials <- data_frame(y_id = seq_along(b$y[, 1]), n_trials = rowSums(b$y))
+
+bayesplot:::ppc_data(b$y[, 1], sims, group = d_m$Study) %>% 
+  left_join(n_trials, by = "y_id") %>% 
+  mutate(prop = value / n_trials) %>% 
+  ggplot() +
+    aes(x = prop) +
+    stat_density(
+      aes_(group = ~ rep_id),
+      data = function(x) dplyr::filter(x, !.data$is_y),
+      geom = "line", position = "identity", size = .25, alpha = .1, 
+      color = constants$col_blue_highlight) +
+    stat_density(
+      data = function(x) dplyr::filter(x, .data$is_y),
+      geom = "line", position = "identity", size = 1) + 
+    labs(
+      x = "Proportion of looks", 
+      y = "Density",
+      title = "Observed data and 200 posterior simulations") + 
+    coord_cartesian(xlim = c(0, 1), expand = FALSE) + 
+    facet_wrap("group")
+```
+
+
+We can ask the model make even more specific posterior predictions. Below we
+plot the posterior predictions for random participants. This is the model
+simulating new data for these participants.
+
+```{r posterior-lines, eval = FALSE, out.width = "100%", fig.height = 4, fig.width = 5}
+set.seed(09272017)
+
+ppred <- d_m %>% 
+  sample_n_of(8, ResearchID) %>% 
+  tristan::augment_posterior_predict(b, newdata = ., nsamples = 100) %>% 
+  mutate(trials = Primary + Others)
+
+ggplot(ppred) + 
+  aes(x = Time, y = Prop, color = Study, group = Study) + 
+  geom_line(aes(y = .posterior_value / trials, 
+                group = interaction(.draw, Study)), 
+            alpha = .20) + 
+  geom_line(size = 1, color = "grey50") + 
+  facet_wrap("ResearchID") + 
+  theme(
+    legend.position = c(.95, 0), 
+    legend.justification = c(1, 0),
+    legend.margin = margin(0)) +
+  guides(color = guide_legend(title = NULL, override.aes = list(alpha = 1))) +
+  labs(
+    title = "Observed means and 100 simulations of new data",
+    x = "Time after target onset [ms]",
+    y = "Proportion looks to target") 
+```
+
+Or we can plot the linear predictions. These are posterior predictions of the
+log-odds of looking to target before adding binomial noise.
+
+```{r posterior-mean-lines, eval = FALSE, out.width = "100%", fig.height = 4, fig.width = 5}
+lpred <- d_m %>% 
+  sample_n_of(8, ResearchID) %>% 
+  tristan::augment_posterior_linpred(b, newdata = ., nsamples = 100)
+
+ggplot(lpred) + 
+  aes(x = Time, y = .posterior_value, color = Study) +
+  geom_line(aes(group = interaction(Study, ResearchID, .draw)), 
+            alpha = .1) +
+  facet_wrap("ResearchID") + 
+  geom_point(aes(y = qlogis(Prop)), shape = 1) + 
+  theme(
+    legend.position = c(.95, 0), 
+    legend.justification = c(1, 0),
+    legend.margin = margin(0)) +
+  guides(color = guide_legend(title = NULL, override.aes = list(alpha = 1))) +
+  labs(
+    title = "Observed data and 100 posterior predictions",
+    x = "Time after target onset [ms]",
+    y = "Posterior log-odds")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Items used in the visual world experiment {#vw-experiment-items}
 ========================================================================
 

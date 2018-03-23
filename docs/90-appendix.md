@@ -120,6 +120,152 @@ default to the first two levels of prior information.
 
 </div>
 
+
+
+
+
+## Additional model results
+
+The output below contains the model quick view, a summary of the fixed effect
+terms, and a summary of the priors used.
+
+
+```r
+b
+
+summary(b, pars = names(fixef(b)))
+
+prior_summary(b)
+```
+
+### Plot the intervals for the random effect parameters
+
+These are the parameters governing the random effect distributions. First, we
+plot the standard deviations. Recall that in our hierarchical model we suppose 
+that each growth curve is drawn from a population of related curves. The 
+model's fixed effects estimate the means of the distribution. These terms
+estimate the variability around that mean. We did not have any a priori 
+hypotheses about the values of these scales, so do not discuss them any further.
+
+
+
+Then the correlations.
+
+
+
+
+### Posterior predictive checks
+
+Bayesian models are generative; they describe how the data could have been
+generated. One way to evaluate the model is to have it simulate new
+observations. If the simulated data closely resembles the observed data, then we
+have some confidence that our model has learned an approximation of how the data
+could have been generated. Figure \@ref(fig:post-pred) depicts the density of
+the observed data from each year of the study versus 200 posterior simulations.
+Because the simulations closely track the density of the observed data, we can
+infer that the model has learned how to generate data from each year of the
+study.
+
+(ref:post-pred) Posterior predictive density for the observed data from each
+year of the study. The _x_-axis represents the outcome measure---the proportion
+of looks to the target image---and the _y_-axis is the density of those values
+at year. At age 3, there is a large density of looks around chance performance
+(.25) with a rightward skew (above-chance looks are common). At age 4 and age 5,
+a bimodal distribution emerges, reflecting how looks start at chance and
+reliably increase to above-chance performance. Each light line is a simulation
+of the observed data from the model, and the thick lines are the observed data.
+Because the thick line is surrounded by light lines, we visually infer that the
+the model faithfully approximates the observed data.
+
+
+
+
+We can ask the model make even more specific posterior predictions. Below we
+plot the posterior predictions for random participants. This is the model
+simulating new data for these participants.
+
+
+```r
+set.seed(09272017)
+
+ppred <- d_m %>% 
+  sample_n_of(8, ResearchID) %>% 
+  tristan::augment_posterior_predict(b, newdata = ., nsamples = 100) %>% 
+  mutate(trials = Primary + Others)
+
+ggplot(ppred) + 
+  aes(x = Time, y = Prop, color = Study, group = Study) + 
+  geom_line(aes(y = .posterior_value / trials, 
+                group = interaction(.draw, Study)), 
+            alpha = .20) + 
+  geom_line(size = 1, color = "grey50") + 
+  facet_wrap("ResearchID") + 
+  theme(
+    legend.position = c(.95, 0), 
+    legend.justification = c(1, 0),
+    legend.margin = margin(0)) +
+  guides(color = guide_legend(title = NULL, override.aes = list(alpha = 1))) +
+  labs(
+    title = "Observed means and 100 simulations of new data",
+    x = "Time after target onset [ms]",
+    y = "Proportion looks to target") 
+```
+
+Or we can plot the linear predictions. These are posterior predictions of the
+log-odds of looking to target before adding binomial noise.
+
+
+```r
+lpred <- d_m %>% 
+  sample_n_of(8, ResearchID) %>% 
+  tristan::augment_posterior_linpred(b, newdata = ., nsamples = 100)
+
+ggplot(lpred) + 
+  aes(x = Time, y = .posterior_value, color = Study) +
+  geom_line(aes(group = interaction(Study, ResearchID, .draw)), 
+            alpha = .1) +
+  facet_wrap("ResearchID") + 
+  geom_point(aes(y = qlogis(Prop)), shape = 1) + 
+  theme(
+    legend.position = c(.95, 0), 
+    legend.justification = c(1, 0),
+    legend.margin = margin(0)) +
+  guides(color = guide_legend(title = NULL, override.aes = list(alpha = 1))) +
+  labs(
+    title = "Observed data and 100 posterior predictions",
+    x = "Time after target onset [ms]",
+    y = "Posterior log-odds")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Items used in the visual world experiment {#vw-experiment-items}
 ========================================================================
 
