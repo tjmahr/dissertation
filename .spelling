@@ -64,6 +64,8 @@ hoc
 multinomial
 lme4
 resampling
+RStanARM
+Gelman
  - index.Rmd
 documentclass
 bookdown
@@ -129,6 +131,7 @@ _y_-axis
 Gelman
 RStanARM's
 _Here
+irr
  - 15-aim1-notebook.Rmd
 RWLPaper
 Barr2008
@@ -183,6 +186,7 @@ bep
 MPPaper
 RWLPaper
 Weisleder2013
+aim1-gca-models
  - 03-significance.Rmd
 Morgan2015
 Marslen-Wilson1989
@@ -247,3 +251,8 @@ le-post-diff
 le-post-diff-cap
 wice
 dirl
+ - 99-references.Rmd
+backmatter
+markboth
+ - 20-aim2-part.Rmd
+part-aim2

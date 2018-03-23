@@ -23,4 +23,6 @@ mdspell -r -n --en-us 10-aim1-part.Rmd
 mdspell -r -n --en-us 11-aim1-notebook.Rmd
 mdspell -r -n --en-us 12-aim1-notebook.Rmd
 mdspell -r -n --en-us 15-aim1-notebook.Rmd
+mdspell -r -n --en-us 20-aim2-part.Rmd
 mdspell -r -n --en-us 90-appendix.Rmd
+mdspell -r -n --en-us 99-references.Rmd
