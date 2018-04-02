@@ -11,10 +11,21 @@ constants <- list(
   x_time = "Time after target onset [ms]",
   y_logodds_target = "Log-odds looking to target",
   y_prop_target = "Proportion looks to target",
+  y_pred_elog_phon = "Predicted emp. log-odds [Phon.]",
+  y_elog_phon = "Emp. log-odds(Phon. vs. Unrelated)",
+  y_elog_semy = "Emp. log-odds(Sem. vs. Unrelated)",
+  y_elog_diff_phon = "Difference in emp. log-odds [Phon.]",
+  y_elog_diff_semy = "Difference in emp. log-odds [Sem.]",
+  lab_study = "Study",
   col_blue_highlight = "#0074D9",
   col_off_black = "#111111",
+  col_infobox_blue = "#EEF7FA",
+  col_infobox_plot_bg = "#E5EAEF",
   cap_median_90_50 = "Posterior median with 90% and 50% intervals",
-  cap_90_50 = "90% and 50% intervals"
+  cap_90_50 = "90% and 50% intervals",
+  cap_model_mean_data_mean_se = "Lines: Model fits. Points: Obs. means ± SE",
+  cap_mean_95 = "Fitted means with 95% interval",
+  cap_diff_95 = "Estimated difference with 95% interval"
 )
 
 aim1_stim <- list(
@@ -87,6 +98,25 @@ get_smooth_pvalue <- function(summary, term, digits = 3) {
     tibble::rownames_to_column(".term") %>%
     filter(.term == term) %>%
     pull(p.value) %>%
-    format_p_value()
+    format_p_value(digits)
+}
+
+get_para_pvalue <- function(summary, term, digits = 3) {
+  summary$p.table %>%
+    as.data.frame() %>%
+    tibble::rownames_to_column(".term") %>%
+    rename(estimate = Estimate, p.value = `Pr(>|t|)`) %>%
+    filter(.term == term) %>%
+    pull(p.value) %>%
+    format_p_value(digits)
+}
+
+get_para_estimate <- function(summary, term) {
+  summary$p.table %>%
+    as.data.frame() %>%
+    tibble::rownames_to_column(".term") %>%
+    rename(estimate = Estimate, p.value = `Pr(>|t|)`) %>%
+    filter(.term == term) %>%
+    pull(estimate)
 }
 
