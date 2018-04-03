@@ -303,6 +303,29 @@ block two.
   vase         van                gift           swan
 
 
+<!-- Add tables for the listing the strong phon foils and the strong semy foils -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Items used in the mispronunciation experiment {#mp-experiment-items}
 ========================================================================
 
