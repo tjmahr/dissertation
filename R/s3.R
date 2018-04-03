@@ -88,6 +88,10 @@ upload_aim1_gamm_data <- function() {
     file = "./data/aim1-phon-gamm-age3-ppvt.rds.gz")
 
   put_object(
+    "s3://bunnyhat/data/aim1-phon-gamm-age3-ppvt-para.rds.gz",
+    file = "./data/aim1-phon-gamm-age3-ppvt-para.rds.gz")
+
+  put_object(
     "s3://bunnyhat/data/aim1-phon-gamm-age3-minp.rds.gz",
     file = "./data/aim1-phon-gamm-age3-minp.rds.gz")
 
