@@ -1329,14 +1329,15 @@ minimal-pair discrimination task. Greater discrimination scores
 *generally* predicted greater peak looks to the foil at 800 ms, but
 this trend sharply reversed at very low discrimination scores.
 
-```{r age3-phon-by-minp, fig.cap = "(ref:age3-phon-by-minp)", out.width = "80%", fig.width = 6, fig.height = 4, include = FALSE}
+```{r age3-phon-by-minp, fig.cap = "(ref:age3-phon-by-minp)", out.width = "80%", fig.width = 6, fig.height = 4}
 smooth_times <- modelr::seq_range(unique(phon_d_minp$Time), 100)
 pp <- get_predictions(
   b2_age3_minp,
   cond = list(
     ability = c(-2, -1, 0, 1, 2),
     Time = smooth_times),
-  rm.ranef = TRUE)
+  rm.ranef = TRUE, 
+  print.summary = FALSE)
 
 df_labs <- data.frame(
   Time = c(790, 1100, 850),

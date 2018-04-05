@@ -1,5 +1,5 @@
 
-# Visualize looks to each image type
+# Effects of phonological and semantical competitors
 
 
 
@@ -14,8 +14,7 @@
 
 
 
-
-## Looks to the phonological foil
+## Looks to the phonological competitor
 
 
 
@@ -63,7 +62,7 @@ is why I evaluated the phonological and semantic foils by comparing them
 against the unrelated image.
 
 <div class="figure">
-<img src="15-aim1-notebook_files/figure-html/declining-phon-props-1.png" alt="(ref:declining-phon-props)" width="50%" />
+<img src="15-aim1-notebook_files/figure-html/declining-phon-props-1.png" alt="(ref:declining-phon-props)" width="60%" />
 <p class="caption">(\#fig:declining-phon-props)(ref:declining-phon-props)</p>
 </div>
 
@@ -78,8 +77,6 @@ data.
 
 
 
-
-
 To model these data, I fit a generalized additive model with fast restricted maximum
 likelihood estimation [@Wood2017; @Soskuthy2017 for a tutorial for
 linguists]. Box 1 provides a brief overview of these models. I used the
@@ -90,7 +87,7 @@ support from the tools in the itsadug R package
 [^gca-fail]: Initially, I tried to use Bayesian polynomial growth curve
     models, as in the earlier analysis of the looks to the target image. These
     models however did not converge, even when strong priors were placed on
-    the parameters. 
+    the parameters.
 
 
 
@@ -109,7 +106,7 @@ expressed time as the weighted sum of a linear trend, a quadratic trend
 and cubic trend. That is:
 
 $$
-\text{log-odds}(\mathit{looking}) = 
+\text{log-odds}(\mathit{looking}) =
   \alpha + \beta_1 * \textit{Time}^1 +
            \beta_2 * \textit{Time}^2 +
            \beta_3 * \textit{Time}^3
@@ -120,10 +117,10 @@ functions*: A set of features that combine to approximate some nonlinear
 function of time. Under this framework, the model can be expressed as:
 
 $$
-\text{log-odds}(\mathit{looking}) = 
+\text{log-odds}(\mathit{looking}) =
   \alpha + f(\textit{Time})
 $$
-  
+
 This is the idea behind generalized additive models and their *smooth
 terms*. These smooths fit nonlinear functions of data by weighting and
 adding simple functions together. The figures below show 9 basis
@@ -180,11 +177,11 @@ Altogether, the model contained the following terms:
 $$
 \small
 \begin{align*}
-   \text{emp. log-odds}(\mathit{phon.\ vs.\ unrelated}) =\    
+   \text{emp. log-odds}(\mathit{phon.\ vs.\ unrelated}) =\
    & \alpha + \beta_1\text{Age3} + \beta_2\text{Age5} +\ &\text{[growth curve averages]} \\
-   & f_1(\text{Time}, \text{Age4})\ +                    &\text{[reference smooth]} \\ 
-   & f_2(\text{Time}, \text{Age4} - \text{Age3})\ +      &\text{[difference smooths]} \\ 
-   & f_3(\text{Time}, \text{Age4} - \text{Age5})\ +      & \\ 
+   & f_1(\text{Time}, \text{Age4})\ +                    &\text{[reference smooth]} \\
+   & f_2(\text{Time}, \text{Age4} - \text{Age3})\ +      &\text{[difference smooths]} \\
+   & f_3(\text{Time}, \text{Age4} - \text{Age5})\ +      & \\
    & f_i(\text{Time}, \text{Child}_i)                    &\text{[by-child random smooths]} \\
 \end{align*}
 $$
@@ -224,7 +221,7 @@ curves.
 (ref:phon-diff-curves) Differences in the average looks to the
 phonological foil versus the unrelated image between age 4 and the other
 ages. Plotted line is estimated difference and the shaded region is
-the 95% confidence around that difference. Blue boxes highlight regions
+the 95% confidence interval around that difference. Blue boxes highlight regions
 where the 95% interval excludes zero. From age 3 to age 4, children
 become more sensitive to the phonological foil during and after the
 target noun. The curves for age 3 and age 4 have largely the same shape,
@@ -273,13 +270,17 @@ to the phonological foil rapidly decrease. The primary difference
 between age-4 and age-5 is that the foil effect becomes more pronounced
 at age 5.
 
+**Summary**. Children demonstrated early looks the phonological foil, peaking around 800 ms after word onset.
+
+Children increased their relative looks to the phonological foil with each
+  year of the study. Although they looked to the target more quickly and more
+  reliably with each of the study, the advantage of the phonological foil over
+  the unrelated image increased with each year. Thus, the children became more
+  sensitive to the phonological cohort words as they grew older.
+
+
 Talking points:
 
-  - Children increased their relative looks to the phonological foil with each
-    year of the study. Although they looked to the target more quickly and more
-    reliably with each of the study, the advantage of the phonological foil over
-    the unrelated image increased with each year. Thus, the children became more
-    sensitive to the phonological cohort words as they grew older.
   - There is hardly an effect of the phonological foil during timepoint 1. There
     are a few ways to interpret this finding. The first may be artefactual. The
     stimuli were re-recorded at timepoint 2 so the timepoint 1 stimuli were
@@ -297,11 +298,11 @@ Talking points:
     activation of cohorts.
   - The children at timepoint1 may not be incrementally activating the cohorts.
     The children in timepoint 2 and 3 certainly are.
-  - Incremental activation and early commitments to partial information goes up 
+  - Incremental activation and early commitments to partial information goes up
     with age.
 
 
-## Looks to the semantic foil
+## Looks to the semantic competitor
 
 Next, I asked how children's sensitivity to the semantic foils changed
 as they grew older. As in [@RWLPaper], I only examined trials for
@@ -309,7 +310,7 @@ which the semantic foil and the noun were part of the same category. For
 example, I included trials with *bee*–*fly*, *shirt*–*dress*, and
 *spoon*–*pan*, but I excluded trials where the similarity was perceptual
 (*sword*–*pen*) or too abstract (*swan*–*bee*). This criterion kept
-13 of the 24 trials. 
+13 of the 24 trials.
 [Appendix \@ref(vw-experiment-items)](#vw-experiment-items) provides a
 complete list of trials used.
 
@@ -357,16 +358,13 @@ differences between the smooths from each study.
 (ref:semy-diff-curves) Differences in the average looks to the semantic
 foil versus the unrelated image between age 4 and the other ages.
 Plotted line is estimated difference and the shaded region is the 95%
-confidence around that difference. Blue boxes highlight regions where
-the 95% interval excludes zero. The flat line on the left reflects how
-the shape of the growth curves remained the same from age 3 to age 4 and
-only differed in average height. From age 4 to age 5, the lines quickly
-diverge and the age-5 curve reaches a higher peak value.
+confidence interval around that difference. Blue boxes highlight regions
+where the 95% interval excludes zero. The flat line on the left reflects
+how the shape of the growth curves remained the same from age 3 to age 4
+and only differed in average height. From age 4 to age 5, the lines
+quickly diverge and the age-5 curve reaches a higher peak value.
 
-<div class="figure">
-<img src="15-aim1-notebook_files/figure-html/semy-diff-curves-1.png" alt="(ref:semy-diff-curves)" width="80%" />
-<p class="caption">(\#fig:semy-diff-curves)(ref:semy-diff-curves)</p>
-</div>
+
 
 The shapes of the age-3 and age-4 curves did not significantly differ,
 EDF = 1.00, *p*&nbsp;= .535. The age-3 curve begins to rise
@@ -388,7 +386,7 @@ from it.
 year of the study. Unlike with the phonological foils, the semantic foils
 clearly influenced looking patterns at age 3. The semantic foil effect occurs
 when we would expect it too: After the end of the target noun, after activation
-of the target noun and its neighbors. 
+of the target noun and its neighbors.
 
   - That the effect of the foil increases each year indicates that the
     semantic representations of words have strengthened.
@@ -407,7 +405,7 @@ of the target noun and its neighbors.
 
 
 
-## Individual differences in competitor sensitivity at age 3
+## Differences in competitor sensitivity at age 3
 
 Next, I asked whether children differed reliably in their sensitivity to
 the phonological and semantic foils based on speech perception and
@@ -419,11 +417,11 @@ pair discrimination experiment administered during the first year of the study.
 picture of a familar object is shown and labeled (e.g., "car"), another
 object is shown and labeled ("jar"), and then both images are shown and
 one of the two is named. The child then indicated which word they heard
-by tapping on the image on a touch-screen. 
+by tapping on the image on a touch-screen.
 
 I derived speech perception scores by fitting a hierarchical item-response
 model. This logistic regression model estimates the probability of child
-*i* correctly choosing word *j* on word-pair *k*. The equation below provides 
+*i* correctly choosing word *j* on word-pair *k*. The equation below provides
 a term-by-term description of the model. The model's intercept term
 represents the average participant's probability of correctly answering
 for an average item. By-child random intercepts capture a child's
@@ -442,14 +440,14 @@ ability after controlling for age and receptive vocabulary.
 $$
 \small
 \begin{align*}
-   \text{log-odds}(\mathit{choosing\ correct\ word}) =\    
+   \text{log-odds}(\mathit{choosing\ correct\ word}) =\
    & \alpha\ +                  &\text{[average participant ability]} \\
    & \alpha_i\ +                &\text{[difference of participant}\ i
-                                       \text{'s ability from average]} \\ 
+                                       \text{'s ability from average]} \\
    & \alpha_j\ +                &\text{[word}\ j\text{'s difficulty]} \\
    & \alpha_{j,k}\ +            &\text{[word}\ j
                                        \text{'s difficulty in word-pair}\ k] \\
-   & \beta_{1}\text{Age}\ +     &\text{[participant-level predictors]} \\ 
+   & \beta_{1}\text{Age}\ +     &\text{[participant-level predictors]} \\
    & \beta_{2}\text{Vocabulary} & \\
 \end{align*}
 $$
@@ -466,10 +464,10 @@ change the shape of the time trend. The additive model was therefore:
 $$
 \small
 \begin{align*}
-   \text{emp. log-odds}(\mathit{phon.\ vs.\ unrelated}) =\    
+   \text{emp. log-odds}(\mathit{phon.\ vs.\ unrelated}) =\
    & \alpha +\ &\text{[growth curve average]} \\
-   & f_1(\text{Time})\ +                    &\text{[time smooth]} \\ 
-   & f_2(\text{Ability})\ +                 &\text{[ability smooth]} \\ 
+   & f_1(\text{Time})\ +                    &\text{[time smooth]} \\
+   & f_2(\text{Ability})\ +                 &\text{[ability smooth]} \\
    & f_3(\text{Time} * \text{Ability})\ +   &\text{[interaction smooth]} \\
    & f_i(\text{Time}, \text{Child}_i)       &\text{[by-child random smooths]} \\
 \end{align*}
@@ -478,81 +476,6 @@ $$
 
 
 
-```r
-phon_base <- "./data/aim1-phon-gamm-age3-base.rds.gz"
-phon_minp <- "./data/aim1-phon-gamm-age3-minp.rds.gz"
-phon_ppvt <- "./data/aim1-phon-gamm-age3-ppvt.rds.gz"
-phon_ppvt_para <- "./data/aim1-phon-gamm-age3-ppvt-para.rds.gz"
-
-b2_age3 <- if (file.exists(phon_base)) {
-  readr::read_rds(phon_base)
-} else {
-  bam(
-    elog ~ s(Time) + s(Time, R, bs = "fs", m = 1, k = 5),
-    data = phon_d_minp) %>% 
-  readr::write_rds(phon_base)
-}
-
-b2_age3_minp <- if (file.exists(phon_minp)) {
-  readr::read_rds(phon_minp)
-} else {
-  bam(
-    elog ~ s(Time) + 
-      s(ability) + 
-      ti(Time, ability) + 
-      s(Time, R, bs = "fs", m = 1, k = 5),
-    data = phon_d_minp) %>% 
-  readr::write_rds(phon_minp)
-}
-
-b2_age3_ppvt <- if (file.exists(phon_ppvt)) {
-  readr::read_rds(phon_ppvt)
-} else {
-  bam(
-    elog ~ s(Time) + 
-      s(ppvt) + 
-      ti(Time, ppvt) + 
-      s(Time, R, bs = "fs", m = 1, k = 5),
-    data = phon_d_minp) %>% 
-  readr::write_rds(phon_ppvt)
-}
-
-b2_age3_ppvt_0 <- if (file.exists(phon_ppvt_para)) {
-  readr::read_rds(phon_ppvt_para)
-} else {
-  bam(
-    elog ~ ppvt + 
-      s(Time) + 
-      s(Time, R, bs = "fs", m = 1, k = 5),
-    data = phon_d_minp) %>% 
-  readr::write_rds(phon_ppvt_para)
-}
-#> Warning in gam.side(sm, X, tol = .Machine$double.eps^0.5): model has repeated 1-
-#> d smooths of same variable.
-
-n_phon_minp <- phon_d_minp %>% 
-  pull(ResearchID) %>% 
-  unique() %>% 
-  length()
-
-minp_summary <- summary(b2_age3_minp)
-phon_minp_edf <- get_smooth_edf(minp_summary, "s(ability)")
-phon_minp_p <- get_smooth_pvalue(minp_summary, "s(ability)")
-
-phon_minp_time_edf <- get_smooth_edf(minp_summary, "ti(Time,ability)")
-phon_minp_time_p <- get_smooth_pvalue(minp_summary, "ti(Time,ability)")
-
-ppvt_summary <- summary(b2_age3_ppvt)
-phon_ppvt_edf <- get_smooth_edf(ppvt_summary, "s(ppvt)")
-phon_ppvt_p <- get_smooth_pvalue(ppvt_summary, "s(ppvt)")
-
-phon_ppvt_time_edf <- get_smooth_edf(ppvt_summary, "ti(Time,ppvt)")
-phon_ppvt_time_p <- get_smooth_pvalue(ppvt_summary, "ti(Time,ppvt)")
-
-comparison <- compareML(b2_age3, b2_age3_minp, print.output = FALSE)
-chi_phon <- format_chi_squared(comparison)
-# compareML(b2_age3, b2_age3_minp,  suggest.report = TRUE)
-```
 
 The model included data from 144 participants; these were
 children with eyetracking data, receptive vocabulary and phonological
@@ -592,60 +515,8 @@ minimal-pair discrimination task. Greater discrimination scores
 *generally* predicted greater peak looks to the foil at 800 ms, but
 this trend sharply reversed at very low discrimination scores.
 
-
-```r
-smooth_times <- modelr::seq_range(unique(phon_d_minp$Time), 100)
-pp <- get_predictions(
-  b2_age3_minp, 
-  cond = list(
-    ability = c(-2, -1, 0, 1, 2),
-    Time = smooth_times), 
-  rm.ranef = TRUE) 
-#> Summary:
-#> 	* Time : numeric predictor; with 100 values ranging from 250.000000 to 1500.000000. 
-#> 	* ability : numeric predictor; with 5 values ranging from -2.000000 to 2.000000. 
-#> 	* R : factor; set to the value(s): 001L. (Might be canceled as random effect, check below.) 
-#> 	* NOTE : The following random effects columns are canceled: s(Time,R)
-#> 
-
-df_labs <- data.frame(
-  Time = c(790, 1100, 850), 
-  fit = c(.49, .28, .18), 
-  # label = c("+1 SD", "Mean", "-1 SD"), 
-  label = c("paste(+1, phantom(.), SD)", "Mean", "paste(-1, phantom(.), SD)"), 
-  ability = c("+1 SD", "Mean", "-1 SD"),
-  panel = "Typical discrimination scores")
-
-df_labs2 <- data.frame(
-  Time = c(750, 750), 
-  fit = c(.30, .62), 
-  # label = c("-2 SD", "+2 SD"), 
-  label = c("paste(-2, phantom(.), SD)", "paste(+2, phantom(.), SD)"), 
-  ability = c("-2 SD", "+2 SD"),
-  panel = "Very low or very high scores")
-
-pp %>% 
-  mutate(
-    panel = ifelse(ability %in% c(-2, 2), 
-                   "Very low or very high scores", 
-                   "Typical discrimination scores"),
-    ability = factor(
-      ability, labels = c("-2 SD", "-1 SD", "Mean", "+1 SD", "+2 SD"))) %>% 
-  ggplot() + 
-    aes(x = Time, y = fit, color = ability, fill = ability) + 
-    geom_hline(yintercept = 0, size = 2, color = "white") +
-    geom_line() + 
-    geom_text(aes(label = label), data = df_labs, parse = TRUE) +
-    geom_text(aes(label = label), data = df_labs2, parse = TRUE) +
-    labs(
-      x = constants$x_time,
-      y = constants$y_pred_elog_phon) + 
-    facet_wrap("panel") + 
-    guides(color = FALSE)
-```
-
 <div class="figure">
-<img src="15-aim1-notebook_files/figure-html/age3-phon-by-minp-1.png" alt="(ref:age3-phon-by-minp)" width="80" />
+<img src="15-aim1-notebook_files/figure-html/age3-phon-by-minp-1.png" alt="(ref:age3-phon-by-minp)" width="80%" />
 <p class="caption">(\#fig:age3-phon-by-minp)(ref:age3-phon-by-minp)</p>
 </div>
 
@@ -655,7 +526,7 @@ pp %>%
 To test the role of receptive vocabulary, I also fit analogous models
 using growth scale value scores from the PPVT-4, a receptive vocabulary
 test. I first adjusted these scores in a regression model to control
-for--that is, partial out the effects of---age and predicted accuracy on
+for--that is, to partial out the effects of---age and predicted accuracy on
 the phonological discrimination task. There was not a significant smooth
 effect for receptive vocabulary, EDF = 1.00,
 *p*&nbsp;= .717, or a significant interaction smooth between time and
@@ -664,14 +535,32 @@ receptive vocabulary, EDF = 1.00,
 looks to the phonological foil at age 3.
 
 I tested the same two predictors on looks to the semantic foil at age 3.
-These child-level factors did not show any parametric effects, smooth
-effects or smooth interactions with time. Thus, children's looks to the
-semantic foil were not reliably related to phonological discrimination
-or receptive vocabulary.
+These child-level factors did not show any significant parametric
+effects, smooth effects or smooth interactions with time. Thus,
+children's looks to the semantic foil were not reliably related to
+phonological discrimination or receptive vocabulary.
+
+
+
+
+## Discussion
+
+In the preceding analyses, I examined children's fixation patterns to
+the phonological and semantic competitors. With each year of the study,
+children looked more to the target numerically, so these analyses
+modeled the ratio of looks to the competitors versus the unrelated image
+used in each trial. Thus, even as the number of looks to the
+phonological foil decreases with age, the advantage of the foil over the
+unrelated image would still increase.
+
+
+
+
+
 
 Talking points :
 
-* I tested whether two child-level features predicted looks to the competitor image at age 3. 
+* I tested whether two child-level features predicted looks to the competitor image at age 3.
 * One a priori expectation was that looks to the phonological foil would relate to phonological discrimination ability, because children who can reliably discriminate one-feature phonetic differences between words would have richer phonological or phonetic representations that supported word recognition.
 * The expectation was tenuously supported by a generalized additive model where children with greater discrimination abilities showed more early looks to the phonological foil. However, this model showed an unexpected effect for children with the lowest discrimination scores, so this model is interpreted cautiously.
 * The other a prior expectation was that looks to semantic foil would relate to looks to the receptive vocabulary. However, neigther predicted related to looks the semantic foil.

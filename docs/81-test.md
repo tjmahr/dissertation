@@ -60,6 +60,11 @@ simple functions together. The figures below show 9 basis functions from a
 "thin-plate spline" and how they can be weighted and summed to fit a growth
 curve.
 
+
+```
+#> Warning: package 'bindrcpp' was built under R version 3.4.4
+```
+
 <img src="81-test_files/figure-html/infobox-1-figs-1.png" width="66%" style="display: block; margin: auto;" />
 
 Each of these basis functions is weighted by a model coefficient, but the
