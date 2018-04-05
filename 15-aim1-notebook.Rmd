@@ -1,18 +1,18 @@
-# Visualize looks to each image type
+# Effects of phonological and semantical competitors
 
-```{r include = FALSE}
+```{r include = FALSE, warning = FALSE}
 knitr::read_chunk("./helpers.R")
 if (interactive()) source("./helpers.R")
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
 ```
 
 ```{r helpers, include = FALSE}
 ```
 
-```{r aim1-gam-load-looks, message = FALSE, warnings = FALSE, echo = FALSE}
+```{r aim1-gam-load-looks, message = FALSE}
 data <- readr::read_csv("./data/aim1-screened.csv.gz")
 
-constants$cap_model_mean_data_mean_se <- 
+constants$cap_model_mean_data_mean_se <-
   "Lines: Model fits. Points: Obs. means ± SE"
 
 # How to aggregate looks to the images
@@ -24,10 +24,10 @@ resp_def <- create_response_def(
 )
 
 # Create alternative aggregation rules for the two foils
-semy_defs <- cycle_response_def(resp_def) %>% 
+semy_defs <- cycle_response_def(resp_def) %>%
   purrr::keep(~ .x$primary %in% c("Target", "SemanticFoil"))
 
-phon_defs <- cycle_response_def(resp_def) %>% 
+phon_defs <- cycle_response_def(resp_def) %>%
   purrr::keep(~ .x$primary %in% c("Target", "PhonologicalFoil"))
 ```
 
@@ -39,13 +39,13 @@ phon_defs <- cycle_response_def(resp_def) %>%
 trial_info <- bind_rows(
   readr::read_csv("data-raw/rwl_timepoint1_trials.csv.gz"),
   readr::read_csv("data-raw/rwl_timepoint2_trials.csv.gz"),
-  readr::read_csv("data-raw/rwl_timepoint3_trials.csv.gz")) %>% 
+  readr::read_csv("data-raw/rwl_timepoint3_trials.csv.gz")) %>%
   select(
     Study,
-    TrialID, 
-    Target = WordTarget, 
+    TrialID,
+    Target = WordTarget,
     PhonologicalFoil = WordPhonologicalFoil,
-    SemanticFoil = WordSemanticFoil, 
+    SemanticFoil = WordSemanticFoil,
     Unrelated = WordUnrelated)
 
 ## There was a block at year one where the wrong unrelated was used.
@@ -54,38 +54,38 @@ trials_to_drop <- trial_info %>%
   count(Study, Target, PhonologicalFoil, SemanticFoil, Unrelated) %>%
   filter(n <= 15)
 
-words <- trial_info %>% 
-  distinct(Target, PhonologicalFoil, SemanticFoil, Unrelated) %>% 
+words <- trial_info %>%
+  distinct(Target, PhonologicalFoil, SemanticFoil, Unrelated) %>%
   anti_join(
     trials_to_drop,
      by = c("Target", "PhonologicalFoil", "SemanticFoil", "Unrelated"))
 
 # aim1_stim$good_phon is a constant defined in helpers.R
-phono_foils <- split(words, words$Target %in% aim1_stim$good_phon) %>% 
-  lapply(arrange, Target) %>% 
+phono_foils <- split(words, words$Target %in% aim1_stim$good_phon) %>%
+  lapply(arrange, Target) %>%
   setNames(c("weak_foil", "strong_foil"))
 
 # aim1_stim$good_semy is a constant defined in helpers.R
-semy_foils <- split(words, words$Target %in% aim1_stim$good_semy) %>% 
-  lapply(arrange, Target) %>% 
+semy_foils <- split(words, words$Target %in% aim1_stim$good_semy) %>%
+  lapply(arrange, Target) %>%
   setNames(c("weak_foil", "strong_foil"))
 
-strong_phon_looks <- trial_info %>% 
-  semi_join(phono_foils$strong_foil) %>% 
-  inner_join(data) %>% 
+strong_phon_looks <- trial_info %>%
+  semi_join(phono_foils$strong_foil) %>%
+  inner_join(data) %>%
   mutate(PhonFoil = "Strong")
 
-strong_semy_looks <- trial_info %>% 
-  semi_join(semy_foils$strong_foil) %>% 
-  inner_join(data) %>% 
+strong_semy_looks <- trial_info %>%
+  semi_join(semy_foils$strong_foil) %>%
+  inner_join(data) %>%
   mutate(SemyFoil = "Strong")
 
-n_phon <- phono_foils$strong_foil$Target %>% 
-  unique() %>% 
+n_phon <- phono_foils$strong_foil$Target %>%
+  unique() %>%
   length()
 
-n_semy <- semy_foils$strong_foil$Target %>% 
-  unique() %>% 
+n_semy <- semy_foils$strong_foil$Target %>%
+  unique() %>%
   length()
 
 # Keeping this commented out code around until it can be ported to an appendix
@@ -93,18 +93,15 @@ n_semy <- semy_foils$strong_foil$Target %>%
 # phono_foils$strong_foil %>%
 #   knitr::kable(caption = "Trials with strong phonological foils.")
 
-# phono_foils$weak_foil %>% 
+# phono_foils$weak_foil %>%
 #   knitr::kable(caption = "Trials with weak phonological foils.")
 
-# semy_foils$strong_foil %>% 
+# semy_foils$strong_foil %>%
 #   knitr::kable(caption = "Trials with strong semantic foils.")
-# 
-# semy_foils$weak_foil %>% 
+#
+# semy_foils$weak_foil %>%
 #   knitr::kable(caption = "Trials with weak semantic foils.")
 ```
-
-
-
 
 ```{r gam-modeling-options, echo = FALSE, results = "hide"}
 opts_model <- list(
@@ -117,37 +114,39 @@ opts_model <- list(
 opts_model$bin_length <- round(opts_model$bin_width * 16.67, -1)
 ```
 
-## Looks to the phonological foil
+
+
+## Looks to the phonological competitor
 
 ```{r create-phon-data, include = FALSE}
-data <- strong_phon_looks %>% 
-  select(Study, ResearchID, TrialID:GazeByImageAOI) %>% 
+data <- strong_phon_looks %>%
+  select(Study, ResearchID, TrialID:GazeByImageAOI) %>%
   assign_bins(bin_width = opts_model$bin_width, Time, TrialID)
 
 # Compute time at center of each bin
-bin_times <- data %>% 
-  distinct(Time, .bin) %>% 
-  group_by(.bin) %>% 
-  mutate(BinTime = round(median(Time), -1)) %>% 
+bin_times <- data %>%
+  distinct(Time, .bin) %>%
+  group_by(.bin) %>%
+  mutate(BinTime = round(median(Time), -1)) %>%
   ungroup()
 
 # Attach bin times
-binned <- data %>% 
-  left_join(bin_times, by = c("Time", ".bin")) %>% 
-  ungroup() %>% 
-  select(-Time) %>% 
-  rename(Time = BinTime) 
+binned <- data %>%
+  left_join(bin_times, by = c("Time", ".bin")) %>%
+  ungroup() %>%
+  select(-Time) %>%
+  rename(Time = BinTime)
 
-d <- binned %>% 
+d <- binned %>%
   aggregate_looks(phon_defs, Study + ResearchID + Time ~ GazeByImageAOI)
 
-phon_d <- d %>% 
+phon_d <- d %>%
   filter(
-    opts_model$phon_start_time <= Time, 
-    Time <= opts_model$phon_end_time) %>% 
+    opts_model$phon_start_time <= Time,
+    Time <= opts_model$phon_end_time) %>%
   rename(Focus = .response_def)
 
-phon_d <- phon_d %>% 
+phon_d <- phon_d %>%
   mutate(
     S = factor(Study, c("TimePoint2", "TimePoint1", "TimePoint3")),
     R = as.factor(ResearchID),
@@ -155,40 +154,40 @@ phon_d <- phon_d %>%
     elog = lookr::empirical_logit(PhonologicalFoil, Unrelated))
 
 # Include intercepts and smooths for studies
-phon_d$S2 <- as.ordered(phon_d$S) 
+phon_d$S2 <- as.ordered(phon_d$S)
 contrasts(phon_d$S2) <- "contr.treatment"
 contrasts(phon_d$S2)
 ```
 
 ```{r create-semy-data, include = FALSE}
-semy_data <- strong_semy_looks %>% 
-  select(Study, ResearchID, TrialID:GazeByImageAOI) %>% 
+semy_data <- strong_semy_looks %>%
+  select(Study, ResearchID, TrialID:GazeByImageAOI) %>%
   assign_bins(bin_width = opts_model$bin_width, Time, TrialID)
 
 # Compute time at center of each bin
-bin_times <- semy_data %>% 
-  distinct(Time, .bin) %>% 
-  group_by(.bin) %>% 
-  mutate(BinTime = round(median(Time), -1)) %>% 
+bin_times <- semy_data %>%
+  distinct(Time, .bin) %>%
+  group_by(.bin) %>%
+  mutate(BinTime = round(median(Time), -1)) %>%
   ungroup()
 
 # Attach bin times
-binned <- semy_data %>% 
-  left_join(bin_times, by = c("Time", ".bin")) %>% 
-  ungroup() %>% 
-  select(-Time) %>% 
-  rename(Time = BinTime) 
+binned <- semy_data %>%
+  left_join(bin_times, by = c("Time", ".bin")) %>%
+  ungroup() %>%
+  select(-Time) %>%
+  rename(Time = BinTime)
 
-semy_d <- binned %>% 
+semy_d <- binned %>%
   aggregate_looks(semy_defs, Study + ResearchID + Time ~ GazeByImageAOI)
 
-semy_d <- semy_d %>% 
+semy_d <- semy_d %>%
   filter(
-    opts_model$semy_start_time <= Time, 
+    opts_model$semy_start_time <= Time,
     Time <= opts_model$semy_end_time) %>%
   rename(Focus = .response_def)
 
-semy_d <- semy_d %>% 
+semy_d <- semy_d %>%
   mutate(
     S = factor(Study, c("TimePoint2", "TimePoint1", "TimePoint3")),
     R = as.factor(ResearchID),
@@ -196,7 +195,7 @@ semy_d <- semy_d %>%
     elog = lookr::empirical_logit(SemanticFoil, Unrelated))
 
 # Include intercepts and smooths for studies
-semy_d$S2 <- as.ordered(semy_d$S) 
+semy_d$S2 <- as.ordered(semy_d$S)
 contrasts(semy_d$S2) <- "contr.treatment"
 contrasts(semy_d$S2)
 ```
@@ -242,25 +241,38 @@ they grew older, they numerically looked less the foils too. This effect
 is why I evaluated the phonological and semantic foils by comparing them
 against the unrelated image.
 
-```{r declining-phon-props, fig.cap = "(ref:declining-phon-props)", echo = FALSE, message = FALSE, out.width = "50%", fig.width = 5, fig.height = 3.5}
-phon_d %>% 
+```{r declining-phon-props, fig.cap = "(ref:declining-phon-props)", echo = FALSE, message = FALSE, out.width = "60%", fig.width = 5, fig.height = 3.5}
+data_labs <- tibble::tribble(
+  ~Focus, ~Time, ~Prop, ~Study,
+  "Target", 1400, .8, "Age 5",
+  "Target", 1400, .7, "Age 4",
+  "Target", 1400, .575, "Age 3",
+  "PhonologicalFoil", 1180, .04, "Age 5",
+  "PhonologicalFoil", 1400, .18, "Age 3",
+) %>% 
   mutate(
     Focus = factor(
-      Focus, c("Target", "PhonologicalFoil"), 
+      Focus, c("Target", "PhonologicalFoil"),
+      c("Target", "Phonological foil"))) 
+  
+
+phon_d %>%
+  mutate(
+    Focus = factor(
+      Focus, c("Target", "PhonologicalFoil"),
       c("Target", "Phonological foil")),
-    Study = convert_study_to_age(Study)) %>% 
-  ggplot() + 
-    aes(x = Time, y = Prop, color = Study) + 
+    Study = convert_study_to_age(Study)) %>%
+  ggplot() +
+    aes(x = Time, y = Prop, color = Study) +
     geom_hline(yintercept = .25, color = "white", size = 2) +
     stat_summary(fun.y = "mean", geom = "line", size = 1) +
+    geom_text(aes(label = Study), data = data_labs, size = 3.5) +
     facet_wrap("Focus") +
     labs(
       x = "Time after target onset [ms]",
       y = "Mean proportion looking to image") +
     theme_grey() +
-    theme(
-      legend.position = c(0.95, 0.95), 
-      legend.justification = c(1, 1))
+    guides(color = FALSE)
 ```
 
 To account for the sparseness of the data, I used the empirical log-odds
@@ -282,34 +294,13 @@ if (file.exists(phon_by_year)) {
   b2r <- readr::read_rds(phon_by_year)
 } else {
   b2r <- bam(
-    elog ~ S2 + 
-      s(Time) + s(Time, by = S2) + 
+    elog ~ S2 +
+      s(Time) + s(Time, by = S2) +
       s(Time, R, bs = "fs", m = 1, k = 5),
     data = phon_d)
   readr::write_rds(b2r, phon_by_year)
 }
-# 
-# # Base model with no study effect
-# b2n <- bam(
-#   elog ~ s(Time), 
-#   data = phon_d, 
-#   method = "REML")
-# # summary(b2n)
-# 
-# # b2 <- bam(
-# #   elog ~ S + s(Time) + s(Time, by = S), 
-# #   data = phon_d, 
-# #   method = "REML")
-# # # summary(b2)
-# 
-# 
-# summary(b2r)
-# # plot(b2r, pages = 1)
-# # report <- itsadug::report_stats(b2r)
-# # report[3, 2]
 ```
-
-
 
 To model these data, I fit a generalized additive model with fast restricted maximum
 likelihood estimation [@Wood2017; @Soskuthy2017 for a tutorial for
@@ -321,7 +312,7 @@ support from the tools in the itsadug R package
 [^gca-fail]: Initially, I tried to use Bayesian polynomial growth curve
     models, as in the earlier analysis of the looks to the target image. These
     models however did not converge, even when strong priors were placed on
-    the parameters. 
+    the parameters.
 
 
 
@@ -340,7 +331,7 @@ expressed time as the weighted sum of a linear trend, a quadratic trend
 and cubic trend. That is:
 
 $$
-\text{log-odds}(\mathit{looking}) = 
+\text{log-odds}(\mathit{looking}) =
   \alpha + \beta_1 * \textit{Time}^1 +
            \beta_2 * \textit{Time}^2 +
            \beta_3 * \textit{Time}^3
@@ -351,10 +342,10 @@ functions*: A set of features that combine to approximate some nonlinear
 function of time. Under this framework, the model can be expressed as:
 
 $$
-\text{log-odds}(\mathit{looking}) = 
+\text{log-odds}(\mathit{looking}) =
   \alpha + f(\textit{Time})
 $$
-  
+
 This is the idea behind generalized additive models and their *smooth
 terms*. These smooths fit nonlinear functions of data by weighting and
 adding simple functions together. The figures below show 9 basis
@@ -365,14 +356,14 @@ summed to fit a growth curve.
 t1_fam <- structure(
   list(
     Time = c(
-      250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 
-      950, 1000, 1050, 1100, 1150, 1200, 1250, 1300, 1350, 1400, 1450, 1500), 
+      250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900,
+      950, 1000, 1050, 1100, 1150, 1200, 1250, 1300, 1350, 1400, 1450, 1500),
     Prop = c(
-      0.252, 0.255, 0.257, 0.261, 0.265, 0.275, 0.286, 0.298, 0.311, 0.315, 
-      0.329, 0.342, 0.365, 0.392, 0.407, 0.422, 0.446, 0.464, 0.479, 0.497, 
-      0.514, 0.524, 0.532, 0.545, 0.549, 0.555)), 
-  .Names = c("Time", "Prop"), 
-  class = c("tbl_df", "tbl", "data.frame"), 
+      0.252, 0.255, 0.257, 0.261, 0.265, 0.275, 0.286, 0.298, 0.311, 0.315,
+      0.329, 0.342, 0.365, 0.392, 0.407, 0.422, 0.446, 0.464, 0.479, 0.497,
+      0.514, 0.524, 0.532, 0.545, 0.549, 0.555)),
+  .Names = c("Time", "Prop"),
+  class = c("tbl_df", "tbl", "data.frame"),
   row.names = c(NA, -26L))
 
 times <- modelr::seq_range(t1_fam$Time, 80)
@@ -382,101 +373,108 @@ t1_gam <- gam(Prop ~ s(Time), data = t1_fam)
 t1_gam <- gam(Prop ~ s(Time, bs = "tp", k = 10), data = t1_fam)
 basis_matrix <- predict(t1_gam, newdata, type = "lpmatrix")[, 2:10]
 
-basis <- polypoly::poly_melt(basis_matrix) %>% 
-  mutate(observation = as.numeric(observation)) %>% 
+basis <- polypoly::poly_melt(basis_matrix) %>%
+  mutate(observation = as.numeric(observation)) %>%
   left_join(
-    data.frame(Time = times, observation = seq_along(times)), 
+    data.frame(Time = times, observation = seq_along(times)),
     by = "observation")
 
-p1 <- ggplot(basis) + 
-  aes(x = Time, y = value) + 
-  geom_line(aes(color = degree)) + 
-  ylim(c(-2, 2)) + 
-  guides(color = FALSE) + 
-  ggtitle("Basis functions (time features)") + 
+p1 <- ggplot(basis) +
+  aes(x = Time, y = value) +
+  geom_line(aes(color = degree)) +
+  ylim(c(-2, 2)) +
+  guides(color = FALSE) +
+  ggtitle("Basis functions (time features)") +
   labs(
     x = constants$x_time,
     y = NULL) +
-  theme_grey(base_size = 9) + 
+  theme_grey(base_size = 9) +
   theme(
     plot.background = element_rect(
-      fill = constants$col_infobox_blue, 
+      fill = constants$col_infobox_blue,
       colour = constants$col_infobox_blue),
     panel.background = element_rect(fill = constants$col_infobox_plot_bg))
 
-weighted <- (basis_matrix %*% diag(coef(t1_gam)[-1])) %>% 
-  polypoly::poly_melt() %>% 
-  mutate(observation = as.numeric(observation)) %>% 
+weighted <- (basis_matrix %*% diag(coef(t1_gam)[-1])) %>%
+  polypoly::poly_melt() %>%
+  mutate(observation = as.numeric(observation)) %>%
   left_join(
-    data.frame(Time = times, observation = seq_along(times)), 
+    data.frame(Time = times, observation = seq_along(times)),
     by = "observation")
 
-p2 <- ggplot(weighted) + 
-  aes(x = Time, y = value) + 
-  geom_line(aes(color = factor(degree))) + 
+p2 <- ggplot(weighted) +
+  aes(x = Time, y = value) +
+  geom_line(aes(color = factor(degree))) +
   stat_summary(
-    fun.y = sum, 
-    color = constants$col_blue_highlight, 
-    geom = "line", 
-    size = 1.25) + 
-  ylim(c(-.2, .2)) + 
-  guides(color = FALSE) + 
-  ggtitle("Weighted basis functions") + 
+    fun.y = sum,
+    color = constants$col_blue_highlight,
+    geom = "line",
+    size = 1.25) +
+  annotate("text",
+    label = "sum", 
+    x = 1350, 
+    y = .175, 
+    color = constants$col_blue_highlight,
+    size = 3,
+    ) +
+  ylim(c(-.2, .2)) +
+  guides(color = FALSE) +
+  ggtitle("Weighted basis functions") +
   labs(
     x = constants$x_time,
     y = NULL) +
-  theme_grey(base_size = 9)  + 
+  theme_grey(base_size = 9)  +
   theme(
     plot.background = element_rect(
-      fill = constants$col_infobox_blue, 
+      fill = constants$col_infobox_blue,
       colour = constants$col_infobox_blue),
     panel.background = element_rect(fill = constants$col_infobox_plot_bg))
 
 
-## Analagous plot for GCA polynomials 
+## Analagous plot for GCA polynomials
 
 # t1_poly <- lm(Prop ~ poly(Time, 3), data = t1_fam)
-# 
-# poly_basis <- polypoly::poly_melt(poly(t1_fam$Time, 3)) %>% 
-#   mutate(observation = as.numeric(observation)) %>% 
+#
+# poly_basis <- polypoly::poly_melt(poly(t1_fam$Time, 3)) %>%
+#   mutate(observation = as.numeric(observation)) %>%
 #   left_join(
-#     data.frame(Time = times, observation = seq_along(times)), 
+#     data.frame(Time = times, observation = seq_along(times)),
 #     by = "observation")
 
-# p1_poly <- ggplot(poly_basis) + 
-#   aes(x = Time, y = value) + 
-#   geom_line(aes(color = degree)) + 
-#   # ylim(c(-2, 2)) + 
-#   guides(color = FALSE) + 
-#   ggtitle("Basis functions (time features)") + 
+# p1_poly <- ggplot(poly_basis) +
+#   aes(x = Time, y = value) +
+#   geom_line(aes(color = degree)) +
+#   # ylim(c(-2, 2)) +
+#   guides(color = FALSE) +
+#   ggtitle("Basis functions (time features)") +
 #   labs(
 #     x = constants$x_time,
 #     y = NULL) +
 #   theme_grey(base_size = 9)
 
-# poly_weighted <- (poly(t1_fam$Time, 3) %*% diag(coef(t1_poly)[-1])) %>% 
-#   polypoly::poly_melt() %>% 
-#   mutate(observation = as.numeric(observation)) %>% 
+# poly_weighted <- (poly(t1_fam$Time, 3) %*% diag(coef(t1_poly)[-1])) %>%
+#   polypoly::poly_melt() %>%
+#   mutate(observation = as.numeric(observation)) %>%
 #   left_join(
-#     data.frame(Time = times, observation = seq_along(times)), 
+#     data.frame(Time = times, observation = seq_along(times)),
 #     by = "observation")
 
-# p2_poly <- ggplot(poly_weighted) + 
-#   aes(x = Time, y = value) + 
-#   geom_line(aes(color = factor(degree))) + 
+# p2_poly <- ggplot(poly_weighted) +
+#   aes(x = Time, y = value) +
+#   geom_line(aes(color = factor(degree))) +
 #   stat_summary(
-#     fun.y = sum, 
-#     color = constants$col_blue_highlight, 
-#     geom = "line", 
-#     size = 1.25) +  
-#   ylim(c(-.2, .2)) + 
-#   guides(color = FALSE) + 
-#   ggtitle("Weighted basis functions") + 
+#     fun.y = sum,
+#     color = constants$col_blue_highlight,
+#     geom = "line",
+#     size = 1.25) +
+#   ylim(c(-.2, .2)) +
+#   guides(color = FALSE) +
+#   ggtitle("Weighted basis functions") +
 #   labs(
 #     x = constants$x_time,
 #     y = NULL) +
-#   theme_grey(base_size = 9) 
-# 
+#   theme_grey(base_size = 9)
+#
 # p3_poly <- cowplot::plot_grid(p1_poly, p2_poly)
 
 p3 <- cowplot::plot_grid(p1, p2)
@@ -535,11 +533,11 @@ Altogether, the model contained the following terms:
 `r insert_html_math()`
 \small
 \begin{align*}
-   \text{emp. log-odds}(\mathit{phon.\ vs.\ unrelated}) =\    
+   \text{emp. log-odds}(\mathit{phon.\ vs.\ unrelated}) =\
    & \alpha + \beta_1\text{Age3} + \beta_2\text{Age5} +\ &\text{[growth curve averages]} \\
-   & f_1(\text{Time}, \text{Age4})\ +                    &\text{[reference smooth]} \\ 
-   & f_2(\text{Time}, \text{Age4} - \text{Age3})\ +      &\text{[difference smooths]} \\ 
-   & f_3(\text{Time}, \text{Age4} - \text{Age5})\ +      & \\ 
+   & f_1(\text{Time}, \text{Age4})\ +                    &\text{[reference smooth]} \\
+   & f_2(\text{Time}, \text{Age4} - \text{Age3})\ +      &\text{[difference smooths]} \\
+   & f_3(\text{Time}, \text{Age4} - \text{Age5})\ +      & \\
    & f_i(\text{Time}, \text{Child}_i)                    &\text{[by-child random smooths]} \\
 \end{align*}
 `r insert_html_math()`
@@ -550,34 +548,34 @@ b2r_summary <- summary.gam(b2r)
 tp2_est <- get_para_estimate(b2r_summary, "(Intercept)")
 tp3_est <- get_para_estimate(b2r_summary, "S2TimePoint3")
 
-tp2 <- tp2_est %>% 
+tp2 <- tp2_est %>%
   printy::fmt_fix_digits(2)
 
-tp3 <- (tp2_est + tp3_est) %>% 
+tp3 <- (tp2_est + tp3_est) %>%
   printy::fmt_fix_digits(2)
 
-tp2_prop <- tp2_est %>% 
-  plogis() %>% 
-  printy::fmt_fix_digits(2) %>% 
-  printy::fmt_leading_zero() 
+tp2_prop <- tp2_est %>%
+  plogis() %>%
+  printy::fmt_fix_digits(2) %>%
+  printy::fmt_leading_zero()
 
-tp3_prop <- (tp2_est + tp3_est) %>% 
-  plogis() %>% 
-  printy::fmt_fix_digits(2) %>% 
-  printy::fmt_leading_zero() 
+tp3_prop <- (tp2_est + tp3_est) %>%
+  plogis() %>%
+  printy::fmt_fix_digits(2) %>%
+  printy::fmt_leading_zero()
 
 tp1_p <- get_para_pvalue(b2r_summary, "S2TimePoint1", digits = 2)
 tp3_p <- get_para_pvalue(b2r_summary, "S2TimePoint3")
 
 # # itsadug::report_stats(b2r, b2r_summary)
-# smooths <- b2r_summary$s.table %>% 
-#   as.data.frame() %>% 
-#   setNames(c("edf", "Ref.df", "F", "p.value")) %>% 
+# smooths <- b2r_summary$s.table %>%
+#   as.data.frame() %>%
+#   setNames(c("edf", "Ref.df", "F", "p.value")) %>%
 #   tibble::rownames_to_column("term")
 
-s_tp2_edf <- get_smooth_edf(b2r_summary, term = "s(Time)") 
-s_tp1_edf <- get_smooth_edf(b2r_summary, term = "s(Time):S2TimePoint1") 
-s_tp3_edf <- get_smooth_edf(b2r_summary, term = "s(Time):S2TimePoint3") 
+s_tp2_edf <- get_smooth_edf(b2r_summary, term = "s(Time)")
+s_tp1_edf <- get_smooth_edf(b2r_summary, term = "s(Time):S2TimePoint1")
+s_tp3_edf <- get_smooth_edf(b2r_summary, term = "s(Time):S2TimePoint3")
 
 s_tp2_p <- get_smooth_pvalue(b2r_summary, "s(Time)")
 s_tp1_p <- get_smooth_pvalue(b2r_summary, "s(Time):S2TimePoint1")
@@ -602,13 +600,13 @@ model estimates to observed means and standard errors, and the right
 visualizes estimated means and their 95% confidence intervals.
 
 ```{r phon-vs-unre-fits, fig.cap = "(ref:phon-vs-unre-fits)", echo = FALSE, warning = FALSE, message = FALSE, out.width = "80%", fig.width = 6, fig.height = 4, results = "hide"}
-avg <- b2r %>% 
+avg <- b2r %>%
   get_predictions(
     cond = list(
-      Time = unique(phon_d$Time), 
+      Time = unique(phon_d$Time),
       S2 = unique(phon_d$S2)),
-    rm.ranef = TRUE) %>% 
-  left_join(recode_studies, by = c("S2")) 
+    rm.ranef = TRUE) %>%
+  left_join(recode_studies, by = c("S2"))
 
 labs_fit_obs <- labs(
   color = constants$lab_study,
@@ -616,21 +614,26 @@ labs_fit_obs <- labs(
   x = constants$x_time,
   caption = constants$cap_model_mean_data_mean_se)
 
-p1 <- phon_d %>% 
-  left_join(recode_studies, by = c("Study", "S", "S2")) %>% 
+# Data for direct labeling of lines
+study_labs <- data.frame(
+  Age = c("Age 3", "Age 4", "Age 5"),
+  x = c(775, NA, 750),
+  y = c(.17, NA, .78)
+)
+
+p1 <- phon_d %>%
+  left_join(recode_studies, by = c("Study", "S", "S2")) %>%
   ggplot() +
     aes(x = Time, y = fitted_elogit, color = Age) +
     geom_hline(size = 2, yintercept = 0, color = "white") +
     stat_summary(aes(y = elog), fun.data = mean_se, alpha = .7) +
-    geom_line(aes(y = fit), data = avg, size = 1) + 
-    # stat_summary(fun.y = "mean", geom = "line", size = 1) +
+    geom_line(aes(y = fit), data = avg, size = 1) +
+    geom_text(aes(label = Age, x = x, y = y), data = study_labs) +
     coord_cartesian(ylim = c(-.35, .85)) +
     labs_fit_obs +
     labs(y = constants$y_elob_phon) +
-    theme_grey(base_size = 10) +
-    theme(
-      legend.position = c(0.025, 0.975), 
-      legend.justification = c(0, 1)) 
+    guides(color = FALSE)
+
 
 labs_model_ci <- labs(
   color = constants$lab_study,
@@ -639,21 +642,21 @@ labs_model_ci <- labs(
   y = NULL,
   caption = constants$cap_mean_95)
 
-p2 <- b2r %>% 
+p2 <- b2r %>%
   get_predictions(
     cond = list(
-      Time = unique(phon_d$Time), 
+      Time = unique(phon_d$Time),
       S2 = unique(phon_d$S2)),
-    rm.ranef = TRUE) %>% 
-  left_join(recode_studies) %>% 
-  ggplot() + 
-    aes(x = Time, y = fit, fill = Age) + 
+    rm.ranef = TRUE) %>%
+  left_join(recode_studies) %>%
+  ggplot() +
+    aes(x = Time, y = fit, fill = Age) +
     geom_hline(size = 2, yintercept = 0, color = "white") +
     geom_ribbon(aes(ymin = fit - CI, ymax = fit + CI), alpha = .2) +
-    geom_line(aes(color = Age), size = 1) + 
+    geom_line(aes(color = Age), size = 1) +
+    geom_text(aes(label = Age, color = Age, x = x, y = y), data = study_labs) +
     coord_cartesian(ylim = c(-.35, .85)) +
     labs_model_ci +
-    theme_grey(base_size = 10) +
     guides(color = FALSE, fill = FALSE)
 
 p3 <- cowplot::plot_grid(p1, p2)
@@ -671,64 +674,64 @@ curves.
 (ref:phon-diff-curves) Differences in the average looks to the
 phonological foil versus the unrelated image between age 4 and the other
 ages. Plotted line is estimated difference and the shaded region is
-the 95% confidence around that difference. Blue boxes highlight regions
+the 95% confidence interval around that difference. Blue boxes highlight regions
 where the 95% interval excludes zero. From age 3 to age 4, children
 become more sensitive to the phonological foil during and after the
 target noun. The curves for age 3 and age 4 have largely the same shape,
 but they steadily diverge over time.
 
 ```{r phon-diff-curves, fig.cap = "(ref:phon-diff-curves)", echo = FALSE, message = FALSE, out.width = "80%", fig.width = 5, fig.height = 3, results = "hide"}
-age5_age4 <- b2r %>% 
+age5_age4 <- b2r %>%
   get_difference(
-    comp = list(S2 = c("TimePoint3", "TimePoint2")), 
-    cond = list(Time = unique(phon_d$Time)), 
-    rm.ranef = TRUE) %>% 
+    comp = list(S2 = c("TimePoint3", "TimePoint2")),
+    cond = list(Time = unique(phon_d$Time)),
+    rm.ranef = TRUE) %>%
   mutate(comparison = "Age 5 − Age 4")
-  
-age4_age3 <- b2r %>% 
+
+age4_age3 <- b2r %>%
   get_difference(
-    comp = list(S2 = c("TimePoint2", "TimePoint1")), 
-    cond = list(Time = unique(phon_d$Time)), 
-    rm.ranef = TRUE) %>% 
-  mutate(comparison = "Age 4 − Age 3")  
+    comp = list(S2 = c("TimePoint2", "TimePoint1")),
+    cond = list(Time = unique(phon_d$Time)),
+    rm.ranef = TRUE) %>%
+  mutate(comparison = "Age 4 − Age 3")
 
 rle_lengths <- function(xs) rle(xs)[["lengths"]]
 
-differences <- bind_rows(age5_age4, age4_age3) %>% 
-  rename(fit = difference) %>% 
+differences <- bind_rows(age5_age4, age4_age3) %>%
+  rename(fit = difference) %>%
   mutate(
-    upper = fit + CI, 
+    upper = fit + CI,
     lower = fit - CI,
-    no_zero = 0 > upper | 0 < lower) %>% 
-  group_by(comparison) %>% 
-  arrange(comparison, Time) %>% 
+    no_zero = 0 > upper | 0 < lower) %>%
+  group_by(comparison) %>%
+  arrange(comparison, Time) %>%
   mutate(
-    streak = rep(seq_along(rle_lengths(no_zero)), rle_lengths(no_zero))) %>% 
+    streak = rep(seq_along(rle_lengths(no_zero)), rle_lengths(no_zero))) %>%
   ungroup()
 
-sig_regions <- differences %>% 
-  filter(no_zero) %>% 
-  group_by(comparison, streak) %>% 
-  summarize(min = min(Time), max = max(Time)) %>% 
+sig_regions <- differences %>%
+  filter(no_zero) %>%
+  group_by(comparison, streak) %>%
+  summarize(min = min(Time), max = max(Time)) %>%
   ungroup()
 
-ggplot(differences) + 
-  aes(x = Time, y = fit) + 
+ggplot(differences) +
+  aes(x = Time, y = fit) +
   geom_hline(size = 2, yintercept = 0, color = "white") +
   geom_vline(
-    aes(xintercept = min), data = sig_regions, 
+    aes(xintercept = min), data = sig_regions,
     color = constants$col_blue_highlight, linetype = "dashed") +
   geom_vline(
-    aes(xintercept = max), data = sig_regions, 
+    aes(xintercept = max), data = sig_regions,
     color = constants$col_blue_highlight ,linetype = "dashed") +
   geom_segment(
       aes(x = min, xend = max, group = streak), y = -Inf, yend = -Inf,
-      data = sig_regions, color = constants$col_blue_highlight, 
-      size = 1) + 
+      data = sig_regions, color = constants$col_blue_highlight,
+      size = 1) +
   geom_segment(
       aes(x = min, xend = max, group = streak), y = Inf, yend = Inf,
-      data = sig_regions, color = constants$col_blue_highlight, 
-      size = 1.1) + 
+      data = sig_regions, color = constants$col_blue_highlight,
+      size = 1.1) +
   geom_ribbon(aes(ymin = fit - CI, ymax = fit + CI), alpha = .2) +
   geom_line(size = 1) +
   labs(
@@ -736,7 +739,7 @@ ggplot(differences) +
     fill = constants$lab_study,
     x = constants$x_time,
     y = constants$y_elog_diff_phon,
-    caption = constants$cap_diff_95) + 
+    caption = constants$cap_diff_95) +
   facet_wrap("comparison")
 ```
 
@@ -778,13 +781,17 @@ to the phonological foil rapidly decrease. The primary difference
 between age-4 and age-5 is that the foil effect becomes more pronounced
 at age 5.
 
+**Summary**. Children demonstrated early looks the phonological foil, peaking around 800 ms after word onset.
+
+Children increased their relative looks to the phonological foil with each
+  year of the study. Although they looked to the target more quickly and more
+  reliably with each of the study, the advantage of the phonological foil over
+  the unrelated image increased with each year. Thus, the children became more
+  sensitive to the phonological cohort words as they grew older.
+
+
 Talking points:
 
-  - Children increased their relative looks to the phonological foil with each
-    year of the study. Although they looked to the target more quickly and more
-    reliably with each of the study, the advantage of the phonological foil over
-    the unrelated image increased with each year. Thus, the children became more
-    sensitive to the phonological cohort words as they grew older.
   - There is hardly an effect of the phonological foil during timepoint 1. There
     are a few ways to interpret this finding. The first may be artefactual. The
     stimuli were re-recorded at timepoint 2 so the timepoint 1 stimuli were
@@ -802,11 +809,11 @@ Talking points:
     activation of cohorts.
   - The children at timepoint1 may not be incrementally activating the cohorts.
     The children in timepoint 2 and 3 certainly are.
-  - Incremental activation and early commitments to partial information goes up 
+  - Incremental activation and early commitments to partial information goes up
     with age.
 
 
-## Looks to the semantic foil
+## Looks to the semantic competitor
 
 Next, I asked how children's sensitivity to the semantic foils changed
 as they grew older. As in [@RWLPaper], I only examined trials for
@@ -814,20 +821,20 @@ which the semantic foil and the noun were part of the same category. For
 example, I included trials with *bee*–*fly*, *shirt*–*dress*, and
 *spoon*–*pan*, but I excluded trials where the similarity was perceptual
 (*sword*–*pen*) or too abstract (*swan*–*bee*). This criterion kept
-`r n_semy` of the 24 trials. 
+`r n_semy` of the 24 trials.
 [Appendix \@ref(vw-experiment-items)](#vw-experiment-items) provides a
 complete list of trials used.
 
 ```{r semy-models, echo = FALSE, message = FALSE, results = "hide"}
 # # # Base model with no study effect
 # # s2n <- bam(
-# #   elog ~ s(Time), 
+# #   elog ~ s(Time),
 # #   data = semy_d)
 # # # summary(b2n)
-# 
+#
 # # Include intercepts and smooths for studies
 # s2 <- bam(
-#   elog ~ S2 + s(Time) + s(Time, by = S2), 
+#   elog ~ S2 + s(Time) + s(Time, by = S2),
 #   data = semy_d)
 # summary(s2)
 # plot(s2, pages = 1)
@@ -839,8 +846,8 @@ if (file.exists(semy_by_year)) {
   s2r <- readr::read_rds(semy_by_year)
 } else {
   s2r <- bam(
-    elog ~ S2 + 
-      s(Time) + s(Time, by = S2) + 
+    elog ~ S2 +
+      s(Time) + s(Time, by = S2) +
       s(Time, R, bs = "fs", m = 1, k = 5),
     data = semy_d)
   readr::write_rds(s2r, semy_by_year)
@@ -850,52 +857,52 @@ if (file.exists(semy_by_year)) {
 ```{r, echo = FALSE}
 s2r_summary <- summary.gam(s2r)
 
-sem_para <- s2r_summary$p.table %>% 
-  as.data.frame() %>% 
-  tibble::rownames_to_column("term") %>% 
+sem_para <- s2r_summary$p.table %>%
+  as.data.frame() %>%
+  tibble::rownames_to_column("term") %>%
   rename(estimate = Estimate, p.value = `Pr(>|t|)`)
 
 sem_tp2_est <- get_para_estimate(s2r_summary, "(Intercept)")
 sem_tp1_est <- get_para_estimate(s2r_summary, "S2TimePoint1")
 sem_tp3_est <- get_para_estimate(s2r_summary, "S2TimePoint3")
 
-sem_tp2 <- sem_tp2_est %>% 
+sem_tp2 <- sem_tp2_est %>%
   printy::fmt_fix_digits(2)
 
-sem_tp2_prop <- sem_tp2_est %>% 
-  plogis() %>% 
-  printy::fmt_fix_digits(2) %>% 
-  printy::fmt_leading_zero() 
+sem_tp2_prop <- sem_tp2_est %>%
+  plogis() %>%
+  printy::fmt_fix_digits(2) %>%
+  printy::fmt_leading_zero()
 
-sem_tp1_elog <- (sem_tp2_est + sem_tp1_est) %>% 
-  printy::fmt_fix_digits(2)  
+sem_tp1_elog <- (sem_tp2_est + sem_tp1_est) %>%
+  printy::fmt_fix_digits(2)
 
-sem_tp1_prop <- (sem_tp2_est + sem_tp1_est) %>% 
-  plogis() %>% 
-  printy::fmt_fix_digits(2) %>% 
-  printy::fmt_leading_zero() 
+sem_tp1_prop <- (sem_tp2_est + sem_tp1_est) %>%
+  plogis() %>%
+  printy::fmt_fix_digits(2) %>%
+  printy::fmt_leading_zero()
 
-sem_tp3_elog <- (sem_tp2_est + sem_tp3_est) %>% 
-  printy::fmt_fix_digits(2)  
+sem_tp3_elog <- (sem_tp2_est + sem_tp3_est) %>%
+  printy::fmt_fix_digits(2)
 
-sem_tp3_prop <- (sem_tp2_est + sem_tp3_est) %>% 
-  plogis() %>% 
-  printy::fmt_fix_digits(2) %>% 
-  printy::fmt_leading_zero() 
+sem_tp3_prop <- (sem_tp2_est + sem_tp3_est) %>%
+  plogis() %>%
+  printy::fmt_fix_digits(2) %>%
+  printy::fmt_leading_zero()
 
 sem_tp1_p <- get_para_pvalue(s2r_summary, "S2TimePoint1", digits = 3)
 sem_tp3_p <- get_para_pvalue(s2r_summary, "S2TimePoint3", digits = 3)
 
 
 ## itsadug::report_stats(b2r, b2r_summary)
-# sem_smooths <- s2r_summary$s.table %>% 
-#   as.data.frame() %>% 
-#   setNames(c("edf", "Ref.df", "F", "p.value")) %>% 
+# sem_smooths <- s2r_summary$s.table %>%
+#   as.data.frame() %>%
+#   setNames(c("edf", "Ref.df", "F", "p.value")) %>%
 #   tibble::rownames_to_column("term")
 
-sem_s_tp2_edf <- get_smooth_edf(s2r_summary, term = "s(Time)") 
-sem_s_tp1_edf <- get_smooth_edf(s2r_summary, term = "s(Time):S2TimePoint1") 
-sem_s_tp3_edf <- get_smooth_edf(s2r_summary, term = "s(Time):S2TimePoint3") 
+sem_s_tp2_edf <- get_smooth_edf(s2r_summary, term = "s(Time)")
+sem_s_tp1_edf <- get_smooth_edf(s2r_summary, term = "s(Time):S2TimePoint1")
+sem_s_tp3_edf <- get_smooth_edf(s2r_summary, term = "s(Time):S2TimePoint3")
 
 sem_s_tp2_p <- get_smooth_pvalue(s2r_summary, "s(Time)")
 sem_s_tp1_p <- get_smooth_pvalue(s2r_summary, "s(Time):S2TimePoint1")
@@ -920,62 +927,69 @@ model estimates to observed means and standard errors, and the right
 visualizes estimated means and their 95% confidence intervals.
 
 ```{r semy-vs-unre-fits, fig.cap = "(ref:semy-vs-unre-fits)", echo = FALSE, warning = FALSE, message = FALSE, out.width = "80%", fig.width = 6, fig.height = 4, results = "hide"}
-avg <- s2r %>% 
+avg <- s2r %>%
   get_predictions(
     cond = list(
-      Time = unique(semy_d$Time), 
+      Time = unique(semy_d$Time),
       S2 = unique(semy_d$S2)),
-    rm.ranef = TRUE) %>% 
-  left_join(recode_studies, by = c("S2")) 
+    rm.ranef = TRUE) %>%
+  left_join(recode_studies, by = c("S2"))
 
-p1 <- semy_d %>% 
-  left_join(recode_studies, by = c("Study", "S", "S2")) %>% 
+# Data for direct labeling of lines
+study_labs <- data.frame(
+  Age = c("Age 3", "Age 4", "Age 5"),
+  x = c(1400, NA, 1330),
+  y = c(.42, NA, 1.1)
+)
+
+p1 <- semy_d %>%
+  left_join(recode_studies, by = c("Study", "S", "S2")) %>%
   ggplot() +
     aes(x = Time, y = fitted_elogit, color = Age) +
     geom_hline(size = 2, yintercept = 0, color = "white") +
     stat_summary(aes(y = elog), fun.data = mean_se, alpha = .7) +
-    geom_line(aes(y = fit), data = avg, size = 1) + 
+    geom_line(aes(y = fit), data = avg, size = 1) +
+    geom_text(aes(x = x, y = y, label = Age), data = study_labs) +
     coord_cartesian(ylim = c(-.25, 1.1)) +
+    guides(color = FALSE) + 
     labs_fit_obs +
     labs(y = constants$y_elog_semy) +
-    theme_grey(base_size = 10) +
-    theme(
-      legend.position = c(0.025, 0.975), 
-      legend.justification = c(0, 1))
+    theme_grey()
 
-p2 <- s2r %>% 
+p2 <- s2r %>%
   get_predictions(
     cond = list(
-      Time = unique(semy_d$Time), 
+      Time = unique(semy_d$Time),
       S2 = unique(semy_d$S2)),
-    rm.ranef = TRUE) %>% 
-  left_join(recode_studies) %>% 
-  ggplot() + 
-    aes(x = Time, y = fit, fill = Age) + 
+    rm.ranef = TRUE) %>%
+  left_join(recode_studies) %>%
+  ggplot() +
+    aes(x = Time, y = fit, fill = Age) +
     geom_hline(size = 2, yintercept = 0, color = "white") +
     geom_ribbon(aes(ymin = fit - CI, ymax = fit + CI), alpha = .2) +
-    geom_line(aes(color = Age), size = 1) + 
+    geom_line(aes(color = Age), size = 1) +
+    geom_text(aes(x = x, y = y, color = Age, label = Age), data = study_labs) +
     coord_cartesian(ylim = c(-.25, 1.1)) +
     labs_model_ci +
-    theme_grey(base_size = 10) + 
-    guides(color = FALSE, fill = FALSE) 
+    theme_grey(base_size = 10) +
+    guides(color = FALSE, fill = FALSE)
 
 p3 <- cowplot::plot_grid(p1, p2)
 print(p3)
 
-semy_peaks <- s2r %>% 
+semy_peaks <- s2r %>%
   get_predictions(
     cond = list(
-      Time = unique(semy_d$Time), 
+      Time = unique(semy_d$Time),
       S2 = unique(semy_d$S2)),
-    rm.ranef = TRUE) %>% 
-  group_by(S2) %>% 
-  top_n(5, fit) %>% 
+    rm.ranef = TRUE) %>%
+  group_by(S2) %>%
+  top_n(5, fit) %>%
   summarise(
     fit = median(fit),
-    fit_prop = plogis(fit) %>% 
-      printy::fmt_fix_digits(2) %>% 
-      printy::fmt_leading_zero()) %>% 
+    fit_prop = plogis(fit) %>%
+      printy::fmt_fix_digits(2) %>%
+      printy::fmt_leading_zero()) %>%
   split(.$S2)
 ```
 
@@ -997,64 +1011,64 @@ differences between the smooths from each study.
 (ref:semy-diff-curves) Differences in the average looks to the semantic
 foil versus the unrelated image between age 4 and the other ages.
 Plotted line is estimated difference and the shaded region is the 95%
-confidence around that difference. Blue boxes highlight regions where
-the 95% interval excludes zero. The flat line on the left reflects how
-the shape of the growth curves remained the same from age 3 to age 4 and
-only differed in average height. From age 4 to age 5, the lines quickly
-diverge and the age-5 curve reaches a higher peak value.
+confidence interval around that difference. Blue boxes highlight regions
+where the 95% interval excludes zero. The flat line on the left reflects
+how the shape of the growth curves remained the same from age 3 to age 4
+and only differed in average height. From age 4 to age 5, the lines
+quickly diverge and the age-5 curve reaches a higher peak value.
 
-```{r semy-diff-curves, fig.cap = "(ref:semy-diff-curves)", echo = FALSE, message = FALSE, out.width = "80%", fig.width = 5, fig.height = 3, results = "hide"}
-age5_age4 <- s2r %>% 
+```{r semy-diff-curves, fig.cap = "(ref:semy-diff-curves)", include = FALSE, out.width = "80%", fig.width = 5, fig.height = 3}
+age5_age4 <- s2r %>%
   get_difference(
-    comp = list(S2 = c("TimePoint3", "TimePoint2")), 
-    cond = list(Time = unique(semy_d$Time)), 
-    rm.ranef = TRUE) %>% 
+    comp = list(S2 = c("TimePoint3", "TimePoint2")),
+    cond = list(Time = unique(semy_d$Time)),
+    rm.ranef = TRUE) %>%
   mutate(comparison = "Age 5 − Age 4")
-  
-age4_age3 <- s2r %>% 
+
+age4_age3 <- s2r %>%
   get_difference(
-    comp = list(S2 = c("TimePoint2", "TimePoint1")), 
-    cond = list(Time = unique(semy_d$Time)), 
-    rm.ranef = TRUE) %>% 
-  mutate(comparison = "Age 4 − Age 3")  
+    comp = list(S2 = c("TimePoint2", "TimePoint1")),
+    cond = list(Time = unique(semy_d$Time)),
+    rm.ranef = TRUE) %>%
+  mutate(comparison = "Age 4 − Age 3")
 
 rle_lengths <- function(xs) rle(xs)[["lengths"]]
 
-differences <- bind_rows(age5_age4, age4_age3) %>% 
-  rename(fit = difference) %>% 
+differences <- bind_rows(age5_age4, age4_age3) %>%
+  rename(fit = difference) %>%
   mutate(
-    upper = fit + CI, 
+    upper = fit + CI,
     lower = fit - CI,
-    no_zero = 0 > upper | 0 < lower) %>% 
-  group_by(comparison) %>% 
-  arrange(comparison, Time) %>% 
+    no_zero = 0 > upper | 0 < lower) %>%
+  group_by(comparison) %>%
+  arrange(comparison, Time) %>%
   mutate(
-    streak = rep(seq_along(rle_lengths(no_zero)), rle_lengths(no_zero))) %>% 
+    streak = rep(seq_along(rle_lengths(no_zero)), rle_lengths(no_zero))) %>%
   ungroup()
 
-sig_regions <- differences %>% 
-  filter(no_zero) %>% 
-  group_by(comparison, streak) %>% 
-  summarize(min = min(Time), max = max(Time)) %>% 
+sig_regions <- differences %>%
+  filter(no_zero) %>%
+  group_by(comparison, streak) %>%
+  summarize(min = min(Time), max = max(Time)) %>%
   ungroup()
 
-ggplot(differences) + 
-  aes(x = Time, y = fit) + 
+ggplot(differences) +
+  aes(x = Time, y = fit) +
   geom_hline(size = 2, yintercept = 0, color = "white") +
   geom_vline(
-    aes(xintercept = min), data = sig_regions, 
+    aes(xintercept = min), data = sig_regions,
     color = constants$col_blue_highlight, linetype = "dashed") +
   geom_vline(
-    aes(xintercept = max), data = sig_regions, 
+    aes(xintercept = max), data = sig_regions,
     color = constants$col_blue_highlight ,linetype = "dashed") +
   geom_segment(
       aes(x = min, xend = max, group = streak), y = -Inf, yend = -Inf,
-      data = sig_regions, color = constants$col_blue_highlight, 
-      size = 1) + 
+      data = sig_regions, color = constants$col_blue_highlight,
+      size = 1) +
   geom_segment(
       aes(x = min, xend = max, group = streak), y = Inf, yend = Inf,
-      data = sig_regions, color = constants$col_blue_highlight, 
-      size = 1.1) + 
+      data = sig_regions, color = constants$col_blue_highlight,
+      size = 1.1) +
   geom_ribbon(aes(ymin = fit - CI, ymax = fit + CI), alpha = .2) +
   geom_line(size = 1) +
   labs(
@@ -1062,7 +1076,7 @@ ggplot(differences) +
     fill = constants$lab_study,
     x = constants$x_time,
     y = constants$y_elog_diff_semy,
-    caption = constants$cap_diff_95) + 
+    caption = constants$cap_diff_95) +
   facet_wrap("comparison")
 ```
 
@@ -1086,7 +1100,7 @@ from it.
 year of the study. Unlike with the phonological foils, the semantic foils
 clearly influenced looking patterns at age 3. The semantic foil effect occurs
 when we would expect it too: After the end of the target noun, after activation
-of the target noun and its neighbors. 
+of the target noun and its neighbors.
 
   - That the effect of the foil increases each year indicates that the
     semantic representations of words have strengthened.
@@ -1105,7 +1119,7 @@ of the target noun and its neighbors.
 
 
 
-## Individual differences in competitor sensitivity at age 3
+## Differences in competitor sensitivity at age 3
 
 Next, I asked whether children differed reliably in their sensitivity to
 the phonological and semantic foils based on speech perception and
@@ -1117,11 +1131,11 @@ pair discrimination experiment administered during the first year of the study.
 picture of a familar object is shown and labeled (e.g., "car"), another
 object is shown and labeled ("jar"), and then both images are shown and
 one of the two is named. The child then indicated which word they heard
-by tapping on the image on a touch-screen. 
+by tapping on the image on a touch-screen.
 
 I derived speech perception scores by fitting a hierarchical item-response
 model. This logistic regression model estimates the probability of child
-*i* correctly choosing word *j* on word-pair *k*. The equation below provides 
+*i* correctly choosing word *j* on word-pair *k*. The equation below provides
 a term-by-term description of the model. The model's intercept term
 represents the average participant's probability of correctly answering
 for an average item. By-child random intercepts capture a child's
@@ -1140,14 +1154,14 @@ ability after controlling for age and receptive vocabulary.
 `r insert_html_math()`
 \small
 \begin{align*}
-   \text{log-odds}(\mathit{choosing\ correct\ word}) =\    
+   \text{log-odds}(\mathit{choosing\ correct\ word}) =\
    & \alpha\ +                  &\text{[average participant ability]} \\
    & \alpha_i\ +                &\text{[difference of participant}\ i
-                                       \text{'s ability from average]} \\ 
+                                       \text{'s ability from average]} \\
    & \alpha_j\ +                &\text{[word}\ j\text{'s difficulty]} \\
    & \alpha_{j,k}\ +            &\text{[word}\ j
                                        \text{'s difficulty in word-pair}\ k] \\
-   & \beta_{1}\text{Age}\ +     &\text{[participant-level predictors]} \\ 
+   & \beta_{1}\text{Age}\ +     &\text{[participant-level predictors]} \\
    & \beta_{2}\text{Vocabulary} & \\
 \end{align*}
 `r insert_html_math()`
@@ -1164,42 +1178,42 @@ change the shape of the time trend. The additive model was therefore:
 `r insert_html_math()`
 \small
 \begin{align*}
-   \text{emp. log-odds}(\mathit{phon.\ vs.\ unrelated}) =\    
+   \text{emp. log-odds}(\mathit{phon.\ vs.\ unrelated}) =\
    & \alpha +\ &\text{[growth curve average]} \\
-   & f_1(\text{Time})\ +                    &\text{[time smooth]} \\ 
-   & f_2(\text{Ability})\ +                 &\text{[ability smooth]} \\ 
+   & f_1(\text{Time})\ +                    &\text{[time smooth]} \\
+   & f_2(\text{Ability})\ +                 &\text{[ability smooth]} \\
    & f_3(\text{Time} * \text{Ability})\ +   &\text{[interaction smooth]} \\
    & f_i(\text{Time}, \text{Child}_i)       &\text{[by-child random smooths]} \\
 \end{align*}
 `r insert_html_math()`
 
 ```{r load-test-scores, include = FALSE}
-ppvt <- readr::read_csv(file = "./data-raw/test_scores.csv") %>% 
-  filter(Study == "TimePoint1") %>% 
-  select(ResearchID, PPVT_Age, PPVT_GSV, EVT_Age, PPVT_GSV) 
+ppvt <- readr::read_csv(file = "./data-raw/test_scores.csv") %>%
+  filter(Study == "TimePoint1") %>%
+  select(ResearchID, PPVT_Age, PPVT_GSV, EVT_Age, PPVT_GSV)
 
-minp <- readr::read_csv(file = "./data-raw/age3-minpair-fits.csv") %>% 
-  filter(Model == "base + age + ppvt") %>% 
-  left_join(ppvt) %>% 
+minp <- readr::read_csv(file = "./data-raw/age3-minpair-fits.csv") %>%
+  filter(Model == "base + age + ppvt") %>%
+  left_join(ppvt) %>%
   mutate(PPVT_Age = ifelse(is.na(PPVT_Age), MinPair_Age, PPVT_Age))
 
-minp <- minp %>% 
+minp <- minp %>%
   modelr::add_residuals(
     model = lm(PPVT_GSV ~ PPVT_Age + fitted, .),
     var = "PPVT_GSV_Adj")
 
-phon_d_minp <- phon_d %>% 
-  filter(S == "TimePoint1") %>% 
-  inner_join(minp, by = "ResearchID") %>% 
+phon_d_minp <- phon_d %>%
+  filter(S == "TimePoint1") %>%
+  inner_join(minp, by = "ResearchID") %>%
   mutate(
-    ability = as.vector(scale(coef)), 
+    ability = as.vector(scale(coef)),
     ppvt = as.vector(scale(PPVT_GSV_Adj)))
 
-semy_d_minp <- semy_d %>% 
-  filter(S == "TimePoint1") %>% 
-  inner_join(minp, by = "ResearchID") %>% 
+semy_d_minp <- semy_d %>%
+  filter(S == "TimePoint1") %>%
+  inner_join(minp, by = "ResearchID") %>%
   mutate(
-    ability = as.vector(scale(coef)), 
+    ability = as.vector(scale(coef)),
     ppvt = as.vector(scale(PPVT_GSV_Adj)))
 ```
 
@@ -1214,7 +1228,7 @@ b2_age3 <- if (file.exists(phon_base)) {
 } else {
   bam(
     elog ~ s(Time) + s(Time, R, bs = "fs", m = 1, k = 5),
-    data = phon_d_minp) %>% 
+    data = phon_d_minp) %>%
   readr::write_rds(phon_base)
 }
 
@@ -1222,11 +1236,11 @@ b2_age3_minp <- if (file.exists(phon_minp)) {
   readr::read_rds(phon_minp)
 } else {
   bam(
-    elog ~ s(Time) + 
-      s(ability) + 
-      ti(Time, ability) + 
+    elog ~ s(Time) +
+      s(ability) +
+      ti(Time, ability) +
       s(Time, R, bs = "fs", m = 1, k = 5),
-    data = phon_d_minp) %>% 
+    data = phon_d_minp) %>%
   readr::write_rds(phon_minp)
 }
 
@@ -1234,11 +1248,11 @@ b2_age3_ppvt <- if (file.exists(phon_ppvt)) {
   readr::read_rds(phon_ppvt)
 } else {
   bam(
-    elog ~ s(Time) + 
-      s(ppvt) + 
-      ti(Time, ppvt) + 
+    elog ~ s(Time) +
+      s(ppvt) +
+      ti(Time, ppvt) +
       s(Time, R, bs = "fs", m = 1, k = 5),
-    data = phon_d_minp) %>% 
+    data = phon_d_minp) %>%
   readr::write_rds(phon_ppvt)
 }
 
@@ -1246,16 +1260,16 @@ b2_age3_ppvt_0 <- if (file.exists(phon_ppvt_para)) {
   readr::read_rds(phon_ppvt_para)
 } else {
   bam(
-    elog ~ ppvt + 
-      s(Time) + 
+    elog ~ ppvt +
+      s(Time) +
       s(Time, R, bs = "fs", m = 1, k = 5),
-    data = phon_d_minp) %>% 
+    data = phon_d_minp) %>%
   readr::write_rds(phon_ppvt_para)
 }
 
-n_phon_minp <- phon_d_minp %>% 
-  pull(ResearchID) %>% 
-  unique() %>% 
+n_phon_minp <- phon_d_minp %>%
+  pull(ResearchID) %>%
+  unique() %>%
   length()
 
 minp_summary <- summary(b2_age3_minp)
@@ -1315,48 +1329,48 @@ minimal-pair discrimination task. Greater discrimination scores
 *generally* predicted greater peak looks to the foil at 800 ms, but
 this trend sharply reversed at very low discrimination scores.
 
-```{r age3-phon-by-minp, fig.cap = "(ref:age3-phon-by-minp)", out.width = "80%", fig.width = 6, fig.height = 4}
+```{r age3-phon-by-minp, fig.cap = "(ref:age3-phon-by-minp)", out.width = "80%", fig.width = 6, fig.height = 4, include = FALSE}
 smooth_times <- modelr::seq_range(unique(phon_d_minp$Time), 100)
 pp <- get_predictions(
-  b2_age3_minp, 
+  b2_age3_minp,
   cond = list(
     ability = c(-2, -1, 0, 1, 2),
-    Time = smooth_times), 
-  rm.ranef = TRUE) 
+    Time = smooth_times),
+  rm.ranef = TRUE)
 
 df_labs <- data.frame(
-  Time = c(790, 1100, 850), 
-  fit = c(.49, .28, .18), 
-  # label = c("+1 SD", "Mean", "-1 SD"), 
-  label = c("paste(+1, phantom(.), SD)", "Mean", "paste(-1, phantom(.), SD)"), 
+  Time = c(790, 1100, 850),
+  fit = c(.49, .28, .18),
+  # label = c("+1 SD", "Mean", "-1 SD"),
+  label = c("paste(+1, phantom(.), SD)", "Mean", "paste(-1, phantom(.), SD)"),
   ability = c("+1 SD", "Mean", "-1 SD"),
   panel = "Typical discrimination scores")
 
 df_labs2 <- data.frame(
-  Time = c(750, 750), 
-  fit = c(.30, .62), 
-  # label = c("-2 SD", "+2 SD"), 
-  label = c("paste(-2, phantom(.), SD)", "paste(+2, phantom(.), SD)"), 
+  Time = c(750, 750),
+  fit = c(.30, .62),
+  # label = c("-2 SD", "+2 SD"),
+  label = c("paste(-2, phantom(.), SD)", "paste(+2, phantom(.), SD)"),
   ability = c("-2 SD", "+2 SD"),
   panel = "Very low or very high scores")
 
-pp %>% 
+pp %>%
   mutate(
-    panel = ifelse(ability %in% c(-2, 2), 
-                   "Very low or very high scores", 
+    panel = ifelse(ability %in% c(-2, 2),
+                   "Very low or very high scores",
                    "Typical discrimination scores"),
     ability = factor(
-      ability, labels = c("-2 SD", "-1 SD", "Mean", "+1 SD", "+2 SD"))) %>% 
-  ggplot() + 
-    aes(x = Time, y = fit, color = ability, fill = ability) + 
+      ability, labels = c("-2 SD", "-1 SD", "Mean", "+1 SD", "+2 SD"))) %>%
+  ggplot() +
+    aes(x = Time, y = fit, color = ability, fill = ability) +
     geom_hline(yintercept = 0, size = 2, color = "white") +
-    geom_line() + 
+    geom_line() +
     geom_text(aes(label = label), data = df_labs, parse = TRUE) +
     geom_text(aes(label = label), data = df_labs2, parse = TRUE) +
     labs(
       x = constants$x_time,
-      y = constants$y_pred_elog_phon) + 
-    facet_wrap("panel") + 
+      y = constants$y_pred_elog_phon) +
+    facet_wrap("panel") +
     guides(color = FALSE)
 ```
 
@@ -1373,7 +1387,7 @@ semy_age3 <- if (file.exists(semy_base)) {
 } else {
   bam(
     elog ~ s(Time) + s(Time, R, bs = "fs", m = 1, k = 5),
-    data = semy_d_minp) %>% 
+    data = semy_d_minp) %>%
   readr::write_rds(semy_base)
 }
 
@@ -1381,11 +1395,11 @@ semy_age3_ppvt <- if (file.exists(semy_ppvt)) {
   readr::read_rds(semy_ppvt)
 } else {
   bam(
-    elog ~ s(Time) + 
-      s(ppvt) + 
-      ti(Time, ppvt) + 
+    elog ~ s(Time) +
+      s(ppvt) +
+      ti(Time, ppvt) +
       s(Time, R, bs = "fs", m = 1, k = 5),
-    data = semy_d_minp) %>% 
+    data = semy_d_minp) %>%
   readr::write_rds(semy_ppvt)
 }
 
@@ -1393,11 +1407,11 @@ semy_age3_minp <- if (file.exists(semy_minp)) {
   readr::read_rds(semy_minp)
 } else {
   bam(
-    elog ~ s(Time) + 
-      s(ability) + 
-      ti(Time, ability) + 
+    elog ~ s(Time) +
+      s(ability) +
+      ti(Time, ability) +
       s(Time, R, bs = "fs", m = 1, k = 5),
-    data = semy_d_minp) %>% 
+    data = semy_d_minp) %>%
   readr::write_rds(semy_minp)
 }
 
@@ -1406,10 +1420,10 @@ semy_age3_ppvt_0 <- if (file.exists(semy_ppvt_para)) {
   readr::read_rds(semy_ppvt_para)
 } else {
   bam(
-    elog ~ s(Time) + 
-      ppvt + 
+    elog ~ s(Time) +
+      ppvt +
       s(Time, R, bs = "fs", m = 1, k = 5),
-    data = semy_d_minp) %>% 
+    data = semy_d_minp) %>%
   readr::write_rds(semy_ppvt_para)
 }
 
@@ -1418,10 +1432,10 @@ semy_age3_minp_0 <- if (file.exists(semy_minp_para)) {
   readr::read_rds(semy_minp_para)
 } else {
   bam(
-    elog ~ s(Time) + 
-      ability + 
+    elog ~ s(Time) +
+      ability +
       s(Time, R, bs = "fs", m = 1, k = 5),
-    data = semy_d_minp) %>% 
+    data = semy_d_minp) %>%
   readr::write_rds(semy_minp_para)
 }
 ```
@@ -1429,7 +1443,7 @@ semy_age3_minp_0 <- if (file.exists(semy_minp_para)) {
 To test the role of receptive vocabulary, I also fit analogous models
 using growth scale value scores from the PPVT-4, a receptive vocabulary
 test. I first adjusted these scores in a regression model to control
-for--that is, partial out the effects of---age and predicted accuracy on
+for--that is, to partial out the effects of---age and predicted accuracy on
 the phonological discrimination task. There was not a significant smooth
 effect for receptive vocabulary, EDF = `r phon_ppvt_edf`,
 `r phon_ppvt_p`, or a significant interaction smooth between time and
@@ -1438,14 +1452,32 @@ receptive vocabulary, EDF = `r phon_ppvt_time_edf`,
 looks to the phonological foil at age 3.
 
 I tested the same two predictors on looks to the semantic foil at age 3.
-These child-level factors did not show any parametric effects, smooth
-effects or smooth interactions with time. Thus, children's looks to the
-semantic foil were not reliably related to phonological discrimination
-or receptive vocabulary.
+These child-level factors did not show any significant parametric
+effects, smooth effects or smooth interactions with time. Thus,
+children's looks to the semantic foil were not reliably related to
+phonological discrimination or receptive vocabulary.
+
+
+
+
+## Discussion
+
+In the preceding analyses, I examined children's fixation patterns to
+the phonological and semantic competitors. With each year of the study,
+children looked more to the target numerically, so these analyses
+modeled the ratio of looks to the competitors versus the unrelated image
+used in each trial. Thus, even as the number of looks to the
+phonological foil decreases with age, the advantage of the foil over the
+unrelated image would still increase.
+
+
+
+
+
 
 Talking points :
 
-* I tested whether two child-level features predicted looks to the competitor image at age 3. 
+* I tested whether two child-level features predicted looks to the competitor image at age 3.
 * One a priori expectation was that looks to the phonological foil would relate to phonological discrimination ability, because children who can reliably discriminate one-feature phonetic differences between words would have richer phonological or phonetic representations that supported word recognition.
 * The expectation was tenuously supported by a generalized additive model where children with greater discrimination abilities showed more early looks to the phonological foil. However, this model showed an unexpected effect for children with the lowest discrimination scores, so this model is interpreted cautiously.
 * The other a prior expectation was that looks to semantic foil would relate to looks to the receptive vocabulary. However, neigther predicted related to looks the semantic foil.
@@ -1471,18 +1503,18 @@ Talking points :
 
 
 ```{r by-aoi-logit, out.width = "100%", fig.height = 2.5, fig.width = 6, echo = FALSE, message = FALSE, eval = FALSE}
-# ggplot(looks_by_aoi %>% filter(AOI != "Unrelated")) + 
-#   aes(x = Time, y = log(Primary / Unrelated), color = Study) + 
+# ggplot(looks_by_aoi %>% filter(AOI != "Unrelated")) +
+#   aes(x = Time, y = log(Primary / Unrelated), color = Study) +
 #   geom_hline(size = 2, color = "white", yintercept = 0) +
-#   stat_smooth(method = "gam", formula = y ~ s(x)) + 
-#   facet_grid( ~ AOI) + 
+#   stat_smooth(method = "gam", formula = y ~ s(x)) +
+#   facet_grid( ~ AOI) +
 #   labs(
 #     x = "Time after target onset [ms]",
 #     y = "Log odds looking to word vs. unrelated word",
 #     caption = "GAM smooth") +
 #   theme_grey(base_size = 9) +
 #   theme(
-#     legend.position = c(0.95, 0.95), 
+#     legend.position = c(0.95, 0.95),
 #     legend.justification = c(1, 1))
 ```
 
