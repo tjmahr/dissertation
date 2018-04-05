@@ -3,6 +3,7 @@
 ```{r include = FALSE}
 knitr::read_chunk("./helpers.R")
 if (interactive()) source("./helpers.R")
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
 ```{r helpers, include = FALSE}
@@ -10,6 +11,9 @@ if (interactive()) source("./helpers.R")
 
 ```{r aim1-gam-load-looks, message = FALSE, warnings = FALSE, echo = FALSE}
 data <- readr::read_csv("./data/aim1-screened.csv.gz")
+
+constants$cap_model_mean_data_mean_se <- 
+  "Lines: Model fits. Points: Obs. means ± SE"
 
 # How to aggregate looks to the images
 resp_def <- create_response_def(
@@ -1311,7 +1315,7 @@ minimal-pair discrimination task. Greater discrimination scores
 *generally* predicted greater peak looks to the foil at 800 ms, but
 this trend sharply reversed at very low discrimination scores.
 
-```{r age3-phon-by-minp, fig.cap = "(ref:age3-phon-by-minp)"}
+```{r age3-phon-by-minp, fig.cap = "(ref:age3-phon-by-minp)", out.width = "80%", fig.width = 6, fig.height = 4}
 smooth_times <- modelr::seq_range(unique(phon_d_minp$Time), 100)
 pp <- get_predictions(
   b2_age3_minp, 

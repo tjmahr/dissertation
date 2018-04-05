@@ -23,7 +23,6 @@ constants <- list(
   col_infobox_plot_bg = "#E5EAEF",
   cap_median_90_50 = "Posterior median with 90% and 50% intervals",
   cap_90_50 = "90% and 50% intervals",
-  cap_model_mean_data_mean_se = "Lines: Model fits. Points: Obs. means ± SE",
   cap_mean_95 = "Fitted means with 95% interval",
   cap_diff_95 = "Estimated difference with 95% interval"
 )
