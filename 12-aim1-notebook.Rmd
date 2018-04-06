@@ -1,5 +1,5 @@
 Analysis of familiar word recognition
-===========================================================================
+========================================================================
 
 ```{r setup, include = FALSE}
 d_m <- readr::read_csv("./data/aim1-model-ready.csv.gz")
