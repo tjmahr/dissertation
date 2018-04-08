@@ -24,7 +24,7 @@ devtools::session_info()
 #>  language (EN)                        
 #>  collate  English_United States.1252  
 #>  tz       America/Chicago             
-#>  date     2018-04-05
+#>  date     2018-04-08
 #> Packages ----------------------------------------------------------------------
 #>  package   * version date       source        
 #>  backports   1.1.2   2017-12-13 CRAN (R 3.4.3)
@@ -57,10 +57,10 @@ devtools::session_info()
 
 last_four_commits <- git2r::commits(git2r::repository("."), n = 4)
 msgs <- lapply(last_four_commits, methods::show)
+#> [7d5936e] 2018-04-06: work on discussion
+#> [5499d36] 2018-04-05: regenerate site
 #> [6e78368] 2018-04-05: work on discussion
 #> [eae7fd0] 2018-04-05: clean up output
-#> [d2ad7b2] 2018-04-03: regenerate site
-#> [98e2af1] 2018-04-02: finish plugging numbers into gamm section
 ```
 
 
