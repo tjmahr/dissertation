@@ -66,6 +66,7 @@ lme4
 resampling
 RStanARM
 Gelman
+mgcv
  - index.Rmd
 documentclass
 bookdown
@@ -160,6 +161,9 @@ alpha_i
 alpha_j
 alpha_
 beta_
+vw-experiment-items
+gca-fail
+age3-phon-by-minp
  - 90-appendix.Rmd
 vw-experiment-items
 wice
