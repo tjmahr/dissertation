@@ -162,7 +162,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="7.1" data-path="effects-of-phonological-and-semantic-competitors.html"><a href="effects-of-phonological-and-semantic-competitors.html#looks-to-the-phonological-competitor"><i class="fa fa-check"></i><b>7.1</b> Looks to the phonological competitor</a></li>
 <li class="chapter" data-level="7.2" data-path="effects-of-phonological-and-semantic-competitors.html"><a href="effects-of-phonological-and-semantic-competitors.html#looks-to-the-semantic-competitor"><i class="fa fa-check"></i><b>7.2</b> Looks to the semantic competitor</a></li>
 <li class="chapter" data-level="7.3" data-path="effects-of-phonological-and-semantic-competitors.html"><a href="effects-of-phonological-and-semantic-competitors.html#differences-in-competitor-sensitivity-at-age-3"><i class="fa fa-check"></i><b>7.3</b> Differences in competitor sensitivity at age 3</a></li>
-<li class="chapter" data-level="7.4" data-path="effects-of-phonological-and-semantic-competitors.html"><a href="effects-of-phonological-and-semantic-competitors.html#discussion-1"><i class="fa fa-check"></i><b>7.4</b> Discussion</a></li>
+<li class="chapter" data-level="7.4" data-path="effects-of-phonological-and-semantic-competitors.html"><a href="effects-of-phonological-and-semantic-competitors.html#discussion-1"><i class="fa fa-check"></i><b>7.4</b> Discussion</a><ul>
+<li class="chapter" data-level="7.4.1" data-path="effects-of-phonological-and-semantic-competitors.html"><a href="effects-of-phonological-and-semantic-competitors.html#immediate-activation-of-phonological-neighbors"><i class="fa fa-check"></i><b>7.4.1</b> Immediate activation of phonological neighbors</a></li>
+<li class="chapter" data-level="7.4.2" data-path="effects-of-phonological-and-semantic-competitors.html"><a href="effects-of-phonological-and-semantic-competitors.html#late-activation-of-semantic-neighbors"><i class="fa fa-check"></i><b>7.4.2</b> Late activation of semantic neighbors</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="effects-of-phonological-and-semantic-competitors.html"><a href="effects-of-phonological-and-semantic-competitors.html#general-discussion"><i class="fa fa-check"></i><b>7.5</b> General discussion</a></li>
 </ul></li>
 <li class="part"><span><b>Miscellany</b></span></li>
 <li class="chapter" data-level="8" data-path="scratch-paper.html"><a href="scratch-paper.html"><i class="fa fa-check"></i><b>8</b> Scratch paper</a><ul>
@@ -265,10 +269,10 @@ devtools<span class="op">::</span><span class="kw">session_info</span>()
 
 last_four_commits &lt;-<span class="st"> </span>git2r<span class="op">::</span><span class="kw">commits</span>(git2r<span class="op">::</span><span class="kw">repository</span>(<span class="st">&quot;.&quot;</span>), <span class="dt">n =</span> <span class="dv">4</span>)
 msgs &lt;-<span class="st"> </span><span class="kw">lapply</span>(last_four_commits, methods<span class="op">::</span>show)
+<span class="co">#&gt; [f3fce72] 2018-04-08: work on 15 discussion</span>
+<span class="co">#&gt; [01a53b3] 2018-04-08: refresh book site</span>
 <span class="co">#&gt; [7d5936e] 2018-04-06: work on discussion</span>
-<span class="co">#&gt; [5499d36] 2018-04-05: regenerate site</span>
-<span class="co">#&gt; [6e78368] 2018-04-05: work on discussion</span>
-<span class="co">#&gt; [eae7fd0] 2018-04-05: clean up output</span></code></pre></div>
+<span class="co">#&gt; [5499d36] 2018-04-05: regenerate site</span></code></pre></div>
 <p>Built with love using R <span class="citation">(Version 3.4.3; R Core Team, <a href="#ref-R-base">2017</a>)</span> and the R-packages <em>bayesplot</em> <span class="citation">(Version 1.5.0; Gabry &amp; Mahr, <a href="#ref-R-bayesplot">2018</a>)</span>, <em>bookdown</em> <span class="citation">(Version 0.7; Xie, <a href="#ref-R-bookdown">2018</a><a href="#ref-R-bookdown">a</a>)</span>, <em>dplyr</em> <span class="citation">(Version 0.7.4; Wickham, Francois, Henry, &amp; Müller, <a href="#ref-R-dplyr">2017</a>)</span>, <em>ggplot2</em> <span class="citation">(Version 2.2.1; Wickham &amp; Chang, <a href="#ref-R-ggplot2">2016</a>)</span>, <em>knitr</em> <span class="citation">(Version 1.20; Xie, <a href="#ref-R-knitr">2018</a><a href="#ref-R-knitr">b</a>)</span>, <em>littlelisteners</em> <span class="citation">(Version 0.0.0.9000; Tristan Mahr, <a href="#ref-R-littlelisteners">2018</a>)</span>, <em>lme4</em> <span class="citation">(Version 1.1.17; Bates, Maechler, Bolker, &amp; Walker, <a href="#ref-R-lme4">2018</a>)</span>, <em>rlang</em> <span class="citation">(Version 0.2.0; Henry &amp; Wickham, <a href="#ref-R-rlang">2018</a>)</span>, <em>rmarkdown</em> <span class="citation">(Version 1.9; Allaire et al., <a href="#ref-R-rmarkdown">2018</a>)</span>, <em>rstanarm</em> <span class="citation">(Version 2.17.3; Gabry &amp; Goodrich, <a href="#ref-R-rstanarm">2018</a>)</span>, <em>tjmisc</em> <span class="citation">(Version 0.0.0.9000; TJ Mahr, <a href="#ref-R-tjmisc">2018</a><a href="#ref-R-tjmisc">a</a>)</span>, and <em>tristan</em> <span class="citation">(Version 0.0.0.9000; TJ Mahr, <a href="#ref-R-tristan">2018</a><a href="#ref-R-tristan">b</a>)</span>.</p>
 <hr />
 <p>This is the original colophon from the huskydown package. I need to reword and note my modifications.</p>

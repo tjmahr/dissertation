@@ -36,7 +36,7 @@ complete list of trials used.
 The outcome measure for these analyses was the log-odds of fixating on
 the phonological foil versus the unrelated image. Because children
 looked more to the target word with each year of the study, they
-necessarily looked less to the distractors each year.
+necessarily looked less to the distractors each year. 
 Figure \@ref(fig:declining-phon-props) illustrates how the proportions
 of looks to the phonological foils declined each year. Therefore, I
 examined the effect of the phonological foil in comparison to the
@@ -211,9 +211,9 @@ visualizes estimated means and their 95% confidence intervals.
 </div>
 
 The average looks to the phonological foil over the unrelated for age 4
-was 0.17 emp. log-odds, .54 proportion units. The averages
-for age 3 and age 4 did not significantly differ, *p*&nbsp;= .51 but the
-average value was significantly greater at age 5, 0.33 emp. log-odds,
+was 0.16 emp. log-odds, .54 proportion units. The averages
+for age 3 and age 4 did not significantly differ, *p*&nbsp;= .85 but the
+average value was significantly greater at age 5, 0.31 emp. log-odds,
 .58 proportion units, *p*&nbsp;< .001. Visually, this effect shows up
 in the almost constant height difference between the age-4 and the age-5
 curves.
@@ -233,11 +233,11 @@ shape, but they steadily diverge over time.
 </div>
 
 There was a significant smooth term for time at age&nbsp;4, estimated degrees
-of freedom (EDF) = 6.78, *p*&nbsp;< .001.
+of freedom (EDF) = 7.28, *p*&nbsp;< .001.
 Figure \@ref(fig:phon-diff-curves) visualizes how and when the smooths
 from other studies differed from the age-4 smooth.
 
-The age-3 and age-4 significantly differed, EDF = 5.45,
+The age-3 and age-4 significantly differed, EDF = 5.48,
 *p*&nbsp;< .001. In particular, the curves are significantly different
 from 500 to 1050 ms. This result confirms that the looks to the
 phonological foil increased from age 3 and age 4 during the time window
@@ -299,7 +299,7 @@ and a time smooth, time-by-study difference smooths, and time-by-child
 random smooths. I modeled the looks from
 from 250 to 1800 ms.
 This window was 300 ms longer than the one used
-for the phonological competitors in order to capture late-occuring
+for the phonological competitors in order to capture late-occurring
 semantic effects.
 
 
@@ -404,7 +404,7 @@ vocabulary measures collected at age 3
 As a measure of speech perception, I used scores from a minimal pair
 discrimination experiment administered during the first year of the
 study. [citations] The task is essentially an ABX discrimination task:
-A picture of a familar object is shown and labeled (e.g., "car"),
+A picture of a familiar object is shown and labeled (e.g., "car"),
 another object is shown and labeled ("jar"), and then both images are
 shown and one of the two is named. The child then indicated which word
 they heard by tapping on the image on a touch-screen.
@@ -472,45 +472,7 @@ The model included data from 144 participants; these were
 children with eyetracking data, receptive vocabulary and phonological
 discrimination data at age 3. There was not a significant smooth effect
 for phonological discrimination ability, EDF = 1.00,
-*p*&nbsp;= .742. The interaction smooth between time and ability was
-significant, EDF = 7.65, *p*&nbsp;= .029. Model
-comparison between the model and a reduced model (without the Ability
-and Ability × Time effects) supported inclusion of the predictor,
-_&chi;_<sup>2</sup>(5)&nbsp;= 6.84, *p*&nbsp;= .018.
-
-To examine the contribution of the interaction term, I visualized
-model-predicted growth curves for an average participant at different
-phonological ability scores. Figure \@ref(fig:age3-phon-by-minp) shows
-how looks to phonological foil apparently increased with discrimination
-ability. The left panel shows how the predicted early looks to the
-phonological foil become more pronounced as phonological discrimination
-increases. This nonlinear interaction, however, becomes unstable at
-extreme values. In particular, children with very low phonological
-discrimination abilities (2 SD below average) showed roughly the same
-estimated growth curves as children with above average (+1 SD)
-discrimination scores. For the middle 68% of children, we can observe a
-sensible and interpretable effect, but this effect term is poorly
-behaved at very low abilities scores. In particular, children with low
-phonemic discrimination are predicted to be especially sensitive to the
-phonological foil. Such a finding contradicts my prior expectation that
-phonological discrimination would be related to processing of word
-onsets, so I interpret as a modeling artifact. A conservative conclusion
-from this model would be that differences in phonological discrimination
-predicted early looks to the phonological foil, but the direction of
-this effect was not consistent at low ability scores.
-
-(ref:age3-phon-by-minp) Estimated looks the phonological foil relative
-to the unrelated image at age 3. Lines represent different predictions
-for an average participant at different levels of performance on a
-minimal-pair discrimination task. Greater discrimination scores
-*generally* predicted greater peak looks to the foil at 800 ms, but
-this trend sharply reversed at very low discrimination scores.
-
-<div class="figure">
-<img src="15-aim1-notebook_files/figure-html/age3-phon-by-minp-1.png" alt="(ref:age3-phon-by-minp)" width="80%" />
-<p class="caption">(\#fig:age3-phon-by-minp)(ref:age3-phon-by-minp)</p>
-</div>
-
+*p*&nbsp;= .551 or for an interaction smooth between time and ability, EDF = 8.37, *p*&nbsp;= .303.
 
 
 
@@ -520,9 +482,9 @@ test. I first adjusted these scores in a regression model to control
 for--that is, to partial out the effects of---age and predicted accuracy
 on the phonological discrimination task. There was not a significant
 smooth effect for receptive vocabulary, EDF = 1.00,
-*p*&nbsp;= .717, or a significant interaction smooth between time and
-receptive vocabulary, EDF = 1.00,
-*p*&nbsp;= .492. Receptive vocabulary therefore was not related to
+*p*&nbsp;= .868, or a significant interaction smooth between time and
+receptive vocabulary, EDF = 5.57,
+*p*&nbsp;= .610. Receptive vocabulary therefore was not related to
 looks to the phonological foil at age 3.
 
 I tested the same two predictors on looks to the semantic foil at age 3.
@@ -532,14 +494,10 @@ children's looks to the semantic foil were not reliably related to
 phonological discrimination or receptive vocabulary.
 
 **Summary**. These models tested whether two child-level
-factors---minimal pair discrimination ability and receptive
+factors---minimal-pair discrimination ability and receptive
 vocabulary---predicted looks to the phonological and semantic
-competitors at age 3. No significant effects were observed except for
-the relationship of phonological discrimination on looks to the
-phonological foils. For typical ranges of ability, increased
-discrimination predicted increased early looks to the phonological foil.
-This trend, however, was unstable for very low phonological
-discrimination scores.
+competitors at age 3. No significant effects were observed for 
+all cases. 
 
 
 
@@ -550,36 +508,79 @@ Discussion
 In the preceding analyses, I examined children's fixation patterns to
 the phonological and semantic competitors and how these fixation
 patterns changed over developmental time. With each year of the study,
-children looked more to the target overallm so they necessarily looked
+children looked more to the target overall, so they consequently looked
 less to the competitor images each year. To account for this fact, these
 analyses modeled the ratio of looks to the competitors versus the
-unrelated image used in each trial. This ratio captured the relative
-advantage of a competitor over the unrelated image.
+unrelated image used in each trial. This ratio measured the relative
+advantage of a competitor over the unrelated image. 
+
+
+<!-- If we imagine a pie-chart of looks to the four images, the target piece -->
+<!-- increases in size each year, overtaking area from the other three looks. -->
 
 <!-- describe general patterns, time course and increase -->
 
-Children became more sensitive to the phonological and semantic competitors with each year of the study. The phonological competitor affected word recognition early on, with relative looks to the phonological foils peaking around 800&nbsp;ms
+### Immediate activation of phonological neighbors
 
-<!-- describe lack of activity at age 3 -->
+Developmentally, children became more sensitive to the phonological
+competitors with each year of the study. These words shared the same
+syllable onset as the target noun---for example, the pairs
+*dress*–*drum* or *fly*–*flag*. The competitors affected word
+recognition early on, with relative looks to the phonological foils
+peaking around 800 ms. The target nouns were approximately 800 ms long
+at age 3 and 550--800 ms for later ages. Assuming an 150–300 ms overhead
+for executing an eye movement in response to speed, this timing means
+that children on average shifted their gaze, immediately, based on partial
+information.
+
+At ages 4 and 5, these early peaks of looks to the phonological competitor were followed by a steep decrease in looks: Children rejected their initial interpretation of the word and considered other images. (At age 3, the pattern showed more wiggliness, which suggests greater uncertainty.) _Say something about inhibition?_
+
+_At age&nbsp;3 the effect of the phonological competitor was very small compared.
+The early advantage of the phonological foil was observed to a more
+limited degree in the age 3 study, but still there._
+
+Young children used information in an incremental fashion. This fact
+agrees with previous findings....
+
+<!-- Our results showed that children's activation of the target and its phonological neighbors increased with age. Children were more able to use partial information during word recognition. I had described this earlier as children becoming "more sensitive" to the phonological competitors. -->
+
+@Rigler2015 provides an interesting comparison. They compared 9-
+and 16-year-olds on a visual-world word recognition experiment with
+cohort and rime competitors. The younger children in that study were
+slower to look to the target image and showed more looks to the
+competitor images. The implications are that children's lexical
+processing is still developing in late childhood and that in particular,
+children's inhibition of lexical competitors increases with age.
+
+The current results with 3-, 4-, and 5-year-olds followed a different
+pattern: Relative looks to the competitor images increased with age.
+Taken together, the results suggest an interesting progression for the
+development of lexical processing. From the earliest stages, children's
+word recognition demonstrates incremental processing. [cite cite]
+During the preschool years, children learn many, many words, and they
+establish phonological and semantic connections between words. These
+connections support immediate activation of neighborhoods of words. For
+these experiments, children became more sensitive to the phonological
+foils because the phonological competitor achieved greater activation.
+Late childhood, based on the @Rigler2015 findings, would be a time for
+refinement of those connections, so that sensitivity to the competitors
+decreases. This refinement could follow from more selective activation 
+channels, increased lexical inhibition, or likely a combination of both.
 
 
-<!-- describe lexical dynamics for semantic foil -->
-
-<!-- describe lack of individual differences at age 3 -->
 
 
+I also asked whether child-level factors predicted sensitivity to the
+phonological competitors. They did not at age 3. In particular, children
+who can more reliably discriminate minimal pairs did not show increased
+sensitive to the phonological foil. This finding suggests that
+sensitivity to the phonological foil is somewhat removed from speech
+perception. PPVT: vocabulary not a factor either. Early activation
+dynamics different from speech perception or number of words.
 
-<!-- Thus, even as the number of looks to the -->
-<!-- phonological foil decreases with age, the advantage of the foil over the -->
-<!-- unrelated image would still increase. -->
+Limitations: Change in recorded stimuli. Inclusion of two competitors on
+every trial.
 
-
-
-
-<!-- Phon looks scraps. -->
-
-<!--   Although children looked to the target more quickly and more reliably with each of the study, the advantage of the phonological foil over -->
-<!--   the unrelated image increased with each year.  -->
 
 
 <!-- Talking points: -->
@@ -587,7 +588,7 @@ Children became more sensitive to the phonological and semantic competitors with
 <!--   - There is hardly an effect of the phonological foil during timepoint 1. There -->
 <!--     are a few ways to interpret this finding. The first may be artefactual. The -->
 <!--     stimuli were re-recorded at timepoint 2 so the timepoint 1 stimuli were -->
-<!--     somewhat longer on average (around 800 ms at TP1 vs. 550--800ms later on). -->
+<!--     somewhat longer on average (). -->
 <!--     However, with slower stimuli, we would still expect an inflection in looks -->
 <!--     to the foil as children have more time to activate the phonological -->
 <!--     representations to the cohort. In other words, with more time to respond, -->
@@ -599,10 +600,32 @@ Children became more sensitive to the phonological and semantic competitors with
 <!--     activating the cohorts as reliably. This would imply that further study is -->
 <!--     required on the evidence for when young children begin to show immediate -->
 <!--     activation of cohorts. -->
-<!--   - The children at timepoint1 may not be incrementally activating the cohorts. -->
-<!--     The children in timepoint 2 and 3 certainly are. -->
-<!--   - Incremental activation and early commitments to partial information goes up -->
-<!--     with age. -->
+
+
+
+### Late activation of semantic neighbors
+
+The semantic competitors were from the same category as the target noun.
+They showed late effects. *bee*–*fly* or *shirt*–*dress*
+
+
+describe lexical dynamics for semantic foil
+
+describe lack of individual differences at age 3
+
+
+
+
+## General discussion
+
+Children became more successful listerners. When they erred, they erred
+on the side of the phonologically or semantically plausible word.
+
+
+<!-- Phon looks scraps. -->
+
+
+
 
 
 <!-- semantic scraps: -->
@@ -620,12 +643,12 @@ Children became more sensitive to the phonological and semantic competitors with
 <!--     these things cancel each other out? -->
 
 
-Talking points :
+<!-- Talking points : -->
 
-* I tested whether two child-level features predicted looks to the competitor image at age 3.
-* One a priori expectation was that looks to the phonological foil would relate to phonological discrimination ability, because children who can reliably discriminate one-feature phonetic differences between words would have richer phonological or phonetic representations that supported word recognition.
-* The expectation was tenuously supported by a generalized additive model where children with greater discrimination abilities showed more early looks to the phonological foil. However, this model showed an unexpected effect for children with the lowest discrimination scores, so this model is interpreted cautiously.
-* The other a prior expectation was that looks to semantic foil would relate to looks to the receptive vocabulary. However, neigther predicted related to looks the semantic foil.
+<!-- * I tested whether two child-level features predicted looks to the competitor image at age 3. -->
+<!-- * One a priori expectation was that looks to the phonological foil would relate to phonological discrimination ability, because children who can reliably discriminate one-feature phonetic differences between words would have richer phonological or phonetic representations that supported word recognition. -->
+
+<!-- * The other a prior expectation was that looks to semantic foil would relate to looks to the receptive vocabulary. However, neither predicted related to looks the semantic foil. -->
 
 
 

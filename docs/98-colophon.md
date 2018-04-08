@@ -57,10 +57,10 @@ devtools::session_info()
 
 last_four_commits <- git2r::commits(git2r::repository("."), n = 4)
 msgs <- lapply(last_four_commits, methods::show)
+#> [f3fce72] 2018-04-08: work on 15 discussion
+#> [01a53b3] 2018-04-08: refresh book site
 #> [7d5936e] 2018-04-06: work on discussion
 #> [5499d36] 2018-04-05: regenerate site
-#> [6e78368] 2018-04-05: work on discussion
-#> [eae7fd0] 2018-04-05: clean up output
 ```
 
 
