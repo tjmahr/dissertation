@@ -116,3 +116,18 @@ upload_aim1_gamm_data <- function() {
     "s3://bunnyhat/data/aim1-semy-gamm-age3-minp-para.rds.gz",
     file = "./data/aim1-semy-gamm-age3-minp-para.rds.gz")
 }
+
+
+
+download_lkj_demo_data <- function() {
+  save_object(
+    "s3://bunnyhat/data/aim1-lkj-prior-demo.csv.gz",
+    file = "./data/aim1-lkj-prior-demo.csv.gz")
+}
+
+upload_lkj_demo_data <- function() {
+  put_object(
+    "s3://bunnyhat/data/aim1-lkj-prior-demo.csv.gz",
+    file = "./data/aim1-lkj-prior-demo.csv.gz")
+}
+
