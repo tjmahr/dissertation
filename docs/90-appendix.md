@@ -84,21 +84,6 @@ give the model a small amount of information to nudge it away from
 extreme, degenerate values.
 
 
-```
-#> Parsed with column specification:
-#> cols(
-#>   .draw = col_integer(),
-#>   .parameter = col_character(),
-#>   grp = col_character(),
-#>   var1 = col_character(),
-#>   var2 = col_character(),
-#>   vcov = col_double(),
-#>   sdcor = col_double(),
-#>   Model = col_character()
-#> )
-```
-
-<img src="90-appendix_files/figure-html/lkj-prior-1.png" width="50%" />
 
 
 

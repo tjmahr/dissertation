@@ -274,18 +274,6 @@ readr<span class="op">::</span><span class="kw">write_rds</span>(m, <span class=
 <p><em>Here I would have to also describe the random effects structure.</em></p>
 <p>For the hierarchical part of the model, I used RStanARM’s <code>decov()</code> prior which simultaneously sets a prior of the variances and correlations of the model’s random effect terms. Practically speaking, the variances model the variation in by-subject and by-subject-by-age effects, and the correlations allow correlations between the by-subject effects and between the by-subject-by-age effects. For example, I would expect that participants with average looking probabilities (low intercepts) to have flatter growth curves (low Time<sup>1</sup> effects), and this relationship would be captured by one of the random-effect correlations.</p>
 <p>For these terms, I used the default prior for the variance terms and used a weakly informative LKJ(2) prior on the random effect correlations. The figure below shows samples from the prior distribution of models fit with the default LKJ(1) prior and a weakly informative LKJ(2) prior. Under LKJ(2), extreme correlations are less plausible. The prior shifts the probability mass away from the ±1 edges towards the center. The motivation for this kind of prior was <em>regularization</em>: We give the model a small amount of information to nudge it away from extreme, degenerate values.</p>
-<pre><code>#&gt; Parsed with column specification:
-#&gt; cols(
-#&gt;   .draw = col_integer(),
-#&gt;   .parameter = col_character(),
-#&gt;   grp = col_character(),
-#&gt;   var1 = col_character(),
-#&gt;   var2 = col_character(),
-#&gt;   vcov = col_double(),
-#&gt;   sdcor = col_double(),
-#&gt;   Model = col_character()
-#&gt; )</code></pre>
-<p><img src="90-appendix_files/figure-html/lkj-prior-1.png" width="50%" /></p>
 <div class="infobox">
 <p><strong>Box 1: A brief comment about priors.</strong></p>
 <p>Bayesian models require prior information (“priors”). Priors are also commonly referred to as “prior beliefs”, and Bayesian techniques are criticized or dismissed for smuggling subjectivity into the scientific enterprise. I find this unfortunate on two grounds. First, <em>belief</em> overstates things. As George Box said, “all models are wrong, but some are useful” [cite], so no part of a statistical model should be called a “belief” when the whole thing is a convenient fiction. That’s why I prefer the term <em>prior information</em>. [Hat tip Gelman?] Second, other parts of the statistical model are also subjective: likelihood functions, what kind of ANOVA, what to covary, whether to transform measurements, whether a <em>p</em> = .07 is a “marginal” effect or no effect at all, and so on. This subjectivity seems reasonable, provided that we scientists are open about modeling decisions.</p>

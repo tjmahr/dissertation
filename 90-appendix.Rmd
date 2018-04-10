@@ -90,7 +90,7 @@ center. The motivation for this kind of prior was *regularization*: We
 give the model a small amount of information to nudge it away from
 extreme, degenerate values.
 
-```{r lkj-prior, echo = FALSE, out.width = "50%", fig.height = 3, fig.width = 4}
+```{r lkj-prior, echo = FALSE, out.width = "50%", fig.height = 3, fig.width = 4, include = FALSE}
 library(ggplot2)
 correlations <- readr::read_csv("./data/aim1-lkj-prior-demo.csv.gz")
 
