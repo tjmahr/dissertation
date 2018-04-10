@@ -56,8 +56,8 @@ readr::write_rds(m, "./data/stan_aim1_cubic_model.rds.gz")
 ```
 
 We used moderately informative priors for the main regression effects.
-Under the Normal(0 [mean], 1 [sd]) prior, before seeing any data, we
-expect 95% of plausible effects to fall in the range ±1.96, which is an
+Under the Normal(0 [mean], 1 [sd]) prior, before seeing any data, we
+expect 95% of plausible effects to fall in the range ±1.96, which is an
 adequate range for these growth curve models.
 
 <!-- For example, consider just the effect of Time^1^. If a -->
@@ -72,25 +72,28 @@ _Here I would have to also describe the random effects structure._
 For the hierarchical part of the model, I used RStanARM's `decov()`
 prior which simultaneously sets a prior of the variances and
 correlations of the model's random effect terms. Practically speaking,
-the variances model the variation in by-subject and
-by-subject-by-age effects, and the correlations allow
+variances capture the variation in by-subject and
+by-subject-by-age effects, and correlations allow
 correlations between the by-subject effects and between the
 by-subject-by-age effects. For example, I would expect that participants
 with average looking probabilities (low intercepts) to have flatter
 growth curves (low Time^1^ effects), and this relationship would be
-captured by one of the random-effect correlations.
+captured by one of the random-effect correlation terms.
 
-For these terms, I used the default prior for the variance terms and
-used a weakly informative LKJ(2) prior on the random effect
-correlations. The figure below shows samples from the prior distribution
-of models fit with the default LKJ(1) prior and a weakly informative
-LKJ(2) prior. Under LKJ(2), extreme correlations are less plausible. The
-prior shifts the probability mass away from the ±1 edges towards the
-center. The motivation for this kind of prior was *regularization*: We
-give the model a small amount of information to nudge it away from
-extreme, degenerate values.
+I used the default prior for the variance terms and applied a weakly
+informative LKJ(2) prior on the random effect correlations.
+Figure \@ref(fig:lkj-prior) shows samples from the prior distribution of
+models fit with the default LKJ(1) prior and a weakly informative LKJ(2)
+prior. Under LKJ(2), extreme correlations are less plausible. The prior
+shifts the probability mass away from the ±1 edges towards the center.
+The motivation for this kind of prior was *regularization*: We give the
+model a small amount of information to nudge it away from extreme,
+degenerate values.
 
-```{r lkj-prior, echo = FALSE, out.width = "50%", fig.height = 3, fig.width = 4, include = FALSE}
+(ref:lkj-prior) Samples of correlation effects drawn from the LKJ(1) and
+LKJ(2) priors.
+
+```{r lkj-prior, fig.cap = "(ref:lkj-prior)", echo = FALSE, out.width = "50%", fig.height = 3, fig.width = 4, message = FALSE}
 library(ggplot2)
 correlations <- readr::read_csv("./data/aim1-lkj-prior-demo.csv.gz")
 
