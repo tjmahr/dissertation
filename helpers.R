@@ -50,6 +50,8 @@ convert_study_to_age <- function(xs) {
     labels = c("Age 3", "Age 4", "Age 5"))
 }
 
+parse_text <- function(x) parse(text = x)
+
 # prints p-value in markdown as "*p* < .001" or "*p* = [whatever]"
 format_p_value <- function(p, digits = 3) {
   formatted <- printy::fmt_p_value(p, digits)

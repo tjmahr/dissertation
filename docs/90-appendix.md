@@ -23,8 +23,12 @@ Time^1^    &minus;0.50   0.50    1.00
 Time^2^    &minus;0.33   0.60    0.93
 Time^3^    &minus;0.63   0.63    1.26
 
-Here is the code used to fit the model with RStanARM. It took about 24 hours
-to run the model.
+Below is the code used to fit the model with RStanARM. It took
+about 24 hours to run the model. `ot1`, `ot2`, and `ot3` are the
+polynomial time features, `ResearchID` identifies children, and `Study`
+identifies the age/year of the study. `Primary` counts the number of
+looks to the target image at each time bin; `Others` counts looks to the
+other three images.
 
 
 ```r
@@ -45,35 +49,56 @@ readr::write_rds(m, "./data/stan_aim1_cubic_model.rds.gz")
 ```
 
 We used moderately informative priors for the main regression effects.
+Under the Normal(0 [mean], 1 [sd]) prior, before seeing any data, we
+expect 95% of plausible effects to fall in the range ±1.96, which is an
+adequate range for these growth curve models.
 
-* b ~ Normal(mean = 0, sd = 1)
-
-Under the Normal(0, 1) prior, before seeing any data, we expect 95% of plausible
-effects to fall in the range ±1.96, which is an adequate range for these
-growth curve models. For example, consider just the effect of Time^1^. If a
-listener starts at chance performance, 25% or -1.1
-logits, and increases to, say, 65% or 0.62, the effect
-of a unit change in Time^1^ would be a change of
-1.72 logits. This magnitude of effect is
-accommodated by our Normal(0, 1) prior. 
+<!-- For example, consider just the effect of Time^1^. If a -->
+<!-- listener starts at chance performance, 25% or -1.1 -->
+<!-- logits, and increases to, say, 65% or 0.62, the effect -->
+<!-- of a unit change in Time^1^ would be a change of -->
+<!-- 1.72 logits. This magnitude of effect is -->
+<!-- accommodated by our Normal(0, 1) prior.  -->
 
 _Here I would have to also describe the random effects structure._
 
-For the hierarchical part of the model, I used RStanARM's `decov()` prior which
-simultaneously sets a prior of the variances and correlations of the model's
-random effect terms. For these terms, I used the default prior for the variance
-terms and used a weakly informative LKJ(2) prior on the random effect
-correlations. The difference between LKJ(1) and LKJ(2) is that under
-LKJ(2) extreme correlations are less plausible. In the figure below, we
-see that the LKJ(2) prior nudges some of the probability mass away from
-±1 towards the center. The motivation for this kind of prior was
-*regularization*: We give the model a small amount of information to
-nudge it away from extreme, degenerate values.
+For the hierarchical part of the model, I used RStanARM's `decov()`
+prior which simultaneously sets a prior of the variances and
+correlations of the model's random effect terms. Practically speaking,
+the variances model the variation in by-subject and
+by-subject-by-age effects, and the correlations allow
+correlations between the by-subject effects and between the
+by-subject-by-age effects. For example, I would expect that participants
+with average looking probabilities (low intercepts) to have flatter
+growth curves (low Time^1^ effects), and this relationship would be
+captured by one of the random-effect correlations.
+
+For these terms, I used the default prior for the variance terms and
+used a weakly informative LKJ(2) prior on the random effect
+correlations. The figure below shows samples from the prior distribution
+of models fit with the default LKJ(1) prior and a weakly informative
+LKJ(2) prior. Under LKJ(2), extreme correlations are less plausible. The
+prior shifts the probability mass away from the ±1 edges towards the
+center. The motivation for this kind of prior was *regularization*: We
+give the model a small amount of information to nudge it away from
+extreme, degenerate values.
 
 
+```
+#> Parsed with column specification:
+#> cols(
+#>   .draw = col_integer(),
+#>   .parameter = col_character(),
+#>   grp = col_character(),
+#>   var1 = col_character(),
+#>   var2 = col_character(),
+#>   vcov = col_double(),
+#>   sdcor = col_double(),
+#>   Model = col_character()
+#> )
+```
 
-
-<img src="90-appendix_files/figure-html/lkj-prior-1.png" width="50%" /><img src="90-appendix_files/figure-html/lkj-prior-2.png" width="50%" />
+<img src="90-appendix_files/figure-html/lkj-prior-1.png" width="50%" />
 
 
 

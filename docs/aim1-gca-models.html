@@ -25,7 +25,7 @@
 <meta name="author" content="Tristan Mahr">
 
 
-<meta name="date" content="2018-04-08">
+<meta name="date" content="2018-04-10">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -139,14 +139,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="part"><span><b>Aim 1: Familiar Word Recognition and Lexical Competition</b></span></li>
 <li class="chapter" data-level="5" data-path="aim1-method.html"><a href="aim1-method.html"><i class="fa fa-check"></i><b>5</b> Method</a><ul>
-<li class="chapter" data-level="5.1" data-path="aim1-method.html"><a href="aim1-method.html#participants"><i class="fa fa-check"></i><b>5.1</b> Participants</a><ul>
-<li class="chapter" data-level="5.1.1" data-path="aim1-method.html"><a href="aim1-method.html#special-case-data-screening"><i class="fa fa-check"></i><b>5.1.1</b> Special case data screening</a></li>
-</ul></li>
+<li class="chapter" data-level="5.1" data-path="aim1-method.html"><a href="aim1-method.html#participants"><i class="fa fa-check"></i><b>5.1</b> Participants</a></li>
 <li class="chapter" data-level="5.2" data-path="aim1-method.html"><a href="aim1-method.html#procedure"><i class="fa fa-check"></i><b>5.2</b> Procedure</a></li>
 <li class="chapter" data-level="5.3" data-path="aim1-method.html"><a href="aim1-method.html#experiment-administration"><i class="fa fa-check"></i><b>5.3</b> Experiment Administration</a></li>
 <li class="chapter" data-level="5.4" data-path="aim1-method.html"><a href="aim1-method.html#stimuli"><i class="fa fa-check"></i><b>5.4</b> Stimuli</a></li>
 <li class="chapter" data-level="5.5" data-path="aim1-method.html"><a href="aim1-method.html#data-screening"><i class="fa fa-check"></i><b>5.5</b> Data screening</a></li>
-<li class="chapter" data-level="5.6" data-path="aim1-method.html"><a href="aim1-method.html#prepare-the-dataset-for-modeling"><i class="fa fa-check"></i><b>5.6</b> Prepare the dataset for modeling</a></li>
+<li class="chapter" data-level="5.6" data-path="aim1-method.html"><a href="aim1-method.html#model-preparation"><i class="fa fa-check"></i><b>5.6</b> Model preparation</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="analysis-of-familiar-word-recognition.html"><a href="analysis-of-familiar-word-recognition.html"><i class="fa fa-check"></i><b>6</b> Analysis of familiar word recognition</a><ul>
 <li class="chapter" data-level="6.1" data-path="analysis-of-familiar-word-recognition.html"><a href="analysis-of-familiar-word-recognition.html#growth-curve-analysis"><i class="fa fa-check"></i><b>6.1</b> Growth curve analysis</a><ul>
@@ -251,7 +249,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </tr>
 </tbody>
 </table>
-<p>Here is the code used to fit the model with RStanARM. It took about 24 hours to run the model.</p>
+<p>Below is the code used to fit the model with RStanARM. It took about 24 hours to run the model. <code>ot1</code>, <code>ot2</code>, and <code>ot3</code> are the polynomial time features, <code>ResearchID</code> identifies children, and <code>Study</code> identifies the age/year of the study. <code>Primary</code> counts the number of looks to the target image at each time bin; <code>Others</code> counts looks to the other three images.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(rstanarm)
 <span class="kw">options</span>(<span class="dt">mc.cores =</span> parallel<span class="op">::</span><span class="kw">detectCores</span>())
 
@@ -266,14 +264,28 @@ m &lt;-<span class="st"> </span><span class="kw">stan_glmer</span>(
   <span class="dt">data =</span> d_m)
 
 readr<span class="op">::</span><span class="kw">write_rds</span>(m, <span class="st">&quot;./data/stan_aim1_cubic_model.rds.gz&quot;</span>)</code></pre></div>
-<p>We used moderately informative priors for the main regression effects.</p>
-<ul>
-<li>b ~ Normal(mean = 0, sd = 1)</li>
-</ul>
-<p>Under the Normal(0, 1) prior, before seeing any data, we expect 95% of plausible effects to fall in the range ±1.96, which is an adequate range for these growth curve models. For example, consider just the effect of Time<sup>1</sup>. If a listener starts at chance performance, 25% or -1.1 logits, and increases to, say, 65% or 0.62, the effect of a unit change in Time<sup>1</sup> would be a change of 1.72 logits. This magnitude of effect is accommodated by our Normal(0, 1) prior.</p>
+<p>We used moderately informative priors for the main regression effects. Under the Normal(0 [mean], 1 [sd]) prior, before seeing any data, we expect 95% of plausible effects to fall in the range ±1.96, which is an adequate range for these growth curve models.</p>
+<!-- For example, consider just the effect of Time^1^. If a -->
+<!-- listener starts at chance performance, 25% or -1.1 -->
+<!-- logits, and increases to, say, 65% or 0.62, the effect -->
+<!-- of a unit change in Time^1^ would be a change of -->
+<!-- 1.72 logits. This magnitude of effect is -->
+<!-- accommodated by our Normal(0, 1) prior.  -->
 <p><em>Here I would have to also describe the random effects structure.</em></p>
-<p>For the hierarchical part of the model, I used RStanARM’s <code>decov()</code> prior which simultaneously sets a prior of the variances and correlations of the model’s random effect terms. For these terms, I used the default prior for the variance terms and used a weakly informative LKJ(2) prior on the random effect correlations. The difference between LKJ(1) and LKJ(2) is that under LKJ(2) extreme correlations are less plausible. In the figure below, we see that the LKJ(2) prior nudges some of the probability mass away from ±1 towards the center. The motivation for this kind of prior was <em>regularization</em>: We give the model a small amount of information to nudge it away from extreme, degenerate values.</p>
-<p><img src="90-appendix_files/figure-html/lkj-prior-1.png" width="50%" /><img src="90-appendix_files/figure-html/lkj-prior-2.png" width="50%" /></p>
+<p>For the hierarchical part of the model, I used RStanARM’s <code>decov()</code> prior which simultaneously sets a prior of the variances and correlations of the model’s random effect terms. Practically speaking, the variances model the variation in by-subject and by-subject-by-age effects, and the correlations allow correlations between the by-subject effects and between the by-subject-by-age effects. For example, I would expect that participants with average looking probabilities (low intercepts) to have flatter growth curves (low Time<sup>1</sup> effects), and this relationship would be captured by one of the random-effect correlations.</p>
+<p>For these terms, I used the default prior for the variance terms and used a weakly informative LKJ(2) prior on the random effect correlations. The figure below shows samples from the prior distribution of models fit with the default LKJ(1) prior and a weakly informative LKJ(2) prior. Under LKJ(2), extreme correlations are less plausible. The prior shifts the probability mass away from the ±1 edges towards the center. The motivation for this kind of prior was <em>regularization</em>: We give the model a small amount of information to nudge it away from extreme, degenerate values.</p>
+<pre><code>#&gt; Parsed with column specification:
+#&gt; cols(
+#&gt;   .draw = col_integer(),
+#&gt;   .parameter = col_character(),
+#&gt;   grp = col_character(),
+#&gt;   var1 = col_character(),
+#&gt;   var2 = col_character(),
+#&gt;   vcov = col_double(),
+#&gt;   sdcor = col_double(),
+#&gt;   Model = col_character()
+#&gt; )</code></pre>
+<p><img src="90-appendix_files/figure-html/lkj-prior-1.png" width="50%" /></p>
 <div class="infobox">
 <p><strong>Box 1: A brief comment about priors.</strong></p>
 <p>Bayesian models require prior information (“priors”). Priors are also commonly referred to as “prior beliefs”, and Bayesian techniques are criticized or dismissed for smuggling subjectivity into the scientific enterprise. I find this unfortunate on two grounds. First, <em>belief</em> overstates things. As George Box said, “all models are wrong, but some are useful” [cite], so no part of a statistical model should be called a “belief” when the whole thing is a convenient fiction. That’s why I prefer the term <em>prior information</em>. [Hat tip Gelman?] Second, other parts of the statistical model are also subjective: likelihood functions, what kind of ANOVA, what to covary, whether to transform measurements, whether a <em>p</em> = .07 is a “marginal” effect or no effect at all, and so on. This subjectivity seems reasonable, provided that we scientists are open about modeling decisions.</p>

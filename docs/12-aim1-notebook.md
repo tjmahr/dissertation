@@ -151,9 +151,9 @@ log-odds to proportions to ease interpretation.
 <p class="caption">(\#fig:effects2)(ref:effects2)</p>
 </div>
 
-(ref:pairwise-effects) Uncertainty intervals for the differences between study
-timepoints. Again, the intercept and peak features were converted to
-proportions.
+(ref:pairwise-effects) Uncertainty intervals for the differences between
+study timepoints. Again, the intercept and peak features were converted
+to proportions.
 
 <div class="figure">
 <img src="12-aim1-notebook_files/figure-html/pairwise-effects-1.png" alt="(ref:pairwise-effects)" width="50%" /><img src="12-aim1-notebook_files/figure-html/pairwise-effects-2.png" alt="(ref:pairwise-effects)" width="50%" />
@@ -394,27 +394,27 @@ receptive vocabulary at age 4. For all cases, the strongest correlations
 were found between the growth curve features at age 3.
 
 Growth curve peaks from age 4 correlated with age 5 vocabulary with
-*r* = .52, 90% UI
-[.50--.54], but the concurrent peaks from age 5
-showed a correlation of just *r* = .31,
+*r* = .52 [90% UI
+.50--.54], but the concurrent peaks from age 5
+showed a correlation of just *r* = .31
 [.29--.33], a difference between age 3 and
-age 5 of *r*<sub>3−5</sub> = .21,
+age 5 of *r*<sub>3−5</sub> = .21
 [.18--.24]. A similar pattern held for
 lexical processing efficiency values. Linear time features from age 3
 correlated with age 5 vocabulary with *r* =
-.41, [.39--.44],
+.41 [.39--.44],
 whereas the concurrent lexical processing values from age 5 only showed
-a correlation of *r* = .28,
+a correlation of *r* = .28
 [.26--.31], a difference of *r*<sub>3−5</sub> =
-.13,
+.13
 [.10--.16]. For the average looking
 probabilities, the correlation for age 3, *r* =
-.39, [.39--.44], was
+.39 [.39--.44], was
 probably only slightly greater than the correlation for age 4,
-*r*<sub>3−4</sub> = .02,
+*r*<sub>3−4</sub> = .02
 [&minus;.01--.04] but considerably greater than the
 concurrent correlation at age 5, *r*<sub>3−5</sub> =
-.08,
+.08
 [.05--.10].
 
 (ref:evt2-gca-cors) Uncertainty intervals for the correlations of growth
@@ -428,19 +428,19 @@ pairwise differences in correlations between timepoints.
 </div>
 
 Peak looking probabilities from age 3 were strongly correlated with
-age 4 receptive vocabulary, *r* = .62,
+age 4 receptive vocabulary, *r* = .62
 [.61--.64], and this correlation was much
 greater than the correlation observed for the age 4 growth curve peaks,
-*r*<sub>3−4</sub> = .26,
+*r*<sub>3−4</sub> = .26
 [.26]. The correlation of age 3
-average looking probabilities, *r* = .45,
+average looking probabilities, *r* = .45
 [.44--.47], was greater than the age 4
-correlation, *r*<sub>TP1−TP2</sub> =
-.08,
-[.08], and the correlation for age 3
-linear time features, *r* = .51,
+correlation, *r*<sub>3−4</sub> =
+.08
+[.06--.11], and the correlation for age 3
+linear time features, *r* = .51
 [.49--.54], was likewise greater,
-*r*<sub>3−4</sub> = .22,
+*r*<sub>3−4</sub> = .22
 [.19--.26].
 
 (ref:ppvt4-gca-cors) Uncertainty intervals for the correlations of
@@ -458,9 +458,7 @@ stable over time, early differences were more significant than later
 ones. The strongest predictors of future vocabulary size were the growth
 curve features from age 3.
 
-<!-- ### Relationships with other child-level predictors -->
 
-<!-- _TJM: This is where I would analyze the other test scores as we have discussed._ -->
 
 
 Discussion
@@ -490,123 +488,38 @@ troubling: Word recognition differences that expanded with age, the
 emergence of a word recognition "gap".
 
 Although the range of individual differences decreased with age,
-differences did not disappear over time. When children at each age were
-ranked using growth curve features, we found a high degree of
-correspondence among these ratings. Children who were faster or more
+individual differences did not disappear over time. When children at
+each age were ranked using growth curve features, we found a high degree
+of correspondence among these ratings. Children who were faster or more
 accurate at age 3 remained relatively fast or accurate at age 5. Thus,
 differences in word recognition were longitudinally stable over the
 preschool years. Extrapolating forwards in time, these differences
-likely would become smaller and smaller until they are irrelevant.
-Alternatively, they might matter in more adverse listening conditions.
-It is conceivable that children's differences would re-emerge in a more
-difficult word recognition task. [_Study Bob's paper on older children._]
+likely would become smaller and smaller and become irrelevant for
+everyday listening situations. It is conceivable, however, that
+individual differences might re-emerge and differentiate word
+recognition performance under adverse listening conditions.
 
+Lastly, I analyzed how individual differences in word recognition
+features correlated with future vocabulary outcomes. The peak looking
+probabilities and growth curve slopes from age 3 showed the strongest
+correlations with future vocabulary scores. This finding was remarkable:
+Expressive vocabulary scores at age 5, for example, were more strongly
+correlated with word recognition data collected two years earlier than
+word recognition data collected during the same week. 
 
-***
-
-  - the vocabulary results
-  - Stitch these pieces together
-  - The shape and structure of words do not change with age. The amount
-    of information needed to identify a word from a closed set is
-    constant with age. So it makes sense that word recognition
-    development follows a trajectory where differences narrow. As a skill, word
-    recognition is a necessary foundation to later more sophisticated
-    degrees of language comprehension. If word recognition is such a foundation,
-    then slow listerners might show challenges in these more difficulty
-    comprehension situations. 
-
-
-*** 
-
-**Summary**. Although individual differences in word recognition are
-stable over time, early differences are more significant than later
-ones. The strongest predictors of future vocabulary size were the growth
-curve features from age 3. That is, word recognition performance from
-age 3 was more strongly correlated with age 5 expressive vocabulary than
-word recognition performance at age 5. A similar pattern of results held
-for predicting receptive vocabulary at age 4.
-
-
-
-
-
-<!-- The growth curve changes each year involved peak accuracy and steepness -->
-<!-- of the curve. They reach higher heights, and they hit year 1 peak -->
-<!-- earlier each year. -->
-
-  <!-- - Word recognition performance is a skill where variation is greatest -->
-  <!--   at younger ages. -->
-  <!-- - What mechanisms might come to bear on this? Does variability narrow -->
-  <!--   developmentally for vocabulary? -->
-  <!-- - Children different in their word-learning trajectories, so the early -->
-  <!--   differences in word recognition could be from younger children who -->
-  <!--   are relatively early/late in word-learning. The SDs of the EVT-2 -->
-  <!--   scores narrows a small amount each year, even when we only consider -->
-  <!--   the children who participated at all three years. -->
-  <!-- - (It will be easier to fold this in to the mechanism discussion once -->
-  <!--   we have firmer results for the looks-to-foils analysis.) -->
-  <!-- - If differences in word recognition matter (and they do) and the -->
-  <!--   differences are greatest at younger ages, then they are most -->
-  <!--   informative at younger ages. -->
-  <!-- - Maybe a few words on why individual differences are worth studying? -->
-
-<!--   - Although the range of variability decreases, individual differences -->
-<!--     do not wash out. -->
-<!--   - Lexical processing is a stable ability over the preschool years. -->
-<!--   - Extrapolating outwards, the differences probably diminish to the -->
-<!--     point that they are not meaningful. But traces of those early -->
-<!--     differences can reappear years later on some test scores. -->
-
-
-  <!-- - This finding is surprising because vocabulary scores from the same -->
-  <!--   week as the eyetracking data are less correlated than scores from -->
-  <!--   two year earlier. -->
-  <!-- - This establishes that the differences are greatest and most -->
-  <!--   predictive at younger ages. -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+We can understand this predictive value of age-3 word recognition from
+two perspectives. The first is statistical. Differences in children's
+word recognition performance were greatest at age 3, so word recognition
+features at age 3 provide more variance and more information about the
+children and their future vocabulary size. The second is conceptual.
+Correlations were strongest for the growth curve peaks. We can think of
+this feature as measuring children's maximum word recognition certainty.
+A child with a peak of .5, for example, looked the target image half of
+the time when they were most certain about the word. Although all of the
+words used were chosen to be familar to preschoolers, children with
+higher peaks knew those words *better*. From the perspective, higher
+peaks at age 3 would indicate more developed lexical representations and
+stronger activation of lexical items at this age. Thus, these children
+have a stronger foundation for word-learning than children who show more
+uncertainty during word recognition.
 
