@@ -24,7 +24,7 @@ devtools::session_info()
 #>  language (EN)                        
 #>  collate  English_United States.1252  
 #>  tz       America/Chicago             
-#>  date     2018-04-10
+#>  date     2018-04-12
 #> Packages ----------------------------------------------------------------------
 #>  package   * version date       source        
 #>  backports   1.1.2   2017-12-13 CRAN (R 3.4.3)
@@ -57,10 +57,10 @@ devtools::session_info()
 
 last_four_commits <- git2r::commits(git2r::repository("."), n = 4)
 msgs <- lapply(last_four_commits, methods::show)
+#> [068779e] 2018-04-10: work on appendix
 #> [f7a3251] 2018-04-10: remove junk from appendix
 #> [8ed7a5c] 2018-04-10: finish part 12
 #> [9ea386f] 2018-04-10: update lkj prior bit
-#> [3072004] 2018-04-08: more discussion
 ```
 
 
