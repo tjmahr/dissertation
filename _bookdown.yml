@@ -16,6 +16,7 @@ rmd_files:
   - 11-aim1-notebook.Rmd
   - 12-aim1-notebook.Rmd
   - 15-aim1-notebook.Rmd
+  - 16-aim1-general-discussion.Rmd
   - 80-scratch.Rmd
   - 81-test.Rmd
   - 90-appendix.Rmd

@@ -156,7 +156,7 @@ The four images on each trial consisted of a target noun, a phonological
 foil, a semantic foil, and an unrelated word. The phonological
 competitors shared a syllable onset (e.g., *flag*–*fly*, *bell*–*bee*),
 shared an initial consonant (*bread*–*bear*, *swing*–*spoon*), had a
-similar phonetically similar consonsant onset (*kite*–*gift*), or shared
+similar phonetically similar consonant onset (*kite*–*gift*), or shared
 a syllable rime (*van*–*pan*). The semantic competitors included words
 from the same category (e.g., *shirt*–*dress*, *horse*–*bear*), words
 that were perceptually similar (*sword*–*pen*, *flag*–*kite*), and words

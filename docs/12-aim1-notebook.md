@@ -469,7 +469,7 @@ recognition of familiar words. First, I examined how children's looking
 patterns *on average* changed year over year. Children's word
 recognition improved each year: The growth curves grew steeper, reached
 higher peaks, and increased in their average value each year. This
-result was unsurprising, but it was valueable because it confirmed that
+result was unsurprising, but it was valuable because it confirmed that
 this word recognition task scaled with development. The task was simple
 enough that children could recognize words at age&nbsp;3, but challenging
 enough for children's performance to improve each year.
@@ -516,7 +516,7 @@ Correlations were strongest for the growth curve peaks. We can think of
 this feature as measuring children's maximum word recognition certainty.
 A child with a peak of .5, for example, looked the target image half of
 the time when they were most certain about the word. Although all of the
-words used were chosen to be familar to preschoolers, children with
+words used were chosen to be familiar to preschoolers, children with
 higher peaks knew those words *better*. From the perspective, higher
 peaks at age 3 would indicate more developed lexical representations and
 stronger activation of lexical items at this age. Thus, these children

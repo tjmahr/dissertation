@@ -103,6 +103,7 @@ sample-vw-screen
 sample-vw-screen-cap2
 T60XL
 vw-experiment-items
+aim1-spaghetti
  - 10-aim1-part.Rmd
 part-aim1
  - 12-aim1-notebook.Rmd

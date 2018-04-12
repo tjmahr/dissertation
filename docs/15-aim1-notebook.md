@@ -510,9 +510,9 @@ the phonological and semantic competitors and how these fixation
 patterns changed over developmental time. With each year of the study,
 children looked more to the target overall, so they consequently looked
 less to the competitor images each year. To account for this fact, these
-analyses modeled the ratio of looks to the competitors versus the
-unrelated image used in each trial. This ratio measured the relative
-advantage of a competitor over the unrelated image. 
+analyses examined the ratio of looks to the competitors versus the
+unrelated word. This ratio measured the relative
+advantage of a competitor over the unrelated word. Put differently,
 
 
 <!-- If we imagine a pie-chart of looks to the four images, the target piece -->
@@ -529,8 +529,8 @@ syllable onset as the target noun---for example, the pairs
 recognition early on, with relative looks to the phonological foils
 peaking around 800 ms. The target nouns were approximately 800 ms long
 at age 3 and 550--800 ms for later ages. Assuming an 150–300 ms overhead
-for executing an eye movement in response to speed, this timing means
-that children on average shifted their gaze, immediately, based on partial
+for executing an eye movement in response to speech, this timing indicates
+that children shifted their gaze immediately, based on partial
 information.
 
 At ages 4 and 5, these early peaks of looks to the phonological competitor were followed by a steep decrease in looks: Children rejected their initial interpretation of the word and considered other images. (At age 3, the pattern showed more wiggliness, which suggests greater uncertainty.) _Say something about inhibition?_
@@ -671,8 +671,6 @@ on the side of the phonologically or semantically plausible word.
 
 
 
-
-
 <!-- Each curve is the log odds of looking to the target, phonological foil, and -->
 <!-- semantic foil versus the unrelated word. Positive values mean more looks to an -->
 <!-- image type than the unrelated. If you think of the _y_ axis as the image's -->
@@ -683,8 +681,7 @@ on the side of the phonologically or semantically plausible word.
 <!-- ones.) -->
 
 <!-- This plot suggests an important finding: Children becoming more sensitive to the -->
-<!-- phonological and semantic foils as they grow older. (I use the verb *suggest* -->
-<!-- because this is still a preliminary, unmodeled finding.) Jan and I had made -->
+<!-- phonological and semantic foils as they grow older. Jan and I had made -->
 <!-- opposite predictions about whether this would happen. Her argument, I think, was -->
 <!-- that children become better at word recognition by becoming better able to -->
 <!-- inhibit interference from competing words. This plot would suggest that they -->
