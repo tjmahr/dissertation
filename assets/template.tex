@@ -11,15 +11,14 @@
 
 \hyphenation{mar-gin-al-ia}
 
-%
-% ----- apply watermark to every page
-% ----- change 'stamp' to 'nostamp'
-%------ to omit watermark
-%
-\usepackage[nostamp]{draftwatermark}
+$if(watermark)$
+\usepackage[stamp]{draftwatermark}
 % % Use the following to make modification
-\SetWatermarkText{DRAFT}
+\SetWatermarkText{$watermark$}
 \SetWatermarkLightness{0.95}
+$else$
+\usepackage[nostamp]{draftwatermark}
+$endif$
 
 \usepackage[nointegrals]{wasysym} %% for the per mil symbol
 \usepackage{textcomp}             %% for copyright symbol

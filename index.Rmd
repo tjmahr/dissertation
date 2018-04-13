@@ -9,6 +9,8 @@ panflute-filters: "fix-apa-ampersands"
 bibliography: ["assets/refs.bib", "assets/packages.bib"]
 csl: "assets/apa.csl"
 link-citations: yes
+abstract: |
+  Here is my abstract
 
 # Data for the PDF version
 year: 2018
@@ -21,14 +23,13 @@ chair: "Name of my committee chair"
 signature: 
   - "committee member 1"
   - "committee member 2"
-abstract: |
-  Here is my abstract
 acknowledgments: |
   My acknowledgments
 dedication: |
   For Penny
 lot: true
 lof: true
+watermark: "DRAFT"
 ---
 
 \frontmatter
