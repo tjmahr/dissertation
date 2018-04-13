@@ -20,9 +20,10 @@ mdspell -r -n --en-us 05-methods.Rmd
 mdspell -r -n --en-us 06-outcomes.Rmd
 mdspell -r -n --en-us 07-analysis.Rmd
 mdspell -r -n --en-us 10-aim1-part.Rmd
-mdspell -r -n --en-us 11-aim1-notebook.Rmd
-mdspell -r -n --en-us 12-aim1-notebook.Rmd
-mdspell -r -n --en-us 15-aim1-notebook.Rmd
+mdspell -r -n --en-us 12-aim1-methods.Rmd
+mdspell -r -n --en-us 14-aim1-familiar-word-recognition.Rmd
+mdspell -r -n --en-us 16-aim1-lexical-competitors.Rmd
+mdspell -r -n --en-us 18-aim1-general-discussion.Rmd
 mdspell -r -n --en-us 20-aim2-part.Rmd
 mdspell -r -n --en-us 90-appendix.Rmd
 mdspell -r -n --en-us 99-references.Rmd

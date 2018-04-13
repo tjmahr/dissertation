@@ -95,7 +95,9 @@ MPPaper
 shoop
 cheem
 McMurray2012
- - 11-aim1-notebook.Rmd
+ - 10-aim1-part.Rmd
+part-aim1
+ - 12-aim1-methods.Rmd
 aim1-method
 OSF_Statement
 RWLPaper
@@ -104,9 +106,7 @@ sample-vw-screen-cap2
 T60XL
 vw-experiment-items
 aim1-spaghetti
- - 10-aim1-part.Rmd
-part-aim1
- - 12-aim1-notebook.Rmd
+ - 14-aim1-familiar-word-recognition.Rmd
 GelmanHill
 RethinkingBook
 Mirman2014
@@ -134,7 +134,7 @@ Gelman
 RStanARM's
 _Here
 irr
- - 15-aim1-notebook.Rmd
+ - 16-aim1-lexical-competitors.Rmd
 RWLPaper
 Barr2008
 Wood2017

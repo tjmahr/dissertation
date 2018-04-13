@@ -46,6 +46,17 @@ add `latex_engine: xelatex` to the YAML configuration for the format in
 [`_output.yml`](./_output.yml).
 
 
+### File names
+
+I name the chapter files with spaced out numbering---e.g.,
+`14-aim1-familiar-word-recognition.Rmd` followed by
+`16-aim1-lexical-competitors.Rmd`---to give myself a little slack in
+case I need to add a new chapter or chunk of text between two chapters.
+(The alternative would require renaming many files at once whenever a
+new chapter was created.) Strictly speaking, the numbering of chapter
+files is not necessary because the order of chapters is spelled out in
+the `_bookdown.yml` configuration file.
+
 ## Migration notes
 
 This bookdown file was originally a fork of

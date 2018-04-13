@@ -238,20 +238,20 @@ clean_site <- function(...) {
   bookdown::clean_book(clean = TRUE)
   message(paste0(paste0(" ", results), collapse = "\n"))
 
-  if (file.exists("./dissertation.Rmd")) {
-    message(" dissertation.Rmd")
-    invisible(file.remove("./dissertation.Rmd"))
-  }
-
-  if (file.exists("./dissertation.md")) {
-    message(" dissertation.md")
-    invisible(file.remove("./dissertation.md"))
-  }
-
-  if (file.exists("./dissertation.log")) {
-    message(" dissertation.log")
-    invisible(file.remove("./dissertation.log"))
-  }
+  # if (file.exists("./dissertation.Rmd")) {
+  #   message(" dissertation.Rmd")
+  #   invisible(file.remove("./dissertation.Rmd"))
+  # }
+  #
+  # if (file.exists("./dissertation.md")) {
+  #   message(" dissertation.md")
+  #   invisible(file.remove("./dissertation.md"))
+  # }
+  #
+  # if (file.exists("./dissertation.log")) {
+  #   message(" dissertation.log")
+  #   invisible(file.remove("./dissertation.log"))
+  # }
 
   # clean up artifacts of individual chapters in root folder
   chapters <- list.files(".", pattern = "Rmd")
