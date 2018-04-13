@@ -17,11 +17,17 @@ the end of the analysis window. The polynomial features for the Time had
 the following ranges:
 
 
-Feature            Min    Max   Range
---------  ------------  -----  ------
-Time^1^    &minus;0.50   0.50    1.00
-Time^2^    &minus;0.33   0.60    0.93
-Time^3^    &minus;0.63   0.63    1.26
+\begin{tabular}{l|r|r|r}
+\hline
+Feature & Min & Max & Range\\
+\hline
+Time\textasciicircum{}1\textasciicircum{} & \&minus;0.50 & 0.50 & 1.00\\
+\hline
+Time\textasciicircum{}2\textasciicircum{} & \&minus;0.33 & 0.60 & 0.93\\
+\hline
+Time\textasciicircum{}3\textasciicircum{} & \&minus;0.63 & 0.63 & 1.26\\
+\hline
+\end{tabular}
 
 Below is the code used to fit the model with RStanARM. It took
 about 24 hours to run the model. `ot1`, `ot2`, and `ot3` are the
@@ -86,10 +92,9 @@ degenerate values.
 (ref:lkj-prior) Samples of correlation effects drawn from the LKJ(1) and
 LKJ(2) priors.
 
-<div class="figure">
-<img src="90-appendix_files/figure-html/lkj-prior-1.png" alt="(ref:lkj-prior)" width="50%" />
-<p class="caption">(\#fig:lkj-prior)(ref:lkj-prior)</p>
-</div>
+\begin{figure}
+\includegraphics[width=0.5\linewidth]{90-appendix_files/figure-latex/lkj-prior-1} \caption{(ref:lkj-prior)}(\#fig:lkj-prior)
+\end{figure}
 
 
 

@@ -106,10 +106,14 @@ relate to word recognition performance.
 how they describe lexical processing performance. The three curves used
 are simulations of new participants at Age 4.
 
-<div class="figure">
-<img src="12-aim1-notebook_files/figure-html/curve-features-1.png" alt="(ref:curve-features)" width="80%" />
-<p class="caption">(\#fig:curve-features)(ref:curve-features)</p>
-</div>
+
+```
+#> Warning: package 'bindrcpp' was built under R version 3.4.4
+```
+
+\begin{figure}
+\includegraphics[width=0.8\linewidth]{14-aim1-familiar-word-recognition_files/figure-latex/curve-features-1} \caption{(ref:curve-features)}(\#fig:curve-features)
+\end{figure}
 
 
 
@@ -128,10 +132,9 @@ recognition growth for each study, and the colored lines represent 200
 posterior samples of these growth curves. The thick dark lines represent
 the observed average growth curve in each study.
 
-<div class="figure">
-<img src="12-aim1-notebook_files/figure-html/average-growth-curves-1.png" alt="(ref:average-growth-curves)" width="50%" />
-<p class="caption">(\#fig:average-growth-curves)(ref:average-growth-curves)</p>
-</div>
+\begin{figure}
+\includegraphics[width=0.5\linewidth]{14-aim1-familiar-word-recognition_files/figure-latex/average-growth-curves-1} \caption{(ref:average-growth-curves)}(\#fig:average-growth-curves)
+\end{figure}
 
 Figure \@ref(fig:effects2) depicts uncertainty intervals with
 the model's average effects of each timepoint on the growth curve
@@ -146,19 +149,17 @@ Figure \@ref(fig:pairwise-effects).
 growth curve features. The intercept and peak features were converted from
 log-odds to proportions to ease interpretation.
 
-<div class="figure">
-<img src="12-aim1-notebook_files/figure-html/effects2-1.png" alt="(ref:effects2)" width="80%" />
-<p class="caption">(\#fig:effects2)(ref:effects2)</p>
-</div>
+\begin{figure}
+\includegraphics[width=0.8\linewidth]{14-aim1-familiar-word-recognition_files/figure-latex/effects2-1} \caption{(ref:effects2)}(\#fig:effects2)
+\end{figure}
 
 (ref:pairwise-effects) Uncertainty intervals for the differences between
 study timepoints. Again, the intercept and peak features were converted
 to proportions.
 
-<div class="figure">
-<img src="12-aim1-notebook_files/figure-html/pairwise-effects-1.png" alt="(ref:pairwise-effects)" width="50%" /><img src="12-aim1-notebook_files/figure-html/pairwise-effects-2.png" alt="(ref:pairwise-effects)" width="50%" />
-<p class="caption">(\#fig:pairwise-effects)(ref:pairwise-effects)</p>
-</div>
+\begin{figure}
+\includegraphics[width=0.5\linewidth]{14-aim1-familiar-word-recognition_files/figure-latex/pairwise-effects-1} \includegraphics[width=0.5\linewidth]{14-aim1-familiar-word-recognition_files/figure-latex/pairwise-effects-2} \caption{(ref:pairwise-effects)}(\#fig:pairwise-effects)
+\end{figure}
 
 
 
@@ -218,20 +219,18 @@ indicating that the model would predict new children to improve year
 over year and show stable individual differences over time.
 
 
-<div class="figure">
-<img src="12-aim1-notebook_files/figure-html/new-participants-1.png" alt="(ref:new-participants)" width="80%" />
-<p class="caption">(\#fig:new-participants)(ref:new-participants)</p>
-</div>
+\begin{figure}
+\includegraphics[width=0.8\linewidth]{14-aim1-familiar-word-recognition_files/figure-latex/new-participants-1} \caption{(ref:new-participants)}(\#fig:new-participants)
+\end{figure}
 
 (ref:new-participants-intervals) Uncertainty intervals for the simulated
 participants. Variability is widest at age 3 and narrowest at age 5,
 consistent with the prediction that children become less variable as
 they grow older.
 
-<div class="figure">
-<img src="12-aim1-notebook_files/figure-html/new-participants-intervals-1.png" alt="(ref:new-participants-intervals)" width="80%" />
-<p class="caption">(\#fig:new-participants-intervals)(ref:new-participants-intervals)</p>
-</div>
+\begin{figure}
+\includegraphics[width=0.8\linewidth]{14-aim1-familiar-word-recognition_files/figure-latex/new-participants-intervals-1} \caption{(ref:new-participants-intervals)}(\#fig:new-participants-intervals)
+\end{figure}
 
 I hypothesized that children would become less variable as they grew
 older and converged on a mature level of performance. I address this
@@ -252,10 +251,9 @@ are most different at the end of the trial as children reliably fixate
 on the target image. The ranges of performance decreases with each year
 of the study as children show less variability.
 
-<div class="figure">
-<img src="12-aim1-notebook_files/figure-html/new-ranges-1.png" alt="(ref:new-ranges)" width="80%" />
-<p class="caption">(\#fig:new-ranges)(ref:new-ranges)</p>
-</div>
+\begin{figure}
+\includegraphics[width=0.8\linewidth]{14-aim1-familiar-word-recognition_files/figure-latex/new-ranges-1} \caption{(ref:new-ranges)}(\#fig:new-ranges)
+\end{figure}
 
 The developmental pattern of increasing reliability and decreasing
 variability was also observed for the growth curve peaks. For the
@@ -326,10 +324,9 @@ non-null, indicating a significant degree of correspondence in
 children's relative word recognition reliability and efficiency over
 three years of study.
 
-<div class="figure">
-<img src="12-aim1-notebook_files/figure-html/kendall-stats-1.png" alt="(ref:kendall-stats)" width="80%" />
-<p class="caption">(\#fig:kendall-stats)(ref:kendall-stats)</p>
-</div>
+\begin{figure}
+\includegraphics[width=0.8\linewidth]{14-aim1-familiar-word-recognition_files/figure-latex/kendall-stats-1} \caption{(ref:kendall-stats)}(\#fig:kendall-stats)
+\end{figure}
 
 We used the `kendall()` function in the irr R package
 [vers. 0.84; @irr] to compute concordance
@@ -422,10 +419,9 @@ curve features at each time point with expressive vocabulary (EVT-2
 standard scores) at age 5. The bottom rows provide intervals for the
 pairwise differences in correlations between timepoints.
 
-<div class="figure">
-<img src="12-aim1-notebook_files/figure-html/evt2-gca-cors-1.png" alt="(ref:evt2-gca-cors)" width="80%" />
-<p class="caption">(\#fig:evt2-gca-cors)(ref:evt2-gca-cors)</p>
-</div>
+\begin{figure}
+\includegraphics[width=0.8\linewidth]{14-aim1-familiar-word-recognition_files/figure-latex/evt2-gca-cors-1} \caption{(ref:evt2-gca-cors)}(\#fig:evt2-gca-cors)
+\end{figure}
 
 Peak looking probabilities from age 3 were strongly correlated with
 age 4 receptive vocabulary, *r* = .62
@@ -448,10 +444,9 @@ growth curve features at each time point with expressive vocabulary
 (PPVT-4 standard scores) at age 4. The bottom row shows pairwise
 differences between the correlations from timepoints.
 
-<div class="figure">
-<img src="12-aim1-notebook_files/figure-html/ppvt4-gca-cors-1.png" alt="(ref:ppvt4-gca-cors)" width="80%" />
-<p class="caption">(\#fig:ppvt4-gca-cors)(ref:ppvt4-gca-cors)</p>
-</div>
+\begin{figure}
+\includegraphics[width=0.8\linewidth]{14-aim1-familiar-word-recognition_files/figure-latex/ppvt4-gca-cors-1} \caption{(ref:ppvt4-gca-cors)}(\#fig:ppvt4-gca-cors)
+\end{figure}
 
 **Summary**. Although individual differences in word recognition were
 stable over time, early differences were more significant than later

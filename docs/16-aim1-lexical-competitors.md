@@ -61,10 +61,9 @@ they grew older, they numerically looked less the foils too. This effect
 is why I evaluated the phonological and semantic foils by comparing them
 against the unrelated image.
 
-<div class="figure">
-<img src="15-aim1-notebook_files/figure-html/declining-phon-props-1.png" alt="(ref:declining-phon-props)" width="60%" />
-<p class="caption">(\#fig:declining-phon-props)(ref:declining-phon-props)</p>
-</div>
+\begin{figure}
+\includegraphics[width=0.6\linewidth]{16-aim1-lexical-competitors_files/figure-latex/declining-phon-props-1} \caption{(ref:declining-phon-props)}(\#fig:declining-phon-props)
+\end{figure}
 
 To account for the sparseness of the data, I used the empirical log-odds
 (or empirical logit) transformation [@Barr2008]. This transformation
@@ -127,7 +126,8 @@ adding simple functions together. The figures below show 9 basis
 functions from a "thin-plate spline" and how they can be weighted and
 summed to fit a growth curve.
 
-<img src="15-aim1-notebook_files/figure-html/infobox-1-figs-1.png" width="66%" style="display: block; margin: auto;" />
+
+\begin{center}\includegraphics[width=0.66\linewidth]{16-aim1-lexical-competitors_files/figure-latex/infobox-1-figs-1} \end{center}
 
 Each of these basis functions is weighted by a model coefficient, but
 the individual basis functions are not a priori meaningful. Rather, it
@@ -174,7 +174,7 @@ We can think of these simpler splines as coarse adjustments in growth
 curve shape to capture child-level variation from limited data.
 Altogether, the model contained the following terms:
 
-$$
+
 \small
 \begin{align*}
    \text{emp. log-odds}(\mathit{phon.\ vs.\ unrelated}) =\
@@ -184,7 +184,7 @@ $$
    & f_3(\text{Time}, \text{Age4} - \text{Age5})\ +      & \\
    & f_i(\text{Time}, \text{Child}_i)                    &\text{[by-child random smooths]} \\
 \end{align*}
-$$
+
 
 
 
@@ -199,16 +199,15 @@ The shape at age 3 does not have a steady rise from baseline and shows a
 very small peak around 800 ms.
 
 (ref:phon-vs-unre-fits) With each year of the study, children looked
-more to the phonological foil, relative to unrelated image, during and
-after the target noun. the target noun. Both figures show means for each
-year estimated by the generalized additive model. The left compares
+more to the phonological competitor, relative to the unrelated image,
+during and after the target noun. Both figures show means for each year
+estimated by the generalized additive model. The left panel compares
 model estimates to observed means and standard errors, and the right
-visualizes estimated means and their 95% confidence intervals.
+panel visualizes estimated means and their 95% confidence intervals.
 
-<div class="figure">
-<img src="15-aim1-notebook_files/figure-html/phon-vs-unre-fits-1.png" alt="(ref:phon-vs-unre-fits)" width="80%" />
-<p class="caption">(\#fig:phon-vs-unre-fits)(ref:phon-vs-unre-fits)</p>
-</div>
+\begin{figure}
+\includegraphics[width=0.8\linewidth]{16-aim1-lexical-competitors_files/figure-latex/phon-vs-unre-fits-1} \caption{(ref:phon-vs-unre-fits)}(\#fig:phon-vs-unre-fits)
+\end{figure}
 
 The average looks to the phonological foil over the unrelated for age 4
 was 0.16 emp. log-odds, .54 proportion units. The averages
@@ -219,7 +218,7 @@ in the almost constant height difference between the age-4 and the age-5
 curves.
 
 (ref:phon-diff-curves) Differences in the average looks to the
-phonological foil versus the unrelated image between age 4 and the other
+phonological competitor versus the unrelated image between age 4 and the other
 ages. Plotted line is estimated difference and the shaded region is
 the 95% confidence interval around that difference. Blue boxes highlight
 regions where the 95% interval excludes zero. From age 3 to age 4,
@@ -227,12 +226,11 @@ children become more sensitive to the phonological foil during and after
 the target noun. The curves for age 3 and age 4 have largely the same
 shape, but they steadily diverge over time.
 
-<div class="figure">
-<img src="15-aim1-notebook_files/figure-html/phon-diff-curves-1.png" alt="(ref:phon-diff-curves)" width="80%" />
-<p class="caption">(\#fig:phon-diff-curves)(ref:phon-diff-curves)</p>
-</div>
+\begin{figure}
+\includegraphics[width=0.8\linewidth]{16-aim1-lexical-competitors_files/figure-latex/phon-diff-curves-1} \caption{(ref:phon-diff-curves)}(\#fig:phon-diff-curves)
+\end{figure}
 
-There was a significant smooth term for time at age&nbsp;4, estimated degrees
+There was a significant smooth term for time at age 4, estimated degrees
 of freedom (EDF) = 7.28, *p*&nbsp;< .001.
 Figure \@ref(fig:phon-diff-curves) visualizes how and when the smooths
 from other studies differed from the age-4 smooth.
@@ -319,14 +317,14 @@ age 3.
 (ref:semy-vs-unre-fits) With each year of the study, children looked
 more to the semantic foil, relative to the unrelated image, with peak
 looking occurring after the target noun. Both figures show means for
-each year estimated by the generalized additive model. The left compares
-model estimates to observed means and standard errors, and the right
-visualizes estimated means and their 95% confidence intervals.
+each year estimated by the generalized additive model. The left panel
+compares model estimates to observed means and standard errors, and the
+right panel visualizes estimated means and their 95% confidence
+intervals.
 
-<div class="figure">
-<img src="15-aim1-notebook_files/figure-html/semy-vs-unre-fits-1.png" alt="(ref:semy-vs-unre-fits)" width="80%" />
-<p class="caption">(\#fig:semy-vs-unre-fits)(ref:semy-vs-unre-fits)</p>
-</div>
+\begin{figure}
+\includegraphics[width=0.8\linewidth]{16-aim1-lexical-competitors_files/figure-latex/semy-vs-unre-fits-1} \caption{(ref:semy-vs-unre-fits)}(\#fig:semy-vs-unre-fits)
+\end{figure}
 
 The average looks to the semantic foil over the unrelated for age 4 was
 0.44 emp. log-odds, .61 proportion units. Children
@@ -362,10 +360,9 @@ quickly diverge and the age-5 curve reaches a higher peak value.
 #> 
 ```
 
-<div class="figure">
-<img src="15-aim1-notebook_files/figure-html/semy-diff-curves-1.png" alt="(ref:semy-diff-curves)" width="80%" />
-<p class="caption">(\#fig:semy-diff-curves)(ref:semy-diff-curves)</p>
-</div>
+\begin{figure}
+\includegraphics[width=0.8\linewidth]{16-aim1-lexical-competitors_files/figure-latex/semy-diff-curves-1} \caption{(ref:semy-diff-curves)}(\#fig:semy-diff-curves)
+\end{figure}
 
 The shapes of the age-3 and age-4 curves did not significantly differ,
 EDF = 1.00, *p*&nbsp;= .535. The age-3 curve begins to rise
@@ -428,7 +425,7 @@ average vocabulary level. Put differently, the by-child intercepts
 reflect a child's ability after controlling for age and receptive
 vocabulary.
 
-$$
+
 \small
 \begin{align*}
    \text{log-odds}(\mathit{choosing\ correct\ word}) =\
@@ -441,7 +438,7 @@ $$
    & \beta_{1}\text{Age}\ +     &\text{[participant-level predictors]} \\
    & \beta_{2}\text{Vocabulary} & \\
 \end{align*}
-$$
+
 
 I tested whether phonemic discrimination ability at age-3 predicted
 looks to the phonological foil over the unrelated image by modifying the
@@ -452,7 +449,7 @@ smooth interaction terms are analogous to interaction terms in linear
 models. In this case, the interaction term allows the ability score to
 change the shape of the time trend. The additive model was therefore:
 
-$$
+
 \small
 \begin{align*}
    \text{emp. log-odds}(\mathit{phon.\ vs.\ unrelated}) =\
@@ -462,7 +459,7 @@ $$
    & f_3(\text{Time} * \text{Ability})\ +   &\text{[interaction smooth]} \\
    & f_i(\text{Time}, \text{Child}_i)       &\text{[by-child random smooths]} \\
 \end{align*}
-$$
+
 
 
 
@@ -512,7 +509,7 @@ children looked more to the target overall, so they consequently looked
 less to the competitor images each year. To account for this fact, these
 analyses examined the ratio of looks to the competitors versus the
 unrelated word. This ratio measured the relative
-advantage of a competitor over the unrelated word. Put differently,
+advantage of a competitor over the unrelated word. 
 
 
 <!-- If we imagine a pie-chart of looks to the four images, the target piece -->
@@ -528,21 +525,36 @@ syllable onset as the target noun---for example, the pairs
 *dress*–*drum* or *fly*–*flag*. The competitors affected word
 recognition early on, with relative looks to the phonological foils
 peaking around 800 ms. The target nouns were approximately 800 ms long
-at age 3 and 550--800 ms for later ages. Assuming an 150–300 ms overhead
-for executing an eye movement in response to speech, this timing indicates
-that children shifted their gaze immediately, based on partial
-information.
+at age 3 and 550--800 ms for later ages. Assuming an 150–300 ms overhead
+for executing an eye movement in response to speech, this timing
+indicates that children shifted their gaze immediately, based on partial
+information. This tendency to act on partial information increased with
+age. In terms of lexical processing, the degree of
+activation of the phonological competitors increased each year.
 
-At ages 4 and 5, these early peaks of looks to the phonological competitor were followed by a steep decrease in looks: Children rejected their initial interpretation of the word and considered other images. (At age 3, the pattern showed more wiggliness, which suggests greater uncertainty.) _Say something about inhibition?_
+<!-- Our results showed that children's activation of the target and its phonological neighbors increased with age. Children were more able to use partial information during word recognition.  -->
 
-_At age&nbsp;3 the effect of the phonological competitor was very small compared.
+At ages 4 and 5, these early peaks of looks to the phonological
+competitor were followed by a steep, monotonic decrease in looks:
+Children rejected their initial interpretation of the word and
+considered other images. At age 3, the average pattern showed more
+wiggliness, suggesting that the children were less decisive in rejecting
+the phonological competitor. The shapes of the looking patterns at age 4
+and age 5 were essentially the same: In particular, the rate at which
+children rejected the phonological competitor did not differ between the
+two studies. If looks
+away from the phonological competitor reflect resolution of lexical
+competition by inhibitory mechanisms, then the lack of a difference
+between the age 4 and age 5 growth curve shapes indicates that
+children's rate of inhibition did not change.
+
 The early advantage of the phonological foil was observed to a more
 limited degree in the age 3 study, but still there._
 
 Young children used information in an incremental fashion. This fact
 agrees with previous findings....
 
-<!-- Our results showed that children's activation of the target and its phonological neighbors increased with age. Children were more able to use partial information during word recognition. I had described this earlier as children becoming "more sensitive" to the phonological competitors. -->
+<!-- I had described this earlier as children becoming "more sensitive" to the phonological competitors. -->
 
 @Rigler2015 provides an interesting comparison. They compared 9-
 and 16-year-olds on a visual-world word recognition experiment with
@@ -559,7 +571,7 @@ development of lexical processing. From the earliest stages, children's
 word recognition demonstrates incremental processing. [cite cite]
 During the preschool years, children learn many, many words, and they
 establish phonological and semantic connections between words. These
-connections support immediate activation of neighborhoods of words. For
+connections support immediate activation of the neighborhoods of words. For
 these experiments, children became more sensitive to the phonological
 foils because the phonological competitor achieved greater activation.
 Late childhood, based on the @Rigler2015 findings, would be a time for
@@ -605,8 +617,26 @@ every trial.
 
 ### Late activation of semantic neighbors
 
-The semantic competitors were from the same category as the target noun.
-They showed late effects. *bee*–*fly* or *shirt*–*dress*
+The semantic competitors were from the same category as the target noun:
+for example, *bee*–*fly* or *shirt*–*dress*. Children also showed
+year-over-year increases in their sensitivity to the semantic
+competitor, relative to the unrelated image. Looks the semantic foil
+peaked late in the trial, around 1300 ms after target onset. This timing
+is consistent with cascading activation: Spoken words immediately
+activates phonological neighborhoods with activation then cascading to
+semantically related words. In this case, children activated the target
+word (*shirt*) but also other pieces of clothing (*shirt*).
+
+Could it instead be the case that the late looks to the semantic foil reflect confusion or uncertainty? After all, these are young children and decisions like *bee* vs. *fly* or *goat* vs. *sheep* can be difficult.[^goat]
+
+[^goat]: Anecdote! I was drawn to the general confusion
+interpretation, partially because I grew up on a farm where we raised
+sheep. I can remember plenty of people, much older than preschool age,
+calling the sheep *goats*. Surely, a bunch of non-rural preschoolers
+would be in a similar situation, confusing sheep and goats, right? But
+naming is harder than recognition. I imagine that the goat-mislabellers
+could point to the right animal if I showed a picture of a goat next to
+a picture of a sheep.
 
 
 describe lexical dynamics for semantic foil
@@ -616,10 +646,6 @@ describe lack of individual differences at age 3
 
 
 
-## General discussion
-
-Children became more successful listerners. When they erred, they erred
-on the side of the phonologically or semantically plausible word.
 
 
 <!-- Phon looks scraps. -->

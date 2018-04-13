@@ -86,10 +86,9 @@ speech.
 the semantic foil *drum*, the phonological foil *bee*, and the unrelated
 *swing*.
 
-<div class="figure">
-<img src="./misc/rwl-screens/TimePoint1/actual/Block2_17_swing2_bell2_bee2_drum2_UpperRightImage_bell.png" alt="(ref:sample-vw-screen-cap2)" width="100%" />
-<p class="caption">(\#fig:sample-vw-screen)(ref:sample-vw-screen-cap2)</p>
-</div>
+\begin{figure}
+\includegraphics[width=1\linewidth]{./misc/rwl-screens/TimePoint1/actual/Block2_17_swing2_bell2_bee2_drum2_UpperRightImage_bell} \caption{(ref:sample-vw-screen-cap2)}(\#fig:sample-vw-screen)
+\end{figure}
 
 
 
@@ -226,20 +225,27 @@ children in the second year than the first due to a timing error in the
 initial version of this experiment, leading to the exclusion of
 27 participants from the first year.
 
+\begin{table}
 
-Table: (\#tab:screening-counts)Eyetracking data before and after data screening. For convenience, the number of exclusions are included as Raw - Screened.
-
-Dataset                Study    N Children   N Blocks   N Trials
----------------------  ------  -----------  ---------  ---------
-Raw                    Age 3           178        332       7967
-                       Age 4           180        347       8327
-                       Age 5           163        322       7724
-Screened               Age 3           163        291       5951
-                       Age 4           165        305       6421
-                       Age 5           156        295       6483
-Raw &minus; Screened   Age 3            15         41       2016
-                       Age 4            15         42       1906
-                       Age 5             7         27       1241
+\caption{(\#tab:screening-counts)Eyetracking data before and after data screening. For convenience, the number of exclusions are included as Raw - Screened.}
+\centering
+\begin{tabular}[t]{llrrr}
+\toprule
+Dataset & Study & N Children & N Blocks & N Trials\\
+\midrule
+Raw & Age 3 & 178 & 332 & 7967\\
+ & Age 4 & 180 & 347 & 8327\\
+ & Age 5 & 163 & 322 & 7724\\
+Screened & Age 3 & 163 & 291 & 5951\\
+ & Age 4 & 165 & 305 & 6421\\
+\addlinespace
+ & Age 5 & 156 & 295 & 6483\\
+Raw \&minus; Screened & Age 3 & 15 & 41 & 2016\\
+ & Age 4 & 15 & 42 & 1906\\
+ & Age 5 & 7 & 27 & 1241\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 
 
@@ -274,7 +280,6 @@ year of the study. Each line represents an individual child's proportion
 of looks to the target image over time. The heavy lines are the averages
 of the lines for each year.
 
-<div class="figure">
-<img src="11-aim1-notebook_files/figure-html/aim1-spaghetti-1.png" alt="(ref:aim1-spaghetti)" width="100%" />
-<p class="caption">(\#fig:aim1-spaghetti)(ref:aim1-spaghetti)</p>
-</div>
+\begin{figure}
+\includegraphics[width=1\linewidth]{12-aim1-methods_files/figure-latex/aim1-spaghetti-1} \caption{(ref:aim1-spaghetti)}(\#fig:aim1-spaghetti)
+\end{figure}

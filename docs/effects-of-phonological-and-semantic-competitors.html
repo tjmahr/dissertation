@@ -25,7 +25,7 @@
 <meta name="author" content="Tristan Mahr">
 
 
-<meta name="date" content="2018-04-12">
+<meta name="date" content="2018-04-13">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -33,7 +33,7 @@
   
   
 <link rel="prev" href="analysis-of-familiar-word-recognition.html">
-<link rel="next" href="general-discussion-1.html">
+<link rel="next" href="general-discussion.html">
 <style type="text/css">
 p.abstract{
   text-align: center;
@@ -164,9 +164,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="7.4.1" data-path="effects-of-phonological-and-semantic-competitors.html"><a href="effects-of-phonological-and-semantic-competitors.html#immediate-activation-of-phonological-neighbors"><i class="fa fa-check"></i><b>7.4.1</b> Immediate activation of phonological neighbors</a></li>
 <li class="chapter" data-level="7.4.2" data-path="effects-of-phonological-and-semantic-competitors.html"><a href="effects-of-phonological-and-semantic-competitors.html#late-activation-of-semantic-neighbors"><i class="fa fa-check"></i><b>7.4.2</b> Late activation of semantic neighbors</a></li>
 </ul></li>
-<li class="chapter" data-level="7.5" data-path="effects-of-phonological-and-semantic-competitors.html"><a href="effects-of-phonological-and-semantic-competitors.html#general-discussion"><i class="fa fa-check"></i><b>7.5</b> General discussion</a></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="general-discussion-1.html"><a href="general-discussion-1.html"><i class="fa fa-check"></i><b>8</b> General Discussion</a></li>
+<li class="chapter" data-level="8" data-path="general-discussion.html"><a href="general-discussion.html"><i class="fa fa-check"></i><b>8</b> General Discussion</a></li>
 <li class="part"><span><b>Miscellany</b></span></li>
 <li class="chapter" data-level="9" data-path="scratch-paper.html"><a href="scratch-paper.html"><i class="fa fa-check"></i><b>9</b> Scratch paper</a><ul>
 <li class="chapter" data-level="9.1" data-path="scratch-paper.html"><a href="scratch-paper.html#bookdown-cheatsheet"><i class="fa fa-check"></i><b>9.1</b> Bookdown cheatsheet</a><ul>
@@ -223,7 +222,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>As in the previous models, I downsampled the data into 50-ms (3-frame) bins in order to smooth the data. I modeled the looks from  to  ms. Lastly, I aggregated looks by child, study and time.</p>
 
 <div class="figure"><span id="fig:declining-phon-props"></span>
-<img src="15-aim1-notebook_files/figure-html/declining-phon-props-1.png" alt="Because children looked more to the target as they grew older, they numerically looked less the foils too. This effect is why I evaluated the phonological and semantic foils by comparing them against the unrelated image." width="60%" />
+<img src="16-aim1-lexical-competitors_files/figure-html/declining-phon-props-1.png" alt="Because children looked more to the target as they grew older, they numerically looked less the foils too. This effect is why I evaluated the phonological and semantic foils by comparing them against the unrelated image." width="60%" />
 <p class="caption">
 Figure 7.1: Because children looked more to the target as they grew older, they numerically looked less the foils too. This effect is why I evaluated the phonological and semantic foils by comparing them against the unrelated image.
 </p>
@@ -246,7 +245,7 @@ Figure 7.1: Because children looked more to the target as they grew older, they 
   \alpha + f(\textit{Time})
 \]</span></p>
 <p>This is the idea behind generalized additive models and their <em>smooth terms</em>. These smooths fit nonlinear functions of data by weighting and adding simple functions together. The figures below show 9 basis functions from a “thin-plate spline” and how they can be weighted and summed to fit a growth curve.</p>
-<p><img src="15-aim1-notebook_files/figure-html/infobox-1-figs-1.png" width="66%" style="display: block; margin: auto;" /></p>
+<p><img src="16-aim1-lexical-competitors_files/figure-html/infobox-1-figs-1.png" width="66%" style="display: block; margin: auto;" /></p>
 <p>Each of these basis functions is weighted by a model coefficient, but the individual basis functions are not a priori meaningful. Rather, it is the whole set of functions that approximate the curvature of the data—i.e., <em>f</em>(Time))—so we statistically evaluate the whole batch of coefficients simultaneously. This joint testing is similar to how one might test a batch of effects in an ANOVA. If the batch of effects jointly improve model fit, we infer that there is a significant smooth or shape effect.</p>
 <p>Smooth terms come with an estimated degrees of freedom (EDF). These values provide a sense of how many degrees of freedom the smooth consumed. An EDF of 1 is a perfectly straight line, indicating no smoothing. Higher EDF values indicate that the smooth term captured more curvature from the data.</p>
 <!-- The other important thing to know about generalized additive models is that -->
@@ -271,17 +270,17 @@ Figure 7.1: Because children looked more to the target as they grew older, they 
 <p>The model’s fitted values are shown in Figure <a href="effects-of-phonological-and-semantic-competitors.html#fig:phon-vs-unre-fits">7.2</a>. These are the average empirical log-odds of fixating on the phonological foil versus the unrelated image for each year of the study. The model captured the trend for increased looks to the competitor image with each year of the study. At age 4 and age 5, the shape rises from a baseline to the peak around 800 ms. These curves slope downwards and eventually fall beneath the initial baseline. The shape at age 3 does not have a steady rise from baseline and shows a very small peak around 800 ms.</p>
 
 <div class="figure"><span id="fig:phon-vs-unre-fits"></span>
-<img src="15-aim1-notebook_files/figure-html/phon-vs-unre-fits-1.png" alt="With each year of the study, children looked more to the phonological foil, relative to unrelated image, during and after the target noun. the target noun. Both figures show means for each year estimated by the generalized additive model. The left compares model estimates to observed means and standard errors, and the right visualizes estimated means and their 95% confidence intervals." width="80%" />
+<img src="16-aim1-lexical-competitors_files/figure-html/phon-vs-unre-fits-1.png" alt="With each year of the study, children looked more to the phonological competitor, relative to the unrelated image, during and after the target noun. Both figures show means for each year estimated by the generalized additive model. The left panel compares model estimates to observed means and standard errors, and the right panel visualizes estimated means and their 95% confidence intervals." width="80%" />
 <p class="caption">
-Figure 7.2: With each year of the study, children looked more to the phonological foil, relative to unrelated image, during and after the target noun. the target noun. Both figures show means for each year estimated by the generalized additive model. The left compares model estimates to observed means and standard errors, and the right visualizes estimated means and their 95% confidence intervals.
+Figure 7.2: With each year of the study, children looked more to the phonological competitor, relative to the unrelated image, during and after the target noun. Both figures show means for each year estimated by the generalized additive model. The left panel compares model estimates to observed means and standard errors, and the right panel visualizes estimated means and their 95% confidence intervals.
 </p>
 </div>
 <p>The average looks to the phonological foil over the unrelated for age 4 was 0.16 emp. log-odds, .54 proportion units. The averages for age 3 and age 4 did not significantly differ, <em>p</em> = .85 but the average value was significantly greater at age 5, 0.31 emp. log-odds, .58 proportion units, <em>p</em> &lt; .001. Visually, this effect shows up in the almost constant height difference between the age-4 and the age-5 curves.</p>
 
 <div class="figure"><span id="fig:phon-diff-curves"></span>
-<img src="15-aim1-notebook_files/figure-html/phon-diff-curves-1.png" alt="Differences in the average looks to the phonological foil versus the unrelated image between age 4 and the other ages. Plotted line is estimated difference and the shaded region is the 95% confidence interval around that difference. Blue boxes highlight regions where the 95% interval excludes zero. From age 3 to age 4, children become more sensitive to the phonological foil during and after the target noun. The curves for age 3 and age 4 have largely the same shape, but they steadily diverge over time." width="80%" />
+<img src="16-aim1-lexical-competitors_files/figure-html/phon-diff-curves-1.png" alt="Differences in the average looks to the phonological competitor versus the unrelated image between age 4 and the other ages. Plotted line is estimated difference and the shaded region is the 95% confidence interval around that difference. Blue boxes highlight regions where the 95% interval excludes zero. From age 3 to age 4, children become more sensitive to the phonological foil during and after the target noun. The curves for age 3 and age 4 have largely the same shape, but they steadily diverge over time." width="80%" />
 <p class="caption">
-Figure 7.3: Differences in the average looks to the phonological foil versus the unrelated image between age 4 and the other ages. Plotted line is estimated difference and the shaded region is the 95% confidence interval around that difference. Blue boxes highlight regions where the 95% interval excludes zero. From age 3 to age 4, children become more sensitive to the phonological foil during and after the target noun. The curves for age 3 and age 4 have largely the same shape, but they steadily diverge over time.
+Figure 7.3: Differences in the average looks to the phonological competitor versus the unrelated image between age 4 and the other ages. Plotted line is estimated difference and the shaded region is the 95% confidence interval around that difference. Blue boxes highlight regions where the 95% interval excludes zero. From age 3 to age 4, children become more sensitive to the phonological foil during and after the target noun. The curves for age 3 and age 4 have largely the same shape, but they steadily diverge over time.
 </p>
 </div>
 <p>There was a significant smooth term for time at age 4, estimated degrees of freedom (EDF) = 7.28, <em>p</em> &lt; .001. Figure <a href="effects-of-phonological-and-semantic-competitors.html#fig:phon-diff-curves">7.3</a> visualizes how and when the smooths from other studies differed from the age-4 smooth.</p>
@@ -297,9 +296,9 @@ Figure 7.3: Differences in the average looks to the phonological foil versus the
 <p>The model’s fitted values are shown in Figure <a href="effects-of-phonological-and-semantic-competitors.html#fig:semy-vs-unre-fits">7.4</a>. The average empirical log-odds of fixating on the semantic foil versus the unrelated image increased with each year of the study. All three years show the same general time course of effects: Looks begin to increase from a baseline around 750 ms and peak around 1300 ms. The peaks of the curves increased as children grew older. The semantic foil shows a clear advantage over the unrelated image at age 3, which was not the case for the phonological foil at age 3.</p>
 
 <div class="figure"><span id="fig:semy-vs-unre-fits"></span>
-<img src="15-aim1-notebook_files/figure-html/semy-vs-unre-fits-1.png" alt="With each year of the study, children looked more to the semantic foil, relative to the unrelated image, with peak looking occurring after the target noun. Both figures show means for each year estimated by the generalized additive model. The left compares model estimates to observed means and standard errors, and the right visualizes estimated means and their 95% confidence intervals." width="80%" />
+<img src="16-aim1-lexical-competitors_files/figure-html/semy-vs-unre-fits-1.png" alt="With each year of the study, children looked more to the semantic foil, relative to the unrelated image, with peak looking occurring after the target noun. Both figures show means for each year estimated by the generalized additive model. The left panel compares model estimates to observed means and standard errors, and the right panel visualizes estimated means and their 95% confidence intervals." width="80%" />
 <p class="caption">
-Figure 7.4: With each year of the study, children looked more to the semantic foil, relative to the unrelated image, with peak looking occurring after the target noun. Both figures show means for each year estimated by the generalized additive model. The left compares model estimates to observed means and standard errors, and the right visualizes estimated means and their 95% confidence intervals.
+Figure 7.4: With each year of the study, children looked more to the semantic foil, relative to the unrelated image, with peak looking occurring after the target noun. Both figures show means for each year estimated by the generalized additive model. The left panel compares model estimates to observed means and standard errors, and the right panel visualizes estimated means and their 95% confidence intervals.
 </p>
 </div>
 <p>The average looks to the semantic foil over the unrelated for age 4 was 0.44 emp. log-odds, .61 proportion units. Children looked significantly less to the semantic foil on average at age 3, 0.30 emp. log-odds, .57 proportion units, <em>p</em> &lt; .001, and they looked significantly more to the semantic foil at age 5, 0.50 emp. log-odds, .62 proportion units, <em>p</em> &lt; .001. The peaks of the growth curves, in proportion units, were .65 at age 3, .68 at age 4, and .70 at age 5.</p>
@@ -311,7 +310,7 @@ Figure 7.4: With each year of the study, children looked more to the semantic fo
 #&gt;  * NOTE : The following random effects columns are canceled: s(Time,R)
 #&gt; </code></pre>
 <div class="figure"><span id="fig:semy-diff-curves"></span>
-<img src="15-aim1-notebook_files/figure-html/semy-diff-curves-1.png" alt="Differences in the average looks to the semantic foil versus the unrelated image between age 4 and the other ages. Plotted line is estimated difference and the shaded region is the 95% confidence interval around that difference. Blue boxes highlight regions where the 95% interval excludes zero. The flat line on the left reflects how the shape of the growth curves remained the same from age 3 to age 4 and only differed in average height. From age 4 to age 5, the lines quickly diverge and the age-5 curve reaches a higher peak value." width="80%" />
+<img src="16-aim1-lexical-competitors_files/figure-html/semy-diff-curves-1.png" alt="Differences in the average looks to the semantic foil versus the unrelated image between age 4 and the other ages. Plotted line is estimated difference and the shaded region is the 95% confidence interval around that difference. Blue boxes highlight regions where the 95% interval excludes zero. The flat line on the left reflects how the shape of the growth curves remained the same from age 3 to age 4 and only differed in average height. From age 4 to age 5, the lines quickly diverge and the age-5 curve reaches a higher peak value." width="80%" />
 <p class="caption">
 Figure 7.5: Differences in the average looks to the semantic foil versus the unrelated image between age 4 and the other ages. Plotted line is estimated difference and the shaded region is the 95% confidence interval around that difference. Blue boxes highlight regions where the 95% interval excludes zero. The flat line on the left reflects how the shape of the growth curves remained the same from age 3 to age 4 and only differed in average height. From age 4 to age 5, the lines quickly diverge and the age-5 curve reaches a higher peak value.
 </p>
@@ -358,19 +357,20 @@ Figure 7.5: Differences in the average looks to the semantic foil versus the unr
 </div>
 <div id="discussion-1" class="section level2">
 <h2><span class="header-section-number">7.4</span> Discussion</h2>
-<p>In the preceding analyses, I examined children’s fixation patterns to the phonological and semantic competitors and how these fixation patterns changed over developmental time. With each year of the study, children looked more to the target overall, so they consequently looked less to the competitor images each year. To account for this fact, these analyses examined the ratio of looks to the competitors versus the unrelated word. This ratio measured the relative advantage of a competitor over the unrelated word. Put differently,</p>
+<p>In the preceding analyses, I examined children’s fixation patterns to the phonological and semantic competitors and how these fixation patterns changed over developmental time. With each year of the study, children looked more to the target overall, so they consequently looked less to the competitor images each year. To account for this fact, these analyses examined the ratio of looks to the competitors versus the unrelated word. This ratio measured the relative advantage of a competitor over the unrelated word.</p>
 <!-- If we imagine a pie-chart of looks to the four images, the target piece -->
 <!-- increases in size each year, overtaking area from the other three looks. -->
 <!-- describe general patterns, time course and increase -->
 <div id="immediate-activation-of-phonological-neighbors" class="section level3">
 <h3><span class="header-section-number">7.4.1</span> Immediate activation of phonological neighbors</h3>
-<p>Developmentally, children became more sensitive to the phonological competitors with each year of the study. These words shared the same syllable onset as the target noun—for example, the pairs <em>dress</em>–<em>drum</em> or <em>fly</em>–<em>flag</em>. The competitors affected word recognition early on, with relative looks to the phonological foils peaking around 800 ms. The target nouns were approximately 800 ms long at age 3 and 550–800 ms for later ages. Assuming an 150–300 ms overhead for executing an eye movement in response to speech, this timing indicates that children shifted their gaze immediately, based on partial information.</p>
-<p>At ages 4 and 5, these early peaks of looks to the phonological competitor were followed by a steep decrease in looks: Children rejected their initial interpretation of the word and considered other images. (At age 3, the pattern showed more wiggliness, which suggests greater uncertainty.) <em>Say something about inhibition?</em></p>
-<p><em>At age 3 the effect of the phonological competitor was very small compared. The early advantage of the phonological foil was observed to a more limited degree in the age 3 study, but still there.</em></p>
+<p>Developmentally, children became more sensitive to the phonological competitors with each year of the study. These words shared the same syllable onset as the target noun—for example, the pairs <em>dress</em>–<em>drum</em> or <em>fly</em>–<em>flag</em>. The competitors affected word recognition early on, with relative looks to the phonological foils peaking around 800 ms. The target nouns were approximately 800 ms long at age 3 and 550–800 ms for later ages. Assuming an 150–300 ms overhead for executing an eye movement in response to speech, this timing indicates that children shifted their gaze immediately, based on partial information. This tendency to act on partial information increased with age. In terms of lexical processing, the degree of activation of the phonological competitors increased each year.</p>
+<!-- Our results showed that children's activation of the target and its phonological neighbors increased with age. Children were more able to use partial information during word recognition.  -->
+<p>At ages 4 and 5, these early peaks of looks to the phonological competitor were followed by a steep, monotonic decrease in looks: Children rejected their initial interpretation of the word and considered other images. At age 3, the average pattern showed more wiggliness, suggesting that the children were less decisive in rejecting the phonological competitor. The shapes of the looking patterns at age 4 and age 5 were essentially the same: In particular, the rate at which children rejected the phonological competitor did not differ between the two studies. If looks away from the phonological competitor reflect resolution of lexical competition by inhibitory mechanisms, then the lack of a difference between the age 4 and age 5 growth curve shapes indicates that children’s rate of inhibition did not change.</p>
+<p>The early advantage of the phonological foil was observed to a more limited degree in the age 3 study, but still there._</p>
 <p>Young children used information in an incremental fashion. This fact agrees with previous findings….</p>
-<!-- Our results showed that children's activation of the target and its phonological neighbors increased with age. Children were more able to use partial information during word recognition. I had described this earlier as children becoming "more sensitive" to the phonological competitors. -->
+<!-- I had described this earlier as children becoming "more sensitive" to the phonological competitors. -->
 <p><span class="citation">Rigler et al. (<a href="#ref-Rigler2015">2015</a>)</span> provides an interesting comparison. They compared 9- and 16-year-olds on a visual-world word recognition experiment with cohort and rime competitors. The younger children in that study were slower to look to the target image and showed more looks to the competitor images. The implications are that children’s lexical processing is still developing in late childhood and that in particular, children’s inhibition of lexical competitors increases with age.</p>
-<p>The current results with 3-, 4-, and 5-year-olds followed a different pattern: Relative looks to the competitor images increased with age. Taken together, the results suggest an interesting progression for the development of lexical processing. From the earliest stages, children’s word recognition demonstrates incremental processing. [cite cite] During the preschool years, children learn many, many words, and they establish phonological and semantic connections between words. These connections support immediate activation of neighborhoods of words. For these experiments, children became more sensitive to the phonological foils because the phonological competitor achieved greater activation. Late childhood, based on the <span class="citation">Rigler et al. (<a href="#ref-Rigler2015">2015</a>)</span> findings, would be a time for refinement of those connections, so that sensitivity to the competitors decreases. This refinement could follow from more selective activation channels, increased lexical inhibition, or likely a combination of both.</p>
+<p>The current results with 3-, 4-, and 5-year-olds followed a different pattern: Relative looks to the competitor images increased with age. Taken together, the results suggest an interesting progression for the development of lexical processing. From the earliest stages, children’s word recognition demonstrates incremental processing. [cite cite] During the preschool years, children learn many, many words, and they establish phonological and semantic connections between words. These connections support immediate activation of the neighborhoods of words. For these experiments, children became more sensitive to the phonological foils because the phonological competitor achieved greater activation. Late childhood, based on the <span class="citation">Rigler et al. (<a href="#ref-Rigler2015">2015</a>)</span> findings, would be a time for refinement of those connections, so that sensitivity to the competitors decreases. This refinement could follow from more selective activation channels, increased lexical inhibition, or likely a combination of both.</p>
 <p>I also asked whether child-level factors predicted sensitivity to the phonological competitors. They did not at age 3. In particular, children who can more reliably discriminate minimal pairs did not show increased sensitive to the phonological foil. This finding suggests that sensitivity to the phonological foil is somewhat removed from speech perception. PPVT: vocabulary not a factor either. Early activation dynamics different from speech perception or number of words.</p>
 <p>Limitations: Change in recorded stimuli. Inclusion of two competitors on every trial.</p>
 <!-- Talking points: -->
@@ -392,14 +392,10 @@ Figure 7.5: Differences in the average looks to the semantic foil versus the unr
 </div>
 <div id="late-activation-of-semantic-neighbors" class="section level3">
 <h3><span class="header-section-number">7.4.2</span> Late activation of semantic neighbors</h3>
-<p>The semantic competitors were from the same category as the target noun. They showed late effects. <em>bee</em>–<em>fly</em> or <em>shirt</em>–<em>dress</em></p>
+<p>The semantic competitors were from the same category as the target noun: for example, <em>bee</em>–<em>fly</em> or <em>shirt</em>–<em>dress</em>. Children also showed year-over-year increases in their sensitivity to the semantic competitor, relative to the unrelated image. Looks the semantic foil peaked late in the trial, around 1300 ms after target onset. This timing is consistent with cascading activation: Spoken words immediately activates phonological neighborhoods with activation then cascading to semantically related words. In this case, children activated the target word (<em>shirt</em>) but also other pieces of clothing (<em>shirt</em>).</p>
+<p>Could it instead be the case that the late looks to the semantic foil reflect confusion or uncertainty? After all, these are young children and decisions like <em>bee</em> vs. <em>fly</em> or <em>goat</em> vs. <em>sheep</em> can be difficult.<a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
 <p>describe lexical dynamics for semantic foil</p>
 <p>describe lack of individual differences at age 3</p>
-</div>
-</div>
-<div id="general-discussion" class="section level2">
-<h2><span class="header-section-number">7.5</span> General discussion</h2>
-<p>Children became more successful listerners. When they erred, they erred on the side of the phonologically or semantically plausible word.</p>
 <!-- Phon looks scraps. -->
 <!-- semantic scraps: -->
 <!-- The looking patterns---that is, the shapes of the growth curves---were largely the same for each year. The main differences were that the age-3 curve was about 100&nbsp;ms slower to rise than the age-4 curve and that the age-5 curve -->
@@ -448,6 +444,7 @@ Figure 7.5: Differences in the average looks to the semantic foil versus the unr
 
 </div>
 </div>
+</div>
 <h3>References</h3>
 <div id="refs" class="references">
 <div id="ref-RWLPaper">
@@ -473,6 +470,7 @@ Figure 7.5: Differences in the average looks to the semantic foil versus the unr
 <hr />
 <ol start="3">
 <li id="fn3"><p>Initially, I tried to use Bayesian polynomial growth curve models, as in the earlier analysis of the looks to the target image. These models however did not converge, even when strong priors were placed on the parameters.<a href="effects-of-phonological-and-semantic-competitors.html#fnref3">↩</a></p></li>
+<li id="fn4"><p>Anecdote! I was drawn to the general confusion interpretation, partially because I grew up on a farm where we raised sheep. I can remember plenty of people, much older than preschool age, calling the sheep <em>goats</em>. Surely, a bunch of non-rural preschoolers would be in a similar situation, confusing sheep and goats, right? But naming is harder than recognition. I imagine that the goat-mislabellers could point to the right animal if I showed a picture of a goat next to a picture of a sheep.<a href="effects-of-phonological-and-semantic-competitors.html#fnref4">↩</a></p></li>
 </ol>
 </div>
             </section>
@@ -481,7 +479,7 @@ Figure 7.5: Differences in the average looks to the semantic foil versus the unr
         </div>
       </div>
 <a href="analysis-of-familiar-word-recognition.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="general-discussion-1.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="general-discussion.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

@@ -65,7 +65,9 @@ curve.
 #> Warning: package 'bindrcpp' was built under R version 3.4.4
 ```
 
-<img src="81-test_files/figure-html/infobox-1-figs-1.png" width="66%" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics[width=0.66\linewidth]{81-test_files/figure-latex/infobox-1-figs-1} \end{center}
 
 Each of these basis functions is weighted by a model coefficient, but the
 individual basis functions are not a priori meaningful. Rather, it is the whole
