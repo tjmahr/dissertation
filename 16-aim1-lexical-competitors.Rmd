@@ -257,6 +257,15 @@ data_labs <- tibble::tribble(
       c("Target", "Phonological foil"))) 
   
 
+
+
+test_theme <- theme_grey(base_size = 14) %+replace%
+    theme(
+      axis.title = element_text(hjust = 1), 
+      strip.text = element_text(hjust = 0), 
+      strip.text.x = element_text(margin = margin(14/2, 14/2, 14/2, 14/2)),
+      strip.text.y = element_text(margin = margin(14/2, 14/2, 14/2, 14/2)))
+
 phon_d %>%
   mutate(
     Focus = factor(
@@ -267,12 +276,12 @@ phon_d %>%
     aes(x = Time, y = Prop, color = Study) +
     geom_hline(yintercept = .25, color = "white", size = 2) +
     stat_summary(fun.y = "mean", geom = "line", size = 1) +
-    geom_text(aes(label = Study), data = data_labs, size = 3.5) +
+    geom_text(aes(label = Study), data = data_labs, size = 4) +
     facet_wrap("Focus") +
     labs(
       x = "Time after target onset [ms]",
       y = "Mean proportion looking to image") +
-    theme_grey() +
+    test_theme +
     guides(color = FALSE)
 ```
 
@@ -1456,58 +1465,6 @@ in word recognition.
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-These results, paired with the findings from older children, lead to a
-compelling developmental story. @Rigler2015 compared 9- and 16-year-olds
-on a visual-world word recognition experiment with cohort and rime
-competitors. The younger children in that study were slower to look to
-the target image and showed more looks to the competitor images. The
-implications are that children's lexical processing is still developing
-in late childhood and that in particular, children's inhibition of
-lexical competitors became stronger with age.
-
-The current results with 3-, 4-, and 5-year-olds followed a different
-pattern: Relative looks to the competitor images increased with age.
-Taken together, the results suggest an interesting progression for the
-development of lexical processing. 
-During the preschool years, children learn many, many words, and they
-establish phonological and semantic connections between words. These
-connections support immediate activation of the neighborhoods of words. For
-these experiments, children became more sensitive to the phonological
-foils because the phonological competitor achieved greater activation.
-Late childhood, based on the @Rigler2015 findings, would be a time for
-refinement of those connections, so that sensitivity to the competitors
-decreases. This refinement could follow from more selective activation 
-channels, increased lexical inhibition, or likely a combination of both.
-
-
-
-
-I also asked whether child-level factors predicted sensitivity to the
-phonological competitors. They did not at age 3. In particular, children
-who can more reliably discriminate minimal pairs did not show increased
-sensitive to the phonological foil. This finding suggests that
-sensitivity to the phonological foil is somewhat removed from speech
-perception. PPVT: vocabulary not a factor either. Early activation
-dynamics different from speech perception or number of words.
-
-Limitations: Change in recorded stimuli. Inclusion of two competitors on
-every trial.
-
-
-
 <!-- Talking points: -->
 
 <!--   - There is hardly an effect of the phonological foil during timepoint 1. There -->
@@ -1531,44 +1488,112 @@ every trial.
 ### Late activation of semantic neighbors
 
 The semantic competitors were from the same category as the target noun:
-for example, *bee*–*fly* or *shirt*–*dress*. Children also showed
+for example, *bee*–*fly* or *shirt*–*dress*. Children showed
 year-over-year increases in their sensitivity to the semantic
-competitor, relative to the unrelated image. Looks the semantic foil
+competitor, compared to the unrelated image. Looks the semantic foils
 started rising steadily 500--700 ms after target onset and peaked late
 in the trial, around 1300 ms. This time-course is more protracted than
-the immediates peaks observed for the phonological foil.
+the immediate peaks observed for the phonological competitor.
 
 In terms of lexical processing, this late timing is consistent with
-cascading activation: Spoken words immediately activates phonological
-neighborhoods with activation cascading to semantically related words.
+cascading activation: Spoken words immediately activate phonological
+neighborhoods with activation cascading onto semantically related words.
 As a particular word is favored, its semantic relatives receive more
-activation. For example, children hear "find the shirt", activate the
-target *shirt* but also activate other pieces of clothing like *dress*.
-The late timing of looks to the semantic competitor reflects late,
-secondary activation of the spoken word's semantic relatives. Put
-another way, the activation of a semantic neighbor (like *dress*) is
-greatest when the activation of the spoken word (*shirt*) is greatest
-which happens once the competition among phonological alternatives has
-resolved.
+secondary activation. For example, children hear "find the shirt",
+activate the target *shirt*, but also activate other pieces of clothing
+like *dress*. The late timing of looks to the semantic competitor
+therefore reflects late, secondary activation of the spoken word's semantic
+relatives. Put another way, the activation of a semantic neighbor (like
+*dress*) is greatest when the activation of the spoken word (*shirt*) is
+greatest which happens once the competition among phonological
+alternatives resolves.
 
-Under this explanation, children hear a word, activate it, and become
+Under this account, children hear a word, activate it, and become
 increasingly likely to fixate on the semantic competitor, compared to
 the unrelated image. The late looks probably reflect a combination of 
 behaviors: children considering the semantically related image to check
-their initial interpretation, and children looking to the wrong image
-because of confusion, lack of knowledge or overriding activation from
-the semantic competitor. 
+their initial interpretation as well as children looking to the wrong image
+because of confusion, lack of knowledge, overriding activation from
+the semantic competitor, or lack of interest in the target. 
 
-Initially, I had subscribed to the confusion or lack of knowledge interpretation. After all, these are young children and decisions like *bee* vs. *fly* or *goat* vs. *sheep* can be difficult. But there are two objections to that line of reasoning. First, we had piloted the set of words in preschool classrooms, so we confirmed that children will reliably and correctly point to *bee* even when a *fly* is an alternative. Second, we would a priori expect that children's confusion among words to be greatest when they are youngest and have much less experience with these semantic categories.
+Initially, I had subscribed to a confusion or lack-of-knowledge
+interpretation of the semantic competitor's advantage. That is, children
+look the semantic competitor because they do not know the difference
+between the target and the semantic competitor. After all, the reasoning
+went, these were young children and decisions like *bee* vs. *fly* or
+*goat* vs. *sheep* can be difficult. But there are two objections to
+that line of reasoning. First, we had piloted the set of words in
+preschool classrooms, so we confirmed that children could reliably and
+correctly point to *bee* even when *fly* is an alternative. Second, we
+would a priori expect that children's confusion among words to be
+greatest when they are youngest and have much less experience with these
+semantic categories. (Indeed, children at age 3 looked less to the
+target overall, so in general, they were less successful at recognizing
+the target word.) 
+
+The late looks to the semantic competitor, relative to the unrelated
+image, however, were greatest at age 5. Children's looks became more
+selective with age: They looked more to the semantic competitor because
+they had discovered the semantic connections among words. They had
+learned the similarity between *bee* and *fly* or *shirt* and *dress*.
+Put another way, to demonstrate confusion between two choices, children
+must learn some association that connects the two; they must use or
+activate some information that induces warranted uncertainty. Rather
+than confusion about the meaning of nouns, the late looks likely reflect
+a confirmatory behavior where children give some consideration to the
+semantic alternative. This is especially the case at age 5, where the
+advantage of semantic competitor quickly decreases after its peak,
+indicating a rapid rejection of the semantic competitor.
+
+
+...summary graf
 
 
 
-  - If children were just confused between bear/horse, fly/bee,
-    goat/sheep, etc., they should be confused more at younger ages when
-    they know much less about the world. So if it were confusion or
-    guess, the semantic foil should be stronger at age 3. But they are
-    also slower at word recognition in general at younger ages, so maybe
-    these things cancel each other out?
+
+
+### Lexical competitors and individual differences
+
+I asked whether offline child-level measures predicted sensitivity to
+the phonological and semantic competitors at age 3. I used children's
+ability scores from a minimal-pair discrimination task as a measure of
+phonemic speech perception, and I also used scores from a receptive
+vocabulary test. For the phonological competitor, I expected that
+children with increased phonemic discrimination would show increased
+looks to the phonological competitor because they had more detailed
+phonemic representations that would activate phonological neighborhoods
+more quickly. For the semantic competitor, I likewise expected children
+with larger receptive vocabularies to show increased looks to the
+semantic competitor because these children knew more words and likely
+learned more semantic connections among the words. I tested these
+effects by using the scores as parametric effects to see if they
+predicted average looks to the competitor, and alternatively, by using
+the scores for smooth effects to see if they influenced the time course
+of looks to the foils.
+
+None of these expectations held: Neither of the child-level measures
+predicted average sensitivity to the phonological or semantic
+competitors at age 3. Part of the result may be artifactual: The
+data---looks to a subset of images on a subset of trials---may be too
+limited at the individual level for the models to pick up on child-level
+effects. Part of the result may be developmental too: Children were
+least sensitive to the competitors at age 3, so individual differences
+may be too small for the data or models to capture. Further work, with
+different experimental designs, may elaborate on whether offline
+measures can reliably detect differences in sensitivity to lexical
+competitors during word recognition. 
+
+
+
+
+
+
+<!--   - If children were just confused between bear/horse, fly/bee, -->
+<!--     goat/sheep, etc., they should be confused more at younger ages when -->
+<!--     they know much less about the world. So if it were confusion or -->
+<!--     guess, the semantic foil should be stronger at age 3. But they are -->
+<!--     also slower at word recognition in general at younger ages, so maybe -->
+<!--     these things cancel each other out? -->
     
   
 <!-- [^goat] -->

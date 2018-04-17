@@ -25,3 +25,39 @@ How can word recognition improve: Stronger activation: energy enters system more
 At the same time, however, children became more sensitive to the phonological and semantic competitors. Each year, children looked more to the target image, and when they erred, they were more likely to err on a lexical relevant word. 
 
 Results suggest the former option: The system is getting more efficient at activation.
+
+
+
+...reiterate main findings
+
+
+These results, paired with the findings from older children, lead to a
+compelling developmental story. @Rigler2015 compared 9- and 16-year-olds
+on a visual-world word recognition experiment with cohort and rime
+competitors. The younger children in that study were slower to look to
+the target image and showed more looks to the competitor images. The
+implications are that children's lexical processing is still developing
+in late childhood and that in particular, children's inhibition of
+lexical competitors became stronger with age.
+
+The current results with 3-, 4-, and 5-year-olds followed a different
+pattern: Relative looks to the competitor images increased with age.
+Taken together, the results suggest an interesting progression for the
+development of lexical processing. 
+During the preschool years, children learn many, many words, and they
+establish phonological and semantic connections between words. These
+connections support immediate activation of the neighborhoods of words. For
+these experiments, children became more sensitive to the phonological
+foils because the phonological competitor achieved greater activation.
+Late childhood, based on the @Rigler2015 findings, would be a time for
+refinement of those connections, so that sensitivity to the competitors
+decreases. This refinement could follow from more selective activation 
+channels, increased lexical inhibition, or likely a combination of both.
+
+
+...outline limitations
+
+Limitations: Change in recorded stimuli. Inclusion of two competitors on
+every trial.
+
+
