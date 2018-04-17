@@ -2,7 +2,7 @@
 --- 
 title: "Development of word recognition in preschoolers"
 author: "Tristan Mahr"
-date: "2018-04-13"
+date: "2018-04-17"
 documentclass: "book"
 site: "bookdown::bookdown_site"
 github-repo: "tjmahr/dissertation"
@@ -10,6 +10,8 @@ panflute-filters: "fix-apa-ampersands"
 bibliography: ["assets/refs.bib", "assets/packages.bib"]
 csl: "assets/apa.csl"
 link-citations: yes
+abstract: |
+  Here is my abstract
 
 # Data for the PDF version
 year: 2018
@@ -22,8 +24,6 @@ chair: "Name of my committee chair"
 signature: 
   - "committee member 1"
   - "committee member 2"
-abstract: |
-  Here is my abstract
 acknowledgments: |
   My acknowledgments
 dedication: |
@@ -39,6 +39,6 @@ watermark: "DRAFT"
 
 This book, when finished, will contain my dissertation research. 
 
-- Last compiled: 2018-04-13 10:19:24
+- Last compiled: 2018-04-17 10:15:35
 
 \mainmatter
