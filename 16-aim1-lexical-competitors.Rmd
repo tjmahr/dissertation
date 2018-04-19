@@ -249,22 +249,18 @@ data_labs <- tibble::tribble(
   "Target", 1400, .7, "Age 4",
   "Target", 1400, .575, "Age 3",
   "PhonologicalFoil", 1180, .04, "Age 5",
-  "PhonologicalFoil", 1400, .18, "Age 3",
-) %>% 
+  "PhonologicalFoil", 1400, .18, "Age 3") %>% 
   mutate(
     Focus = factor(
       Focus, c("Target", "PhonologicalFoil"),
       c("Target", "Phonological foil"))) 
-  
 
-
-
-test_theme <- theme_grey(base_size = 14) %+replace%
-    theme(
-      axis.title = element_text(hjust = 1), 
-      strip.text = element_text(hjust = 0), 
-      strip.text.x = element_text(margin = margin(14/2, 14/2, 14/2, 14/2)),
-      strip.text.y = element_text(margin = margin(14/2, 14/2, 14/2, 14/2)))
+# test_theme <- theme_grey(base_size = 14) %+replace%
+#     theme(
+#       axis.title = element_text(hjust = 1), 
+#       strip.text = element_text(hjust = 0), 
+#       strip.text.x = element_text(margin = margin(14/2, 14/2, 14/2, 14/2)),
+#       strip.text.y = element_text(margin = margin(14/2, 14/2, 14/2, 14/2)))
 
 phon_d %>%
   mutate(
@@ -281,7 +277,6 @@ phon_d %>%
     labs(
       x = "Time after target onset [ms]",
       y = "Mean proportion looking to image") +
-    test_theme +
     guides(color = FALSE)
 ```
 
@@ -1382,14 +1377,9 @@ patterns changed over developmental time. With each year of the study,
 children looked more to the target overall, so they consequently looked
 less to the competitor images each year. To account for this fact, these
 analyses examined the ratio of looks to the competitors versus the
-unrelated word. This ratio measured the relative
-advantage of a competitor over the unrelated word. 
+unrelated word. This ratio measured the relative advantage of a
+competitor over the unrelated word.
 
-
-<!-- If we imagine a pie-chart of looks to the four images, the target piece -->
-<!-- increases in size each year, overtaking area from the other three looks. -->
-
-<!-- describe general patterns, time course and increase -->
 
 ### Immediate activation of phonological neighbors
 
@@ -1408,12 +1398,12 @@ competitor increased with each year of the study.
 
 When children looked to the phonological competitor, they fixated on the
 wrong image and had to revise their interpretation of the noun. At
-ages 4 and 5, the early peaks of looks to the phonological competitor
+ages 4 and 5, the early peaks of looks to the phonological competitor
 were followed by a steep, monotonic decrease in looks: Children rejected
 their initial interpretation of the word and considered other images. At
-age 3, the average pattern showed more wiggliness, suggesting that
+age 3, the average pattern showed more wiggliness, suggesting that
 children were less decisive in rejecting the phonological competitor.
-The shapes of the looking patterns at age 4 and age 5 were essentially
+The shapes of the looking patterns at age 4 and age 5 were essentially
 the same. In particular, the older children were not any faster, on
 average, in the rejecting the phonological competitor.
 
@@ -1443,7 +1433,7 @@ activates compatible words.[^connectionism]
   lexical mechanisms involved should be ones that enable stronger 
   immediate activations as a result of learning more words.
 
-Children at age 4 and age 5 did not show any changes in how quickly they
+Children at age 4 and age 5 did not show any changes in how quickly they
 rejected the phonological foil, and this results suggests that lexical
 inhibition may not change over the preschool year. The reasoning is as
 follows: If children developed stronger lexical inhibition with age, so
@@ -1461,28 +1451,6 @@ in word recognition.
   inhibition to overcome, so changes in inhibition could be a plausible
   part of the developmental story. But then again, there is no 
   compelling reason from the data to make that assertion.
-
-
-
-
-<!-- Talking points: -->
-
-<!--   - There is hardly an effect of the phonological foil during timepoint 1. There -->
-<!--     are a few ways to interpret this finding. The first may be artefactual. The -->
-<!--     stimuli were re-recorded at timepoint 2 so the timepoint 1 stimuli were -->
-<!--     somewhat longer on average (). -->
-<!--     However, with slower stimuli, we would still expect an inflection in looks -->
-<!--     to the foil as children have more time to activate the phonological -->
-<!--     representations to the cohort. In other words, with more time to respond, -->
-<!--     there could plausibly be an even greater effect of early phonological -->
-<!--     information. -->
-<!--   - Alternatively, the children in timepoint 1 may not be using the early -->
-<!--     similarity of words during word recognition. That is, instead of immediate -->
-<!--     incremental activation of lexical cohorts, the children may not be -->
-<!--     activating the cohorts as reliably. This would imply that further study is -->
-<!--     required on the evidence for when young children begin to show immediate -->
-<!--     activation of cohorts. -->
-
 
 
 ### Late activation of semantic neighbors
@@ -1519,7 +1487,7 @@ the semantic competitor, or lack of interest in the target.
 Initially, I had subscribed to a confusion or lack-of-knowledge
 interpretation of the semantic competitor's advantage. That is, children
 look the semantic competitor because they do not know the difference
-between the target and the semantic competitor. After all, the reasoning
+between the target and the semantic competitor. After all, my thinking
 went, these were young children and decisions like *bee* vs. *fly* or
 *goat* vs. *sheep* can be difficult. But there are two objections to
 that line of reasoning. First, we had piloted the set of words in
@@ -1543,13 +1511,7 @@ than confusion about the meaning of nouns, the late looks likely reflect
 a confirmatory behavior where children give some consideration to the
 semantic alternative. This is especially the case at age 5, where the
 advantage of semantic competitor quickly decreases after its peak,
-indicating a rapid rejection of the semantic competitor.
-
-
-...summary graf
-
-
-
+indicating rejection of the semantic competitor.
 
 
 ### Lexical competitors and individual differences
@@ -1559,13 +1521,13 @@ the phonological and semantic competitors at age 3. I used children's
 ability scores from a minimal-pair discrimination task as a measure of
 phonemic speech perception, and I also used scores from a receptive
 vocabulary test. For the phonological competitor, I expected that
-children with increased phonemic discrimination would show increased
+children with better phonemic discrimination would show increased
 looks to the phonological competitor because they had more detailed
 phonemic representations that would activate phonological neighborhoods
 more quickly. For the semantic competitor, I likewise expected children
 with larger receptive vocabularies to show increased looks to the
 semantic competitor because these children knew more words and likely
-learned more semantic connections among the words. I tested these
+developed more semantic connections among the words. I tested these
 effects by using the scores as parametric effects to see if they
 predicted average looks to the competitor, and alternatively, by using
 the scores for smooth effects to see if they influenced the time course
@@ -1583,93 +1545,3 @@ different experimental designs, may elaborate on whether offline
 measures can reliably detect differences in sensitivity to lexical
 competitors during word recognition. 
 
-
-
-
-
-
-<!--   - If children were just confused between bear/horse, fly/bee, -->
-<!--     goat/sheep, etc., they should be confused more at younger ages when -->
-<!--     they know much less about the world. So if it were confusion or -->
-<!--     guess, the semantic foil should be stronger at age 3. But they are -->
-<!--     also slower at word recognition in general at younger ages, so maybe -->
-<!--     these things cancel each other out? -->
-    
-  
-<!-- [^goat] -->
-
-<!-- [^goat]: Anecdote! I was drawn to the general confusion idea, -->
-<!-- partially because I grew up on a farm where we raised sheep. I can -->
-<!-- remember plenty of people, much older than preschool age, calling the -->
-<!-- sheep *goats*. Surely, a bunch of non-rural preschoolers would be in a -->
-<!-- similar situation, confusing sheep and goats, right? But naming is -->
-<!-- harder than recognition. I imagine that the goat-mislabellers could -->
-<!-- point to the right animal if I showed a picture of a goat next to a -->
-<!-- picture of a sheep. Indeed, we piloted these images in preschool -->
-<!-- classrooms, by having children point to images in the presense of the -->
-<!-- phonological and semantic competitors. -->
-
-
-
-
-<!-- Phon looks scraps. -->
-
-
-
-
-
-<!-- semantic scraps: -->
-
-<!-- The looking patterns---that is, the shapes of the growth curves---were largely the same for each year. The main differences were that the age-3 curve was about 100&nbsp;ms slower to rise than the age-4 curve and that the age-5 curve -->
-
-<!--   - That the effect of the foil increases each year indicates that the -->
-<!--     semantic representations of words have strengthened. -->
-<!--   - Is inhibition coming online at age 5? -->
-
-
-
-<!-- Talking points : -->
-
-<!-- * I tested whether two child-level features predicted looks to the competitor image at age 3. -->
-<!-- * One a priori expectation was that looks to the phonological foil would relate to phonological discrimination ability, because children who can reliably discriminate one-feature phonetic differences between words would have richer phonological or phonetic representations that supported word recognition. -->
-
-<!-- * The other a prior expectation was that looks to semantic foil would relate to looks to the receptive vocabulary. However, neither predicted related to looks the semantic foil. -->
-
-
-
-
-
-<!-- What's going on here: -->
-
-<!--   - The weak phonological foils are indeed weaker than the strong foils. -->
-<!--   - The strong semantic foils appear stronger than the weak ones. The -->
-<!--     strong foils show a growth curve pattern of increasing looks away -->
-<!--     from baseline and there a developmental difference among the growth -->
-<!--     curves for each time point. -->
-<!--   - Children have a lower advantage for the target (vs unrelated) in -->
-<!--     weak foil trials because... why? My reading is that if the semantic -->
-<!--     or phonological foil is effective, children will look at it instead -->
-<!--     of the unrelated image. Conversely, if the semantic or phonological -->
-<!--     foil are less effective, children will look more to the unrelated -->
-<!--     image, which pulls down the ratio of looks to target versus the -->
-<!--     unrelated image. -->
-
-
-
-<!-- Each curve is the log odds of looking to the target, phonological foil, and -->
-<!-- semantic foil versus the unrelated word. Positive values mean more looks to an -->
-<!-- image type than the unrelated. If you think of the _y_ axis as the image's -->
-<!-- _relatedness_ to the target, you can see a time course of relatedness in each -->
-<!-- panel: Here early phonological effects meaning early relatedness and later, -->
-<!-- flatter semantic effects meaning late relatedness. (These effects make even more -->
-<!-- sense sense if phonological representations affect processing before semantic -->
-<!-- ones.) -->
-
-<!-- This plot suggests an important finding: Children becoming more sensitive to the -->
-<!-- phonological and semantic foils as they grow older. Jan and I had made -->
-<!-- opposite predictions about whether this would happen. Her argument, I think, was -->
-<!-- that children become better at word recognition by becoming better able to -->
-<!-- inhibit interference from competing words. This plot would suggest that they -->
-<!-- show increased sensitive to the target and foils words by looking less to the -->
-<!-- unrelated word as they age and reapportioning those looks to the other three -->
-<!-- lexically relevant words. -->
