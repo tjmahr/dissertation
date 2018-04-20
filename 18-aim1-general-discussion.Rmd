@@ -22,50 +22,55 @@ Learn words and learn connections between words
 -----------------------------------------------------------------------
 
 Children showed year-over-year improvements in word recognition, as
-measured by average and peak looking probabilities and the rate of
-change in looking probabilities. Children were more faster and more
-reliable at recognizing familar words. At the same time, children also
-became more sensitive to the phonological and semantic competitors. With
-each year, children looked more to the target image, and when they
-erred, they were more likely to err on a lexical relevant word.
+measured by average looking probabilities, peak looking probabilities,
+and the rate of change in looking probabilities. Children became faster,
+more reliable, and less uncertain during recognizing familar words. At
+the same time, children also became more sensitive to the phonological
+and semantic competitors. With each year, children looked more to the
+target image, but when they erred, they were more likely to err on a
+lexical relevant word.
 
 These developmental patterns can be interpreted in terms of lexical
 activation and processing dynamics. In this task, children hear a
 stream of speech and activate some phonetic, phonemic, lexical, and
 semantic representations that match the speech input. As they hear more
-a word, the activation builds until a particular word is favored, and
-children shift their gaze onto the named image. To make this system more
-efficient, we have to find ways to increase the relative activation of
-the correct word. In particular, we can increase the strength of
-connections so that activation can propagate more efficiently through
-the system, and we can inhibit competing words so that the correct word
-can win out over its competitors.
+of a word, the activation builds until a particular word is favored, and
+children shift their gaze onto the named image. Let's imagine that we
+have to engineer this system. To make this system more efficient, we have
+to find ways to increase the relative activation of the correct word. In
+particular, we can increase the strength of connections so that
+activation can propagate more efficiently through the system, and we can
+inhibit competing words so that the correct word can win out over its
+competitors more quickly.
 
 The results from these studies indicate that children become more
-efficient at activating the target word over the preschool years. As
-they grew older, children were faster to look at a named image and more
-likely to fixate on the phonological competitor (compared to the
-unrelated image) as they grew older. These two findings reflect changes
-in how quickly partial acoustic information could activate a
-phonological plausible word. The phonological competitors shared the
-same syllable onset as the target noun (e.g., *dress*–*drum*), so the
-early part of the word matched both of these words. That children became
-more sensitive to the phonological competitor with age means that they
-learned the phonological similarities among words, so that part of a
-word activated a neighborhood of phonological plausible matches. This
-development supports faster word recognition because it would
-channel activation to relevant words more quickly.
+efficient at activating the target word *and related words* over the
+preschool years. As they grew older, children were faster to look at a
+named image and more likely to fixate on the phonological competitor
+(compared to the unrelated image) as they grew older. These two findings
+reflect changes in how quickly partial acoustic information can
+activate a phonological plausible word. The phonological competitors
+shared the same syllable onset as the target noun (e.g.,
+*dress*–*drum*), so the early part of the word matched both of these
+words. That children became more sensitive to the phonological
+competitor with age means that they learned the phonological
+similarities among words, because part of a word activated a
+neighborhood of phonological plausible matches. This development
+supports faster word recognition because it would channel activation to
+relevant words more quickly.
 
+The other mechanism we might tune is inhibition.
 Children's looks to the phonological or semantic competitors were
 temporary: Looks increases to some peak level and then quickly decrease.
 Behaviorally, the drop in looking probability reflects the rejection of
 an interpretation: for example, a child hears "dr", jumps to *dress*,
 but hear "um", revises the interpretation and shifts looks to *drum*.
-These corrections reflect some change in relative activation where a
-different word overrides an initial interpretation. The evidence for
-developmental changes in lexical inhibition was scant: The rate of
+We could interpret these corrections as evidence for an inhibitory
+process: Corrections reflect change in relative activation where a
+different word overrides an initial interpretation. But the evidence for 
+_developmental changes_ in lexical inhibition was scant: The rate of
 rejection of the phonological competitor did not change from age 4 to
-age 5, but the rate did increase for the semantic competitor from from
+age 5, although rate did increase for the semantic competitor from
 age 4 to age 5.
 
 These results, paired with the findings from older children, lead to a
@@ -89,20 +94,16 @@ connections, so that sensitivity to the competitors decreases. This
 refinement could follow from more selective activation channels,
 increased lexical inhibition, or likely a combination of both.
 
-
-Inhibition may play a part
-
-disqualifying 
-
-information. But it can also reflect overriding activation: Activation un
+***
 
 
+so on. Some parts of the children's lexicon may be less densely developed.
 
-would be followed
+these differences reflect different degrees of lexical development
+provide a  the presence of individual differences in word recognition is not unexpected. Different
 
 
-
-, so that both of these words were activated
+As children learn more words, they learn the similarities and connections among them. After learning many, many, many words, they
 
 
 In terms of lexical processing,
@@ -151,21 +152,39 @@ ever-growing haystack is to sort the hay and organize the straws. We
 might apply the reasoning backwards in time too: Early on, with just a
 few straws, an ad hoc or inefficient organization can be just fine.
 
+...
+
+***
 
 ...outline limitations
 
-Limitations: Change in recorded stimuli. Inclusion of two competitors on
-every trial.
+This research has some limitations. The experimental design included
+semantic and phonological competitors on every trial, so isolating out
+the semantic and phonological competition effects required some
+subtlety. A more direct design would compare different types of a
+trials: for example, a target vs. three unrelated images condition, and
+a target vs. a competitor vs. two unrelated images condition. The trials
+also used different kinds of semantic and phonological competitors. For
+example, two of the phonological competitors rhymed with the target, so
+they could not be included the analysis of phonological competitors
+(which focused competitors with the same onset as the target). The
+current design limited the number of trials that could be used in the
+analyses of the competitors and weakened the power of the analyses.
 
-*** 
+Another limitation include changes in the experiment procedure over the
+course of the longitudinal study. From age 3 to age 4, we re-recorded
+the stimuli (with the same original speakers) so that the durations
+between the two different dialect versions of the experiment were
+similar. From age 4 to age 5, we also shortened the duration of the
+trials by removing attention-getting prompt (e.g, *this is fun!*) from
+the ends of the trials. These small procedural changes mean that
+year-to-year differences do not reflect *pure* development differences.
+It is very implausible, however, that the robust year-over-changes owe
+more to procedural changes than a year of learning and language
+development.
 
-so on. Some parts of the children's lexicon may be less densely developed.
-
-these differences reflect different degrees of lexical development
-provide a  the presence of individual differences in word recognition is not unexpected. Different
 
 
-As children learn more words, they learn the similarities and connections among them. After learning many, many, many words, they
 
 
 

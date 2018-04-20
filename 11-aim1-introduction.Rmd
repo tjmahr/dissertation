@@ -1,0 +1,188 @@
+Familiar Word Recognition {#aim1-introduction}
+=======================================================================
+
+```{r include = FALSE}
+knitr::read_chunk("./helpers.R")
+if (interactive()) source("./helpers.R")
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+```{r helpers, message = FALSE, warning = FALSE}
+```
+
+```{r include = FALSE}
+knitr::opts_chunk$set(cache = TRUE)
+```
+
+## Lexical Processing Dynamics
+
+Mature listeners recognize words by continuously evaluating incoming
+speech input for possible word matches. The first part of a word
+activates multiple candidate words in parallel. These candidates compete
+as more of the speech signal enters the system, and the best-fitting
+word is the favored interpretation. For example, the onset "bee" might
+activate the candidates *bee*, *beam*, *beetle*, *beak*, *beaker*,
+*beginning*, and so on, but an additional "m" would narrow the
+candidates to just *beam*. Semantic relationships also influence lexical
+processing, and cascading phonological-semantic effects—e.g., where
+*castle* activates the phonologically similar *candy* which in turn
+activates the semantically related *sweet*—have been demonstrated
+[@Marslen-Wilson1989]. Both low-level phonetic cues and high-level
+grammatical, semantic and pragmatic information can influence this
+process, but the *continuous processing of multiple competing
+candidates* is the essential dynamic underlying word recognition
+[@Magnuson2013].
+
+What about young children who know considerably fewer words? Eyetracking
+studies with toddlers have suggested a developmental continuity between
+toddlers and adult listeners. Children recognize words incrementally
+[@Swingley1999], match truncated words to their intended referents
+[@Fernald2001], and use information from neighboring words in a
+sentence to facilitate word recognition. This information can be
+grammatical: @Lew-Williams2007 found that Spanish-acquiring preschoolers
+can use grammatical gender on determiners (*el* or *la*) to anticipate
+the word named in a two-object word recognition task. The information
+can also be low-level phonetic variation: We found that
+English-acquiring toddlers look earlier to a named image when the
+coarticulatory formant cues on word *the* predicted the noun of the
+sentence, compared to tokens with neutral coarticulation [@Mahr2015].
+
+There is some evidence for lexical competition where children are
+sensitive to phonological and semantic similarities among words.
+@EllisWeismer2016 showed that toddlers (14–29 months old) looked less
+reliably to a named image when the onscreen competitor was a
+semantically related word or perceptually similar image. In @RWLPaper,
+preschoolers (28–60 months old) demonstrated sensitivity to semantic and
+phonological competitors in a four-image eyetracking task. @Huang2011
+presented evidence of cascading semantic-phonological activation in
+five-year-olds such that for a target word like *log*, children looked
+more to an indirect phonological competitor like *key* (competing
+through its activation of *lock*) than they looked to an unrelated image
+like *carrot*.
+
+In contrast to these studies, which all demonstrate interference from
+similar words, @Mani2010 demonstrated cross-modal phonological priming
+effects in 18-month-olds. In this study, a picture of prime word (e.g.,
+cat or teeth) was presented in silence; then two images (cup and shoe)
+were presented, one of which was named (*cup*). Children on average
+looked more to the target word (*cup*) when it was primed by an image of
+a phonological neighbor (*cat*), and the children performed at chance
+when the prime was not related to the named word. @Mani2012 found a
+similar result for cascading phonological-semantic priming
+with 24-month-olds: Children looked more to a target (e.g., *shoe*)
+compared to a distractor (*door*) when primed by an image (*clock*,
+assumed to activate *sock* which primed *shoe*). Our results with
+coarticulation in @Mahr2015 are consistent with priming too. The
+transitional cues of the vowel in *the* built up activation of
+compatible nouns, causing children to look to the noun more quickly,
+compared to *the* tokens without those cues.
+
+The above studies involved young children of different ages tested under
+different procedures, sometimes in different dialects and languages.
+Averaging these results together, so to speak, the studies suggest that
+early word recognition demonstrates some hallmarks of adult behavior:
+Continuous processing of words, integration of information from
+different levels of representation, and the influence of similar,
+unspoken words on recognition of a word. Nevertheless, we only have a
+fragmented view of how familiar word recognition and lexical competition
+develop within children.
+
+One open question is how lexical competition develops within children.
+For example, do phonological similar words exert more interference
+during word recognition as children grow older? As a guiding hypothesis,
+we can think of word learning as a gradual process where familiarity
+with a word moves from shallow receptive knowledge to deeper expressive
+knowledge. In adult listeners, words compete and they inhibit one another, so
+that a word is truly “learned” and integrated into the lexicon when it
+can influence the processing of other words [a line of reasoning
+reviewed by @Kapnoula2015]. But how well do young children know
+familiar words? Increasing sensitivity to similar sounding words over
+time would reveal that children more thoroughly learn words and improve
+in their ability to consider multiple candidates in parallel. 
+
+
+## Individual Differences in Word Recognition
+
+We have a rough understanding of the development of word recognition,
+and these gaps in knowledge matter because young children differ in
+their word recognition abilities. These differences are usually measured
+using *accuracy* (a probability of recognizing to a word) or
+*efficiency* (a reaction time or some measure of how quickly accuracy
+changes over time). These differences are consequential too, as word
+recognition differences correlate with other language measures
+concurrently, retrospectively, and prospectively.
+
+Many studies highlight the predictive power of word recognition ability.
+@MarchmanFernald2008 found that vocabulary size and lexical processing
+efficiency at age 2 jointly predicted working memory scores and
+expressive language scores at age 8. @Fernald2012 also found that late
+talkers who looked more quickly to a named word at 18 months showed
+larger gains in vocabulary by 30 months compared to late-talkers who
+looked more slowly at 18 months. @Weisleder2013 found that lexical
+processing and language input at 19 months predict vocabulary size
+at 25 months and that lexical processing mediated the effect of
+language input---the basic idea being that rich language input builds up
+word recognition ability which in turn supports word-learning. 
+
+...
+
+
+
+
+
+<!-- Taken together, these results are inconclusive. -->
+
+<!-- This result would -->
+<!-- suggest word recognition reflects domain-general processing abilities that influence word learning. -->
+
+
+<!-- In [MahrEdwards2018], we evaluated -->
+<!-- language input and lexical processing too. We found that language input -->
+<!-- and word recognition at age 3 efficiency predicted growth in age-4 -->
+<!-- receptive vocabulary, but only word recognition predicted growth in -->
+<!-- age-4 expressive vocabulary. We concluded that receptive vocabulary -->
+
+
+<!-- Children differ in word-recognition ability in ways that  -->
+
+<!-- The best predictor of lexical processing efficiency is concurrent -->
+<!-- vocabulary size: Children who know more words look more quickly and -->
+<!-- reliably to a named word [e.g., @MPPaper]. This fact deserves a brief -->
+<!-- reflection: Suppose the information-processing mechanism behind word -->
+<!-- recognition were just a naïve table search. Then this finding is -->
+<!-- somewhat puzzling: Children with larger lexicons have to find a needle -->
+<!-- in a larger haystack—yet this apparent liability is an advantage. That -->
+<!-- is why the search analogy is naïve. One explanation follows from the -->
+<!-- earlier described idea about graded word learning: Children become -->
+<!-- better at recognizing words as they learn more words because they -->
+<!-- extract regularities and discover similarities among words and develop -->
+<!-- more efficient lexical representations—the haystack develops regularity -->
+<!-- and becomes easier to search. -->
+
+<!-- Although it is a robust predictor of word recognition, vocabulary size -->
+<!-- is nonspecific. For lexical processing dynamics, vocabulary size can be -->
+<!-- considered an indicator for the organization and efficiency of a child’s -->
+<!-- lexicon, but it also correlates with other (meaningful) differences. -->
+<!-- Vocabulary is related to differences in speech perception -->
+<!-- [@Cristia2014_Review] and environmental factors like language input -->
+<!-- [e.g., @HartRisley; @Hoff2003]. For instance, measures of speech -->
+<!-- perception at 6–8 months predict vocabulary size at 24 months [e.g., -->
+<!-- @Tsao2004; @Kuhl2008], so processing predicts future vocabulary predicts -->
+<!-- concurrent processing. -->
+
+
+
+<!-- Word recognition efficiency and vocabulary size are interconnected -->
+<!-- measures with concurrent and predictive associations. This project can -->
+<!-- clarify this relationship by examining the co-development of word -->
+<!-- recognition, vocabulary size, and speech perception. In particular, I -->
+<!-- will ask how individual differences in word recognition change over time.  -->
+
+<!-- By studying how sensitivity to -->
+<!-- similar-sounding and similar-meaning words develop over time and within -->
+<!-- ever-growing vocabularies, this project can reveal how children come to -->
+<!-- process words efficiently. -->
+
+
+## This project
+

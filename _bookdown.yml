@@ -10,7 +10,6 @@ rmd_files:
   - index.Rmd
   - 01-prospectus.Rmd
   - 02-specific-aims.Rmd
-  - 03-significance.Rmd
   - 04-hypotheses.Rmd
   - 10-aim1-part.Rmd
   - 12-aim1-methods.Rmd

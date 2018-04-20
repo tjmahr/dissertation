@@ -1,0 +1,107 @@
+
+<!-- Talking points: -->
+
+<!--   - There is hardly an effect of the phonological foil during timepoint 1. There -->
+<!--     are a few ways to interpret this finding. The first may be artefactual. The -->
+<!--     stimuli were re-recorded at timepoint 2 so the timepoint 1 stimuli were -->
+<!--     somewhat longer on average (). -->
+<!--     However, with slower stimuli, we would still expect an inflection in looks -->
+<!--     to the foil as children have more time to activate the phonological -->
+<!--     representations to the cohort. In other words, with more time to respond, -->
+<!--     there could plausibly be an even greater effect of early phonological -->
+<!--     information. -->
+<!--   - Alternatively, the children in timepoint 1 may not be using the early -->
+<!--     similarity of words during word recognition. That is, instead of immediate -->
+<!--     incremental activation of lexical cohorts, the children may not be -->
+<!--     activating the cohorts as reliably. This would imply that further study is -->
+<!--     required on the evidence for when young children begin to show immediate -->
+<!--     activation of cohorts. -->
+
+
+
+
+<!--   - If children were just confused between bear/horse, fly/bee, -->
+<!--     goat/sheep, etc., they should be confused more at younger ages when -->
+<!--     they know much less about the world. So if it were confusion or -->
+<!--     guess, the semantic foil should be stronger at age 3. But they are -->
+<!--     also slower at word recognition in general at younger ages, so maybe -->
+<!--     these things cancel each other out? -->
+    
+  
+<!-- [^goat] -->
+
+<!-- [^goat]: Anecdote! I was drawn to the general confusion idea, -->
+<!-- partially because I grew up on a farm where we raised sheep. I can -->
+<!-- remember plenty of people, much older than preschool age, calling the -->
+<!-- sheep *goats*. Surely, a bunch of non-rural preschoolers would be in a -->
+<!-- similar situation, confusing sheep and goats, right? But naming is -->
+<!-- harder than recognition. I imagine that the goat-mislabellers could -->
+<!-- point to the right animal if I showed a picture of a goat next to a -->
+<!-- picture of a sheep. Indeed, we piloted these images in preschool -->
+<!-- classrooms, by having children point to images in the presense of the -->
+<!-- phonological and semantic competitors. -->
+
+
+
+
+<!-- Phon looks scraps. -->
+
+
+
+
+
+<!-- semantic scraps: -->
+
+<!-- The looking patterns---that is, the shapes of the growth curves---were largely the same for each year. The main differences were that the age-3 curve was about 100&nbsp;ms slower to rise than the age-4 curve and that the age-5 curve -->
+
+<!--   - That the effect of the foil increases each year indicates that the -->
+<!--     semantic representations of words have strengthened. -->
+<!--   - Is inhibition coming online at age 5? -->
+
+
+
+<!-- Talking points : -->
+
+<!-- * I tested whether two child-level features predicted looks to the competitor image at age 3. -->
+<!-- * One a priori expectation was that looks to the phonological foil would relate to phonological discrimination ability, because children who can reliably discriminate one-feature phonetic differences between words would have richer phonological or phonetic representations that supported word recognition. -->
+
+<!-- * The other a prior expectation was that looks to semantic foil would relate to looks to the receptive vocabulary. However, neither predicted related to looks the semantic foil. -->
+
+
+
+
+
+<!-- What's going on here: -->
+
+<!--   - The weak phonological foils are indeed weaker than the strong foils. -->
+<!--   - The strong semantic foils appear stronger than the weak ones. The -->
+<!--     strong foils show a growth curve pattern of increasing looks away -->
+<!--     from baseline and there a developmental difference among the growth -->
+<!--     curves for each time point. -->
+<!--   - Children have a lower advantage for the target (vs unrelated) in -->
+<!--     weak foil trials because... why? My reading is that if the semantic -->
+<!--     or phonological foil is effective, children will look at it instead -->
+<!--     of the unrelated image. Conversely, if the semantic or phonological -->
+<!--     foil are less effective, children will look more to the unrelated -->
+<!--     image, which pulls down the ratio of looks to target versus the -->
+<!--     unrelated image. -->
+
+
+
+<!-- Each curve is the log odds of looking to the target, phonological foil, and -->
+<!-- semantic foil versus the unrelated word. Positive values mean more looks to an -->
+<!-- image type than the unrelated. If you think of the _y_ axis as the image's -->
+<!-- _relatedness_ to the target, you can see a time course of relatedness in each -->
+<!-- panel: Here early phonological effects meaning early relatedness and later, -->
+<!-- flatter semantic effects meaning late relatedness. (These effects make even more -->
+<!-- sense sense if phonological representations affect processing before semantic -->
+<!-- ones.) -->
+
+<!-- This plot suggests an important finding: Children becoming more sensitive to the -->
+<!-- phonological and semantic foils as they grow older. Jan and I had made -->
+<!-- opposite predictions about whether this would happen. Her argument, I think, was -->
+<!-- that children become better at word recognition by becoming better able to -->
+<!-- inhibit interference from competing words. This plot would suggest that they -->
+<!-- show increased sensitive to the target and foils words by looking less to the -->
+<!-- unrelated word as they age and reapportioning those looks to the other three -->
+<!-- lexically relevant words. -->
