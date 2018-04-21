@@ -134,18 +134,37 @@ strongest for the age-3 growth curve features, in particular for the
 peak probability of looking to the target word. The peak probability
 measures the overall certainty in word recognition and how strongly the
 target word is activated. Children with more efficient representations
-of familiar words at age 3 have a stronger foundation for learning
-future words, and as a result, they had larger vocabularies at age 4 and
-age 5.
+of familiar words at age 3 have a stronger foundation for encoding and
+integrating future words, and as a result, they showed larger
+vocabularies at age 4 and age 5. 
+
+Initially, I had expected processing *speed* (that is, growth curve
+slopes) to be the most predictive measure of vocabulary growth. Children
+who can more quickly recognize words, the reasoning goes, can take in
+information more quickly and devote extra processing cycles towards
+learning.[^fernald] Indeed, processing speed was highly correlated
+with future vocabulary size. Yet peak probability was the strongest
+predictor of future vocabulary size, although these two processing
+measures are highly related. (To hit a higher peak at time *x*, a growth
+curve needs to start from higher baseline or have steeper slope.)
 
 
-...These findings have implications for our understanding of word learning and word recognition.
+[^fernald]: "The infant who identifies familiar words more quickly has
+more resources available for attending to subsequent words, with
+advantages for learning new words later in the sentence, as well as for
+tracking distributional information about relations among words... Being
+slow to identify the referent of a familiar word could interfere with
+lexical activation and impede success in tracking distributional
+regularities and managing attentional resources in real time (Evans,
+Saffran, & Robe-Torres, 2009)" [@FernaldMarchman; p. 217].
 
-differences are real, stable, and most discriminating at younger ages.
+Children who are better at word recognition also
 
-the way to intervene is to act early.
 
+These findings have implications for our understanding of word learning and word recognition. 
 Children become better at recognizing words by learning similarities among words and using those similarities to activate neighborhoods of lexically relevant words. Rather than just measuring vocabulary size, word recognition reflects how well words have been integrated into the lexicon.
+
+The first is that individual differences in word recognition diminish over time, and the differences are more predictive and discriminating at younger ages. 
 
 ...limitations
 
