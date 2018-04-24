@@ -57,10 +57,10 @@ devtools::session_info()
 
 last_four_commits <- git2r::commits(git2r::repository("."), n = 4)
 msgs <- lapply(last_four_commits, methods::show)
+#> [8e05dcd] 2018-04-24: new version
 #> [dbdddd1] 2018-04-22: pull in some simulation results
 #> [04fcd22] 2018-04-21: address speed too
 #> [56ffe42] 2018-04-21: more discussion
-#> [e3f53bb] 2018-04-20: start work on introduction
 ```
 
 

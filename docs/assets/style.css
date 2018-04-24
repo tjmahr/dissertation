@@ -30,3 +30,25 @@ div.infobox img {
   display: block;
   margin: 0 auto;
 }
+
+.book .book-header h1 {
+  opacity: 1;
+  text-align: left;
+}
+
+#header .title {
+  margin-bottom: 0em;
+}
+
+#header h4 {
+  margin: 0;
+  color: #666;
+}
+
+#header h4 em {
+  font-style: normal;
+}
+
+#header h4.date {
+  margin-bottom: 2em;
+}

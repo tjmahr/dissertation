@@ -11,8 +11,8 @@ bookdown::gitbook:
   ]
   config:
     toc:
-      before: |
-        <li><a href="./">Word Recognition in Preschoolers</a></li>
+      #before: |
+      #  <li><a href="./">Word Recognition in Preschoolers</a></li>
       after: |
         <li><a href="https://github.com/rstudio/bookdown" target="blank">Created with bookdown</a></li>
         <li><a href="https://tjmahr.github.io/" target="blank">Tristan Mahr</a></li>

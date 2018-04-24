@@ -10,6 +10,7 @@ panflute-filters: "fix-apa-ampersands"
 bibliography: ["assets/refs.bib", "assets/packages.bib"]
 csl: "assets/apa.csl"
 link-citations: yes
+cover-image: "assets/cover.png"
 abstract: |
   Vocabulary size in preschool is a robust predictor of later language
   development, and early language skills predict early literacy skills at
@@ -45,8 +46,13 @@ watermark: "DRAFT"
 
 \frontmatter
 
+Welcome {-}
+========================================================================
+
+<img src="assets/cover.png" width="50%" style="display: block; margin: auto;" />
+
 This book, when finished, will contain my dissertation research. 
 
-- Last compiled: 2018-04-24 09:11:29
+- Last compiled: 2018-04-24 15:00:12
 
 \mainmatter

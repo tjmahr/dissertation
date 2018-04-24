@@ -12,14 +12,13 @@ rmd_files:
   - 02-specific-aims.Rmd
   - 04-hypotheses.Rmd
   - 10-aim1-part.Rmd
+  - 11-aim1-introduction.Rmd
   - 12-aim1-methods.Rmd
   - 14-aim1-familiar-word-recognition.Rmd
   - 16-aim1-lexical-competitors.Rmd
   - 18-aim1-general-discussion.Rmd
   - 80-scratch.Rmd
-  - 81-test.Rmd
   - 90-appendix.Rmd
-  - 98-colophon.Rmd
   - 99-references.Rmd
 clean:
   - dissertation.Rmd
