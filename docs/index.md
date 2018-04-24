@@ -2,7 +2,7 @@
 --- 
 title: "Development of word recognition in preschoolers"
 author: "Tristan Mahr"
-date: "2018-04-17"
+date: "2018-04-24"
 documentclass: "book"
 site: "bookdown::bookdown_site"
 github-repo: "tjmahr/dissertation"
@@ -11,7 +11,17 @@ bibliography: ["assets/refs.bib", "assets/packages.bib"]
 csl: "assets/apa.csl"
 link-citations: yes
 abstract: |
-  Here is my abstract
+  Vocabulary size in preschool is a robust predictor of later language
+  development, and early language skills predict early literacy skills at
+  school entry. By studying the mechanisms that shape word
+  learning, we can understand how individual differences in language
+  ability arise and identify strategies for closing language gaps between
+  children. Word recognition—the process of mapping incoming speech sounds
+  to known or novel words—has been shown to predict later language
+  outcomes. We do not know how this ability develops over time, and we do
+  not know when word recognition is most predictive of future outcomes.
+  This project will provide an integrated account of how word recognition
+  develops from age 3 to age 5.
 
 # Data for the PDF version
 year: 2018
@@ -35,10 +45,8 @@ watermark: "DRAFT"
 
 \frontmatter
 
-# Preface {-}
-
 This book, when finished, will contain my dissertation research. 
 
-- Last compiled: 2018-04-17 10:15:35
+- Last compiled: 2018-04-24 09:11:29
 
 \mainmatter

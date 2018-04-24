@@ -25,7 +25,7 @@ relatively fast later in childhood? Or, is such a question ill-posed
 because the magnitude of the differences among children shrink with age?
 I plan to address this gap in knowledge by analyzing three years of word
 recognition data collected in recently completed longitudinal study of
-180 children.
+180 children.
 
 In particular, I will examine the development of *familiar word
 recognition*, *lexical competition,* and *fast referent selection* (the
@@ -33,20 +33,14 @@ ability to map novel words to novel objects in the moment). Through
 these analyses, I will develop a fine-grained description of how the
 dynamics of word recognition change year over year, and I will study how
 differences in word recognition performance relate to child-level
-measures (such as vocabulary and speech perception). I will complement
-these empirical analyses with computational cognitive models. With these
-models, I will simulate the word recognition data from each year and
-study how the models need to change to adapt to children’s developing
-word recognition abilities. These simulations can identify plausible
-psychological mechanisms that underlie changes in word recognition
-behavior.
+measures (such as vocabulary and speech perception). 
 
 Specific Aim 1 (Familiar Word Recognition and Lexical Competition)
 ------------------------------------------------------------------------
 
 **To characterize the development of familiar word recognition and
 lexical competition, I will analyze data from a visual world paradigm
-experiment, conducted at age 3, age 4, and age 5.**
+experiment, conducted at age 3, age 4, and age 5.**
 
 In these eyetracking experiments, children were presented with four
 images of familiar objects and heard a prompt to view one of the images.
@@ -54,20 +48,19 @@ The four images included a target word (e.g., *bell*), a semantically
 related word (*drum*), a phonologically similar word (*bee*), and an
 unrelated word (*swing*). I will use a series of growth curve analyses
 to describe how children’s familiar word recognition develop year over
-year. Of interest is how individual differences at Year 1 persist into
-Year 3. I will also analyze how expressive vocabulary and lexical
-processing develop together over time. Lastly, I will examine the
-children’s looks to the distractors to study the developmental course of
-lexical competition from similar sounding and similar meaning words.
-Changes in sensitivity to competing words can reveal how lexical
-competition emerges as a byproduct of learning new words.
+year. Of interest is how individual differences at age 3 persist into
+age 5. I will examine the children’s looks to the distractors to study
+the developmental course of lexical competition from similar sounding
+and similar meaning words. Changes in sensitivity to competing words can
+reveal how lexical competition emerges as a byproduct of learning new
+words.
 
 Specific Aim 2 (Referent Selection and Mispronunciations)
 -----------------------------------------------------------------------
 
 **To characterize how fast referent selection develops longitudinally, I
 will analyze data from a looking-while-listening mispronunciation
-experiment, conducted at age 3, age 4, and age 5.**
+experiment, conducted at age 3, age 4, and age 5.**
 
 In these eyetracking experiments [based on @WhiteMorgan2008;
 @MPPaper], children saw an image of a familiar object and an unfamiliar

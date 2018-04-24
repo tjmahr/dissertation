@@ -3,26 +3,252 @@ General Discussion
 =======================================================================
 
 This study examined the development of familiar word recognition over
-the preschool years. The word recognition data came from a Visual World
-Paradigm eyetracking experiment which recorded children's fixations to
-images in response to prompts like *see the bear*. The trial displays
-featured a target noun along with a phonological competitor, a semantic
-competitor, and an unrelated image. The experiment was conducted as part
-of a three-year longitudinal study; children were 28–39 months-old at
-the Age 3 visit, 39–52 at Age 4, and 51–65 at Age 5. To describe
-children's word recognition ability, I analyzed how the probability of
-fixating on the target image changed over the time course of a trial.
-The presence of the competitor images also allowed additional analyses
-about children's sensitivities to the phonological and semantic
-competitors. The longitudinal design allowed me to describe
-developmental changes in word recognition.
+the preschool years. The word recognition data came from a visual-world
+eyetracking experiment which recorded children's fixations to images in
+response to prompts like *see the bear*. The trials featured a target
+noun along with a phonological competitor, a semantic competitor, and an
+unrelated image. To describe children's word recognition ability, I
+analyzed how the probability of fixating on the target image changed
+over the time course of a trial. The presence of the competitor images
+also allowed additional analyses about children's sensitivities to the
+phonological and semantic competitors. The experiment was conducted as
+part of a three-year longitudinal study; children were 28–39 months-old
+at the Age 3 visit, 39–52 at Age 4, and 51–65 at Age 5. The longitudinal
+design allowed me to describe developmental changes in word recognition.
 
-Children showed year-over-year improvements in word recognition, as measured by
-average and peak looking probabilities and the rate of change in looking
-probabilities. Children were more faster and more reliable at recognizing familar words. In terms of lexical processing, words became activated more strongly (higher peak looks to the target) and more quickly (steeper word changes in word recognition probability).
 
-How can word recognition improve: Stronger activation: energy enters system more quickly. Or less activation: greater inhibition of competitors so competition resolves more quickly.
 
-At the same time, however, children became more sensitive to the phonological and semantic competitors. Each year, children looked more to the target image, and when they erred, they were more likely to err on a lexical relevant word. 
+How to improve word recognition
+-----------------------------------------------------------------------
 
-Results suggest the former option: The system is getting more efficient at activation.
+Children showed year-over-year improvements in word recognition, as
+measured by average looking probabilities, peak looking probabilities,
+and the rate of change in looking probabilities. Children became faster,
+more reliable, and less uncertain during recognizing familar words. At
+the same time, children also became more sensitive to the phonological
+and semantic competitors. With each year, children looked more to the
+target image, but when they erred, they were more likely to err on a
+lexical relevant word.
+
+These developmental patterns can be interpreted in terms of lexical
+activation and processing dynamics. In this task, children hear a stream
+of speech and activate some phonetic, phonemic, lexical, and semantic
+representations that match the speech input. As they hear more of a
+word, the activation builds until a particular word is favored, and
+children shift their gaze onto the named image. Let's imagine that we
+have to engineer this system. To make word recognition more efficient,
+we have to find ways to increase the relative activation of the correct
+word. In particular, we can increase the strength of connections so that
+activation can propagate more quickly through the system, and we can
+allow inhibit among competing words so that the correct word can win out
+over its competitors more quickly.
+
+The results from these studies indicate that children become more
+efficient at activating the target word *and related words* over the
+preschool years. As they grew older, children were faster to look at a
+named image and more likely to fixate on the phonological competitor
+(compared to the unrelated image). These two findings reflect changes in
+how (partial) acoustic information can propagate to activate
+phonologically plausible words. The phonological competitors shared the
+same syllable onset as the target noun (e.g., *dress*–*drum*), so the
+early part of the word matched both of these words. That children became
+more sensitive to the phonological competitor with age means that they
+learned the phonological similarities among words, because part of a
+word activated a neighborhood of phonological plausible matches. This
+developmental change supports faster word recognition because the
+listener can channel activation to relevant words more quickly.
+
+The other mechanism we might tune to improve word recognition is
+inhibition. Children's looks to the phonological or semantic competitors
+were temporary: Looks increase to some peak level and then quickly
+decrease. Behaviorally, the drop in looking probability reflects the
+rejection of an interpretation: for example, a child hears "dr", shifts
+looks to *dress*, but hears "um", revises the interpretation and jumps
+to *drum*. We can interpret these corrections as evidence for an
+inhibitory process: Corrections indicate a change in relative activation
+where a different word overrides an initial interpretation. But the
+evidence for *developmental changes* in lexical inhibition from these
+data was scant. The rate of rejection of the phonological
+competitor---that is, how quickly looks fall from their peak value---did
+not change from age 4 to age 5, although the rate did increase for the
+semantic competitor from age 4 to age 5. Preschoolers did demonstrate
+inhibition by revising their interpretations of nouns, but there were no
+clear developmental changes in inhibition.
+
+Previous simulation work can help us identify more specific mechanisms
+at play. @McMurray2010 used the TRACE model of word recognition
+[@TRACE] to simulate looks to a target and phonological (cohort and
+rime) competitors in adolescents with specific language impairment. The
+authors tuned a number of model parameters and examined how those
+changed influenced predicted looks to the target and competitors. In our
+dataset, we observed a developmental trend where the relative looks to
+the phonological competitors peak higher each year. In those TRACE
+simulations, looks to the cohort competitor peak higher if 1) the rate
+of lexical activation increased, 2) the rate of lexical decay decreased,
+or 3) strength of lexical inhibition decreased. Of these options, the
+decrease in lexical inhibition best matches the current data. The
+similarity does not mean that children inhibited words less as they grew
+older. That is too simplistic: The developmental changes in preschoolers
+are the result of simultaneous changes in many mechanisms. But the
+similarity here does suggest that the preschoolers certainly did not
+*increase* their lexical inhibition with age.
+
+
+
+
+Learn words and learn connections between words
+-----------------------------------------------------------------------
+
+Preschoolers showed increased activation of the target noun
+and semantically and phonologically related words but little
+developmental change in lexical inhibition. Paired with the findings
+from older children, these results lead to a compelling developmental
+story. @Rigler2015 compared 9- and 16-year-olds on a visual-world word
+recognition experiment with phonologial (cohort and rime) competitors.
+The younger children were slower to look to the target image and showed
+more looks to the competitors. The implications are that children's word
+recognition is still developing in late childhood and that in
+particular, children's inhibition of lexical competitors became stronger
+with age.
+
+The current study with 3-, 4-, and 5-year-olds followed a different
+pattern: Relative looks to the competitor images increased with age.
+Taken together, these two studies suggest an interesting progression for the
+development of lexical processing. During the preschool years, children
+learn many, many words, and they establish phonological and semantic
+connections between words. These connections support the immediate
+activation of neighborhoods of words. Late childhood, based on the
+@Rigler2015 findings, then is a time for refinement of those
+connections, so that sensitivity to the competitors decreases. This
+refinement could follow from more selective activation channels,
+increased lexical inhibition, or likely a combination of both.
+
+
+
+Individual differences
+-----------------------------------------------------------------------
+
+Another dimension of this study concerned individual differences in word
+recognition. Some children were faster or more accurate during word
+recognition, and these children were more likely to faster or more
+accurate at later ages. The magnitude of these differences diminished
+over time, so that children approached a more mature level of
+performance. 
+
+In terms of lexical processing dynamics, we might think of early
+differences as reflecting early differences in the burgeoning lexicon.
+Children may have different numbers of words, different degrees of
+experience with some words, less established connections among words,
+and at a lower level, different phonetic and speech perception
+abilities, given the links between speech perception in infancy and
+early vocabulary development. Differences in word recognition are
+greatest early on in development because this is when the differences
+among children's lexicons is greatest. The task of learning new words,
+and more importantly, of developing representations and associations to
+organize words normalizes the differences among children's
+lexicons.[^haystack] That pressure would make the overall variability
+among children decrease over time while still preserving a relative
+ordering among children.
+
+[^haystack]: Earlier I had used a needle-in-a-haystack metaphor for
+lexical access and said that the way to cope with finding a needle in an
+ever-growing haystack is to sort the hay and organize the straws. We
+might apply the reasoning backwards in time too: Early on, with just a
+few straws, an ad hoc or inefficient organization can suffice.
+
+We can also interpret the predictive power of word recognition measures
+in terms of lexical processing and lexical organization. Correlations
+between word recognition performance and future vocabulary were
+strongest for the age-3 growth curve features, in particular for the
+peak probability of looking to the target word. The peak probability
+measures the overall certainty in word recognition and how strongly the
+target word is activated. Children with more efficient representations
+of familiar words at age 3 have a stronger foundation for encoding and
+integrating future words, and as a result, they showed larger
+vocabularies at age 4 and age 5. 
+
+Initially, I had expected processing *speed* (that is, growth curve
+slopes) to be the most predictive measure of vocabulary growth. Children
+who can more quickly recognize words, the reasoning goes, can take in
+information more quickly and devote extra processing cycles towards
+learning.[^fernald] Indeed, processing speed was highly correlated
+with future vocabulary size. Yet peak probability was the strongest
+predictor of future vocabulary size, although these two processing
+measures are highly related. (To hit a higher peak at time *x*, a growth
+curve needs to start from higher baseline or have steeper slope.)
+
+[^fernald]: "The infant who identifies familiar words more quickly has
+more resources available for attending to subsequent words, with
+advantages for learning new words later in the sentence, as well as for
+tracking distributional information about relations among words... Being
+slow to identify the referent of a familiar word could interfere with
+lexical activation and impede success in tracking distributional
+regularities and managing attentional resources in real time (Evans,
+Saffran, & Robe-Torres, 2009)" [@Fernald2012, p. 217].
+
+
+
+
+Children who are better at word recognition also
+
+
+These findings have implications for our understanding of word learning and word recognition. 
+Children become better at recognizing words by learning similarities among words and using those similarities to activate neighborhoods of lexically relevant words. Rather than just measuring vocabulary size, word recognition reflects how well words have been integrated into the lexicon.
+
+The first is that individual differences in word recognition diminish over time, and the differences are more predictive and discriminating at younger ages. 
+
+...limitations
+
+This research has some limitations. The experimental design included
+semantic and phonological competitors on every trial, so isolating out
+the semantic and phonological competition effects required some
+subtlety. A more direct design would compare different types of a
+trials: for example, a target vs. three unrelated images condition, and
+a target vs. a competitor vs. two unrelated images condition. The trials
+also used different kinds of semantic and phonological competitors. For
+example, two of the phonological competitors rhymed with the target, so
+they could not be included the analysis of phonological competitors
+(which focused competitors with the same onset as the target). The
+current design limited the number of trials that could be used in the
+analyses of the competitors and weakened the power of the analyses.
+
+Another limitation include changes in the experiment procedure over the
+course of the longitudinal study. From age 3 to age 4, we re-recorded
+the stimuli (with the same original speakers) so that the durations
+between the two different dialect versions of the experiment were
+similar. From age 4 to age 5, we also shortened the duration of the
+trials by removing attention-getting prompt (e.g, *this is fun!*) from
+the ends of the trials. These small procedural changes mean that
+year-to-year differences do not reflect *pure* development differences.
+It is very implausible, however, that the robust year-over-changes owe
+more to procedural changes than a year of learning and language
+development.
+
+
+...end it
+
+
+
+
+<!-- *** -->
+
+
+<!-- so on. Some parts of the children's lexicon may be less densely developed. -->
+
+<!-- these differences reflect different degrees of lexical development -->
+<!-- provide a  the presence of individual differences in word recognition is not unexpected. Different -->
+
+
+<!-- As children learn more words, they learn the similarities and connections among them. After learning many, many, many words, they -->
+
+
+<!-- In terms of lexical processing, -->
+<!-- words became activated more strongly (higher peak looks to the target) -->
+<!-- and more quickly (steeper word changes in word recognition probability). -->
+
+
+<!-- I described and modeled children's word recognition performance using -->
+<!-- growth curves that measured children's probability of fixating on a -->
+<!-- named word during a trial. We can interpret these growth curves in terms -->
+<!-- of lexical activation and processing dynamics.  The time course of fixation probabilities reflect the time of lexical activation. Indeed, many simulation studies make this connection explicit, mapping looking patterns onto activations from word recognition models []. -->
+

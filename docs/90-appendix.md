@@ -17,17 +17,11 @@ the end of the analysis window. The polynomial features for the Time had
 the following ranges:
 
 
-\begin{tabular}{l|r|r|r}
-\hline
-Feature & Min & Max & Range\\
-\hline
-Time\textasciicircum{}1\textasciicircum{} & \&minus;0.50 & 0.50 & 1.00\\
-\hline
-Time\textasciicircum{}2\textasciicircum{} & \&minus;0.33 & 0.60 & 0.93\\
-\hline
-Time\textasciicircum{}3\textasciicircum{} & \&minus;0.63 & 0.63 & 1.26\\
-\hline
-\end{tabular}
+Feature            Min    Max   Range
+--------  ------------  -----  ------
+Time^1^    &minus;0.50   0.50    1.00
+Time^2^    &minus;0.33   0.60    0.93
+Time^3^    &minus;0.63   0.63    1.26
 
 Below is the code used to fit the model with RStanARM. It took
 about 24 hours to run the model. `ot1`, `ot2`, and `ot3` are the
@@ -92,9 +86,10 @@ degenerate values.
 (ref:lkj-prior) Samples of correlation effects drawn from the LKJ(1) and
 LKJ(2) priors.
 
-\begin{figure}
-\includegraphics[width=0.5\linewidth]{90-appendix_files/figure-latex/lkj-prior-1} \caption{(ref:lkj-prior)}(\#fig:lkj-prior)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="90-appendix_files/figure-html/lkj-prior-1.png" alt="(ref:lkj-prior)" width="50%" />
+<p class="caption">(\#fig:lkj-prior)(ref:lkj-prior)</p>
+</div>
 
 
 
@@ -177,26 +172,26 @@ Then the correlations.
 
 ### Posterior predictive checks
 
-Bayesian models are generative; they describe how the data could have been
-generated. One way to evaluate the model is to have it simulate new
-observations. If the simulated data closely resembles the observed data, then we
-have some confidence that our model has learned an approximation of how the data
-could have been generated. Figure \@ref(fig:post-pred) depicts the density of
-the observed data from each year of the study versus 200 posterior simulations.
-Because the simulations closely track the density of the observed data, we can
-infer that the model has learned how to generate data from each year of the
-study.
+<!-- Bayesian models are generative; they describe how the data could have been -->
+<!-- generated. One way to evaluate the model is to have it simulate new -->
+<!-- observations. If the simulated data closely resembles the observed data, then we -->
+<!-- have some confidence that our model has learned an approximation of how the data -->
+<!-- could have been generated. Figure \@ref(fig:post-pred) depicts the density of -->
+<!-- the observed data from each year of the study versus 200 posterior simulations. -->
+<!-- Because the simulations closely track the density of the observed data, we can -->
+<!-- infer that the model has learned how to generate data from each year of the -->
+<!-- study. -->
 
-(ref:post-pred) Posterior predictive density for the observed data from each
-year of the study. The _x_-axis represents the outcome measure---the proportion
-of looks to the target image---and the _y_-axis is the density of those values
-at year. At age 3, there is a large density of looks around chance performance
-(.25) with a rightward skew (above-chance looks are common). At age 4 and age 5,
-a bimodal distribution emerges, reflecting how looks start at chance and
-reliably increase to above-chance performance. Each light line is a simulation
-of the observed data from the model, and the thick lines are the observed data.
-Because the thick line is surrounded by light lines, we visually infer that the
-the model faithfully approximates the observed data.
+<!-- (ref:post-pred) Posterior predictive density for the observed data from each -->
+<!-- year of the study. The _x_-axis represents the outcome measure---the proportion -->
+<!-- of looks to the target image---and the _y_-axis is the density of those values -->
+<!-- at year. At age 3, there is a large density of looks around chance performance -->
+<!-- (.25) with a rightward skew (above-chance looks are common). At age 4 and age 5, -->
+<!-- a bimodal distribution emerges, reflecting how looks start at chance and -->
+<!-- reliably increase to above-chance performance. Each light line is a simulation -->
+<!-- of the observed data from the model, and the thick lines are the observed data. -->
+<!-- Because the thick line is surrounded by light lines, we visually infer that the -->
+<!-- the model faithfully approximates the observed data. -->
 
 
 

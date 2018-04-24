@@ -35,7 +35,8 @@ knitr::opts_chunk$set(
   tidy = FALSE,
   collapse = TRUE,
   comment = "#>",
-  out.width = 80
+  out.width = 80,
+  fig.align = "center"
 )
 
 options(width = 80)
@@ -106,22 +107,16 @@ knitr::kable(
 The chunk label `table-single` provides an implicit label 
 for Table \@ref(tab:table-single).
 
-\begin{table}
 
-\caption{(\#tab:table-single)A table of the first 5 rows of the mtcars data.}
-\centering
-\begin{tabular}[t]{lrrrrr}
-\toprule
-  & mpg & cyl & disp & hp & drat\\
-\midrule
-Mazda RX4 & 21.0 & 6 & 160 & 110 & 3.90\\
-Mazda RX4 Wag & 21.0 & 6 & 160 & 110 & 3.90\\
-Datsun 710 & 22.8 & 4 & 108 & 93 & 3.85\\
-Hornet 4 Drive & 21.4 & 6 & 258 & 110 & 3.08\\
-Hornet Sportabout & 18.7 & 8 & 360 & 175 & 3.15\\
-\bottomrule
-\end{tabular}
-\end{table}
+Table: (\#tab:table-single)A table of the first 5 rows of the mtcars data.
+
+                      mpg   cyl   disp    hp   drat
+------------------  -----  ----  -----  ----  -----
+Mazda RX4            21.0     6    160   110   3.90
+Mazda RX4 Wag        21.0     6    160   110   3.90
+Datsun 710           22.8     4    108    93   3.85
+Hornet 4 Drive       21.4     6    258   110   3.08
+Hornet Sportabout    18.7     8    360   175   3.15
 
 ### Figure references and using text references as captions
 
@@ -156,9 +151,10 @@ knitr::include_graphics(
 )
 ```
 
-\begin{figure}
-\includegraphics[width=0.3\linewidth]{./misc/happy-cat-grooming-itself-vector-file} \includegraphics[width=0.3\linewidth]{./misc/happy-cat-grooming-itself-vector-file} \caption{(ref:happy-cat-cap)}(\#fig:happy-cat)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="./misc/happy-cat-grooming-itself-vector-file.png" alt="(ref:happy-cat-cap)" width="30%" /><img src="./misc/happy-cat-grooming-itself-vector-file.png" alt="(ref:happy-cat-cap)" width="30%" />
+<p class="caption">(\#fig:happy-cat)(ref:happy-cat-cap)</p>
+</div>
 
 
 

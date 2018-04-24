@@ -1,7 +1,10 @@
 p.caption {
   color: #777;
   margin-top: 10px;
+  font-size: .833em !important;
+  text-align: left;
 }
+
 p code {
   white-space: inherit;
 }
@@ -13,17 +16,17 @@ pre code {
   white-space: inherit;
 }
 div.infobox {
-    margin: 2em 0 !important;
-    padding: 1em;
-    color: #494e52;
-    font-size: .80em !important;
-    text-indent: initial;
-    background-color: #eef7fa;
-    border-radius: 4px;
-    box-shadow: 0 1px 1px rgba(82,173,200,0.25);
+  margin: 2em 0 !important;
+  padding: 1em;
+  color: #494e52;
+  text-indent: initial;
+  font-size: .833em !important;
+  background-color: #eef7fa;
+  border-radius: 4px;
+  box-shadow: 0 1px 1px rgba(82,173,200,0.25);
 }
 
 div.infobox img {
-    display: block;
-    margin: 0 auto;
+  display: block;
+  margin: 0 auto;
 }
