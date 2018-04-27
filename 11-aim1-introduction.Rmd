@@ -183,7 +183,7 @@ In this study, I tackle these two lines of research: The development of
 lexical competition effects and individual differences in familiar word
 recognition. I report the results of a longitudinal study of word
 recognition in preschoolers at age 3, age 4, and age 5. The study is described 
-in detail in [Chapter \@ref(#aim1-method)](#aim1-method). This experiment
+in detail in [Chapter \@ref(aim1-method)](#aim1-method). This experiment
 test worded recognition by presenting prompts like "find the horse" and
 recording children's looks to an array of four images. The array of
 images included the target, a phonological competitor, a semantic
@@ -193,7 +193,7 @@ individual differences change over time. In
 [Chapter \@ref(lex-competitors)](#lex-competitors) I study how the
 phonological and semantic competitors influence word recognition and the
 influence of the competitors changes over time. Finally, in 
-[Chapter \@ref(\#aim-discussion)](#aim-discussion), I link these two
+[Chapter \@ref(\aim-discussion)](#aim-discussion), I link these two
 lines of research together and describe how both sets of results in
 terms of lexical processing.
 
