@@ -1,5 +1,5 @@
 
-General Discussion
+General Discussion {#aim-discussion}
 =======================================================================
 
 This study examined the development of familiar word recognition over
@@ -146,16 +146,26 @@ Children may have different numbers of words, different degrees of
 experience with some words, less established connections among words,
 and at a lower level, different phonetic and speech perception
 abilities, given the links between speech perception in infancy and
-early vocabulary development [TODO]. Differences in word recognition are
-greatest early on in development because this is when the differences
-among children's lexicons are greatest. The task of learning new words,
-and more importantly, of developing representations and associations to
-organize words normalizes the differences among children's
-lexicons.[^haystack] That pressure would make the overall variability
-among children decrease over time while still preserving a relative
-ordering among children.
+early vocabulary development [TODO]. Differences in word recognition
+are greatest early on in development because this is when the
+differences among children's lexicons are greatest. 
+The task of learning
+new words, and more importantly, of developing representations and
+associations to organize words normalizes the differences among
+children's lexicons.[^haystack] That pressure would make the overall
+variability among children decrease over time while still preserving a
+relative ordering among children.
 
-[^haystack]: Earlier I had used a needle-in-a-haystack metaphor for
+<!-- @Borovsky2016 take -->
+<!-- this idea a step further and have found *within-child* differences in word -->
+<!-- recognition on the basis of lexical development. The authors analyzed -->
+<!-- the vocabularies in a sample of 24-month-olds and identified semantic -->
+<!-- categories that were relatively dense or sparse for each child. These -->
+<!-- children were faster to fixate on a named word when the word came from -->
+<!-- one of the child's denser semantic networks. -->
+
+
+[^haystack]: I sometimes use a needle-in-a-haystack metaphor for
 lexical access and said that the way to cope with finding a needle in an
 ever-growing haystack is to sort the hay and organize the straws. (Or
 better yet, make it a *self-organizing* haystack.) We might apply the
@@ -183,9 +193,9 @@ predictor of future vocabulary size. Granted, these two processing
 measures are highly related; to hit a higher peak at time *x*, a growth
 curve needs to start from higher baseline or have steeper slope. The
 idea of certainty suggests an alternative explanation of the predictive
-power of word recognition: Children who are more accruate (or less
-uncertain) during word recognition can extract *more information* from
-the speech signal. 
+power of word recognition: Children who are more accurate (or less
+uncertain) during word recognition can extract and activate *more
+information* from the speech signal.
 
 [^fernald]: "The infant who identifies familiar words more quickly has
 more resources available for attending to subsequent words, with

@@ -1,5 +1,5 @@
 
-Analysis of familiar word recognition
+Analysis of familiar word recognition {#fam-rec}
 ========================================================================
 
 

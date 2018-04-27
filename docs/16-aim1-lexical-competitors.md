@@ -1,5 +1,5 @@
 
-Effects of phonological and semantic competitors
+Effects of phonological and semantic competitors {#lex-competitors}
 =======================================================================
 
 
