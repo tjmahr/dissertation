@@ -12,7 +12,7 @@ csl: "assets/apa.csl"
 link-citations: yes
 cover-image: "assets/cover.png"
 abstract: |
-  Vocabulary size in preschool is a robust predictor of later language
+  [*draft*] Vocabulary size in preschool is a robust predictor of later language
   development, and early language skills predict early literacy skills at
   school entry. By studying the mechanisms that shape word
   learning, we can understand how individual differences in language
@@ -53,6 +53,6 @@ Welcome {-}
 
 This book, when finished, will contain my dissertation research. 
 
-- Last compiled: 2018-04-27 15:16:23
+- Last compiled: 2018-04-27 20:38:01
 
 \mainmatter

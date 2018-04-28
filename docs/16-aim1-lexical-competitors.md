@@ -211,9 +211,9 @@ panel visualizes estimated means and their 95% confidence intervals.
 </div>
 
 The average looks to the phonological foil over the unrelated for age 4
-was 0.16 emp. log-odds, .54 proportion units. The averages
-for age 3 and age 4 did not significantly differ, *p*&nbsp;= .85, but the
-average value was significantly greater at age 5, 0.31 emp. log-odds,
+was 0.17 emp. log-odds, .54 proportion units. The averages
+for age 3 and age 4 did not significantly differ, *p*&nbsp;= .51, but the
+average value was significantly greater at age 5, 0.33 emp. log-odds,
 .58 proportion units, *p*&nbsp;< .001. Visually, this effect shows up
 in the almost constant height difference between the age-4 and the age-5
 curves.
@@ -233,11 +233,11 @@ the same shape, but they steadily diverge over time.
 </div>
 
 There was a significant smooth term for time at age 4, estimated degrees
-of freedom (EDF) = 7.28, *p*&nbsp;< .001.
+of freedom (EDF) = 6.78, *p*&nbsp;< .001.
 Figure \@ref(fig:phon-diff-curves) visualizes how and when the smooths
 from other studies differed from the age-4 smooth.
 
-The age-3 and age-4 significantly differed, EDF = 5.48,
+The age-3 and age-4 significantly differed, EDF = 5.45,
 *p*&nbsp;< .001. In particular, the curves are significantly different
 from 500 to 1050 ms. This result confirms that the looks to the
 phonological foil increased from age 3 and age 4 during the time window
@@ -464,7 +464,7 @@ The model included data from 144 participants; these were
 children with eyetracking data, receptive vocabulary and phonological
 discrimination data at age 3. There was not a significant smooth effect
 for phonological discrimination ability, EDF = 1.00,
-*p*&nbsp;= .551 or for an interaction smooth between time and ability, EDF = 8.37, *p*&nbsp;= .303.
+*p*&nbsp;= .742 or for an interaction smooth between time and ability, EDF = 7.65, *p*&nbsp;= .029.
 
 
 
@@ -474,9 +474,9 @@ test. I first adjusted these scores in a regression model to control
 for--that is, to partial out the effects of---age and predicted accuracy
 on the phonological discrimination task. There was not a significant
 smooth effect for receptive vocabulary, EDF = 1.00,
-*p*&nbsp;= .868, or a significant interaction smooth between time and
-receptive vocabulary, EDF = 5.57,
-*p*&nbsp;= .610. Receptive vocabulary therefore was not related to
+*p*&nbsp;= .717, or a significant interaction smooth between time and
+receptive vocabulary, EDF = 1.00,
+*p*&nbsp;= .492. Receptive vocabulary therefore was not related to
 looks to the phonological foil at age 3.
 
 I tested the same two predictors on looks to the semantic foil at age 3.

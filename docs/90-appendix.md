@@ -379,12 +379,12 @@ In this section, I clarify relationships between this project and other
 word recognition research reported from our lab. In short, our lab has
 reported results about the two-image and four-image experiments from
 cross-sectional samples, describing child-level measures that predict
-performance in these tasks. In contrast, my dissertation 1) focuses on
-the longitudinal development of word recognition and 2) engages with the
+performance in these tasks. In contrast, my dissertation 1) focuses on
+the longitudinal development of word recognition and 2) engages with the
 fine-grained details of lexical processing.
 
 @MPPaper analyzed a different version of the mispronunciation experiment
-on a different sample of children (*n* = 34, 30-46 months old). This
+on a different sample of children (*n* = 34, 30–46 months old). This
 earlier version included both real word and the mispronunciation of the
 real word in the same block of trial. For example, a child would hear
 “dog” and “tog” during the same session of the experiment. This design

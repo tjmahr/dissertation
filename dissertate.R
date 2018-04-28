@@ -293,6 +293,12 @@ build_gitbook <- function(...) {
                          encoding = 'UTF-8')
 }
 
+#' rebuild ms-word book
+build_wordbook <- function(...) {
+  rmarkdown::render_site(output_format = 'bookdown::word_document2',
+                         encoding = 'UTF-8')
+}
+
 debug <- function(...) {
   debug_info <- list(
     raw_args = info$raw_args,

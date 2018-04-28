@@ -1,25 +1,14 @@
 
-(PART\*) Prospectus {#part-prospectus .unnumbered}
+(PART\*) Preamble {#part-prospectus .unnumbered}
 ========================================================================
 
-Prospectus Preamble
+Dissertation Information
 ========================================================================
 
-About This Document {#about-this-document .unnumbered}
+Committee Members {#committee-members .unnumbered}
 ------------------------------------------------------------------------
 
-This document outlines the research questions, data, and methods for my
-dissertation. This proposal started out as a grant-writing project, so
-it has some of the touchstones of NIH F31 grant (Specific Aims,
-Significance, Approach), but these sections have been expanded
-considerably.
-
-Date of oral presentation of dissertation proposal: April 3, 2017.
-
-Dissertation Committee Members {#committee-members .unnumbered}
-------------------------------------------------------------------------
-
-  - Jan Edwards, primary mentor and chair, Department of Hearing and
+  - Jan Edwards, primary advisor and chair, Department of Hearing and
     Speech Sciences, University of Maryland
     
   - Susan Ellis Weismer, advisor at UW-Madison, Department of
@@ -35,8 +24,16 @@ Dissertation Committee Members {#committee-members .unnumbered}
   - Bob McMurray, Department of Psychological and Brain Sciences,
     University of Iowa
 
+
 Planned Dissertation Format {#planned-dissertation-format .unnumbered}
 ------------------------------------------------------------------------
 
 Two thematically related manuscripts, one for each specific aim, to be
 completed by Summer 2018.
+
+
+Et cetera
+------------------------------------------------------------------------
+
+Date of oral presentation of dissertation proposal: April 3, 2017.
+

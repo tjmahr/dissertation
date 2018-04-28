@@ -193,7 +193,7 @@ individual differences change over time. In
 [Chapter \@ref(lex-competitors)](#lex-competitors) I study how the
 phonological and semantic competitors influence word recognition and the
 influence of the competitors changes over time. Finally, in 
-[Chapter \@ref(\aim-discussion)](#aim-discussion), I link these two
+[Chapter \@ref(aim1-discussion)](#aim1-discussion), I link these two
 lines of research together and describe how both sets of results in
 terms of lexical processing.
 

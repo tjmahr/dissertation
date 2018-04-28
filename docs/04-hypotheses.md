@@ -4,7 +4,7 @@ Research Hypotheses
 
 In this section, I outline the main hypotheses I plan to study for each
 specific aim. This section is intended to preregister the main analyses
-for this project, so I can cleanly separate confirmatory and exploratory
+for this project, so I can cleanly identify confirmatory versus exploratory
 results.
 
 Specific Aim 1 (Familiar Word Recognition and Lexical Competition)

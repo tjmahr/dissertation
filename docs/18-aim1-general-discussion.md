@@ -1,5 +1,5 @@
 
-General Discussion {#aim-discussion}
+General Discussion {#aim1-discussion}
 =======================================================================
 
 This study examined the development of familiar word recognition over
