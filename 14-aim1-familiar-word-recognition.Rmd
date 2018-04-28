@@ -279,12 +279,10 @@ lpred %>%
         mutate(Study = convert_study_to_age(Study)), 
       fun.y = "mean", geom = "line", 
       color = constants$col_off_black, size = 1) + 
-    theme(
-      legend.position = c(.01, .99), 
-      legend.justification = c(0, 1),
-      legend.margin = margin(3, 6, 6, 6)) +
-    guides(
-      color = guide_legend(title = NULL, override.aes = list(alpha = 1))) +
+    geom_text(aes(color = "Age 5", label = "Age 5"), x = 1390, y = .83) +
+    geom_text(aes(color = "Age 3", label = "Age 3"), x = 1380, y = .46) +
+    expand_limits(y = .85) +
+    guides(color = "none") +
     labs(
       title = "Observed means and 200 posterior fits",
       x = constants$x_time,
@@ -711,20 +709,29 @@ by_draw <- lpred %>%
   ungroup() %>% 
   tidyr::gather("range", "extent", -Study, -Time) %>% 
   mutate(range = factor(range, levels = unique(rev(sort(range)))))
-  
+
+
+range_labels <- tibble::tribble(
+  ~Study,  ~Time, ~range, ~extent,
+  "TimePoint1", 1250, "95^th~vs.~05^th",  .485,
+  "TimePoint3", 1400, "75^th~vs.~25^th",  .09,
+  "TimePoint3", 1350, "95^th~vs.~05^th",  .28,
+  "TimePoint1", 1300, "75^th~vs.~25^th",  .23) %>% 
+  mutate(
+    Study = convert_study_to_age(Study),
+    range = factor(range, levels = unique(rev(sort(range))))) 
+
 ggplot(by_draw %>% mutate(Study = convert_study_to_age(Study))) +
   aes(x = Time, y = extent, color = Study) +
   geom_point() + 
+  geom_text(aes(label = Study), data = range_labels) +
   facet_wrap("range", labeller = label_parsed) +
+  expand_limits(y = .06) +
   labs(
     title = "Ranges of predictions for 1000 new participants",
     x = constants$x_time,
     y = "Difference of percentiles") + 
-  theme(
-    legend.position = c(.01, .99), 
-    legend.justification = c(0, 1),
-    legend.margin = margin(3, 6, 6, 6)) +
-  guides(color = guide_legend(title = NULL))
+  guides(color = "none")
 ```
 
 The developmental pattern of increasing reliability and decreasing
@@ -901,7 +908,7 @@ w_uis <- w_intervals %>%
 rm(ws, reduced_data, posterior_w)
 ```
 
-We used the `kendall()` function in the irr R package
+I used the `kendall()` function in the irr R package
 [vers. `r packageVersion("irr")`; @irr] to compute concordance
 statistics. Figure \@ref(fig:kendall-stats) depicts uncertainty intervals
 for the Kendall *W*'s for these growth curve features. The 90%
