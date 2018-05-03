@@ -14,7 +14,8 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 knitr::opts_chunk$set(cache = TRUE)
 ```
 
-## Lexical Processing Dynamics
+Lexical processing dynamics
+------------------------------------------------------------------------
 
 Mature listeners recognize spoken words by continuously evaluating
 incoming speech for possible word matches. The first part of a word
@@ -113,7 +114,8 @@ more thoroughly learn familiar words with age.
 
 
 
-## Individual Differences in Word Recognition
+Individual differences in word recognition
+------------------------------------------------------------------------
 
 We have a rough understanding of the development of word recognition,
 and these gaps in knowledge matter because young children differ in
@@ -150,7 +152,8 @@ recognition a skill where most children catch up and converge on a
 mature range of performance by a certain age? 
 
 
-## The Current Study
+The current study
+------------------------------------------------------------------------
 
 In the previous two sections, I pointed out two gaps in knowledge. The
 first is that we do not have a clear understanding how the mechanisms

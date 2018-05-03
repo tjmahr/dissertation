@@ -238,7 +238,7 @@ limited the number of trials that could be used in the analyses of the
 competitors and weakened the power of the analyses.
 
 A final limitation includes the changes in the experiment procedure over
-the course of the longitudinal study. From age&nbsp;3 to age&nbsp;4, we
+the course of the longitudinal study. From age 3 to age 4, we
 re-recorded the stimuli (with the same original speakers) so that the
 durations between the two different dialect versions of the experiment
 were similar. From age 4 to age 5, we also shortened the duration of the

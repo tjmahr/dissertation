@@ -28,10 +28,10 @@ Planned Dissertation Format {#planned-dissertation-format .unnumbered}
 ------------------------------------------------------------------------
 
 Two thematically related manuscripts, one for each specific aim, to be
-completed by Summer 2018.
+completed Summer 2018.
 
 
-Et cetera {-}
+Et cetera {.unnumbered}
 ------------------------------------------------------------------------
 
 Date of oral presentation of dissertation proposal: April 3, 2017.

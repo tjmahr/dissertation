@@ -1,0 +1,97 @@
+Method {#aim2-method}
+=======================================================================
+
+```{r include = FALSE}
+knitr::read_chunk("./helpers.R")
+if (interactive()) source("./helpers.R")
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+```{r helpers, message = FALSE, warning = FALSE}
+```
+
+```{r include = FALSE}
+knitr::opts_chunk$set(cache = TRUE)
+```
+
+Data collection for this experiment occurred during the same
+longitudinal study as the familiar word recognition experiment of Aim 1.
+Thus, this experiment used the same participants, same stimulus
+preparation, and same general experimental procedure that were reported
+in detail in [Chapter \@ref(aim1-method)](#aim1-method).
+
+
+Mispronunciation task
+------------------------------------------------------------------------
+
+This experiment is an adaptation of the mispronunciation detection task
+by @WhiteMorgan2008 and @MPPaper. In the experiment, two images are
+presented onscreen—a familiar object and an unfamiliar object—and the
+child hears a prompt to view one of the images. In the *correct
+pronunciation* (or *real word*) and *mispronunciation* conditions, the
+child hears either the familiar word (e.g., *soup*) or a one-feature
+mispronunciation of the first consonant of the target word (*shoup*).
+These conditions are designed to test whether children map
+mispronunciations to novel words. To encourage fast referent selection,
+there were also trials in a *nonword* condition where the label was an
+unambiguous novel word (e.g., *cheem* presented with images of a bed and
+a novel-looking pastry mixer). Each nonword was constructed to match the
+phonotactic probability of one of the mispronunciations. 
+Figure \@ref(fig:`r sample-mp-screen`) shows the displays used in two
+trials. Importantly, within a block of trials, the child never hears
+both the correct and mispronounced forms of the same word. A child
+hearing "duck" then a few trials later hearing "guck" would provide a
+basis of comparison so that the child can decide that "guck" is probably
+not "duck"---our design avoided this situation.
+
+(ref:sample-mp-screen-cap) Example displays for (*left*) a trial in
+which *duck* is mispronounced as "guck"and (*right*) a trial in which
+the nonword "cheem" is presented.
+
+```{r sample-mp-screen, fig.cap = "(ref:sample-mp-screen-cap)", echo = FALSE, out.width = "100%"}
+library(magick)
+dir_screens <- "./misc/mp-screens/TimePoint1/actual/"
+
+i1 <- dir_screens %>% 
+  file.path("Block1_03_MP_bull2_duck2_ImageR_guk.png") %>% 
+  image_read() %>% 
+  image_scale("x400")
+
+i2 <- dir_screens %>% 
+  file.path("Block1_14_nonsense_bed2_mixer2_ImageL_Cim.png") %>% 
+  image_read() %>% 
+  image_scale("x400")
+
+image_append(c(i1, i2))
+```
+
+<!-- (Maybe explain why the nonword condition give children the license to -->
+<!-- interpret a mispronunciation as a nonword.) -->
+<!-- So, children sometimes heard correct productions that can be mapped to familiar -->
+<!-- objects and sometimes heard flagrant nonwords that could be quickly associated -->
+<!-- to unfamilar objects. Both of these behaviors are encouraged by the experiment. -->
+
+In a block of the experiment, there were 12 trials each from the correct
+production, mispronunciation, and nonword conditions, and children
+received two blocks of the task. A complete list of the items used in
+the experiment over the three years of the study is included in
+[Appendix \@ref(mp-experiment-items)](#mp-experiment-items).
+
+
+Visual stimuli
+------------------------------------------------------------------------
+
+The images used in the experiment consisted of color photographs on gray
+backgrounds. As in the familiar word recognition, these images were
+piloted in two preschool classrooms. Piloting confirmed that children
+consistently used the same label for familiar objects and did not
+consistently use the same label for novel/unfamiliar objects.
+
+
+Data screening {#aim2-screening}
+------------------------------------------------------------------------
+
+
+
+
+

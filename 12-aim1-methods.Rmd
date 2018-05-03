@@ -16,7 +16,7 @@ knitr::opts_chunk$set(cache = TRUE)
 
 
 
-Participants
+Participants {#aim1-participants}
 -----------------------------------------------------------------------
 
 The participants were 28–39 months-old at Age 3, 39–52 at Age 4,
@@ -70,7 +70,7 @@ and *High*: graduate degree.
 
 
 
-Procedure
+Visual World Paradigm {#aim1-procedure}
 -----------------------------------------------------------------------
 
 This experiment used a version of the Visual World Paradigm for word
@@ -98,7 +98,7 @@ knitr::include_graphics("./misc/rwl-screens/TimePoint1/actual/Block2_17_swing2_b
 
 
 
-Experiment Administration
+Experiment administration
 -----------------------------------------------------------------------
 
 Children participating in the study were tested over two lab visits
