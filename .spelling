@@ -67,6 +67,11 @@ resampling
 RStanARM
 Gelman
 mgcv
+wiggliness
+coactivate
+connectionism
+connectionist
+TODO
  - index.Rmd
 documentclass
 bookdown
@@ -82,12 +87,14 @@ lof
 frontmatter
 pdf
 mainmatter
+cover.png
  - README.md
 gh-pages
 Yihui's
 unforked
  - 01-prospectus.Rmd
 F31
+cetera
  - 02-specific-aims.Rmd
 Weisleder2013
 WhiteMorgan2008
@@ -192,6 +199,7 @@ MPPaper
 RWLPaper
 Weisleder2013
 aim1-gca-models
+lkj-prior
  - 03-significance.Rmd
 Morgan2015
 Marslen-Wilson1989
@@ -261,3 +269,34 @@ backmatter
 markboth
  - 20-aim2-part.Rmd
 part-aim2
+ - 11-aim1-introduction.Rmd
+aim1-introduction
+Marslen-Wilson1989
+Magnuson2013
+Swingley1999
+Fernald2001
+Lew-Williams2007
+Borovsky2012
+Mahr2015
+EllisWeismer2016
+Huang2011
+Mani2010
+Mani2012
+Arias-Trejo2009
+Kapnoula2015
+MarchmanFernald2008
+Fernald2012
+Weisleder2013
+Lany2017
+30-month-olds
+aim1-method
+aim1-discussion
+ - 18-aim1-general-discussion.Rmd
+aim1-discussion
+McMurray2010
+Rigler2015
+16-year-olds
+5-year-olds
+fernald
+Saffran
+Fernald2012

@@ -23,7 +23,7 @@ How to improve word recognition
 Children showed year-over-year improvements in word recognition, as
 measured by average looking probabilities, peak looking probabilities,
 and the rate of change in looking probabilities. Children became more
-reliable, less uncertain, and faster at recognizing familar words. At
+reliable, less uncertain, and faster at recognizing familiar words. At
 the same time, children also became more sensitive to the phonological
 and semantic competitors, compared to the unrelated image. With each
 year, children looked more to the target image, but when they erred,
@@ -107,7 +107,7 @@ and semantically and phonologically related words but little
 developmental change in lexical inhibition. Paired with the findings
 from older children, these results lead to a compelling developmental
 story. @Rigler2015 compared 9- and 16-year-olds on a visual-world word
-recognition experiment with phonologial (cohort and rime) competitors.
+recognition experiment with phonological (cohort and rime) competitors.
 The younger children were slower to look to the target image and showed
 more looks to the competitors. The implications are that children's word
 recognition is still developing in late childhood and that in
