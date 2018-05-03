@@ -19,50 +19,6 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 knitr::opts_chunk$set(cache = TRUE)
 ```
 
-```{r, message = FALSE, warnings = FALSE, include = FALSE}
-# Load trial info
-trials <- c(
-  "./data-raw/mp_timepoint1_trials.csv.gz", 
-  "./data-raw/mp_timepoint2_trials.csv.gz", 
-  "./data-raw/mp_timepoint3_trials.csv.gz") %>% 
-  lapply(readr::read_csv) %>% 
-  bind_rows() %>% 
-  select(TrialID, Condition = StimType, WordGroup)
-
-# Load gazes
-looks <- c(
-  "./data-raw/mp_timepoint1_looks.csv.gz", 
-  "./data-raw/mp_timepoint2_looks.csv.gz", 
-  "./data-raw/mp_timepoint3_looks.csv.gz") %>% 
-  lapply(readr::read_csv) %>% 
-  bind_rows()
-
-looks <- left_join(looks, trials) %>%
-  filter(Version == "Standard")
-
-# Keep only frames from -500 to 2000 plus or minus any frames to make the 
-# number of frames divisible by 3 (for binning)
-times_to_keep <- looks %>% 
-  distinct(Time) %>% 
-  trim_to_bin_width(
-    bin_width = 3, time_var = Time, key_time = 0, 
-    key_position = 2, min_time = -500, max_time = 2000) %>% 
-  pull(Time) %>% 
-  range()
-
-# Aggregate looks to target
-resp_def <- create_response_def(
-  primary = "Target",
-  others = "Distractor",
-  elsewhere = "tracked",
-  missing = NA)
-
-raw_data <- looks %>% 
-  filter(between(Time, times_to_keep[1], times_to_keep[2])) %>% 
-  aggregate_looks(
-    resp_def, Study + ResearchID + Condition + Time ~ GazeByImageAOI)
-```
-
 Here is the first look at the raw, unscreened, unbinned data.
 
 ```{r raw-aim2, out.width = "100%", fig.show = 'hold', fig.height = 3, fig.width = 6, message = FALSE, warning = FALSE, echo = FALSE}
@@ -72,7 +28,7 @@ Here is the first look at the raw, unscreened, unbinned data.
 raw_data %>% 
   mutate(Condition = factor(Condition, c("real", "MP", "nonsense"))) %>% 
   ggplot() + 
-    aes(x = Time, y = Prop, color = Study) + 
+    aes(x = Time, y = Prop, color = Age) + 
     geom_hline(size = 2, color = "white", yintercept = .5) +
     stat_summary(fun.data = mean_se) +
     facet_wrap("Condition") + 
@@ -87,7 +43,7 @@ raw_data %>%
 raw_data %>% 
   mutate(Condition = factor(Condition, c("real", "MP", "nonsense"))) %>% 
   ggplot() + 
-    aes(x = Time, y = Prop, color = Study) + 
+    aes(x = Time, y = Prop, color = Age) + 
     geom_hline(size = 2, color = "white", yintercept = .5) +
     stat_smooth() +
     facet_wrap("Condition") + 
@@ -114,160 +70,6 @@ Observations:
   - The "peak" growth curve feature will need to be flipped for the nonword
     trials.
 
-### Data screening
-
-We will use the missing data window and missing data threshold as Aim 1. We need
-to add a new rule for minimum trials per condition. Let's go with 6.
-
-```{r aim2-screening-rules}
-# We use the following options for data screening.
-rules <- list(
-  screening_window = c(0, 2000),
-  missing_data_limit = .5,
-  min_trials_per_block = 18,
-  min_trials_per_condition = 6)
-
-opts_model <- list(
-  bin_width = 3,
-  start_time = 250,
-  end_time = 1500
-)
-
-opts_model$bin_length <- round(opts_model$bin_width * 16.67, -1)
-opts_model
-```
-
-After mapping the gaze coordinates onto the onscreen images, we performed data
-screening. As in Aim 1, we considered the time window from
-`r rules$screening_window[1]` to `r rules$screening_window[2]` ms after noun
-onset. We identified a trial as *unreliable* if at least
-`r rules$missing_data_limit * 100`% of the looks were missing during the time
-window. We excluded an entire block of trials if it had fewer than
-`r rules$min_trials_per_block` reliable trials. As an additional criterion, we
-excluded participants who failed to provide at least
-`r rules$min_trials_per_condition` reliable trials per experimental condition.
-
-```{r apply-data-screening-rules, echo = FALSE, results = 'hide'}
-# The first and last times are offset by 20 ms because we downsample our data
-# into 50-ms (3-frame) bins. The frames at -16.65, 0, +16.65 ms make up the
-# frames in the bin at time 0, so we need to capture the frame at -16.65. The
-# same reasoning applies to the frame at 2016.65.
-screening_times <- looks %>% 
-  distinct(Time) %>% 
-  trim_to_bin_width(
-    bin_width = 3, key_time = 0, 
-    key_position = 2, time_var = Time, 
-    min_time = rules$screening_window[1] - 20, 
-    max_time = rules$screening_window[2] + 20) %>% 
-  pull(Time) %>% 
-  range()
-screening_times
-
-missing_data_by_trial <- looks %>% 
-  filter(screening_times[1] <= Time, Time <= screening_times[2]) %>% 
-  aggregate_looks(
-    resp_def, 
-    Study + Version + ResearchID + Basename + 
-      Condition + TrialNo ~ GazeByImageAOI) %>% 
-  mutate(BadTrial = rules$missing_data_limit <= PropNA)
-
-bad_trial_counts <- missing_data_by_trial %>% 
-  count(Study, ResearchID, Basename, BadTrial) %>% 
-  tidyr::spread(BadTrial, n) %>% 
-  rename(n_bad = `TRUE`, n_good = `FALSE`) %>% 
-  # Replace NAs with 0, in case there were 0 good trials in a block or 
-  # 0 bad trials in a block
-  mutate(
-    n_bad = coalesce(n_bad, 0L),
-    n_good = coalesce(n_good, 0L),
-    trials = n_good + n_bad,
-    prop_bad = round(n_bad / trials, 2)) 
-
-# Min trials per block cleaning
-blocks_to_drop <- bad_trial_counts %>% 
-  filter(n_good < rules$min_trials_per_block)
-blocks_to_drop
-
-# Identifying unreliable trials
-leftover_bad_trials <- missing_data_by_trial %>% 
-  anti_join(blocks_to_drop, by = c("Study", "ResearchID", "Basename")) %>% 
-  filter(rules$missing_data_limit <= PropNA)
-
-# Count reliable trials per Study x ResearchID x Condition
-good_trials_per_condition <- missing_data_by_trial %>% 
-  anti_join(blocks_to_drop, by = c("Study", "Basename")) %>% 
-  anti_join(leftover_bad_trials, by = c("Study", "Basename", "TrialNo")) %>% 
-  count(Study, ResearchID, Condition, BadTrial) %>% 
-  tidyr::spread(BadTrial, n) %>% 
-  rename(n_good = `FALSE`) %>% 
-  mutate(n_good = coalesce(n_good, 0L)) %>% 
-  # Make sure that there are three Condition rows for each Study x ResearchID
-  tidyr::complete(
-    tidyr::nesting(Study, ResearchID), Condition, 
-    fill = list(n_good = 0))
-
-too_few_trials_per_condition <- good_trials_per_condition %>% 
-  filter(n_good < rules$min_trials_per_condition) %>% 
-  distinct(Study, ResearchID)
-
-clean_looks <- looks %>% 
-  anti_join(blocks_to_drop, by = c("Study", "Basename")) %>% 
-  anti_join(leftover_bad_trials, by = c("Study", "Basename", "TrialNo")) %>% 
-  anti_join(too_few_trials_per_condition, by = c("Study", "ResearchID"))
-
-data <- clean_looks %>% 
-  filter(between(Time, times_to_keep[1], times_to_keep[2])) %>% 
-  readr::write_csv("./data/aim2-screened.csv.gz") 
-```
-
-```{r bad-version-counts, message = FALSE}
-ids_by_version <- readr::read_csv("./data-raw/mp_timepoint1_blocks.csv") %>% 
-  select(ResearchID, Basename, Version) %>% 
-  split(.$Version) %>% 
-  lapply(getElement, "ResearchID")
-
-n_lost_in_bad_version <- ids_by_version$`Early attention getter` %>% 
-  setdiff(ids_by_version$Standard) %>% 
-  length()
-```
-
-Table \@ref(tab:mp-screening-counts) shows the numbers of participants and
-trials excluded at each timepoint due to unreliable data. As with the experiment
-in Aim 1, there were more children in the second timepoint than the first
-timepoint due to a timing error in the initial version of this experiment,
-leading to the exclusion of `r n_lost_in_bad_version` participants from the
-first timepoint.
-
-```{r mp-screening-counts, echo = FALSE}
-screening_results <- list(Screened = clean_looks, Raw = looks) %>% 
-  bind_rows(.id = "Dataset") %>% 
-  distinct(Dataset, Study, ResearchID, Basename, TrialID) %>% 
-  group_by(Dataset, Study) %>% 
-  summarise(
-    `N Children` = n_distinct(ResearchID),
-    `N Blocks` = n_distinct(Basename),
-    `N Trials` = n_distinct(TrialID)) %>% 
-  ungroup()
-
-# Add an extra set of rows computing difference
-screening_results2 <- screening_results %>% 
-  tidyr::gather("Stat", "Value", -Study, -Dataset) %>% 
-  tidyr::spread(Dataset, Value) %>% 
-  mutate(`Raw &minus; Screened` = Raw - Screened) %>% 
-  tidyr::gather(Dataset, "Count", -Study, -Stat) %>% 
-  tidyr::spread(Stat, Count) %>% 
-  mutate(
-    Dataset = Dataset %>% 
-      factor(c("Raw", "Screened", "Raw &minus; Screened"))) %>% 
-  select(Dataset, Study, `N Children`, `N Blocks`, `N Trials`) %>% 
-  arrange(Dataset, Study) %>% 
-  mutate(Dataset = Dataset %>% as.character() %>% replace_if_same_as_last(""))
-
-knitr::kable(
-  screening_results2,
-  caption = "Eyetracking data before and after data screening.", 
-  booktabs = TRUE)
-```
 
 
 
