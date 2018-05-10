@@ -23,7 +23,7 @@ differences persist over time so that faster processors remain
 relatively fast later in childhood? Or, is such a question ill-posed
 because the magnitude of the differences among children shrink with age?
 I plan to address this gap in knowledge by analyzing three years of word
-recognition data collected in recently completed longitudinal study of
+recognition data collected in a recently completed longitudinal study of
 180 children.
 
 In particular, I will examine the development of *familiar word
@@ -31,7 +31,7 @@ recognition*, *lexical competition,* and *fast referent selection* (the
 ability to map novel words to novel objects in the moment). Through
 these analyses, I will develop a fine-grained description of how the
 dynamics of word recognition change year over year, and I will study how
-differences in word recognition performance relate to child-level
+differences in word recognition performance relate to other child-level
 measures (such as vocabulary and speech perception). 
 
 Specific Aim 1 (Familiar Word Recognition and Lexical Competition)
@@ -46,13 +46,13 @@ images of familiar objects and heard a prompt to view one of the images.
 The four images included a target word (e.g., *bell*), a semantically
 related word (*drum*), a phonologically similar word (*bee*), and an
 unrelated word (*swing*). I will use a series of growth curve analyses
-to describe how children’s familiar word recognition develop year over
+to describe how children’s familiar word recognition develops year over
 year. Of interest is how individual differences at age 3 persist into
-age 5. I will examine the children’s looks to the distractors to study
-the developmental course of lexical competition from similar sounding
-and similar meaning words. Changes in sensitivity to competing words can
-reveal how lexical competition emerges as a byproduct of learning new
-words.
+age 5. I will also examine the children’s looks to the distractors to
+study the developmental course of lexical competition from
+similar sounding and similar meaning words. Changes in sensitivity to
+competing words can reveal how lexical competition emerges as a
+byproduct of learning new words.
 
 Specific Aim 2 (Referent Selection and Mispronunciations)
 -----------------------------------------------------------------------
@@ -67,9 +67,9 @@ object, and they heard either a correct production of the familiar
 object (e.g., *soup*), a one-feature mispronunciation of the familiar
 object (*shoop*), or a novel word unrelated to either image (*cheem*).
 The correct productions test familiar word recognition and the nonwords
-test fast referent selection. The mispronunciations test a child’s
-phonological categories (whether the child permits, rejects, or
-equivocates about mispronunciations).
+test fast referent selection. The mispronunciations test the child’s
+phonological categories by showing whether the child permits, rejects,
+or equivocates about mispronunciations.
 
 I will use growth curve analyses to study how children’s responses to
 the three word types change over time. I will examine familiar word

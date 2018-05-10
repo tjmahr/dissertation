@@ -1,0 +1,85 @@
+Items used in the visual world experiment {#vw-experiment-items}
+========================================================================
+
+```{r include = FALSE, warning = FALSE}
+knitr::read_chunk("./helpers.R")
+if (interactive()) source("./helpers.R")
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
+```
+
+```{r helpers, include = FALSE}
+```
+
+```{r vw-items, include = FALSE}
+trial_info <- bind_rows(
+  readr::read_csv("data-raw/rwl_timepoint1_trials.csv.gz"),
+  readr::read_csv("data-raw/rwl_timepoint2_trials.csv.gz"),
+  readr::read_csv("data-raw/rwl_timepoint3_trials.csv.gz")) %>%
+  select(
+    Study,
+    TrialID,
+    Target = WordTarget,
+    PhonologicalFoil = WordPhonologicalFoil,
+    SemanticFoil = WordSemanticFoil,
+    Unrelated = WordUnrelated)
+
+## There was a block at year one where the wrong unrelated was used.
+## See the items with 15 trials each. We will exclude them.
+trials_to_drop <- trial_info %>%
+  count(Study, Target, PhonologicalFoil, SemanticFoil, Unrelated) %>%
+  filter(n <= 15)
+
+words <- trial_info %>%
+  distinct(Target, PhonologicalFoil, SemanticFoil, Unrelated) %>%
+  anti_join(
+    trials_to_drop,
+    by = c("Target", "PhonologicalFoil", "SemanticFoil", "Unrelated")) %>% 
+  group_by(Target) %>% 
+  mutate(Unrelated = paste(sort(Unrelated), collapse = "/")) %>% 
+  distinct() %>% 
+  ungroup() %>% 
+  setNames(c("Target", "Phonological", "Semantic", "Unrelated")) %>% 
+  arrange(Target)
+
+# aim1_stim$good_phon is a constant defined in helpers.R
+phono_foils <- split(words, words$Target %in% aim1_stim$good_phon) %>%
+  setNames(c("weak_foil", "strong_foil"))
+
+# aim1_stim$good_semy is a constant defined in helpers.R
+semy_foils <- split(words, words$Target %in% aim1_stim$good_semy) %>%
+  setNames(c("weak_foil", "strong_foil"))
+```
+
+Table \@ref(tab:aim1-all-items) lists the items used for the Visual World
+experiment. Each row of the table represents a set of four images used
+in a trial. There were two blocks of trials with different images and
+trial orderings. For the two unrelated foils with more than one word
+listed, the two foils were used in different blocks.
+
+```{r aim1-all-items, echo = FALSE}
+words %>% 
+  knitr::kable(
+    caption = "Sets of four images used for the Visual World Experiment.")
+```
+ 
+For the analysis of phonological competitors, I only used trials where
+the target and the phonological foil shared the same syllable onset
+(Table \@ref(tab:phonological-competitor-items)). For the analysis of
+semantic competitors, I only used trials where the target and the
+semantic foil belonged to the same category 
+(Table \@ref(tab:semantic-competitor-items)).
+
+```{r phonological-competitor-items, echo = FALSE}
+phono_foils$strong_foil %>%
+  select(-Semantic) %>% 
+  knitr::kable(
+    caption = "Items used for the analysis of phonological versus unrelated competitors.")
+```
+
+```{r semantic-competitor-items, echo = FALSE}
+semy_foils$strong_foil %>%
+  select(-Phonological) %>% 
+  knitr::kable(
+    caption = "Items used for the analysis of semantic versus unrelated competitors.")
+```
+

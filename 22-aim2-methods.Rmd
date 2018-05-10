@@ -62,9 +62,9 @@ raw_data <- looks %>%
 
 Data collection for this experiment occurred during the same
 longitudinal study as the familiar word recognition experiment of Aim 1.
-Thus, this experiment used the same participants, same stimulus
-preparation, and same general experimental procedure that were reported
-in detail in [Chapter \@ref(aim1-method)](#aim1-method).
+Thus, this experiment used the same participants, the same stimulus
+style and preparation, and the same general experimental procedure as
+those reported in detail in [Chapter \@ref(aim1-method)](#aim1-method).
 
 
 Mispronunciation task
@@ -83,16 +83,17 @@ there were also trials in a *nonword* condition where the label was an
 unambiguous novel word (e.g., *cheem* presented with images of a bed and
 a novel-looking pastry mixer). Each nonword was constructed to match the
 phonotactic probability of one of the mispronunciations. 
-Figure \@ref(fig:`r sample-mp-screen`) shows the displays used in two
-trials. Importantly, within a block of trials, the child never hears
+Figure \@ref(fig:`r sample-mp-screen`) shows the screens used in two
+trials. 
+Importantly, within a block of trials, the child never hears
 both the correct and mispronounced forms of the same word. A child
 hearing "duck" then a few trials later hearing "guck" would provide a
 basis of comparison so that the child can decide that "guck" is probably
-not "duck"---our design avoided this situation.
+not "duck"---the design used here avoided this situation.
 
-(ref:sample-mp-screen-cap) Example displays for (*left*) a trial in
-which *duck* is mispronounced as "guck"and (*right*) a trial in which
-the nonword "cheem" is presented.
+(ref:sample-mp-screen-cap) Example displays for a trial in which *duck*
+is mispronounced as "guck" (*left*) and a trial in which the nonword
+"cheem" is presented (*right*).
 
 ```{r sample-mp-screen, fig.cap = "(ref:sample-mp-screen-cap)", echo = FALSE, out.width = "100%"}
 library(magick)
@@ -130,8 +131,10 @@ Visual stimuli
 The images used in the experiment consisted of color photographs on gray
 backgrounds. As in the familiar word recognition, these images were
 piloted in two preschool classrooms. Piloting confirmed that children
-consistently used the same label for familiar objects and did not
-consistently use the same label for novel/unfamiliar objects.
+consistently used the same label for familiar objects and did not 
+consistently use the same label for the novel/unfamiliar objects. 
+
+<!-- And said either I dont know or I don't have a word for that -->
 
 
 Data screening {#aim2-screening}
@@ -241,10 +244,10 @@ n_lost_in_bad_version <- ids_by_version$`Early attention getter` %>%
 
 Table \@ref(tab:mp-screening-counts) shows the numbers of participants and
 trials excluded during each of year of the study due to unreliable data. As with the experiment
-in Aim 1, there were more children in the second timepoint than the first
-timepoint due to a timing error in the initial version of this experiment,
+in Aim 1, there were more children in the second year than the first
+year due to a timing error in the initial version of this experiment,
 leading to the exclusion of `r n_lost_in_bad_version` participants from the
-first timepoint.
+first year.
 
 ```{r mp-screening-counts, echo = FALSE}
 screening_results <- list(Screened = clean_looks, Raw = looks) %>% 
@@ -252,9 +255,9 @@ screening_results <- list(Screened = clean_looks, Raw = looks) %>%
   distinct(Dataset, Age, ResearchID, Basename, TrialID) %>% 
   group_by(Dataset, Age) %>% 
   summarise(
-    `N Children` = n_distinct(ResearchID),
-    `N Blocks` = n_distinct(Basename),
-    `N Trials` = n_distinct(TrialID)) %>% 
+    `Children` = n_distinct(ResearchID),
+    `Blocks` = n_distinct(Basename),
+    `Trials` = n_distinct(TrialID)) %>% 
   ungroup()
 
 # Add an extra set of rows computing difference
@@ -267,31 +270,106 @@ screening_results2 <- screening_results %>%
   mutate(
     Dataset = Dataset %>% 
       factor(c("Raw", "Screened", "Raw &minus; Screened"))) %>% 
-  select(Dataset, Age, `N Children`, `N Blocks`, `N Trials`) %>% 
+  select(Dataset, Age, `Children`, `Blocks`, `Trials`) %>% 
   arrange(Dataset, Age) %>% 
+  rename(Study = Age) %>% 
   mutate(Dataset = Dataset %>% as.character() %>% replace_if_same_as_last(""))
 
 knitr::kable(
   screening_results2,
-  caption = "Eyetracking data before and after data screening.", 
+  caption = "Eyetracking data counts before and after data screening.", 
   booktabs = TRUE)
 ```
 
 
 
 After mapping the gaze coordinates onto the onscreen images, I performed
-data screening following the same set of steps as in Chapter X. First, I
-plotted the average growth curve for each Year x Condition to determine
-the main time window for the analyses, based on where the data
-plateaued. The window was from `r rules$screening_window[1]` to
-`r rules$screening_window[2]` ms after noun onset. Next, I identified a
-trial as *unreliable* if at least `r rules$missing_data_limit * 100`% of
-the looks were missing during the time window, and I excluded an entire
-block of trials if it had fewer than `r rules$min_trials_per_block`
-reliable trials. As an additional criterion, I excluded participants who
-failed to provide at least `r rules$min_trials_per_condition` reliable
-trials per experimental condition.
+data screening following the same set of steps as in Chapter X. 
+To make data quality judgments, I only considered the window from
+`r rules$screening_window[1]` to `r rules$screening_window[2]` ms after
+noun onset. Next, I identified a trial as *unreliable* if at least
+`r rules$missing_data_limit * 100`% of the looks were missing during the
+time window, and I excluded an entire block of trials if it had fewer
+than `r rules$min_trials_per_block` reliable trials. As an additional
+criterion, I excluded participants who failed to provide at least
+`r rules$min_trials_per_condition` reliable trials per experimental
+condition.
+
+## Model prepation
+
+As in Aim 1, to prepare the data for modeling, I downsampled the data
+into `r opts_model$bin_length`-ms (`r opts_model$bin_width`-frame) bins.
+For the real word and nonword trials, I modeled looks from XX to XX ms.
+For the mispronunciation trials, I modeled looks from XX to XX ms.
+Lastly, I aggregated looks by child, study, condition and time, and
+created orthogonal polynomials to use as time features for the model.
 
 
 
+```{r, echo = FALSE, message = FALSE, warnings = FALSE}
+m_data <- data %>% 
+  select(Study, ResearchID, Condition, TrialID:GazeByImageAOI) %>% 
+  assign_bins(bin_width = opts_model$bin_width, Time, TrialID)
 
+# Compute time at center of each bin
+bin_times <- m_data %>% 
+  distinct(Time, .bin) %>% 
+  group_by(.bin) %>% 
+  mutate(BinTime = round(median(Time), -1)) %>% 
+  ungroup()
+
+# Attach bin times
+binned <- m_data %>% 
+  left_join(bin_times, by = c("Time", ".bin")) %>% 
+  ungroup() %>% 
+  select(-Time) %>% 
+  rename(Time = BinTime) 
+
+d <- binned %>% 
+  aggregate_looks(
+    resp_def, Study + ResearchID + Condition + Time ~ GazeByImageAOI)
+
+d_m <- d %>% 
+  filter(0 <= Time, Time <= opts_model$end_time) %>% 
+  polypoly::poly_add_columns(
+    Time, degree = 3, scale_width = 1, prefix = "ot")
+
+readr::write_csv(d_m, "./data/aim2-model-ready.csv.gz")
+```
+
+Figure \@ref(fig:aim2-spaghetti) depicts the results from the real word
+and nonword conditions following these data screening and preparation
+steps. The lines start around .5 which is chance performance on this
+two-image task. The lines rise as the word unfolds and peak and plateau
+around 1400 ms.
+
+(ref:aim2-spaghetti) Empirical word recognition growth curves from each
+year of the study. Each line represents an individual child's proportion
+of looks to the target image over time. The heavy lines are the averages
+of the lines for each year.
+
+```{r aim2-spaghetti, fig.cap = "(ref:aim2-spaghetti)", echo = FALSE, message = FALSE, out.width = "100%", fig.height = 6, fig.width = 5}
+d %>% 
+  filter(0 <= Time, Time <= opts_model$end_time) %>% 
+  mutate(
+    Study = convert_study_to_age(Study),
+    Condition = factor(
+      Condition, 
+      levels = c("real", "nonsense", "MP"), 
+      labels = c("Real word", "Nonword", "Mispronunciation"))) %>% 
+  filter(Condition != "Mispronunciation") %>%
+  ggplot() + 
+    aes(x = Time, y = Prop) + 
+    geom_hline(yintercept = .5, color = "white", size = 2) + 
+    geom_line(aes(group = ResearchID), alpha = .16, color = constants$col_off_black) + 
+    stat_summary(aes(color = Study), fun.y = mean, geom = "line", size = 1.25) +
+    stat_summary(
+      aes(color = Year), 
+      data = . %>% mutate(Year = Study, Study = "All"), 
+      fun.y = mean, geom = "line", size = 1.25) +
+    facet_grid(Condition ~ Study) + 
+    labs(x = constants$x_time,
+         y = constants$y_prop_target,
+         caption = "One line per child. Heavy line: Average of lines.") + 
+    guides(color = FALSE)
+```

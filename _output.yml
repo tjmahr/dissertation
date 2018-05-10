@@ -36,6 +36,18 @@ huskydown::thesis_pdf:
     in_header: assets/preamble3.tex
   template: assets/template.tex
 
+bookdown::html_document2:
+  pandoc_args: [
+    "--csl", "./assets/apa.csl",
+    "--bibliography", "./assets/refs.bib",
+    "--filter", "pandoc-citeproc",
+    "--filter", "./assets/fix-apa-ampersands.py"
+  ]
+  css: "./assets/style.css"
+  keep_md: true
+
+
+
 
 # bookdown::epub_book:
 #     pandoc_args: [

@@ -18,11 +18,10 @@ rmd_files:
   - 16-aim1-lexical-competitors.Rmd
   - 18-aim1-general-discussion.Rmd
   - 20-aim2-part.Rmd
-  - 22-aim2-methods.Rmd
+  # - 22-aim2-methods.Rmd
   # - 80-scratch.Rmd
   - 90-appendix.Rmd
   - 99-references.Rmd
 clean:
   - dissertation.Rmd
-  - dissertation.md
   - dissertation.log
