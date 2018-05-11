@@ -182,7 +182,7 @@ fluently dialect-shift between AAE and MAE. At the beginning of the lab
 visit, the examiner listened to the interactions between the child and
 caregiver in order to confirm the child's home dialect. Prompts to view
 the target image of a trial (e.g., *find the girl*) used the carrier
-phrases “find the” and “see the”. These carriers were recording in the
+phrases “find the” and “see the”. These carriers were recorded in the
 frame “find/see the egg” and cross-spliced with the target nouns to
 minimize coarticulatory cues on the determiner “the”. The stimuli were
 re-recorded after the first year of the study with the same speakers so
@@ -242,7 +242,7 @@ rules <- list(
 ```
 
 To process the eyetracking data, I first mapped gaze *x*-*y* coordinates
-onto the onscreen images. We next performed *deblinking*. I interpolated
+onto the onscreen images. I next performed *deblinking*. I interpolated
 short runs of missing gaze data (up to 150 ms) if the same image was
 fixated before and after the missing data run. Put differently, I
 classified a window of missing data as a blink if the window was brief
@@ -426,10 +426,10 @@ d_m <- d %>%
 readr::write_csv(d_m, "./data/aim1-model-ready.csv.gz")
 ```
 
-Figure \@ref(fig:aim1-spaghetti) depicts the dataset following these data
-screening and preparation steps. The lines start around .25 which is
+Figure \@ref(fig:aim1-spaghetti) depicts the dataset following the data
+screening and model preparation steps. The lines start around .25 which is
 chance performance on four-alternative forced choice task. The lines
-rise as the word unfolds and peak and plateau around 1400 ms.
+rise as the word unfolds, and they peak and plateau around 1400 ms.
 
 (ref:aim1-spaghetti) Empirical word recognition growth curves from each
 year of the study. Each line represents an individual child's proportion

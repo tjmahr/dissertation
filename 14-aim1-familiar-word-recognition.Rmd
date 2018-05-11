@@ -46,12 +46,10 @@ inferences using estimates of uncertainty (instead of using statistical
 significance—which is not a straightforward matter for mixed-effects
 models).[^2]
 
-[^2]: It is tempting to further justify this approach by comparing
-    Bayesian versus classical/frequentist statistics, but my goals in
-    using this method are simple: To estimate statistical effects and
-    quantify uncertainty about those effects. This pragmatic brand of
-    Bayesian statistics is illustrated in texts by @GelmanHill and 
-    @RethinkingBook.
+[^2]: My goals in using this method were simply to estimate model 
+    effects and quantify the uncertainty about those effects. This pragmatic, 
+    estimation-based approach of Bayesian statistics is illustrated in texts 
+    by @GelmanHill and @RethinkingBook.
 
 The eyetracking growth curves were fit using an orthogonal cubic
 polynomial function of time [a now-conventional approach; see
@@ -98,10 +96,18 @@ To study how word recognition changes over time, I modeled how the
 growth curves change over developmental time. This amounted to studying
 how the growth curve parameters changes year over year. I included
 dummy-coded indicators for Age 3, Age 4, and Age 5 and allowed these
-indicators interact with the growth curve parameters. These
-year-by-growth-curve terms captured how the shape of the growth curves
-changed each year. The model also included random effects to represent
-child-by-year effects.
+indicators to interact with the growth curve parameters. These
+year-by-growth-curve-feature terms captured how the shape of the growth
+curves changed each year. The model also included random effects to
+represent by-child and by-child-by-year effects to estimate a general
+growth curve for each child and to estimate how each child's growth
+curve changed each year.
+
+The models were fit in R (vers. 3.4.3) with the RStanARM package
+(vers. 2.16.3). [Appendix \@ref(aim1-gca-models)](#aim1-gca-models)
+contains the R code used to fit the model along with a description of 
+the model specifications represented in the model syntax.
+
 
 
 ### Growth curve features as measures of word recognition performance
@@ -293,16 +299,16 @@ Figure \@ref(fig:effects2) depicts uncertainty intervals with
 the model's average effects of each timepoint on the growth curve
 features. The intercept and linear time effects increased each year,
 confirming that children become more reliable and faster at recognizing
-words as they grow older. The peak accuracy also increased each year.
+words as they grow older. The peak probability also increased each year.
 For each effect, the change from age 3 to age 4 is approximately the
-same as the change from age 4 to age 5, as visible in
+same as the change from age 4 to age 5, as illustrated in
 Figure \@ref(fig:pairwise-effects).
 
 (ref:effects2) Uncertainty intervals for the effects of study years on
 growth curve features. The intercept and peak features were converted from
 log-odds to proportions to ease interpretation.
 
-```{r effects2, fig.cap = "(ref:effects2)", echo = FALSE, out.width = "80%", fig.height=4, fig.width=5}
+```{r effects2, fig.cap = "(ref:effects2)", echo = FALSE, out.width = "100%", fig.height=4, fig.width=8}
 # Column names will have mathematical formatting too
 draws <- as.data.frame(b) %>% 
   as_tibble() %>% 
@@ -339,31 +345,40 @@ intervals2 <- bind_rows(props, logodds) %>%
   mutate(min_x = min(ll), max_x = max(hh)) %>% 
   ungroup()
 
-ggplot(intervals2) + 
-  aes(y = parameter) +
-  geom_vline(xintercept = 0, size = 2, color = "white") +
-  geom_point(aes(x = m), size = 3, shape = 3) + 
-  # Draw mock gridlines in case the point's + shape is wider than the interval.
-  # All that's visible is then a | with a gap in the middle.
-  geom_segment(
-    aes(y = parameter, yend = parameter, x = min_x, xend = max_x), 
-    size = .25, color = "white") +
-  ggstance::geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
-  ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
-  scale_y_discrete(labels = parse_text) + 
-  labs(
-    x = NULL, 
-    y = NULL, 
-    title = "Average effects by study",
-    caption = constants$cap_median_90_50) + 
-  facet_wrap("Scale", scales = "free", ncol = 1, labeller = label_both)
+p1 <- intervals2 %>% 
+  filter(Scale != "Proportion") %>% 
+  ggplot() + 
+    aes(y = parameter) +
+    geom_vline(xintercept = 0, size = 2, color = "white") +
+    geom_point(aes(x = m), size = 3, shape = 3) + 
+    # Draw mock gridlines in case the point's + shape is wider than interval.
+    # All that's visible is then a | with a gap in the middle.
+    geom_segment(
+      aes(y = parameter, yend = parameter, x = min_x, xend = max_x), 
+      size = .25, color = "white") +
+    ggstance::geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
+    ggstance::geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
+    scale_y_discrete(labels = parse_text) + 
+    labs(
+      x = NULL, 
+      y = NULL, 
+      title = "Average effects by study",
+      caption = " ") 
+
+p2 <- p1 %+% (intervals2 %>% filter(Scale == "Proportion"))
+p2 <- p2 + 
+  labs(title = " ", caption = constants$cap_median_90_50) 
+p3 <- ggplot() + theme_void()
+
+p23 <- cowplot::plot_grid(p2, p3, ncol = 1, rel_heights = c(.66, .33))
+cowplot::plot_grid(p1, p23, ncol = 2)
 ```
 
 (ref:pairwise-effects) Uncertainty intervals for the differences between
 study timepoints. Again, the intercept and peak features were converted
 to proportions.
 
-```{r pairwise-effects, fig.cap = "(ref:pairwise-effects)", fig.show = 'hold', echo = FALSE, out.width = "50%", fig.height = c(4, 3), fig.width = c(4, 4)}
+```{r pairwise-effects, fig.cap = "(ref:pairwise-effects)", fig.show = 'hold', echo = FALSE, out.width = "100%", fig.height = c(4), fig.width = c(8)}
 clean_names <- . %>% 
   stringr::str_replace_all("[()]", "") %>% 
   stringr::str_replace("Age~~", "Age ") %>% 
@@ -436,7 +451,7 @@ p2 <- ggplot(pairwise %>% filter(parameter %in% c("Peak", "Intercept"))) +
   labs(
     x = NULL, 
     y = NULL, 
-    title = " ",
+    title = "  ",
     caption = constants$cap_median_90_50) + 
   theme(
     strip.placement = "outside", 
@@ -446,11 +461,9 @@ p2 <- ggplot(pairwise %>% filter(parameter %in% c("Peak", "Intercept"))) +
       size = rel(1.4), 
       margin = margin(0, 10, 0, 5, "pt")))
 
-# p3 <- ggplot() + theme_void()
-# p23 <- cowplot::plot_grid(p2, p3, ncol = 1, rel_heights = c(.66, .33))
-# cowplot::plot_grid(p1, p23, ncol = 2)
-p1
-p2
+p3 <- ggplot() + theme_void()
+p23 <- cowplot::plot_grid(p2, p3, ncol = 1, rel_heights = c(.66, .33))
+cowplot::plot_grid(p1, p23, ncol = 2)
 ```
 
 ```{r, include = FALSE}
@@ -546,10 +559,15 @@ probability was `r peak_pts$Age3` [`r peak_uis$Age3`] at age 3,
 by `r peak_dpts$Age5_4` [`r peak_duis$Age5_4`] from age 4 to age 5.
 These results numerically confirm the hypothesis that children would
 improve in their word recognition reliability, both in terms of average
-looking and in terms of peak accuracy, each year.
+looking and in terms of peak looking, each year. The changes in peak 
+probability were also rather large: children's probability fixating on
+the target increased by approximately .1 each year. These growths
+indicate the task scaled with children's development because they had
+room to improve each year.
 
 **Summary**. The average growth curve features increased year over year,
-so that children looked to the target more quickly and more reliably.
+so that children looked to the target more quickly and more reliably 
+as they grew older.
 
 
 
@@ -603,17 +621,17 @@ model and learning about the population of growth curves---allow the
 model to simulate new samples from that distribution of growth curves.
 That is, we can predict a set of growth curves for a hypothetical,
 unobserved child drawn from the same distribution as the
-`r n_distinct(d_m$ResearchID)` observed children. This procedure allows
-one to explore the plausible degrees of variability in performance at
-each age.
+`r n_distinct(d_m$ResearchID)` children observed in this study. This
+procedure allows one to explore the plausible degrees of variability in
+performance at each age.
 
-Figure \@ref(fig:new-participants) shows the posterior predictions
-for 1,000 simulated participants, which demonstrates how the model
+Figure \@ref(fig:new-participants) shows the posterior predictions
+for 1,000 simulated participants, and it demonstrates how the model
 expects new participants to improve longitudinally but also exhibit
-stable individual differences over time. Figure
-\@ref(fig:new-participants-intervals) shows uncertainty intervals for
-these simulations. The model learned to predict less accurate and more
-variable performance at age 3 with improving accuracy and narrowing
+stable individual features over time. 
+Figure \@ref(fig:new-participants-intervals) shows uncertainty intervals
+for these simulations. The model learned to predict less accurate and
+more variable performance at age 3 with improving accuracy and narrowing
 variability at age 4 and age 5.
 
 (ref:new-participants) Posterior predictions for hypothetical
@@ -677,16 +695,16 @@ ggplot(lpred %>% mutate(Study = convert_study_to_age(Study))) +
 ```
 
 I hypothesized that children would become less variable as they grew
-older and converged on a mature level of performance. I address this
-question by inspecting the ranges of predictions for the simulated
+older and converged on a mature level of performance. To address this
+question, I inspected the ranges of predictions for the simulated
 participants. The claim that children become less variable would imply
-that the range of predictions should be narrower age 5 than for age 4
-than age 3. Figure \@ref(fig:new-ranges) depicts the range of the
-predictions, both in terms of the 90 percentile range (i.e., the range
-of the middle 90% of the data) and in terms of the 50 percentile
-(interquartile) range. The ranges of performance decrease from age 3 to
-age 4 to age 5, consistent with the hypothesized reduction in
-variability.
+that the range of predictions should be narrower for age 5 than for age 4
+and narrower for age 4 than for age 3. Figure \@ref(fig:new-ranges)
+depicts the range of the predictions, both in terms of the 90 percentile
+range (i.e., the range of the middle 90% of the data) and in terms of
+the 50 percentile (interquartile) range. The ranges of performance
+decrease from age 3 to age 4 to age 5, consistent with the hypothesized
+reduction in variability.
 
 (ref:new-ranges) Ranges of predictions for simulated participants over
 the course of a trial. The ranges are most similar during the first half
@@ -751,8 +769,8 @@ for age 5.
 growth curves from 1,000 hypothetical, unobserved participants. The
 simulated dataset showed increasing looking probability and decreasing
 variability with each year of the study. These simulations confirmed the
-hypothesis that variability would be diminish as children converge on a
-mature level of performance on this task.
+hypothesis that variability would diminish as children began to demonstrate 
+a mature degree of performance for this task.
 
 
 
@@ -852,7 +870,7 @@ Because I used a Bayesian model, there is a distribution of ratings and
 thus a distribution of concordance statistics. Each sample of the
 posterior distribution fits a growth curve for each child in each study,
 so each posterior sample provides a set of ratings for concordance
-coefficients. The distribution of *W*'s lets us quantify our uncertainty
+coefficients. This distribution of *W*'s lets us quantify our uncertainty
 because we can compute *W*'s for each of the `r nsamples` samples from
 the posterior distribution.
 
@@ -865,10 +883,10 @@ meaningfully from chance.
 
 (ref:kendall-stats) Uncertainty intervals for the Kendall's coefficient
 of concordance. Random ratings provide a baseline of null *W*
-statistics. The intercept and linear time features are decisively
+statistics. The peak, intercept and linear time features are decisively
 non-null, indicating a significant degree of correspondence in
 children's relative word recognition reliability and efficiency over
-three years of study.
+the three years of the study.
 
 ```{r kendall-stats, fig.cap = "(ref:kendall-stats)", echo = FALSE, out.width = "80%", fig.height = 3, fig.width = 6}
 subtitle <- glue::glue(
