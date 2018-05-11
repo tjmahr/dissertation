@@ -35,7 +35,7 @@ signature:
   - "Jan Edwards"
   - "Susan Ellis Weismer"
   - "Margarita Kaushanskaya"
-  - "Audra Sterling"
+  - "Jenny Saffran"
   - "David Kaplan"
   - "Bob McMurray"
 acknowledgments: |
@@ -49,15 +49,19 @@ watermark: "DRAFT"
 
 \frontmatter
 
+```{block, include = identical(knitr:::pandoc_to(), "html")}
 Welcome {-}
 ========================================================================
+
+```
 
 ```{r fig.align = "center", out.width = "50%", echo = FALSE, include = identical(knitr:::pandoc_to(), "html")}
 knitr::include_graphics("assets/cover.png", dpi = NA)
 ```
 
+```{block, include = identical(knitr:::pandoc_to(), "html")}
 This book, when finished, will contain my dissertation research. 
 
 - Last compiled: `r Sys.time()`
 
-\mainmatter
+```
