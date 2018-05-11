@@ -308,11 +308,12 @@ if (file.exists(phon_by_year)) {
 ```
 
 To model these data, I fit a generalized additive model with fast
-restricted maximum likelihood estimation [@Wood2017; @Soskuthy2017 for
-a tutorial for linguists]. Box 1 provides a brief overview of these
-models. I used the mgcv R package [vers. `r packageVersion("mgcv")`;
-@Wood2017] with support from the tools in the itsadug R package
-[vers. `r packageVersion("itsadug")`; @itsadug].[^gca-fail]
+restricted maximum likelihood estimation [@Wood2017; @Winter2016;
+@Soskuthy2017 for a tutorial for linguists]. Box 1 provides a brief
+overview of these models. I used the mgcv R package
+[vers. `r packageVersion("mgcv")`; @Wood2017] with support from the
+tools in the itsadug R package [vers. `r packageVersion("itsadug")`;
+@itsadug].[^gca-fail]
 
 [^gca-fail]: Initially, I tried to use Bayesian polynomial growth
   curve models, as in the earlier analysis of the looks to the target
