@@ -14,6 +14,10 @@ ranges of the time features.
 
 ```{r poly-feature-range, echo = FALSE, message = FALSE, warning = FALSE}
 library(dplyr)
+library(rstanarm)
+library(ggplot2)
+theme_set(theme_grey())
+
 d_m <- readr::read_csv("./data/aim1-model-ready.csv.gz")
 
 d_m %>% 
@@ -40,6 +44,7 @@ counts together for a logistic regression.
 
 ```{r, eval = FALSE}
 library(rstanarm)
+
 # Run chains on different cores
 options(mc.cores = parallel::detectCores())
 
@@ -57,17 +62,24 @@ m <- stan_glmer(
 readr::write_rds(m, "./data/stan_aim1_cubic_model.rds.gz")
 ```
 
-The line `(ot1 + ot2 + ot3 | ResearchID/Study)` describes the random
+The lines `cbind(Primary, Others) ~ (ot1 + ot2 + ot3) * Study` fits a
+cubic growth curve for each year of the study. It uses the R language's
+formula convention to regress the looking counts onto an intercept term
+(implicitly included by default), `ot1`, `ot2`, `ot3` along with the
+interactions of the `Study` variable with the intercept, `ot1`, `ot2`,
+and `ot3`. 
+
+The line `+ (ot1 + ot2 + ot3 | ResearchID/Study)` describes the random
 effects structure of the model with the `/` indicating that data from
 each `Study` is nested within each `ResearchID`. Thus, for each child,
 we have a general intercept and general effects for Time^1^, Time^2^,
 and Time^3^. These child-level effects are further adjusted using
 `Study:ResearchID` effects. The effects in each level are allowed to
-correlate. For example, I would expect that participants with average
-looking probabilities (low intercepts) to have flatter growth curves
-(low Time^1^ effects), and this relationship would be captured by one of
-the random-effect correlation terms. All told, the random effect
-structure and point estimates for the model was as follows:
+correlate. For example, I would expect that participants with low
+average looking probabilities (low intercepts) to have flatter growth
+curves (low Time^1^ effects), and this relationship would be captured by
+one of the random-effect correlation terms. All told, the random effect
+structure and point estimates for these effects were as follows:
 
 ```{r, include = FALSE}
 b <- readr::read_rds("./data/stan_aim1_cubic_model.rds.gz")
@@ -79,7 +91,7 @@ start <- lines %>% stringr::str_which(c("Error terms"))
 end <- lines %>% stringr::str_which(c("Num. levels"))
 ```
 
-```{r}
+```{r, echo = FALSE}
 cat(lines[start:end], sep = "\n")
 ```
 
@@ -103,8 +115,8 @@ correlations of the model's random effect terms. I used the default
 prior for the variance terms and applied a weakly informative LKJ(2)
 prior on the random effect correlations. Figure \@ref(fig:lkj-prior)
 shows samples from the prior distribution of models fit with the default
-LKJ(1) prior and a weakly informative LKJ(2) prior. Under LKJ(2),
-extreme correlations are less plausible. The prior shifts the
+LKJ(1) prior and the weakly informative LKJ(2) prior that I used. Under
+LKJ(2), extreme correlations are less plausible. The prior shifts the
 probability mass away from the ±1 edges towards the center. The
 motivation for this kind of prior was *regularization*: We give the
 model a small amount of information to nudge it away from extreme,
@@ -114,8 +126,6 @@ degenerate values.
 LKJ(2) priors. 
 
 ```{r lkj-prior, fig.cap = "(ref:lkj-prior)", echo = FALSE, out.width = "50%", fig.height = 3, fig.width = 4, message = FALSE}
-library(ggplot2)
-theme_set(theme_grey())
 correlations <- readr::read_csv("./data/aim1-lkj-prior-demo.csv.gz")
 
 ggplot(correlations) +
@@ -130,62 +140,65 @@ ggplot(correlations) +
 
 
 
-<!-- For example, consider just the effect of Time^1^. If a -->
-<!-- listener starts at chance performance, 25% or `r qlogis(.25) %>% round(2)` -->
-<!-- logits, and increases to, say, 65% or `r qlogis(.65) %>% round(2)`, the effect -->
-<!-- of a unit change in Time^1^ would be a change of -->
-<!-- `r (qlogis(.65) - qlogis(.25)) %>% round(2)` logits. This magnitude of effect is -->
-<!-- accommodated by our Normal(0, 1) prior.  -->
 
 
 
+Generalized additive models
+------------------------------------------------------------------------
 
+To model the looks to the competitor images, I used generalized additive
+(mixed) models. The models were fit in R (vers. 3.4.3) using the mgcv R
+package [vers. 1.8.23; @Wood2017] with support from the tools in the
+itsadug R package [vers. `r packageVersion("itsadug")`; @itsadug].
 
+I will briefly walk through the code used to fit one of these models in
+order to articulate the modeling decisions at play.
 
+I first convert the categorical variables into the right types.
 
+```{r, eval = FALSE}
+# Create a Study dummy variabe with Age 4 as the reference level
+phon_d$S <- factor(phon_d$Study, c("TimePoint2", "TimePoint1", "TimePoint3"))
 
+# Convert the ResearchID into a factor
+phon_d$R <- as.factor(phon_d$ResearchID)
 
+# Convert the Study factor (phon_d$S) into an ordered factor.
+# This step is needed for the ti model estimate difference smooths.
+phon_d$S2 <- as.ordered(phon_d$S)
+contrasts(phon_d$S2) <- "contr.treatment"
+contrasts(phon_d$S2)
+```
 
-<div class = "infobox">
+Then I can fit the generalized additive model. The outcome `elog` is the
+empirical log-odds of looking to the phonological competitor relative to
+the unrelated image.
 
-**Box 1: A brief comment about priors.**
+```{r, eval = FALSE}
+phon_gam <- bam(
+  elog ~ S2 +
+    s(Time) + s(Time, by = S2) +
+    s(Time, R, bs = "fs", m = 1, k = 5),
+  data = phon_d)
 
-Bayesian models require prior information (“priors”). Priors are also
-commonly referred to as "prior beliefs", and Bayesian techniques are
-criticized or dismissed for smuggling subjectivity into the scientific
-enterprise. I find this unfortunate on two grounds. First, *belief*
-overstates things. As George Box said, "all models are wrong, but some
-are useful" [cite], so no part of a statistical model should be called
-a "belief" when the whole thing is a convenient fiction. That's why I
-prefer the term *prior information*. [Hat tip Gelman?] Second, other
-parts of the statistical model are also subjective: likelihood
-functions, what kind of ANOVA, what to covary, whether to transform
-measurements, whether a *p* = .07 is a "marginal" effect or no effect at
-all, and so on. This subjectivity seems reasonable, provided that we
-scientists are open about modeling decisions.
+# Save the output
+readr::write_rds(phon_gam, "./data/aim1-phon-random-smooths.rds.gz")
+```
 
-<!-- For these models, I will use weakly to moderately informative priors. -->
-<!-- For example, suppose *x* and *y* are scaled to mean 0 and standard -->
-<!-- deviation 1. A weakly informative prior for the effect of *x* on *y* -->
-<!-- might be Normal(0, 5)—a normal distribution with mean 0 and standard -->
-<!-- deviation 5. If we fit a regression model and observed an effect size -->
-<!-- of 12 SD units, our first assumption would be that something went wrong -->
-<!-- with our software. The weakly informative prior captures this level of -->
-<!-- prior information. A moderately informative prior would be Normal(0, 1). -->
-<!-- This prior information captures our disciplinary experience that effect -->
-<!-- sizes greater than ±1 relatively uncommon in child language research. A -->
-<!-- strongly informative prior for this effect might be something like -->
-<!-- Normal(.4, .1) which says that our model should be very skeptical of -->
-<!-- negative effects and of effects larger than .8. For this project, I will -->
-<!-- default to the first two levels of prior information. -->
+There is just one parametric term: `S2`. The term computes the average
+effect of each study with Age 4 serving as the reference condition (and
+as the model intercept).
 
-</div>
-
-
-
-
-
-
-
-
-
+Next come the smooth terms. `s(Time)` fits the shape of Time for the
+reference condition (Age 4). `s(Time, by = S2)` fits the difference
+smooths for Age 3 versus Age 4 and Age 5 versus Age 4. 
+`s(Time, R, bs = "fs", m = 1, k = 5)` fits a smooth for each participant
+(`R`). `bs = "fs"` means that the model should use a factor smooth
+(`fs`) basis (`bs`)---that is, a "random effect" smooth for each
+participant. The `m = 1` changes the smoothness penalty so that the
+random effects are pulled towards the group average; @Winter2016 and
+@Baayen2016 suggest using this option. `k = 5` means to use 5 knots (`k`)
+for the basis function. The other smooths use the default number of
+knots (10). I used fewer knots for the by-child smooths because of
+limited data. As a result, these smooths capture by-child variation by
+making coarse adjustments to study-level growth curves. 
