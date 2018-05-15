@@ -10,5 +10,6 @@ install_github_packages <- function() {
   devtools::install_github("tjmahr/tjmisc")
   devtools::install_github("tjmahr/printy")
   devtools::install_github("klutometis/roxygen")
+  devtools::install_github("rstudio/bookdown")
   devtools::install_github("crsh/papaja")
 }
