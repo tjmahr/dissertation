@@ -839,19 +839,19 @@ Looks to the semantic competitor
 ------------------------------------------------------------------------
 
 I asked how children's sensitivity to the semantic competitor changed
-as they grew older. As in [@RWLPaper], I only examined trials for
+as they grew older. As in @RWLPaper, I only examined trials for
 which the semantic foil and the noun were part of the same category. For
 example, I included trials with *bee*–*fly*, *shirt*–*dress*, and
 *spoon*–*pan*, but I excluded trials where the similarity was perceptual
 (*sword*–*pen*) or too abstract (*swan*–*bee*). This criterion kept
 `r n_semy` of the 24 trials.
-[Appendix \@ref(vw-experiment-items)](#vw-experiment-items) provides a
+[Appendix \@ref(vw-experiment-items)](#vw-experiment-items) provides a
 complete list of trials used.
 
 For these trials, I used the same modeling technique as the one used for
-phonological competitor: Generalized additive models with study effects
+phonological competitors: Generalized additive models with study effects
 and a time smooth, time-by-study difference smooths, and time-by-child
-random smooths. I modeled the looks from
+random smooths. I modeled the looks
 from `r opts_model$semy_start_time` to `r opts_model$semy_end_time` ms.
 This window was `r opts_model$semy_longer` ms longer than the one used
 for the phonological competitors in order to capture late-occurring
@@ -911,13 +911,6 @@ sem_tp3_prop <- (sem_tp2_est + sem_tp3_est) %>%
 sem_tp1_p <- get_para_pvalue(s2r_summary, "S2TimePoint1", digits = 3)
 sem_tp3_p <- get_para_pvalue(s2r_summary, "S2TimePoint3", digits = 3)
 
-
-## itsadug::report_stats(b2r, b2r_summary)
-# sem_smooths <- s2r_summary$s.table %>%
-#   as.data.frame() %>%
-#   setNames(c("edf", "Ref.df", "F", "p.value")) %>%
-#   tibble::rownames_to_column("term")
-
 sem_s_tp2_edf <- get_smooth_edf(s2r_summary, term = "s(Time)")
 sem_s_tp1_edf <- get_smooth_edf(s2r_summary, term = "s(Time):S2TimePoint1")
 sem_s_tp3_edf <- get_smooth_edf(s2r_summary, term = "s(Time):S2TimePoint3")
@@ -927,25 +920,7 @@ sem_s_tp1_p <- get_smooth_pvalue(s2r_summary, "s(Time):S2TimePoint1")
 sem_s_tp3_p <- get_smooth_pvalue(s2r_summary, "s(Time):S2TimePoint3")
 ```
 
-The model’s fitted values are shown in
-Figure \@ref(fig:semy-vs-unre-fits). The average empirical log-odds of
-fixating on the semantic foil versus the unrelated image increased with
-each year of the study. All three years show the same general time
-course of effects: Looks begin to increase from a baseline around 750 ms
-and peak around 1300 ms. The peaks of the curves increased as children
-grew older. The semantic foil shows a clear advantage over the unrelated
-image at age 3, which was not the case for the phonological foil at
-age 3.
-
-(ref:semy-vs-unre-fits) With each year of the study, children looked
-more to the semantic foil, relative to the unrelated image, with peak
-looking occurring after the target noun. Both figures show means for
-each year estimated by the generalized additive model. The left panel
-compares model estimates to observed means and standard errors, and the
-right panel visualizes estimated means and their 95% confidence
-intervals.
-
-```{r semy-vs-unre-fits, fig.cap = "(ref:semy-vs-unre-fits)", warning = FALSE, message = FALSE, out.width = "80%", fig.width = 6, fig.height = 4, results = "hide"}
+```{r semy-peaks, include = FALSE}
 avg <- s2r %>%
   get_predictions(
     cond = list(
@@ -955,6 +930,42 @@ avg <- s2r %>%
     print.summary = FALSE) %>%
   left_join(recode_studies, by = c("S2"))
 
+# what and when is the peak value
+peaks <- avg %>% 
+  group_by(Age) %>% 
+  filter(fit == max(fit)) %>% 
+  ungroup() %>% 
+  mutate(
+    prop = plogis(fit) %>% 
+      printy::fmt_fix_digits(2) %>% 
+      printy::fmt_leading_zero()) %>% 
+  split(.$S)
+```
+
+
+The model’s fitted values are shown in
+Figure \@ref(fig:semy-vs-unre-fits). The average empirical log-odds of
+fixating on the semantic competitor versus the unrelated word increased with
+each year of the study. All three years show the same general time
+course of effects: Looks begin to increase from a baseline around 750 ms
+and peak around 1300 ms. The peak proportions of looks to the
+semantic competitor versus the unrelated word increased as children grew
+older: The peaks were `r peaks$TimePoint1$prop` at
+`r peaks$TimePoint1$Time` ms for age 3, `r peaks$TimePoint2$prop` at
+`r peaks$TimePoint2$Time` ms for age 4, and `r peaks$TimePoint3$prop` at
+`r peaks$TimePoint3$Time` ms for age 5. Moreover, the semantic competitor
+shows a decisive advantage over the unrelated image at age 3, in contrast
+to the limited advantage of the phonological competitor at age 3.
+
+(ref:semy-vs-unre-fits) With each year of the study, children looked
+more to the semantic foil (relative to the unrelated image) with peak
+looking occurring after the target noun. Both figures show means for
+each year estimated by the generalized additive model. The left panel
+compares model estimates to observed means and standard errors, and the
+right panel visualizes estimated means and their 95% confidence
+intervals.
+
+```{r semy-vs-unre-fits, fig.cap = "(ref:semy-vs-unre-fits)", warning = FALSE, message = FALSE, out.width = "80%", fig.width = 6, fig.height = 4, results = "hide"}
 # Data for direct labeling of lines
 study_labs <- data.frame(
   Age = c("Age 3", "Age 4", "Age 5"),
@@ -998,33 +1009,30 @@ p2 <- s2r %>%
 p3 <- cowplot::plot_grid(p1, p2)
 print(p3)
 
-semy_peaks <- s2r %>%
-  get_predictions(
-    cond = list(
-      Time = unique(semy_d$Time),
-      S2 = unique(semy_d$S2)),
-    rm.ranef = TRUE,
-    print.summary = FALSE) %>%
-  group_by(S2) %>%
-  top_n(5, fit) %>%
-  summarise(
-    fit = median(fit),
-    fit_prop = plogis(fit) %>%
-      printy::fmt_fix_digits(2) %>%
-      printy::fmt_leading_zero()) %>%
-  split(.$S2)
+# semy_peaks <- s2r %>%
+#   get_predictions(
+#     cond = list(
+#       Time = unique(semy_d$Time),
+#       S2 = unique(semy_d$S2)),
+#     rm.ranef = TRUE,
+#     print.summary = FALSE) %>%
+#   group_by(S2) %>%
+#   top_n(5, fit) %>%
+#   summarise(
+#     fit = median(fit),
+#     fit_prop = plogis(fit) %>%
+#       printy::fmt_fix_digits(2) %>%
+#       printy::fmt_leading_zero()) %>%
+#   split(.$S2)
 ```
 
-The average looks to the semantic foil over the unrelated for age 4 was
+The average looks to the semantic foil over the unrelated image for age 4 was
 `r sem_tp2` emp. log-odds, `r sem_tp2_prop` proportion units. Children
 looked significantly less to the semantic foil on average at age 3,
 `r sem_tp1_elog` emp. log-odds, `r sem_tp1_prop` proportion units,
 `r sem_tp1_p`, and they looked significantly more to the semantic foil
 at age 5, `r sem_tp3_elog` emp. log-odds, `r sem_tp3_prop` proportion
-units, `r sem_tp3_p`. The peaks of the growth curves, in proportion
-units, were `r semy_peaks$TimePoint1$fit_prop` at age 3,
-`r semy_peaks$TimePoint2$fit_prop` at age 4, and
-`r semy_peaks$TimePoint3$fit_prop` at age 5.
+units, `r sem_tp3_p`. 
 
 There was a significant smooth term for time at age 4, estimated degrees
 of freedom (EDF) = `r sem_s_tp2_edf`, `r sem_s_tp2_p`.
@@ -1032,9 +1040,9 @@ Figure \@ref(fig:semy-diff-curves) visualizes the time course of the
 differences between the smooths from each study.
 
 (ref:semy-diff-curves) Differences in the average looks to the semantic
-foil versus the unrelated image between age 4 and the other ages.
+competitor versus the unrelated word between age 4 and the other ages.
 Plotted line is estimated difference and the shaded region is the 95%
-confidence interval around that difference. Blue boxes highlight regions
+confidence interval around that difference. Boxes highlight regions
 where the 95% interval excludes zero. The flat line on the left reflects
 how the shape of the growth curves remained the same from age 3 to age 4
 and only differed in average height. From age 4 to age 5, the lines
@@ -1109,30 +1117,30 @@ The shapes of the age-3 and age-4 curves did not significantly differ,
 EDF = `r sem_s_tp1_edf`, `r sem_s_tp1_p`. The age-3 curve begins to rise
 about 100 ms later, and it reaches a shallower peak value than the age-4
 curve. These two features create a nearly constant height difference
-between the two curves, and thus, the two curves show the same overall
+between the two curves, and thus the two curves show the same overall
 shape.
 
-The age-4 and age-5 smooths significantly differed, EDF = `r s_tp3_edf`,
-`r s_tp3_p`. The differences are greatest after the end of the target
+The age-4 and age-5 smooths significantly differed, EDF = `r sem_s_tp3_edf`,
+`r sem_s_tp3_p`. The differences are greatest after the end of the target
 noun, in the window from 750 to 1500 ms. The two curves start from a
 similar baseline but quickly diverge as the age-5 curve reaches a higher
 peak value. After 1500 ms, the age-5 curve turns downwards to overlap
-with the age-4 curve. Thus, children looked more to the semantic foil
+with the age-4 curve. Children looked more to the semantic foil
 relative to the unrelated image, but they were also quicker to correct
 and look away from it.
 
 **Summary.** Children became more sensitive to the semantic competitor,
-compared to the unrelated image, with each year of the study. The
+compared to the unrelated word, with each year of the study. The
 semantic foils clearly influenced looking patterns at age 3, in contrast
 to the muted effect observed for the phonological foils. The semantic
 effect also occurred when we would expect: After the end of the target
-noun, following activation of the target noun and its semantic
-neighbors. 
+noun, following the lexical activation of the target noun and its
+semantic neighbors.
 
 
 
 
-Differences in competitor sensitivity at age 3
+Child-level differences in competitor sensitivity at age 3
 ------------------------------------------------------------------------
 
 Next, I asked whether children differed reliably in their sensitivity to
@@ -1155,14 +1163,14 @@ model's intercept term represents the average participant's probability
 of correctly answering for an average item. By-child random intercepts
 capture a child's deviation from the overall average, so they estimate
 the child's *ability*. By-word and by-word-in-pair random intercepts
-capture the relative difficulty of particular items on the experiment.
+capture the relative *difficulty* of particular items on the experiment.
 The by-word-in-pair effects were necessary because four words appeared
 in more than one word pair (e.g., *juice*--*goose* and
 *juice*--*moose*). The model also controlled for the children's ages and
 receptive vocabulary scores (PPVT-4 growth scale values). These
 predictors were transformed to have mean 0 and standard deviation 1, so
 the the model's intercept reflected a child of an average age and an
-average vocabulary level. Put differently, the by-child intercepts
+average vocabulary level. Therefore, the by-child intercepts
 reflect a child's ability after controlling for age and receptive
 vocabulary.
 
