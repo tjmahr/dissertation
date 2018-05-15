@@ -72,6 +72,7 @@ coactivate
 connectionism
 connectionist
 TODO
+Saffran
  - index.Rmd
 documentclass
 bookdown
@@ -88,6 +89,7 @@ frontmatter
 pdf
 mainmatter
 cover.png
+todo
  - README.md
 gh-pages
 Yihui's
@@ -102,7 +104,7 @@ MPPaper
 shoop
 cheem
 McMurray2012
- - 10-aim1-part.Rmd
+ - 10-part-aim1.Rmd
 part-aim1
  - 12-aim1-methods.Rmd
 aim1-method
@@ -113,6 +115,8 @@ sample-vw-screen-cap2
 T60XL
 vw-experiment-items
 aim1-spaghetti
+aim1-participants
+aim1-procedure
  - 14-aim1-familiar-word-recognition.Rmd
 GelmanHill
 RethinkingBook
@@ -141,6 +145,7 @@ Gelman
 RStanARM's
 _Here
 irr
+aim1-gca-models
  - 16-aim1-lexical-competitors.Rmd
 RWLPaper
 Barr2008
@@ -172,8 +177,18 @@ beta_
 vw-experiment-items
 gca-fail
 age3-phon-by-minp
- - 90-appendix.Rmd
+Winter2016
+ - 92-app-aim1-models.Rmd
+aim1-gca-models
+lkj-prior
+Wood2017
+itsadug
+Winter2016
+Baayen2016
+ - 91-app-aim1-items.Rmd
 vw-experiment-items
+aim1-all-items
+ - 95-app-aim2-items.Rmd
 wice
 dɔg
 tɔg
@@ -195,11 +210,6 @@ tʃim
 ɹaɪs
 waɪs
 bep
-MPPaper
-RWLPaper
-Weisleder2013
-aim1-gca-models
-lkj-prior
  - 03-significance.Rmd
 Morgan2015
 Marslen-Wilson1989
@@ -262,7 +272,7 @@ dirl
  - 99-references.Rmd
 backmatter
 markboth
- - 20-aim2-part.Rmd
+ - 20-part-aim2.Rmd
 part-aim2
  - 11-aim1-introduction.Rmd
 aim1-introduction
@@ -286,6 +296,7 @@ Lany2017
 30-month-olds
 aim1-method
 aim1-discussion
+month-olds
  - 18-aim1-general-discussion.Rmd
 aim1-discussion
 McMurray2010
@@ -295,3 +306,7 @@ Rigler2015
 fernald
 Saffran
 Fernald2012
+ - 97-app-related-work.Rmd
+MPPaper
+RWLPaper
+Weisleder2013
