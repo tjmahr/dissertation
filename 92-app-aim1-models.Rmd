@@ -1,13 +1,13 @@
 Computational Details for Specific Aim 1 {#aim1-gca-models}
 ========================================================================
 
-Growth curve analysis models
+Growth curve analyses
 ------------------------------------------------------------------------
 
 The models were fit in R (vers. 3.4.3) with the RStanARM package (vers. 2.16.3).
 
 When I computed the orthogonal polynomial features for Time, they were
-rescaled so that the linear feature ranged from −.5 to .5. Under this
+scaled so that the linear feature ranged from −.5 to .5. Under this
 scaling a unit change in Time^1^ was equal to change from the start to
 the end of the analysis window. Table \@ref(tab:poly-feature-range) shows the 
 ranges of the time features.
@@ -21,7 +21,8 @@ theme_set(theme_grey())
 d_m <- readr::read_csv("./data/aim1-model-ready.csv.gz")
 
 d_m %>% 
-  distinct(ot1, ot2, ot3) %>% 
+  distinct(Time, ot1, ot2, ot3) %>% 
+  rename(`Trial window (ms)` = Time) %>% 
   tidyr::gather("Feature", "Value") %>% 
   group_by(Feature) %>% 
   summarise(Min = min(Value), Max = max(Value), Range = Max - Min) %>% 
@@ -31,16 +32,21 @@ d_m %>%
   mutate(Feature = stringr::str_replace(Feature, "ot(\\d)", "Time^\\1^")) %>% 
   knitr::kable(
     align = c("l", "r", "r", "r"),
-    caption = "Ranges of the polynomial time features")
+    caption = "Ranges of the polynomial time features.")
 ```
 
-Below is the code used to fit the model with RStanARM. It took
-about 24 hours to run the model. `ot1`, `ot2`, and `ot3` are the
-polynomial time features, `ResearchID` identifies children, and `Study`
-identifies the age/year of the study. `Primary` counts the number of
-looks to the target image at each time bin; `Others` counts looks to the
-other three images. `cbind(Primary, Others)` is used to package both
-counts together for a logistic regression.
+It took approximately 24 hours to run the model on four Monte Carlo
+sampling chains with 1000 warm-up iterations and 1000 sampling
+iterations. Warm-up iterations are discarded, so the model
+comprises 4000 samples from the posterior distribution.
+
+The code used to fit the model with RStanARM is printed below. The
+variables `ot1`, `ot2`, and `ot3` are the polynomial time features,
+`ResearchID` identifies children, and `Study` identifies the age/year of
+the study. `Primary` counts the number of looks to the target image at
+each time bin; `Others` counts looks to the other three images.
+`cbind(Primary, Others)` is used to package both counts together for a
+logistic regression.
 
 ```{r, eval = FALSE}
 library(rstanarm)
@@ -62,15 +68,14 @@ m <- stan_glmer(
 readr::write_rds(m, "./data/stan_aim1_cubic_model.rds.gz")
 ```
 
-The lines `cbind(Primary, Others) ~ (ot1 + ot2 + ot3) * Study` fits a
+The code `cbind(Primary, Others) ~ (ot1 + ot2 + ot3) * Study` fits a
 cubic growth curve for each year of the study. It uses the R language's
 formula convention to regress the looking counts onto an intercept term
 (implicitly included by default), `ot1`, `ot2`, `ot3` along with the
 interactions of the `Study` variable with the intercept, `ot1`, `ot2`,
 and `ot3`. 
 
-The line `+ (ot1 + ot2 + ot3 | ResearchID/Study)` describes the random
-effects structure of the model with the `/` indicating that data from
+The line `(ot1 + ot2 + ot3 | ResearchID/Study)` describes the random-effect structure of the model with the `/` indicating that data from
 each `Study` is nested within each `ResearchID`. Thus, for each child,
 we have a general intercept and general effects for Time^1^, Time^2^,
 and Time^3^. These child-level effects are further adjusted using
@@ -79,7 +84,7 @@ correlate. For example, I would expect that participants with low
 average looking probabilities (low intercepts) to have flatter growth
 curves (low Time^1^ effects), and this relationship would be captured by
 one of the random-effect correlation terms. All told, the random effect
-structure and point estimates for these effects were as follows:
+structure and point estimates for these effects were:
 
 ```{r, include = FALSE}
 b <- readr::read_rds("./data/stan_aim1_cubic_model.rds.gz")
@@ -107,22 +112,22 @@ centered at 0, so negative and positive effects are equally likely. The
 intercept distribution as a standard deviation of 5, and the
 coefficients have a distribution around 3. On the log-odds scale, 95%
 looking to target would be 2.94, so effects of this magnitude are easily
-included inside these distributions like Normal(0, 3) and Normal(0, 5). 
+accommodated by distributions like Normal(0 [mean], 3 [SD]) and Normal(0, 5). 
 
-For the random-effects part of the model, I used RStanARM's `decov()`
-prior which simultaneously sets a prior of the variances and
+For the random-effect part of the model, I used RStanARM's `decov()`
+prior which simultaneously sets a prior on the variances and
 correlations of the model's random effect terms. I used the default
 prior for the variance terms and applied a weakly informative LKJ(2)
-prior on the random effect correlations. Figure \@ref(fig:lkj-prior)
-shows samples from the prior distribution of models fit with the default
-LKJ(1) prior and the weakly informative LKJ(2) prior that I used. Under
-LKJ(2), extreme correlations are less plausible. The prior shifts the
-probability mass away from the ±1 edges towards the center. The
-motivation for this kind of prior was *regularization*: We give the
-model a small amount of information to nudge it away from extreme,
-degenerate values.
+prior on the random-effect correlations. Figure \@ref(fig:lkj-prior)
+shows samples from the prior distribution of two dummy models fit with
+the default LKJ(1) prior and the weakly informative LKJ(2) prior used
+here. Under LKJ(2), extreme correlations are less plausible; the prior
+shifts the probability mass away from the ±1 boundaries towards the
+center. The motivation for this kind of prior was *regularization*: I
+give the model a small amount of information to nudge it away from
+extreme, degenerate values.
 
-(ref:lkj-prior) Samples of correlation effects drawn from the LKJ(1) and
+(ref:lkj-prior) Samples of correlation effects drawn from LKJ(1) and
 LKJ(2) priors. 
 
 ```{r lkj-prior, fig.cap = "(ref:lkj-prior)", echo = FALSE, out.width = "50%", fig.height = 3, fig.width = 4, message = FALSE}
@@ -148,7 +153,7 @@ Generalized additive models
 
 To model the looks to the competitor images, I used generalized additive
 (mixed) models. The models were fit in R (vers. 3.4.3) using the mgcv R
-package [vers. 1.8.23; @Wood2017] with support from the tools in the
+package [vers. 1.8.23; @Wood2017] with support from tools in the
 itsadug R package [vers. `r packageVersion("itsadug")`; @itsadug].
 
 I will briefly walk through the code used to fit one of these models in
