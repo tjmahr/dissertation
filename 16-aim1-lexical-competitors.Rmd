@@ -87,20 +87,6 @@ n_phon <- phono_foils$strong_foil$Target %>%
 n_semy <- semy_foils$strong_foil$Target %>%
   unique() %>%
   length()
-
-# Keeping this commented out code around until it can be ported to an appendix
-
-# phono_foils$strong_foil %>%
-#   knitr::kable(caption = "Trials with strong phonological foils.")
-
-# phono_foils$weak_foil %>%
-#   knitr::kable(caption = "Trials with weak phonological foils.")
-
-# semy_foils$strong_foil %>%
-#   knitr::kable(caption = "Trials with strong semantic foils.")
-#
-# semy_foils$weak_foil %>%
-#   knitr::kable(caption = "Trials with weak semantic foils.")
 ```
 
 ```{r gam-modeling-options, echo = FALSE, results = "hide"}
@@ -794,7 +780,7 @@ ggplot(differences) +
 
 The age-3 and age-4 curves significantly differed, EDF = `r s_tp1_edf`,
 `r s_tp1_p`. In particular, the curves are significantly different
-from 500 to 1050 ms. This result confirms that the looks to the
+from 500 to 1050 ms. This result confirms that the looks to the
 phonological foil increased from age 3 and age 4 during the time window
 immediately following presentation of the noun and that children became
 more sensitive to the phonological similarities between the competitor
@@ -1026,13 +1012,13 @@ print(p3)
 #   split(.$S2)
 ```
 
-The average looks to the semantic foil over the unrelated image for age 4 was
-`r sem_tp2` emp. log-odds, `r sem_tp2_prop` proportion units. Children
-looked significantly less to the semantic foil on average at age 3,
-`r sem_tp1_elog` emp. log-odds, `r sem_tp1_prop` proportion units,
-`r sem_tp1_p`, and they looked significantly more to the semantic foil
-at age 5, `r sem_tp3_elog` emp. log-odds, `r sem_tp3_prop` proportion
-units, `r sem_tp3_p`. 
+The average looks to the semantic foil over the unrelated image for
+age 4 was `r sem_tp2` emp. log-odds, `r sem_tp2_prop` proportion units.
+Children looked significantly less to the semantic foil on average at
+age 3, `r sem_tp1_elog` emp. log-odds, `r sem_tp1_prop` proportion
+units, `r sem_tp1_p`, and they looked significantly more to the semantic
+foil at age 5, `r sem_tp3_elog` emp. log-odds, `r sem_tp3_prop`
+proportion units, `r sem_tp3_p`. 
 
 There was a significant smooth term for time at age 4, estimated degrees
 of freedom (EDF) = `r sem_s_tp2_edf`, `r sem_s_tp2_p`.
@@ -1189,14 +1175,15 @@ vocabulary.
 \end{align*}
 `r insert_html_math()`
 
-I tested whether phonemic discrimination ability at age-3 predicted
-looks to the phonological foil over the unrelated image by modifying the
-generalized additive model from earlier. In particular, I included a
-smooth term for the phonemic discrimination ability score and a "smooth
-interaction" between the smooth of time and phonemic ability. These
-smooth interaction terms are analogous to interaction terms in linear
-models. In this case, the interaction term allows the ability score to
-change the shape of the time trend. The additive model was therefore:
+I tested whether phonemic discrimination ability at age 3 predicted
+looks to the phonological competitor over the unrelated image by
+modifying the generalized additive model from earlier. In particular, I
+included a smooth term for the phonemic discrimination ability score and
+a "smooth interaction" between the smooth of time and phonemic ability.
+These smooth interaction terms are analogous to interaction terms in
+linear models. In this case, the interaction term allows the ability
+score to change the shape of the time trend. The additive model was
+therefore:
 
 `r insert_html_math()`
 \small
@@ -1315,10 +1302,11 @@ chi_phon <- format_chi_squared(comparison)
 ```
 
 The model included data from `r n_phon_minp` participants; these were
-children with eyetracking data, receptive vocabulary and phonological
+children with eyetracking data, receptive vocabulary and phonemic
 discrimination data at age 3. There was not a significant smooth effect
-for phonological discrimination ability, EDF = `r phon_minp_edf`,
-`r phon_minp_p` or for an interaction smooth between time and ability, EDF = `r phon_minp_time_edf`, `r phon_minp_time_p`.
+for discrimination ability, EDF = `r phon_minp_edf`, `r phon_minp_p` or
+for an interaction smooth between time and ability, EDF =
+`r phon_minp_time_edf`, `r phon_minp_time_p`.
 
 ```{r fit-semy-minp-model, echo = FALSE}
 semy_base <- "./data/aim1-semy-gamm-age3-base.rds.gz"
@@ -1389,7 +1377,7 @@ To test the role of receptive vocabulary, I also fit analogous models
 using growth scale value scores from the PPVT-4, a receptive vocabulary
 test. I first adjusted these scores in a regression model to control
 for--that is, to partial out the effects of---age and predicted accuracy
-on the phonological discrimination task. There was not a significant
+on the discrimination task. There was not a significant
 smooth effect for receptive vocabulary, EDF = `r phon_ppvt_edf`,
 `r phon_ppvt_p`, or a significant interaction smooth between time and
 receptive vocabulary, EDF = `r phon_ppvt_time_edf`,
@@ -1400,7 +1388,7 @@ I tested the same two predictors on looks to the semantic foil at age 3.
 These child-level factors did not show any significant parametric
 effects, smooth effects or smooth interactions with time. Thus,
 children's looks to the semantic foil were not reliably related to
-phonological discrimination or receptive vocabulary.
+phonemic discrimination or receptive vocabulary.
 
 **Summary**. These models tested whether two child-level
 factors---minimal-pair discrimination ability and receptive
@@ -1432,7 +1420,7 @@ syllable onset as the target noun---for example, the pairs
 *dress*–*drum* or *fly*–*flag*. The competitors affected word
 recognition early on, with relative looks to the phonological foils
 peaking around 800 ms. The target nouns were approximately 800 ms in duration
-at age 3 and 550--800 ms at later ages. Assuming an 150–300 ms overhead
+at age 3 and 550--800 ms at later ages. Assuming a 200–300 ms overhead
 for executing an eye movement in response to speech, this timing
 indicates that children shifted their gaze immediately, based on partial
 information. Moreover, the tendency to act on partial information became
@@ -1447,14 +1435,14 @@ their initial interpretation of the word and considered other images. At
 age 3, the average pattern showed more wiggliness, suggesting that
 children were less decisive in rejecting the phonological competitor.
 The shapes of the looking patterns at age 4 and age 5 were essentially
-the same. In particular, the older children were not any faster, on
-average, in the rejecting the phonological competitor.
+the same. In particular, the older children were not any faster in the
+rejecting the phonological competitor on average.
 
 We can interpret these findings in terms of lexical processing dynamics.
 Under this view, incoming speech activates phonetic and phonemic and
 lexical representations. The word with the strongest activation is the
 favored interpretation and the object of the child's fixations. The
-immediate looks to the phonological competitors reflect immediate
+early looks to the phonological competitors reflect immediate
 activation of lexical units: Children activate words on the basis of
 partial acoustic information. This result is a hallmark of spoken word
 recognition. The activation of phonologically plausible words becomes
@@ -1462,23 +1450,24 @@ stronger with age, as reflected in children's increasing sensitivity to
 the phonological competitors. Some mechanisms that may explain this
 developmental pattern include changes in lexical organization so that
 neighborhoods of phonologically similar words coactivate and changes in
-lexical representations so that partial information more strongly
-activates compatible words.[^connectionism]
+lexical representations so that partial information can more eagerly
+activate compatible words.[^connectionism]
 
-[^connectionism]: I am not too committed to the particular mechanisms
+[^connectionism]: I am not too committed to any particular mechanisms
   of *representation* or *organization*. Under a connectionist framework
-  with distributed representations, everything is a big mess, with a 
-  word represented as a pattern of activation over many shared units. 
-  (I think of numbers on a digital clock where eight lines turn on or 
-  off to make ten digits.) In that case, representation and organization 
-  are inseparable, and it would make more sense to talk about the 
-  strength and number of connections instead. My point here is that the 
-  lexical mechanisms involved should be ones that enable stronger 
-  immediate activations as a result of learning more words.
+  with distributed representations, for instance, a 
+  word is represented as a pattern of activation distributed over many shared 
+  units. (I think of numbers on a digital clock where seven lines turn on or 
+  off to make ten digits but exponentially more complicated.) In that
+  case, representation and organization are inseparable, and it would make
+  more sense to talk about the strength and number of connections instead.
+  My point here is that the lexical mechanisms involved should be ones
+  that enable stronger immediate activations as a result of learning more
+  words.
 
 Children at age 4 and age 5 did not show any changes in how quickly they
 rejected the phonological foil, and this results suggests that lexical
-inhibition may not change over the preschool year. The reasoning is as
+inhibition may not change over the preschool years. The reasoning is as
 follows: If children developed stronger lexical inhibition with age, so
 that lexical competition resolves more quickly, then we would expect
 activation of the phonological competitors to decay more quickly and for
@@ -1492,8 +1481,8 @@ in word recognition.
 [^decay-rates]: Granted, there might be some subtle nonlinear effect
   at play where higher peak activations require a greater degree of
   inhibition to overcome, so changes in inhibition could be a plausible
-  part of the developmental story. But then again, there is no 
-  compelling reason from the data to make that assertion.
+  part of the developmental story. But there is no compelling reason from 
+  the data to make that assertion.
 
 
 ### Late activation of semantic neighbors
@@ -1512,12 +1501,12 @@ neighborhoods with activation cascading onto semantically related words.
 As a particular word is favored, its semantic relatives receive more
 secondary activation. For example, children hear "find the shirt",
 activate the target *shirt*, but also activate other pieces of clothing
-like *dress*. The late timing of looks to the semantic competitor
+including *dress*. The late timing of looks to the semantic competitor
 therefore reflects late, secondary activation of the spoken word's semantic
-relatives. Put another way, the activation of a semantic neighbor (like
+relatives. In other words, the activation of a semantic neighbor (like
 *dress*) is greatest when the activation of the spoken word (*shirt*) is
-greatest which happens once the competition among phonological
-alternatives resolves.
+greatest which happens relatively late, once the competition among
+phonological alternatives resolves.
 
 Under this account, children hear a word, activate it, and become
 increasingly likely to fixate on the semantic competitor, compared to
@@ -1529,11 +1518,11 @@ the semantic competitor, or lack of interest in the target.
 
 Initially, I had subscribed to a confusion or lack-of-knowledge
 interpretation of the semantic competitor's advantage. That is, children
-look the semantic competitor because they do not know the difference
+look to the semantic competitor because they do not know the difference
 between the target and the semantic competitor. After all, my thinking
 went, these were young children and decisions like *bee* vs. *fly* or
 *goat* vs. *sheep* can be difficult. But there are two objections to
-that line of reasoning. First, we had piloted the set of words in
+that line of reasoning. First, our lab piloted the set of words in
 preschool classrooms, so we confirmed that children could reliably and
 correctly point to *bee* even when *fly* is an alternative. Second, we
 would a priori expect that children's confusion among words to be
