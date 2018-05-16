@@ -30,12 +30,10 @@ inferences using estimates of uncertainty (instead of using statistical
 significance—which is not a straightforward matter for mixed-effects
 models).[^2]
 
-[^2]: It is tempting to further justify this approach by comparing
-    Bayesian versus classical/frequentist statistics, but my goals in
-    using this method are simple: To estimate statistical effects and
-    quantify uncertainty about those effects. This pragmatic brand of
-    Bayesian statistics is illustrated in texts by @GelmanHill and 
-    @RethinkingBook.
+[^2]: My goals in using this method were simply to estimate model 
+    effects and quantify the uncertainty about those effects. This pragmatic, 
+    estimation-based approach of Bayesian statistics is illustrated in texts 
+    by @GelmanHill and @RethinkingBook.
 
 The eyetracking growth curves were fit using an orthogonal cubic
 polynomial function of time [a now-conventional approach; see
@@ -82,10 +80,18 @@ To study how word recognition changes over time, I modeled how the
 growth curves change over developmental time. This amounted to studying
 how the growth curve parameters changes year over year. I included
 dummy-coded indicators for Age 3, Age 4, and Age 5 and allowed these
-indicators interact with the growth curve parameters. These
-year-by-growth-curve terms captured how the shape of the growth curves
-changed each year. The model also included random effects to represent
-child-by-year effects.
+indicators to interact with the growth curve parameters. These
+year-by-growth-curve-feature terms captured how the shape of the growth
+curves changed each year. The model also included random effects to
+represent by-child and by-child-by-year effects to estimate a general
+growth curve for each child and to estimate how each child's growth
+curve changed each year.
+
+The models were fit in R (vers. 3.4.3) with the RStanARM package
+(vers. 2.16.3). [Appendix \@ref(aim1-gca-models)](#aim1-gca-models)
+contains the R code used to fit the model along with a description of 
+the model specifications represented in the model syntax.
+
 
 
 ### Growth curve features as measures of word recognition performance
@@ -137,9 +143,9 @@ Figure \@ref(fig:effects2) depicts uncertainty intervals with
 the model's average effects of each timepoint on the growth curve
 features. The intercept and linear time effects increased each year,
 confirming that children become more reliable and faster at recognizing
-words as they grow older. The peak accuracy also increased each year.
+words as they grow older. The peak probability also increased each year.
 For each effect, the change from age 3 to age 4 is approximately the
-same as the change from age 4 to age 5, as visible in
+same as the change from age 4 to age 5, as illustrated in
 Figure \@ref(fig:pairwise-effects).
 
 (ref:effects2) Uncertainty intervals for the effects of study years on
@@ -147,7 +153,7 @@ growth curve features. The intercept and peak features were converted from
 log-odds to proportions to ease interpretation.
 
 <div class="figure" style="text-align: center">
-<img src="14-aim1-familiar-word-recognition_files/figure-html/effects2-1.png" alt="(ref:effects2)" width="80%" />
+<img src="14-aim1-familiar-word-recognition_files/figure-html/effects2-1.png" alt="(ref:effects2)" width="100%" />
 <p class="caption">(\#fig:effects2)(ref:effects2)</p>
 </div>
 
@@ -156,7 +162,7 @@ study timepoints. Again, the intercept and peak features were converted
 to proportions.
 
 <div class="figure" style="text-align: center">
-<img src="14-aim1-familiar-word-recognition_files/figure-html/pairwise-effects-1.png" alt="(ref:pairwise-effects)" width="50%" /><img src="14-aim1-familiar-word-recognition_files/figure-html/pairwise-effects-2.png" alt="(ref:pairwise-effects)" width="50%" />
+<img src="14-aim1-familiar-word-recognition_files/figure-html/pairwise-effects-1.png" alt="(ref:pairwise-effects)" width="100%" />
 <p class="caption">(\#fig:pairwise-effects)(ref:pairwise-effects)</p>
 </div>
 
@@ -175,10 +181,15 @@ probability was 0.55 [0.53--0.57] at age 3,
 by 0.09 [0.07--0.10] from age 4 to age 5.
 These results numerically confirm the hypothesis that children would
 improve in their word recognition reliability, both in terms of average
-looking and in terms of peak accuracy, each year.
+looking and in terms of peak looking, each year. The changes in peak 
+probability were also rather large: children's probability fixating on
+the target increased by approximately .1 each year. These growths
+indicate the task scaled with children's development because they had
+room to improve each year.
 
 **Summary**. The average growth curve features increased year over year,
-so that children looked to the target more quickly and more reliably.
+so that children looked to the target more quickly and more reliably 
+as they grew older.
 
 
 
@@ -195,17 +206,19 @@ model and learning about the population of growth curves---allow the
 model to simulate new samples from that distribution of growth curves.
 That is, we can predict a set of growth curves for a hypothetical,
 unobserved child drawn from the same distribution as the
-195 observed children. This procedure allows
-one to explore the plausible degrees of variability in performance at
-each age.
+195 children observed in this study. This
+procedure of studying model implications by having the model generate
+new data is called *posterior predictive inference*, and in this case,
+it allows one to explore the plausible degrees of variability in
+performance at each age.
 
-Figure \@ref(fig:new-participants) shows the posterior predictions
-for 1,000 simulated participants, which demonstrates how the model
+Figure \@ref(fig:new-participants) shows the posterior predictions
+for 1,000 simulated participants, and it demonstrates how the model
 expects new participants to improve longitudinally but also exhibit
-stable individual differences over time. Figure
-\@ref(fig:new-participants-intervals) shows uncertainty intervals for
-these simulations. The model learned to predict less accurate and more
-variable performance at age 3 with improving accuracy and narrowing
+stable individual features over time. 
+Figure \@ref(fig:new-participants-intervals) shows uncertainty intervals
+for these simulations. The model learned to predict less accurate and
+more variable performance at age 3 with improving accuracy and narrowing
 variability at age 4 and age 5.
 
 (ref:new-participants) Posterior predictions for hypothetical
@@ -234,16 +247,16 @@ they grow older.
 </div>
 
 I hypothesized that children would become less variable as they grew
-older and converged on a mature level of performance. I address this
-question by inspecting the ranges of predictions for the simulated
+older and converged on a mature level of performance. To address this
+question, I inspected the ranges of predictions for the simulated
 participants. The claim that children become less variable would imply
-that the range of predictions should be narrower age 5 than for age 4
-than age 3. Figure \@ref(fig:new-ranges) depicts the range of the
-predictions, both in terms of the 90 percentile range (i.e., the range
-of the middle 90% of the data) and in terms of the 50 percentile
-(interquartile) range. The ranges of performance decrease from age 3 to
-age 4 to age 5, consistent with the hypothesized reduction in
-variability.
+that the range of predictions should be narrower for age 5 than for age 4
+and narrower for age 4 than for age 3. Figure \@ref(fig:new-ranges)
+depicts the range of the predictions, both in terms of the 90 percentile
+range (i.e., the range of the middle 90% of the data) and in terms of
+the 50 percentile (interquartile) range. The ranges of performance
+decrease from age 3 to age 4 to age 5, consistent with the hypothesized
+reduction in variability.
 
 (ref:new-ranges) Ranges of predictions for simulated participants over
 the course of a trial. The ranges are most similar during the first half
@@ -274,8 +287,8 @@ for age 5.
 growth curves from 1,000 hypothetical, unobserved participants. The
 simulated dataset showed increasing looking probability and decreasing
 variability with each year of the study. These simulations confirmed the
-hypothesis that variability would be diminish as children converge on a
-mature level of performance on this task.
+hypothesis that variability would diminish as children began to demonstrate 
+a mature degree of performance for this task.
 
 
 
@@ -299,7 +312,7 @@ intercept terms from year 1 are one set of ratings and the terms from
 years 2 and 3 provide two more sets of ratings. These three ratings are
 the "judges" used to compute the intercept's *W*. Thus, I computed five
 groups of *W* coefficients, one for each set of growth curve features:
-Intercept, Time^1^, Time^2^, Time^3^, and Peak looking probability.
+intercept, Time^1^, Time^2^, Time^3^, and peak looking probability.
 
 
 
@@ -308,7 +321,7 @@ Because I used a Bayesian model, there is a distribution of ratings and
 thus a distribution of concordance statistics. Each sample of the
 posterior distribution fits a growth curve for each child in each study,
 so each posterior sample provides a set of ratings for concordance
-coefficients. The distribution of *W*'s lets us quantify our uncertainty
+coefficients. This distribution of *W*'s lets us quantify our uncertainty
 because we can compute *W*'s for each of the 4000 samples from
 the posterior distribution.
 
@@ -321,49 +334,50 @@ meaningfully from chance.
 
 (ref:kendall-stats) Uncertainty intervals for the Kendall's coefficient
 of concordance. Random ratings provide a baseline of null *W*
-statistics. The intercept and linear time features are decisively
+statistics. The peak, intercept and linear time features are decisively
 non-null, indicating a significant degree of correspondence in
 children's relative word recognition reliability and efficiency over
-three years of study.
+the three years of the study.
 
 <div class="figure" style="text-align: center">
 <img src="14-aim1-familiar-word-recognition_files/figure-html/kendall-stats-1.png" alt="(ref:kendall-stats)" width="80%" />
 <p class="caption">(\#fig:kendall-stats)(ref:kendall-stats)</p>
 </div>
 
-We used the `kendall()` function in the irr R package
+I used the `kendall()` function in the irr R package
 [vers. 0.84; @irr] to compute concordance
 statistics. Figure \@ref(fig:kendall-stats) depicts uncertainty intervals
 for the Kendall *W*'s for these growth curve features. The 90%
-uncertainty interval of *W* statistics from random ratings
-[0.28--0.39] subsumes the intervals for the Time^2^
-effect [0.30--0.35] and the Time^3^ effect
-[0.28--0.35], indicating that these values do not
-differentiate children in a longitudinally stable way. That is, the
-Time^2^ and Time^3^ features differentiate children across studies as
-well as random numbers. Earlier, I stated that only the intercept,
-linear time, and peak features have psychologically meaningful
-interpretations and that the higher-order features of these models serve
-to capture the shape of the growth curve data. These concordance
-statistics support that assertion.
+uncertainty interval of *W* statistics from random ratings,
+[.28--.39], subsumes the intervals for the Time^2^
+effect [.30--.35] and the Time^3^ effect
+[.28--.35], indicating that these values do not
+differentiate children in a longitudinally stable way. Earlier, I
+claimed that only the intercept, linear time, and peak features have
+psychologically meaningful interpretations and that the higher-order
+time features mainly act to capture the curvature of the data. These
+null concordance statistics support that claim because the Time^2^ and
+Time^3^ features differentiate children across studies as well as random
+numbers.
 
-Concordance is strongest for the peak feature, *W* = 0.59
-[0.57--0.60] and the intercept term, *W* =
-0.58 [0.57--0.60], followed by the
-linear time term, *W* = 0.50 [0.48--0.52].
+Concordance is strongest for the peak feature, *W* = .59
+[.57--.60] and the intercept term, *W* =
+.58 [.57--.60], followed by the
+linear time term, *W* = .50 [.48--.52].
 Because these values are far removed from the statistics for random
 ratings, I conclude that there is a credible degree of correspondence
 across studies when ranking children using their peak looking
 probability, average look probability (the intercept) or their growth
 curve slope (linear time).
 
-**Summary**. Growth curve features reflected individual differences in
-word recognition performance. By using Kendall's *W* to
-measure the degree of concordance among growth curve features over
-time, I tested whether individual differences in lexical
-processing persisted over development. I found that the peak looking
-probability, average looking probability and linear time features were
-stable over time.
+**Summary**. Growth curve features measured individual differences in
+word recognition performance. By using Kendall's *W* to measure the
+degree of concordance among growth curve features over time, I tested
+whether individual differences in lexical processing persisted over
+development. I found that the peak looking probability, average looking
+probability and linear time features were stable over time. Children who
+relatively fast (or reliable) at word recognition at one age were also
+relatively fast (or reliable) at other ages too.
 
 
 
@@ -377,8 +391,8 @@ Predicting future vocabulary size
 
 
 I hypothesized that individual differences in word recognition at age 3
-will be more discriminating and predictive future language outcomes than
-differences at age 4 or age 5. To test this hypothesis, we calculated
+will be more discriminating and predictive of future language outcomes than
+differences at age 4 or age 5. To test this hypothesis, I calculated
 the correlations of growth curve features with age 5 expressive
 vocabulary size and age 4 receptive vocabulary. (The receptive test was
 not administered during the last year of the study for logistical
@@ -393,12 +407,13 @@ Figure \@ref(fig:ppvt4-gca-cors) shows analogous correlations for the
 receptive vocabulary at age 4. For all cases, the strongest correlations
 were found between the growth curve features at age 3.
 
-Growth curve peaks from age 4 correlated with age 5 vocabulary with
+Growth curve peaks from age 3 correlated with age 5 vocabulary with
 *r* = .52 [90% UI
 .50--.54], but the concurrent peaks from age 5
 showed a correlation of just *r* = .31
-[.29--.33], a difference between age 3 and
-age 5 of *r*<sub>3−5</sub> = .21
+[.29--.33], a difference between age-3 and
+age-5 correlations of *r*<sub>3−5</sub> =
+.21
 [.18--.24]. A similar pattern held for
 lexical processing efficiency values. Linear time features from age 3
 correlated with age 5 vocabulary with *r* =
@@ -418,9 +433,11 @@ concurrent correlation at age 5, *r*<sub>3−5</sub> =
 [.05--.10].
 
 (ref:evt2-gca-cors) Uncertainty intervals for the correlations of growth
-curve features at each time point with expressive vocabulary (EVT-2
-standard scores) at age 5. The bottom rows provide intervals for the
-pairwise differences in correlations between timepoints.
+curve features at each timepoint with age-5 expressive vocabulary (EVT-2
+standard scores). The bottom rows provide intervals for the pairwise
+differences in correlations between timepoints. For example, the top row
+of the left panel is the correlation between age-3 peak probability and
+age-5 expressive vocabulary.
 
 <div class="figure" style="text-align: center">
 <img src="14-aim1-familiar-word-recognition_files/figure-html/evt2-gca-cors-1.png" alt="(ref:evt2-gca-cors)" width="80%" />
@@ -432,7 +449,7 @@ age 4 receptive vocabulary, *r* = .62
 [.61--.64], and this correlation was much
 greater than the correlation observed for the age 4 growth curve peaks,
 *r*<sub>3−4</sub> = .26
-[.26]. The correlation of age 3
+[.23--.29]. The correlation for age 3
 average looking probabilities, *r* = .45
 [.44--.47], was greater than the age 4
 correlation, *r*<sub>3−4</sub> =
@@ -444,9 +461,9 @@ linear time features, *r* = .51
 [.19--.26].
 
 (ref:ppvt4-gca-cors) Uncertainty intervals for the correlations of
-growth curve features at each time point with expressive vocabulary
-(PPVT-4 standard scores) at age 4. The bottom row shows pairwise
-differences between the correlations from timepoints.
+growth curve features from age 43 and age 44 with age-4 receptive vocabulary
+(PPVT-4 standard scores). The bottom row shows pairwise
+differences between the age-3 and age-4 correlations.
 
 <div class="figure" style="text-align: center">
 <img src="14-aim1-familiar-word-recognition_files/figure-html/ppvt4-gca-cors-1.png" alt="(ref:ppvt4-gca-cors)" width="80%" />
@@ -456,7 +473,9 @@ differences between the correlations from timepoints.
 **Summary**. Although individual differences in word recognition were
 stable over time, early differences were more significant than later
 ones. The strongest predictors of future vocabulary size were the growth
-curve features from age 3.
+curve features from age 3. Of these features, correlations were strongest
+for peak looking probabilities.
+
 
 
 
@@ -481,11 +500,11 @@ particular, to simulate new participants. The range of performance
 narrowed each year, so that children were most variable at age 3 and
 least variable at age 5. This result is consistent with a model of
 development children vary widely early on and converge on a more mature
-level of performance. From this perspective, word recognition as a skill
-is like articulation where most children grow out of immature speech
-patterns by grade school. An alternative outcome would have been
-troubling: Word recognition differences that expanded with age, the
-emergence of a word recognition "gap".
+level of performance. From this perspective, word recognition is a skill
+where children "grow out" of immature and highly variable performance
+patterns. An alternative outcome would have been concerning: Word
+recognition differences that expanded with age with some children
+falling behind their peers.
 
 Although the range of individual differences decreased with age,
 individual differences did not disappear over time. When children at
@@ -494,7 +513,7 @@ of correspondence among these ratings. Children who were faster or more
 accurate at age 3 remained relatively fast or accurate at age 5. Thus,
 differences in word recognition were longitudinally stable over the
 preschool years. Extrapolating forwards in time, these differences
-likely would become smaller and smaller and become irrelevant for
+likely become smaller and smaller and become irrelevant for
 everyday listening situations. It is plausible, however, that under
 adverse listening conditions, individual differences might re-emerge and
 differentiate children's word recognition performance.
@@ -507,19 +526,19 @@ Expressive vocabulary scores at age 5, for example, were more strongly
 correlated with word recognition data collected two years earlier than
 word recognition data collected during the same week. 
 
-We can understand the predictive value of age-3 word recognition from
-two perspectives. The first interpretation is statistical. Differences
-in children's word recognition performance were greatest at age 3, so
-word recognition features at age 3 provide more variance and more
-information about the children and their future vocabulary size. The
-second interpretation is conceptual. Correlations were strongest for the
-growth curve peaks. We can think of this feature as measuring children's
-maximum word recognition certainty. A child with a peak of .5, for
-example, looked the target image half of the time when they were most
-certain about the word. Although all of the words used were chosen to be
-familiar to preschoolers, children with higher peaks knew those words
-*better*. These children had a stronger foundation for word-learning
-than children who show more uncertainty during word recognition, and as
-a result, these children had developed larger vocabularies two years
-later.
+We can understand the predictive value of age-3 word recognition
+performance from two perspectives. The first interpretation is
+statistical. Differences in children's word recognition performance were
+greatest at age 3, so word recognition features at age 3 provide more
+variance and more information about the children and their future
+vocabulary size. The second interpretation is conceptual. Correlations
+were strongest for the growth curve peaks. We can think of this feature
+as measuring children's maximum word recognition certainty. A child with
+a peak of .5, for example, looked the target image half of the time when
+they were most certain about the word. Although all of the words used
+were familiar to preschoolers, children with higher peaks
+knew those words *better*. These children had a stronger foundation for
+word-learning than children who show more uncertainty during word
+recognition, and as a result, these children had developed larger
+vocabularies two years later.
 

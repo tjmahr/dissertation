@@ -10,20 +10,23 @@ Method {#aim1-method}
 
 
 
-Participants
+Participants {#aim1-participants}
 -----------------------------------------------------------------------
 
-The participants were 28–39 months-old at Age 3, 39–52 at Age 4,
-and 51–65 at Age 5. Approximately, 180 children participated at
-Age 3, 170 at Age 4, and 160 at Age 5. Of these children,
-approximately 20 were identified by their parents as late talkers.
-Prospective families were interviewed over telephone before
-participating in the study. Children were not scheduled for testing if a
-parent reported language problems, vision problems, developmental
-delays, or an individualized education program for the child.
-Recruitment and data collection occurred at two Learning to Talk lab
-sites—one at the University of Wisconsin–Madison and the other at the
-University of Minnesota.
+The data were collected as part of a three-year longitudinal study. For
+convenience, I refer to the three years as Age 3, Age 4, and Age 5,
+although the participants on average were three months younger than
+those nominal ages. In particular, the participants
+were 28–39 months-old at Age 3, 39–52 at Age 4, and 51–65 at Age 5.
+Approximately, 180 children participated at Age 3, 170 at Age 4, and 160
+at Age 5. Of these children, approximately 20 were identified by their
+parents as late talkers. Prospective families were interviewed over
+telephone before participating in the study. Children were not scheduled
+for testing if a parent reported language problems, vision problems,
+developmental delays, or an individualized education program for the
+child. Recruitment and data collection occurred at two Learning to Talk
+lab sites—one at the University of Wisconsin–Madison and the other at
+the University of Minnesota.
 
 [^1]: [Appendix \@ref(related-work)](#related-work) describes how this 
       dissertation relates to other work from our lab.
@@ -36,8 +39,8 @@ for exclusion include: excessive missing data during eyetracking,
 experiment or technology error, developmental concerns not identified
 until later in study, or a failed hearing screening. Final sample sizes
 will depend on the measures needed for an analysis and the results from
-data screening checks. I disclose all measurements and data exclusions
-following guidelines by the Center for Open Science [@OSF_Statement].
+data screening checks. I disclose all data exclusions following
+guidelines by the Center for Open Science [@OSF_Statement].
 
                                           Year 1 (Age 3)     Year 2 (Age 4)     Year 3 (Age 5)
 ----------------------------------------- ------------------ ------------------ ------------------
@@ -64,7 +67,7 @@ and *High*: graduate degree.
 
 
 
-Procedure
+Visual World Paradigm {#aim1-procedure}
 -----------------------------------------------------------------------
 
 This experiment used a version of the Visual World Paradigm for word
@@ -93,7 +96,7 @@ the semantic foil *drum*, the phonological foil *bee*, and the unrelated
 
 
 
-Experiment Administration
+Experiment administration
 -----------------------------------------------------------------------
 
 Children participating in the study were tested over two lab visits
@@ -141,10 +144,10 @@ child's gaze was verified and the trial continued. If the experiment
 could not verify the gaze after 10 s, the trial continued. This
 procedure guaranteed that for most trials, the child was looking to the
 display before presenting the carrier phrase and that the experiment was
-ready to record the child's response to the carrier. During Year 1
-(age 3) and Year 2 (age 4), an attention-getter (e.g., *check it
+ready to record the child's response to the carrier. During year 1
+(age 3) and year 2 (age 4), an attention-getter (e.g., *check it
 out*!) played 1 s following the end of the target noun. These
-reinforcers were dropped in Year 3 (age 5) to streamline the experiment
+reinforcers were dropped in year 3 (age 5) to streamline the experiment
 for older listeners.
 
 
@@ -174,7 +177,7 @@ fluently dialect-shift between AAE and MAE. At the beginning of the lab
 visit, the examiner listened to the interactions between the child and
 caregiver in order to confirm the child's home dialect. Prompts to view
 the target image of a trial (e.g., *find the girl*) used the carrier
-phrases “find the” and “see the”. These carriers were recording in the
+phrases “find the” and “see the”. These carriers were recorded in the
 frame “find/see the egg” and cross-spliced with the target nouns to
 minimize coarticulatory cues on the determiner “the”. The stimuli were
 re-recorded after the first year of the study with the same speakers so
@@ -201,7 +204,7 @@ Data screening
 
 
 To process the eyetracking data, I first mapped gaze *x*-*y* coordinates
-onto the onscreen images. We next performed *deblinking*. I interpolated
+onto the onscreen images. I next performed *deblinking*. I interpolated
 short runs of missing gaze data (up to 150 ms) if the same image was
 fixated before and after the missing data run. Put differently, I
 classified a window of missing data as a blink if the window was brief
@@ -264,10 +267,10 @@ features for the model.
 
 
 
-Figure \@ref(fig:aim1-spaghetti) depicts the dataset following these data
-screening and preparation steps. The lines start around .25 which is
+Figure \@ref(fig:aim1-spaghetti) depicts the dataset following the data
+screening and model preparation steps. The lines start around .25 which is
 chance performance on four-alternative forced choice task. The lines
-rise as the word unfolds and peak and plateau around 1400 ms.
+rise as the word unfolds, and they peak and plateau around 1400 ms.
 
 (ref:aim1-spaghetti) Empirical word recognition growth curves from each
 year of the study. Each line represents an individual child's proportion

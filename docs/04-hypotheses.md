@@ -1,14 +1,13 @@
 
 Research Hypotheses
-===================
+========================================================================
 
 In this section, I outline the main hypotheses I plan to study for each
 specific aim. This section is intended to preregister the main analyses
-for this project, so I can cleanly identify confirmatory versus exploratory
-results.
+for this project.
 
 Specific Aim 1 (Familiar Word Recognition and Lexical Competition)
-------------------------------------------------------------------
+------------------------------------------------------------------------
 
   - Children’s accuracy and efficiency of recognizing words will improve
     each year.
@@ -23,7 +22,7 @@ Specific Aim 1 (Familiar Word Recognition and Lexical Competition)
 
   - As a consequence, individual differences in word recognition at
     age 3, for example, will be more discriminating and predictive of
-    age 5 language outcomes than differences at age 4.
+    age 5 language outcomes than differences at age 4 or age 5.
 
   - Children will become more sensitive to lexical competitors as they
     age, based on the hypothesis that children discover similarities
@@ -35,7 +34,7 @@ Specific Aim 1 (Familiar Word Recognition and Lexical Competition)
 
 
 Specific Aim 2 (Referent Selection and Mispronunciations)
----------------------------------------------------------
+------------------------------------------------------------------------
 
   - Children’s accuracy and efficiency of recognizing real words and
     fast-associating nonwords will improve each year.

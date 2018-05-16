@@ -2,7 +2,7 @@
 --- 
 title: "Development of word recognition in preschoolers"
 author: "Tristan Mahr"
-date: "2018-04-27"
+date: "2018-05-16"
 documentclass: "book"
 site: "bookdown::bookdown_site"
 github-repo: "tjmahr/dissertation"
@@ -18,7 +18,7 @@ abstract: |
   learning, we can understand how individual differences in language
   ability arise and identify strategies for closing language gaps between
   children. Word recognition—the process of mapping incoming speech sounds
-  to known or novel words—has been shown to predict later language
+  to known or novel words—has been shown in toddlers to predict later language
   outcomes. We do not know how this ability develops over time, and we do
   not know when word recognition is most predictive of future outcomes.
   This project will provide an integrated account of how word recognition
@@ -31,12 +31,16 @@ affiliation: >
   University of Wisconsin--Madison"
 school: "University of Wisconsin--Madison"
 program: "Communication Sciences and Disorders"
-chair: "Name of my committee chair"
+chair: "Jan Edwards"
 signature: 
-  - "committee member 1"
-  - "committee member 2"
+  - "Jan Edwards"
+  - "Susan Ellis Weismer"
+  - "Margarita Kaushanskaya"
+  - "Jenny Saffran"
+  - "David Kaplan"
+  - "Bob McMurray"
 acknowledgments: |
-  My acknowledgments
+  [*todo*] acknowledgments
 dedication: |
   For Penny
 lot: true
@@ -51,8 +55,7 @@ Welcome {-}
 
 <img src="assets/cover.png" width="50%" style="display: block; margin: auto;" />
 
+
 This book, when finished, will contain my dissertation research. 
 
-- Last compiled: 2018-04-27 20:38:01
-
-\mainmatter
+- Last compiled: 2018-05-16 12:56:49

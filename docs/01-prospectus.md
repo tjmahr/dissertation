@@ -1,5 +1,5 @@
 
-(PART\*) Preamble {#part-prospectus .unnumbered}
+(PART\*) Prospectus {#part-prospectus .unnumbered}
 ========================================================================
 
 Dissertation Information
@@ -8,32 +8,44 @@ Dissertation Information
 Committee Members {#committee-members .unnumbered}
 ------------------------------------------------------------------------
 
-  - Jan Edwards, primary advisor and chair, Department of Hearing and
-    Speech Sciences, University of Maryland
+  - Jan Edwards, primary advisor and chair  \
+    Department of Hearing and Speech Sciences, University of Maryland
     
-  - Susan Ellis Weismer, advisor at UW-Madison, Department of
-    Communication Sciences and Disorders
+  - Susan Ellis Weismer, advisor at UW-Madison  \
+    Department of Communication Sciences and Disorders
     
-  - Margarita Kaushanskaya, Department of Communication Sciences and
-    Disorders
+  - Margarita Kaushanskaya  \
+    Department of Communication Sciences and Disorders
     
-  - Audra Sterling, Department of Communication Sciences and Disorders
+  - Jenny Saffran   \
+    Department of Psychology
   
-  - David Kaplan, Department of Educational Psychology
+  - David Kaplan   \
+    Department of Educational Psychology
   
-  - Bob McMurray, Department of Psychological and Brain Sciences,
-    University of Iowa
+  - Bob McMurray  \
+    Department of Psychological and Brain Sciences, University of Iowa
 
 
 Planned Dissertation Format {#planned-dissertation-format .unnumbered}
 ------------------------------------------------------------------------
 
-Two thematically related manuscripts, one for each specific aim, to be
-completed by Summer 2018.
+The dissertation will consist of two thematically and empirically
+related manuscripts to be completed Summer 2018. These two manuscripts
+will serve as the main two *parts* of this book, and each of the conventional
+manuscript sections (introduction, methods, etc.) will serve as chapters
+within those two parts. 
 
-
-Et cetera
+Miscellany {.unnumbered}
 ------------------------------------------------------------------------
 
 Date of oral presentation of dissertation proposal: April 3, 2017.
+
+Web version of the dissertation:
+<https://tjmahr.github.io/dissertation/>
+
+Research compendium with data, scripts and source documents:
+<https://github.com/tjmahr/dissertation>
+
+
 

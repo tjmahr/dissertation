@@ -8,7 +8,8 @@ Familiar Word Recognition {#aim1-introduction}
 
 
 
-## Lexical Processing Dynamics
+Lexical processing dynamics
+------------------------------------------------------------------------
 
 Mature listeners recognize spoken words by continuously evaluating
 incoming speech for possible word matches. The first part of a word
@@ -23,7 +24,7 @@ effects—for instance, where *castle* activates the phonologically
 similar *candy* which in turn activates the semantically related
 *sweet*—have been demonstrated [@Marslen-Wilson1989]. Both low-level
 phonetic cues and high-level grammatical, semantic and pragmatic
-information can influence this process, but the *continuous processing
+information can influence this process, but this *continuous processing
 of multiple competing candidates* is the essential dynamic underlying
 word recognition in adults [@Magnuson2013].
 
@@ -36,24 +37,24 @@ sentence to facilitate word recognition. This information can be
 high-level grammatical or semantic cues. @Lew-Williams2007 found that
 Spanish-acquiring preschoolers can use grammatical gender on determiners
 (*el* or *la*) to anticipate the word named in a two-object word
-recognition task. @Borovsky2012 showed that children used semantic
+recognition task. @Borovsky2012 showed that children can use semantic
 information from an agent and a verb (e.g., *the dog chased*) to
 anticipate a plausible noun (*the cat*). The information can also be
-low-level phonetic variation: We found that English-acquiring toddlers
-look earlier to a named image when the coarticulatory formant cues on
-word *the* predicted the noun of the sentence, compared to tokens with
-neutral coarticulation [@Mahr2015].
+low-level phonetic variation: We found that toddlers look earlier to a
+named image when the coarticulatory formant cues on word *the* predicted
+the noun of the sentence, compared to tokens with neutral coarticulation
+[@Mahr2015].
 
 There is some evidence for lexical competition where children are
 sensitive to phonological and semantic similarities among words.
-@EllisWeismer2016 showed that toddlers (14–29 months old) looked less
+@EllisWeismer2016 showed that toddlers (14–29 months old) look less
 reliably to a named image when the onscreen competitor was a
 semantically related word or perceptually similar image. @Huang2011
 presented evidence of cascading semantic-phonological activation in
-five-year-olds such that for a target word like *log*, children looked
-more to an indirect phonological competitor like *key* (competing
+five-year-olds such that for a target word like *log*, the children
+looked more to an indirect phonological competitor like *key* (competing
 through its activation of *lock*) than they looked to an unrelated image
-like *carrot*. 
+like *carrot*.
 
 Priming studies also reveal that children are sensitive to phonological 
 similarities among words. @Mani2010 demonstrated
@@ -69,19 +70,14 @@ looked more to a target (e.g., *shoe*) compared to a distractor (*door*)
 when primed by an image (*clock*, assumed to activate *sock* which
 primed *shoe*).[^semantic-priming]
 
-[^semantic-priming]: @Arias-Trejo2009 is frequently cited as evidence
-of semantic priming effects but I find the design puzzling. Toddlers
-heard sentences like "I saw a cat... dog". During the word *dog*, two
-images (dog and door) are presented. The idea is that *cat* should prime
-looks to its semantic neighbor *dog*. I think a presentation procedure
-like "dog... I saw a cat" or a cross-modal priming procedure would be a
-clearer test of priming. 
-
-<!-- They varied the prime so that an -->
-<!-- unrelated word also acted as the prime: "I saw a swing... dog". -->
-<!-- At 18-months-old children looked to the target in both of those -->
-<!-- conditions, but at 21-months-old, the children only looked in the -->
-<!-- "dog... cat" condition.  -->
+[^semantic-priming]: @Arias-Trejo2009 is commonly cited as evidence of
+semantic priming effects. Toddlers heard sentences like "I saw a cat...
+dog". During the word *dog*, two images (dog and door) are presented.
+The idea is that *cat* should prime looks to its semantic neighbor
+*dog*. The unnatural stimulus order (a sentence followed by an isolated
+single word) and a condition effect where 18 month-olds children
+outperformed 21 month-olds make me skeptical that semantic priming is
+the most plausible explanation of those results.
 
 The above studies involved young children of different ages tested under
 different procedures, sometimes in different dialects and languages.
@@ -90,7 +86,7 @@ early word recognition demonstrates some hallmarks of adult behavior:
 Continuous processing of words, integration of information from
 different levels of representation, and the influence of similar,
 unspoken words on recognition of a word. Nevertheless, we only have a
-fragmented view of how familiar word recognition *develops* within children.
+fragmented view of how familiar word recognition develops within children.
 
 One open question is how lexical competition develops in young
 listeners. For example, how and when do phonological or semantically
@@ -98,16 +94,17 @@ similar words exert their influence on word recognition? As a guiding
 hypothesis, we can think of word learning as a gradual process where
 familiarity with a word moves from shallow receptive knowledge to deeper
 expressive knowledge. In adult listeners, words compete and they inhibit
-one another, so that a word is truly “learned” and integrated into the
-lexicon when it can influence the processing of other words [a line of
+one another, so that a word is truly “learned” (integrated into the
+lexicon) when it can influence the processing of other words [a line of
 reasoning reviewed by @Kapnoula2015]. Increasing sensitivity to similar
 sounding or similar meaning words over time would reveal that children
-more thoroughly learn familar words with age. 
+more thoroughly learn familiar words with age. 
 
 
 
 
-## Individual Differences in Word Recognition
+Individual differences in word recognition
+------------------------------------------------------------------------
 
 We have a rough understanding of the development of word recognition,
 and these gaps in knowledge matter because young children differ in
@@ -116,24 +113,24 @@ using *accuracy* (a probability of recognizing to a word) or
 *efficiency* (a reaction time or some measure of how quickly accuracy
 changes over time). These differences are consequential too, as word
 recognition differences correlate with other language measures
-concurrently, retrospectively, and prospectively.
+concurrently and prospectively.
 
 Many studies highlight the predictive power of word recognition ability.
 @MarchmanFernald2008 found that vocabulary size and lexical processing
 efficiency at age 2 jointly predicted working memory scores and
-expressive language scores at age 8. @Fernald2012 also found that late
+expressive language scores at age 8. @Fernald2012 found that late
 talkers who looked more quickly to a named word at 18 months showed
 larger gains in vocabulary by 30 months compared to late-talkers who
 looked more slowly at 18 months. @Weisleder2013 found that lexical
-processing and language input at 19 months predict vocabulary size
+processing and language input at 19 months predicted vocabulary size
 at 25 months and that lexical processing mediated the effect of
 language input---the basic idea being that rich language input builds up
-word recognition ability which in turn supports word-learning. @Lany2017
-find a direct link between lexical processing and word
+word recognition ability which in turn supports word learning. @Lany2017
+found a direct link between lexical processing and word
 learning: 18-month-olds and 30-month-olds who were faster at recognizing
 familiar words were also more accurate at recognizing novel words in a
-word-learning task. Thus, children who are better recognizing words
-learn more words over time and perform better at word recognition tasks.
+word-learning task. Thus, children who are better at recognizing words
+learn more words over time and perform better at word-learning tasks.
 
 Word recognition performance predicts future language outcomes, so we
 conclude that individual differences in word recognition are important.
@@ -144,17 +141,38 @@ recognition a skill where most children catch up and converge on a
 mature range of performance by a certain age? 
 
 
-## The Current Study
+The current study
+------------------------------------------------------------------------
 
-In the previous two sections, I pointed out two gaps in knowledge. The
-first is that we do not have a clear understanding how the mechanisms
-underlying word recognition change in childhood. We know that children
+In the previous two sections, I outlined two gaps in knowledge. The
+first is that we do not have a clear understanding of how the mechanisms
+underlying word recognition change in early childhood. We know that children
 show plenty of adult-like features of word recognition, but each of
 these findings is an isolated fact. What we need is a coherent set of
-facts that show specific features of word recognition change with age.
+facts that show how specific features of word recognition change with age.
 The second gap is that although we know that individual differences in
 word recognition are predictive of later outcomes, we do not have a
-developmental context for these individual differences.
+developmental picture of these individual differences.
+
+In this study, I tackle these two lines of research: The development of
+lexical competition effects and individual differences in familiar word
+recognition. I report the results of a longitudinal study of word
+recognition in preschoolers at age 3, age 4, and age 5. The study is
+described in detail in [Chapter \@ref(aim1-method)](#aim1-method).
+Briefly stated, this experiment tested word recognition by presenting
+prompts like "find the horse" and recording children's looks to an array
+of four images. The array of images included the target, a phonological
+competitor, a semantic competitor, and an unrelated image. In 
+[Chapter \@ref(fam-rec)](#fam-rec), I analyze the development patterns of
+familiar word recognition (looks to the target) and how individual
+differences change over time. In
+[Chapter \@ref(lex-competitors)](#lex-competitors), I study how the
+phonological and semantic competitors influence word recognition and how
+the influence of the competitors changes over time. Finally, in 
+[Chapter \@ref(aim1-discussion)](#aim1-discussion), I link these two
+lines of research together and describe both sets of results in terms of
+lexical processing dynamics.
+
 
 <!-- One first step towards understanding differences in word recognition is -->
 <!-- the following observation: The best predictor of lexical processing -->
@@ -173,23 +191,6 @@ developmental context for these individual differences.
 <!-- search. The development of word recognition requires learning similarities among words and therefore requires -->
 
 
-In this study, I tackle these two lines of research: The development of
-lexical competition effects and individual differences in familiar word
-recognition. I report the results of a longitudinal study of word
-recognition in preschoolers at age 3, age 4, and age 5. The study is described 
-in detail in [Chapter \@ref(aim1-method)](#aim1-method). This experiment
-test worded recognition by presenting prompts like "find the horse" and
-recording children's looks to an array of four images. The array of
-images included the target, a phonological competitor, a semantic
-competitor, and an unrelated image. In [Chapter \@ref(fam-rec)](#fam-rec) 
-I analyzed the development patterns of familiar word recognition and how
-individual differences change over time. In 
-[Chapter \@ref(lex-competitors)](#lex-competitors) I study how the
-phonological and semantic competitors influence word recognition and the
-influence of the competitors changes over time. Finally, in 
-[Chapter \@ref(aim1-discussion)](#aim1-discussion), I link these two
-lines of research together and describe how both sets of results in
-terms of lexical processing.
 
 
 <!-- {#aim-discussion} -->

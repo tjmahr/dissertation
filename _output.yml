@@ -17,7 +17,7 @@ bookdown::gitbook:
         <li><a href="https://github.com/rstudio/bookdown" target="blank">Created with bookdown</a></li>
         <li><a href="https://tjmahr.github.io/" target="blank">Tristan Mahr</a></li>
     download:
-      - "pdf"
+      #- "pdf"
     split_bib: false
   # https://rmarkdown.rstudio.com/html_document_format.html#markdown_extensions
   md_extensions: -tex_math_single_backslash

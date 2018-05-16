@@ -59,9 +59,9 @@ Welcome {-}
 knitr::include_graphics("assets/cover.png", dpi = NA)
 ```
 
-```{block, include = identical(knitr:::pandoc_to(), "html")}
+```{r, include = identical(knitr:::pandoc_to(), "html"), results = "asis", echo = FALSE}
+cat("
 This book, when finished, will contain my dissertation research. 
 
-- Last compiled: `r Sys.time()`
-
+- Last compiled:", format(Sys.time()))
 ```
