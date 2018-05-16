@@ -4,8 +4,8 @@ Computational Details for Specific Aim 1 {#aim1-gca-models}
 Growth curve analyses
 ------------------------------------------------------------------------
 
-The models were fit in R (vers. 3.4.3) with the RStanARM package
-(vers. 2.16.3).
+These models were fit in R [vers. 3.4.3; @R-base] with the RStanARM package
+[vers. 2.16.3; @R-rstanarm].
 
 When I computed the orthogonal polynomial features for Time, they were
 scaled so that the linear feature ranged from −.5 to .5. Under this
@@ -70,8 +70,8 @@ readr::write_rds(m, "./data/stan_aim1_cubic_model.rds.gz")
 ```
 
 The code `cbind(Primary, Others) ~ (ot1 + ot2 + ot3) * Study` fits a
-cubic growth curve for each year of the study. It uses the R language's
-formula convention to regress the looking counts onto an intercept term
+cubic growth curve for each year of the study. It uses R's
+formula syntax to regress the looking counts onto an intercept term
 (implicitly included by default), `ot1`, `ot2`, `ot3` along with the
 interactions of the `Study` variable with the intercept, `ot1`, `ot2`,
 and `ot3`. 
@@ -108,13 +108,14 @@ The model used the following priors:
 prior_summary(m)
 ```
 
-The priors for the intercept and regression coefficients are wide, very weakly
-informative normal distributions. These distributions are
+The priors for the intercept and regression coefficients are wide, very
+weakly informative normal distributions. These distributions are
 centered at 0, so negative and positive effects are equally likely. The
 intercept distribution as a standard deviation of 5, and the
 coefficients have a distribution around 3. On the log-odds scale, 95%
 looking to target would be 2.94, so effects of this magnitude are easily
-accommodated by distributions like Normal(0 [mean], 3 [SD]) and Normal(0, 5). 
+accommodated by distributions like Normal(0 [mean], 3 [SD]) and
+Normal(0, 5).
 
 For the random-effect part of the model, I used RStanARM's `decov()`
 prior which simultaneously sets a prior on the variances and
@@ -159,9 +160,9 @@ package [vers. 1.8.23; @Wood2017] with support from tools in the
 itsadug R package [vers. `r packageVersion("itsadug")`; @itsadug].
 
 I will briefly walk through the code used to fit one of these models in
-order to articulate the modeling decisions at play.
-
-I first convert the categorical variables into the right types.
+order to articulate the modeling decisions at play. I first convert
+the categorical variables into the right types, so that the model can 
+fit difference smooths.
 
 ```{r, eval = FALSE}
 # Create a Study dummy variabe with Age 4 as the reference level
@@ -177,9 +178,9 @@ contrasts(phon_d$S2) <- "contr.treatment"
 contrasts(phon_d$S2)
 ```
 
-Then I can fit the generalized additive model. The outcome `elog` is the
-empirical log-odds of looking to the phonological competitor relative to
-the unrelated image.
+I fit the generalized additive model with the code below. The outcome
+`elog` is the empirical log-odds of looking to the phonological
+competitor relative to the unrelated word.
 
 ```{r, eval = FALSE}
 phon_gam <- bam(
