@@ -1,5 +1,5 @@
 
-Related Work {#related-work}
+Related work {#related-work}
 ========================================================================
 
 In this section, I clarify relationships between this project and other
@@ -19,7 +19,7 @@ participants from year 1 of the longitudinal study (i.e., what I refer
 to as age 3) in order to enrich parts of the sample demographics. For
 this manuscript, we analyzed how vocabulary and maternal education
 predicted looking patterns, including relative looks to the semantic and
-phonological foils, but with convential polynomial growth curves. The
+phonological foils, but with conventional polynomial growth curves. The
 use of generalized additive models is an innovation I developed for my
 dissertation.
 

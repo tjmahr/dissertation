@@ -357,7 +357,7 @@ knitr::kable(
   screening_results2,
   caption = glue::glue(
     "Eyetracking data before and after data screening. For convenience, the \\
-     number of exclusions are included as Raw − Screened."),
+     number of exclusions is included as Raw − Screened."),
   booktabs = TRUE)
 ```
 

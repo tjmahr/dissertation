@@ -1,5 +1,5 @@
 
-General Discussion {#aim1-discussion}
+General discussion {#aim1-discussion}
 =======================================================================
 
 This study examined the development of familiar word recognition over
@@ -244,7 +244,7 @@ the course of the longitudinal study. From age 3 to age 4, we
 re-recorded the stimuli (with the same original speakers) so that the
 noun durations between the two different dialect versions of the
 experiment were similar. From age 4 to age 5, we also shortened the
-duration of the trials by removing attention-getting prompts (e.g, *this
+duration of the trials by removing attention-getting prompts (e.g., *this
 is fun!*) from the ends of the trials. These small procedural changes
 mean that year-to-year differences do not reflect *pure* development
 differences. It is implausible, however, that the robust

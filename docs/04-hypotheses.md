@@ -1,5 +1,5 @@
 
-Research Hypotheses
+Research hypotheses
 ========================================================================
 
 In this section, I outline the main hypotheses I plan to study for each
@@ -20,7 +20,7 @@ Specific Aim 1 (Familiar Word Recognition and Lexical Competition)
     over time, as children converge on a mature level of performance for
     this paradigm.
 
-  - As a consequence, individual differences in word recognition at
+  - Consequently, individual differences in word recognition at
     age 3, for example, will be more discriminating and predictive of
     age 5 language outcomes than differences at age 4 or age 5.
 

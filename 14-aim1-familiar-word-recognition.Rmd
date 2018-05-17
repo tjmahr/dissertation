@@ -79,7 +79,7 @@ linear features exhibit steeper frame-by-frame increases in looking
 probability.[^3]
 
 
-[^3]: The polynomial other terms are less important—or rather, they have
+[^3]: The polynomial other terms are less important—or rather, they 
     do not map as neatly onto behavioral descriptions as the accuracy
     and efficiency parameters. The primary purpose of quadratic and
     cubic terms is to ensure that the estimated growth curve adequately
@@ -1251,7 +1251,7 @@ recognition improved each year: The growth curves grew steeper, reached
 higher peaks, and increased in their overall average value each year. This
 result was unsurprising, but it was valuable because it confirmed that
 this word recognition task scaled with development. The task was simple
-enough that children could recognize words at age 3, but challenging
+enough that children could recognize words at age 3 but challenging
 enough for children's performance to improve each year.
 
 After establishing how the averages changed each year, I next asked how

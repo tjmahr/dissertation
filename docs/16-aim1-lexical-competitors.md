@@ -34,7 +34,7 @@ feature difference), *bear*–*bread* (onset difference), and
 complete list of trials used.
 
 The outcome measure for these analyses was the log-odds of fixating on
-the phonological competitor versus the unrelated word Because children
+the phonological competitor versus the unrelated word. Because children
 looked more to the target word with each year of the study, they
 necessarily looked less to the distractors each year. 
 Figure \@ref(fig:declining-phon-props) illustrates how the proportions
@@ -138,7 +138,7 @@ summed to fit a growth curve.
 Each of these basis functions is weighted by a model coefficient, but
 the individual basis functions are not a priori meaningful. Rather, it
 is the whole set of functions that approximate the curvature of the
-data---i.e., *f*(Time))---so we statistically evaluate the whole batch
+data---i.e., *f*(Time)---so we statistically evaluate the whole batch
 of coefficients simultaneously. This joint testing is similar to how one
 might test a batch of effects in an ANOVA. If the batch of effects
 jointly improve model fit, we infer that there is a significant smooth
@@ -443,7 +443,7 @@ in more than one word pair (e.g., *juice*--*goose* and
 *juice*--*moose*). The model also controlled for the children's ages and
 receptive vocabulary scores (PPVT-4 growth scale values). These
 predictors were transformed to have mean 0 and standard deviation 1, so
-the the model's intercept reflected a child of an average age and an
+the model's intercept reflected a child of an average age and an
 average vocabulary level. Therefore, the by-child intercepts
 reflect a child's ability after controlling for age and receptive
 vocabulary.
@@ -591,7 +591,7 @@ activate compatible words.[^connectionism]
   words.
 
 Children at age 4 and age 5 did not show any changes in how quickly they
-rejected the phonological foil, and this results suggests that lexical
+rejected the phonological foil, and this result suggests that lexical
 inhibition may not change over the preschool years. The reasoning is as
 follows: If children developed stronger lexical inhibition with age, so
 that lexical competition resolves more quickly, then we would expect
@@ -671,7 +671,7 @@ advantage of semantic competitor quickly decreases after its peak,
 indicating rejection of the semantic competitor.
 
 
-### Lexical competitors and individual differences
+### Lexical competitors and child-level predictors
 
 I asked whether offline child-level measures predicted sensitivity to
 the phonological and semantic competitors at age 3. I used children's

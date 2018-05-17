@@ -1,5 +1,5 @@
 
-Specific Aims
+Specific aims
 ========================================================================
 
 Individual differences in language ability are apparent as soon as

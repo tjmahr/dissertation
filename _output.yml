@@ -40,6 +40,7 @@ bookdown::html_document2:
   pandoc_args: [
     "--csl", "./assets/apa.csl",
     "--bibliography", "./assets/refs.bib",
+    "--bibliography", "./assets/packages.bib",
     "--filter", "pandoc-citeproc",
     "--filter", "./assets/fix-apa-ampersands.py"
   ]

@@ -1,4 +1,4 @@
-Computational Details for Specific Aim 1 {#aim1-gca-models}
+Computational details for Specific Aim 1 {#aim1-gca-models}
 ========================================================================
 
 Growth curve analyses
@@ -203,7 +203,7 @@ smooths for Age 3 versus Age 4 and Age 5 versus Age 4.
 `s(Time, R, bs = "fs", m = 1, k = 5)` fits a smooth for each participant
 (`R`). `bs = "fs"` means that the model should use a factor smooth
 (`fs`) basis (`bs`)---that is, a "random effect" smooth for each
-participant. The `m = 1` changes the smoothness penalty so that the
+participant. `m = 1` changes the smoothness penalty so that the
 random effects are pulled towards the group average; @Winter2016 and
 @Baayen2016 suggest using this option. `k = 5` means to use 5 knots (`k`)
 for the basis function. The other smooths use the default number of

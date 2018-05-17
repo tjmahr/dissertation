@@ -230,7 +230,7 @@ initial version of this experiment, leading to the exclusion of
 27 participants from the first year.
 
 
-Table: (\#tab:screening-counts)Eyetracking data before and after data screening. For convenience, the number of exclusions are included as Raw - Screened.
+Table: (\#tab:screening-counts)Eyetracking data before and after data screening. For convenience, the number of exclusions is included as Raw - Screened.
 
 Dataset                Study    N Children   N Blocks   N Trials
 ---------------------  ------  -----------  ---------  ---------

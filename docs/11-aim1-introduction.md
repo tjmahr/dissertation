@@ -1,5 +1,5 @@
 
-Familiar Word Recognition {#aim1-introduction}
+Familiar word recognition {#aim1-introduction}
 =======================================================================
 
 

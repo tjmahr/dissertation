@@ -2,7 +2,7 @@
 (PART\*) Prospectus {#part-prospectus .unnumbered}
 ========================================================================
 
-Dissertation Information
+Dissertation information
 ========================================================================
 
 Committee Members {#committee-members .unnumbered}
