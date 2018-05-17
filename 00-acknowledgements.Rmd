@@ -2,7 +2,97 @@
 Acknowledgements {-}
 ========================================================================
 
-[*todo*] L2T people, LL people, Psych and ILL people, internet people, 
-participants and families, my family
+*draft*
+
+[*todo*]  LL people, Psych and ILL people
+
+Thanks to my advisor and mentor Jan Edwards for recognizing my potential,
+plucking me from the Masters program, and giving me the opportunity to
+be a part of her lab. Jan changed my life by giving me a purpose and
+place to develop my skills.
+
+Working in the Learning To Talk lab was an enriching experience. I had
+the freedom to explore and experiment and to fail and learn. I entered
+as a speech pathologist and left a data scientist. Thanks to Ben Munson,
+Mary Beckman, Franzo Law II, Matt Winn, Pat Reidy, Tatiana Thonesavanh,
+Alissa Schneeberg, Kayla Kristensen, Allie Johnson, Michelle Erskine,
+and Lizzy Hill. Special thanks to Nancy and Bob Wermuth for being role
+models.
+
+Thanks to my compatriots at Waisman and elsewhere whom I commiserated with often: Pierce Edmiston,
+Courtney Venker, Ron Pomper, Martin Zettersten, Liz Premo, Phoebe Natzke, whoever happened to be around in Rita's lab on a given day.
+
+Thanks to the faculty who were always willing to advise me: Audra
+Sterling, Jenny Saffran, Courtney Seidel.
+
+Thanks to the families and children who participated in our research.
+
+Thanks to administrators who kept the machine running: Maureen Garity,
+Amanda Talbert, [Waisman's payroll person].
+
+Thanks to Bob McMurray for giving the most consequential lecture I saw
+in grad school where he explained how eyetracking data works as a
+measure of word recognition.
+
+I spend all day working in R and RStudio. I want to thank Hadley Wickham
+for fixing the language and for working in open source so that I could learn
+from his work. Thanks to other RStudio people: Yihui Xie, Kevin Ushey,
+Jenny Bryan, and Mara Averick.
+
+I've spent the last two years basically teaching myself Bayesian
+statistics. Thanks to David Kaplan for talking me through some of my
+early doubts. Thanks to the Stan team, in particular: Jonah Gabry,
+Paul-Christan Bürkner, Aki Vehtari, Ben Goodrich, and Andrew Gelman.
+Thanks to Richard McElreath for putting his course on YouTube.
+
+Thanks to Dan Mirman for writing his book.
+
+Susan for taking me under her wing.
+
+Recognition is due for the community of statistics, data science,
+psychology, and language science people that I spent idle moments with
+on Twitter. I felt a sense of community with fellow graduate students,
+post-docs and others early in their research career:
+Dave Kleinschmidt (\@kleinschmidt), Andrew MacDonald (\@polesasunder), 
+Molly Lewis (\@mollyllewis), Alexander Etz (\@AlxEtz), 
+Melissa Kline (\@melissaekline), Anne Scheel (\@annemscheel), 
+Rachael Tatman (\@rctatman), Adrienne Wood (\@adriennerwood),
+Brock Ferguson (\@brocferg), Jared Knowles (\@jknowles),
+Matti Vuorre (\@vuorre), Jake Westfall (\@CookieSci), 
+Mike DeCrescenzo (\@mikedecr), and Shoshana Vasserman (\@shoshievass).
+I don't have neat categorization for the rest of you, but I appreciated
+learning from you and getting random bits of feedback or advice from
+you:
+Matt Harris (\@Md_Harris), 
+Michael Frank (\@mcxfrank), Karl Broman (\@kwbroman), 
+Gavin Simpson (\@ucfagls), Jim Savage (\@jim_savage_), 
+Gary Lupyan (\@glupyan), Andrea Panizza (\@unsorsodicorda), 
+Erik Westlund (\@erikdbwestlund), Mike Lawrence (\@MikeLwrnc),
+and Joseph V. Casillas (\@jvcasill).
+
+Thanks to Lolo for telling me that graduate school for speech pathology is a
+good route for a linguist.
+
+I am grateful for the financial support from the NIH grants that
+supported me as a trainee or as a research assistant: NICHD
+Grant 2-T32-HD049899 to Maryellen MacDonald, NIDCD Grant R01 DC012513 to
+Susan Ellis Weismer, Jan Edwards, and Jenny R. Saffran, and NIDCD T32
+DC05359-10 to Susan Ellis Weismer.
+
+
+I grew up on dairy farm in rural Wisconsin where I was the seventh of
+ten children. That explains about 70% of who I am and who I've become.
+My mom is nothing short of a superhero. My dad has been a paragon of
+steadiness and selflessness. Thanks to Jeremy for scolding me for
+playing too many videogames when I was in middle school and making me go
+*I'm going to prove this jerk wrong by getting a job*. Thanks to Bob for
+bailing me out a few times in Madison.
+
+Thanks for my loving and patient wife Amanda. None of this would have
+been possible without your support. People sometimes thought I was a workaholic
+because I would get to my office at 8 am. But really, I just wanted to
+ride the bus with you in the morning. We started a family together! Shout out to Kiki
+and Nooper. Thanks to Tom and Nancy for being close to us.
 
 ```
+
