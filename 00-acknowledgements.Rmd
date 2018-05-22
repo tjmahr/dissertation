@@ -19,8 +19,10 @@ Alissa Schneeberg, Kayla Kristensen, Allie Johnson, Michelle Erskine,
 and Lizzy Hill. Special thanks to Nancy and Bob Wermuth for being role
 models.
 
-Thanks to my compatriots at Waisman and elsewhere whom I commiserated with often: Pierce Edmiston,
-Courtney Venker, Ron Pomper, Martin Zettersten, Liz Premo, Phoebe Natzke, whoever happened to be around in Rita's lab on a given day.
+Thanks to my compatriots at Waisman and elsewhere whom I commiserated
+with often: Pierce Edmiston, Courtney Venker, Ron Pomper, Martin
+Zettersten, Liz Premo, Janine Mathee, Phoebe Natzke, whoever happened to
+be around in Rita's lab on a given day.
 
 Thanks to the faculty who were always willing to advise me: Audra
 Sterling, Jenny Saffran, Courtney Seidel.
@@ -34,20 +36,17 @@ Thanks to Bob McMurray for giving the most consequential lecture I saw
 in grad school where he explained how eyetracking data works as a
 measure of word recognition.
 
+Susan for taking me under her wing.
+
 I spend all day working in R and RStudio. I want to thank Hadley Wickham
 for fixing the language and for working in open source so that I could learn
 from his work. Thanks to other RStudio people: Yihui Xie, Kevin Ushey,
 Jenny Bryan, and Mara Averick.
 
 I've spent the last two years basically teaching myself Bayesian
-statistics. Thanks to David Kaplan for talking me through some of my
-early doubts. Thanks to the Stan team, in particular: Jonah Gabry,
-Paul-Christan Bürkner, Aki Vehtari, Ben Goodrich, and Andrew Gelman.
-Thanks to Richard McElreath for putting his course on YouTube.
-
-Thanks to Dan Mirman for writing his book.
-
-Susan for taking me under her wing.
+statistics. Thanks to the Stan team for a great ecosystem. Thanks to
+David Kaplan for talking me through some of my early doubts. Thanks to
+Richard McElreath for putting his course on YouTube.
 
 Recognition is due for the community of statistics, data science,
 psychology, and language science people that I spent idle moments with
