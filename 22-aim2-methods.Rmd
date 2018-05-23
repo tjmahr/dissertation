@@ -22,7 +22,17 @@ trials <- c(
   "./data-raw/mp_timepoint3_trials.csv.gz") %>% 
   lapply(readr::read_csv) %>% 
   bind_rows() %>% 
-  select(TrialID, Condition = StimType, WordGroup)
+  select(TrialID, Condition = StimType, WordGroup, TargetWord, Bias_ImageAOI)
+
+# Include whether the bias image was the familiar or unfamiliar image
+bias_familiarity <- tribble(
+  ~Bias_ImageAOI, ~Bias_Fam,
+  "Target", "Familiar",
+  "Distractor", "Unfamiliar"
+)
+
+trials <- trials %>% 
+  left_join(bias_familiarity)
 
 # Load gazes
 looks <- c(
@@ -31,6 +41,10 @@ looks <- c(
   "./data-raw/mp_timepoint3_looks.csv.gz") %>% 
   lapply(readr::read_csv) %>% 
   bind_rows()
+
+check <- left_join(looks, trials) %>% 
+  distinct(Bias_ImageAOI, StimType, ImageL, GazeByAOI, GazeByImageAOI)
+
 
 looks <- left_join(looks, trials) %>%
   filter(Version == "Standard") %>% 
@@ -63,7 +77,7 @@ raw_data <- looks %>%
 Data collection for this experiment occurred during the same
 longitudinal study as the familiar word recognition experiment of Aim 1.
 Thus, this experiment used the same participants, the same stimulus
-style and preparation, and the same general experimental procedure as
+preparation and style, and the same general experimental procedure as
 those reported in detail in [Chapter \@ref(aim1-method)](#aim1-method).
 
 
@@ -131,10 +145,10 @@ Visual stimuli
 The images used in the experiment consisted of color photographs on gray
 backgrounds. As in the familiar word recognition, these images were
 piloted in two preschool classrooms. Piloting confirmed that children
-consistently used the same label for familiar objects and did not 
-consistently use the same label for the novel/unfamiliar objects. 
-
-<!-- And said either I dont know or I don't have a word for that -->
+consistently used the same label for familiar objects. For the novel
+objects, the children reported to not know a word for the object, or if
+they did name the object, they did not consistently use the same word
+for an object.
 
 
 Data screening {#aim2-screening}
@@ -242,11 +256,11 @@ n_lost_in_bad_version <- ids_by_version$`Early attention getter` %>%
   length()
 ```
 
-Table \@ref(tab:mp-screening-counts) shows the numbers of participants and
-trials excluded during each of year of the study due to unreliable data. As with the experiment
-in Aim 1, there were more children in the second year than the first
-year due to a timing error in the initial version of this experiment,
-leading to the exclusion of `r n_lost_in_bad_version` participants from the
+Table \@ref(tab:mp-screening-counts) shows the numbers of participants
+and trials excluded during each of year of the study due to unreliable
+data. There were more children in the second year than the first year
+due to a timing error in the initial version of this experiment, leading
+to the exclusion of `r n_lost_in_bad_version` participants from the
 first year.
 
 ```{r mp-screening-counts, echo = FALSE}
@@ -281,12 +295,11 @@ knitr::kable(
   booktabs = TRUE)
 ```
 
-
-
 After mapping the gaze coordinates onto the onscreen images, I performed
-data screening following the same set of steps as in Chapter X. 
-To make data quality judgments, I only considered the window from
-`r rules$screening_window[1]` to `r rules$screening_window[2]` ms after
+data screening following the same set of steps as in
+[Chapter \@ref(aim1-method)](#aim1-method). To make data quality
+judgments, I only considered the window from
+`r rules$screening_window[1]` to `r rules$screening_window[2]` ms after
 noun onset. Next, I identified a trial as *unreliable* if at least
 `r rules$missing_data_limit * 100`% of the looks were missing during the
 time window, and I excluded an entire block of trials if it had fewer
@@ -297,7 +310,7 @@ condition.
 
 ## Model prepation
 
-As in Aim 1, to prepare the data for modeling, I downsampled the data
+To prepare the data for modeling, I downsampled the data
 into `r opts_model$bin_length`-ms (`r opts_model$bin_width`-frame) bins.
 For the real word and nonword trials, I modeled looks from XX to XX ms.
 For the mispronunciation trials, I modeled looks from XX to XX ms.
@@ -350,7 +363,7 @@ of the lines for each year.
 
 ```{r aim2-spaghetti, fig.cap = "(ref:aim2-spaghetti)", echo = FALSE, message = FALSE, out.width = "100%", fig.height = 6, fig.width = 5}
 d %>% 
-  filter(0 <= Time, Time <= opts_model$end_time) %>% 
+  filter(0 <= Time, Time <= opts_model$end_time) %>%
   mutate(
     Study = convert_study_to_age(Study),
     Condition = factor(
@@ -369,7 +382,72 @@ d %>%
       fun.y = mean, geom = "line", size = 1.25) +
     facet_grid(Condition ~ Study) + 
     labs(x = constants$x_time,
-         y = constants$y_prop_target,
+         y = constants$y_prop_fam,
          caption = "One line per child. Heavy line: Average of lines.") + 
     guides(color = FALSE)
 ```
+
+Bias calcuations!
+
+
+
+```{r}
+d2 <- binned %>% 
+  left_join(trials) %>% 
+  aggregate_looks(
+    resp_def, Study + ResearchID + Bias_Fam + Condition + Time ~ GazeByImageAOI)
+
+d2_plot <- d2 %>% 
+  mutate(
+    Study = convert_study_to_age(Study),
+    Condition = factor(
+      Condition, 
+      levels = c("real", "nonsense", "MP"), 
+      labels = c("Real word", "Nonword", "Mispronunciation"))) %>% 
+  filter(0 <= Time)
+
+d2_plot %>% 
+  filter(Condition == "Real word") %>%
+  ggplot() + 
+    aes(x = Time, y = Prop) + 
+    geom_hline(yintercept = .5, color = "white", size = 2) + 
+    stat_summary(aes(color = Study, linetype = Bias_Fam), 
+                 fun.y = mean, geom = "line", size = 1.25) +
+    # facet_grid(Condition ~ .) + 
+    labs(x = constants$x_time,
+         y = constants$y_prop_fam) 
+
+last_plot() %+% filter(d2_plot, Condition == "Mispronunciation")
+last_plot() %+% filter(d2_plot, Condition == "Nonword")
+
+
+d3 <- binned %>% 
+  left_join(trials) %>% 
+  aggregate_looks(
+    resp_def, Study + ResearchID + Bias_Fam + Condition + Time ~ GazeByImageAOI)
+
+d3_plot <- d3 %>% 
+  mutate(
+    Study = convert_study_to_age(Study),
+    Condition = factor(
+      Condition, 
+      levels = c("real", "nonsense", "MP"), 
+      labels = c("Real word", "Nonword", "Mispronunciation"))) %>% 
+  filter(0 <= Time)
+
+
+
+d3_plot %>% 
+  mutate(PropTarget = ifelse(Condition == "Nonword", 1 - Prop, Prop)) %>%
+  filter(Condition != "Mispronunciation") %>% 
+  ggplot() + 
+    aes(x = Time, y = PropTarget) + 
+    geom_hline(yintercept = .5, color = "white", size = 2) + 
+    stat_summary(aes(color = Condition, linetype = Bias_Fam), 
+                 fun.y = mean, geom = "line", size = 1.25) +
+    facet_grid(. ~ Study) +
+    labs(x = constants$x_time,
+         y = constants$y_prop_target) 
+
+```
+

@@ -11,6 +11,7 @@ constants <- list(
   x_time = "Time after target onset [ms]",
   y_logodds_target = "Log-odds looking to target",
   y_prop_target = "Proportion looks to target",
+  y_prop_fam = "Proportion looks to familiar",
   y_pred_elog_phon = "Predicted emp. log-odds [Phon.]",
   y_elog_phon = "Emp. log-odds(Phon. vs. Unrelated)",
   y_elog_semy = "Emp. log-odds(Sem. vs. Unrelated)",
