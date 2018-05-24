@@ -308,20 +308,111 @@ criterion, I excluded participants who failed to provide at least
 `r rules$min_trials_per_condition` reliable trials per experimental
 condition.
 
+```{r}
+htmlent::ents$`less-than or equal to`
+```
+;
+
+Because this is a two image task, I took into account the location of
+the child's gaze at the onset of the target noun. For each trial, I
+counted the number of looks to the familiar object and the unfamiliar
+object during the first 250 ms after target noun onset
+(specifically, 0 ≤ *time* < 250 ms). If the majority of the looks
+fell to the familiar object, then the trial was a familiar-initial
+trial. An analogous rule labeled trials as unfamiliar-initial trials.
+Ties were broken by favoring the early viewed image. For example, a tie
+might be a trial with 7 frames of looking to the unfamiliar image,
+followed by 1 frame between the two images, followed by 7 frames to the
+familiar image. In this case, the unfamilar image was viewed first, so
+the trial is classified as unfamiliar-initial. If there were no looks to
+either image during that window, the trial was not classified for either
+image and it was excluded. Only 5% of trials were excluded in this way.
+
+```{r, echo = FALSE}
+counts <- data %>% 
+  distinct(Study, Condition, ResearchID, TrialID, Bias_Fam) %>% 
+  count(Study, Condition, Bias_Fam) %>% 
+  group_by(Study, Condition) %>% 
+  mutate(prop = n / sum(n)) %>% 
+  filter(is.na(Bias_Fam)) %>% 
+  ungroup()
+
+data %>% 
+  mutate(
+    Study = convert_study_to_age(Study),
+    Condition = factor(
+      Condition, 
+      levels = c("real", "nonsense", "MP"), 
+      labels = c("Real word", "Nonword", "Mispronunciation"))) %>% 
+  distinct(Study, Condition, ResearchID, TrialID, Bias_Fam) %>% 
+  count(Study, Condition, Bias_Fam) %>% 
+  tidyr::spread(Bias_Fam, n) %>% 
+  setNames(c("Study", "Condition", "Familiar-initial", 
+             "Unfamiliar-initial", "Neither (excluded)")) %>% 
+  knitr::kable()
+```
+
+
+
+
+```{r, eval = FALSE}
+# Just some scratch paper to doublecheck my bias calculation math
+x <- data %>% 
+  tjmisc::sample_n_of(1, TrialID) %>% 
+  filter(0 <= Time, Time <= 245)
+x 
+
+f <- function(x) {
+  subtrial <- x
+  subtrial$WindowDur <- nrow(subtrial) * lookr::lwl_constants$ms_per_frame
+  subtrial$LastPossible <- max(subtrial$Time)
+  
+  plyr::ddply(
+    subtrial, "GazeByImageAOI", plyr::summarize, 
+    Frames = length(Time), 
+    Weight = Frames * unique(WindowDur), 
+    FirstLook = min(Time), 
+    Earliness = unique(LastPossible) - FirstLook, 
+    Bias = Weight + Earliness)
+  
+  list(
+    Frames = Frames, Weight = Weight, FirstLook = FirstLook, 
+    LastPossible = LastPossible,
+    Earliness = Earliness, 
+    Bias = Bias)
+}
+```
+
+
+```{r, eval = FALSE}
+counts <- data %>% 
+  distinct(Study, Condition, ResearchID, TrialID, Bias_Fam) %>% 
+  count(Study, ResearchID, Condition, Bias_Fam)
+
+ggplot(counts) + 
+  aes(x = n, fill = Condition) + 
+  geom_histogram(binwidth = 1, boundary = 1) + 
+  facet_grid(Bias_Fam ~ Study) + 
+  geom_vline(xintercept = 2)
+```
+
+
+
 ## Model prepation
 
 To prepare the data for modeling, I downsampled the data
 into `r opts_model$bin_length`-ms (`r opts_model$bin_width`-frame) bins.
 For the real word and nonword trials, I modeled looks from XX to XX ms.
 For the mispronunciation trials, I modeled looks from XX to XX ms.
-Lastly, I aggregated looks by child, study, condition and time, and
-created orthogonal polynomials to use as time features for the model.
+Lastly, I aggregated looks by child, study, condition, initial fixation
+locaiton and time, and created orthogonal polynomials to use as time
+features for the model.
 
 
 
 ```{r, echo = FALSE, message = FALSE, warnings = FALSE}
 m_data <- data %>% 
-  select(Study, ResearchID, Condition, TrialID:GazeByImageAOI) %>% 
+  select(Study, ResearchID, Condition, Bias_Fam, TrialID:GazeByImageAOI) %>% 
   assign_bins(bin_width = opts_model$bin_width, Time, TrialID)
 
 # Compute time at center of each bin
@@ -340,7 +431,7 @@ binned <- m_data %>%
 
 d <- binned %>% 
   aggregate_looks(
-    resp_def, Study + ResearchID + Condition + Time ~ GazeByImageAOI)
+    resp_def, Study + ResearchID + Condition + Bias_Fam + Time ~ GazeByImageAOI)
 
 d_m <- d %>% 
   filter(0 <= Time, Time <= opts_model$end_time) %>% 
@@ -370,21 +461,23 @@ d %>%
       Condition, 
       levels = c("real", "nonsense", "MP"), 
       labels = c("Real word", "Nonword", "Mispronunciation"))) %>% 
-  filter(Condition != "Mispronunciation") %>%
+  filter(Condition != "Mispronunciation", !is.na(Bias_Fam)) %>%
   ggplot() + 
     aes(x = Time, y = Prop) + 
     geom_hline(yintercept = .5, color = "white", size = 2) + 
-    geom_line(aes(group = ResearchID), alpha = .16, color = constants$col_off_black) + 
-    stat_summary(aes(color = Study), fun.y = mean, geom = "line", size = 1.25) +
+    # geom_line(aes(group = interaction(Bias_Fam, ResearchID)), alpha = .16, color = constants$col_off_black) + 
+    geom_line(aes(group = ResearchID), data = . %>% filter(Bias_Fam == "Familiar"), 
+              alpha = .10, color = constants$col_off_black, position = position_jitter(height = .01)) +
+    stat_summary(aes(color = Study, linetype = Bias_Fam), fun.y = mean, geom = "line", size = 1.25) +
     stat_summary(
-      aes(color = Year), 
+      aes(color = Year, linetype = Bias_Fam), 
       data = . %>% mutate(Year = Study, Study = "All"), 
       fun.y = mean, geom = "line", size = 1.25) +
     facet_grid(Condition ~ Study) + 
     labs(x = constants$x_time,
          y = constants$y_prop_fam,
          caption = "One line per child. Heavy line: Average of lines.") + 
-    guides(color = FALSE)
+    guides(color = FALSE, linetype = FALSE)
 ```
 
 Bias calcuations!
