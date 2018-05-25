@@ -454,7 +454,7 @@ of the lines for each year.
 
 ```{r aim2-spaghetti, fig.cap = "(ref:aim2-spaghetti)", echo = FALSE, message = FALSE, out.width = "100%", fig.height = 6, fig.width = 5}
 d %>% 
-  filter(0 <= Time, Time <= opts_model$end_time) %>%
+  filter(250 <= Time, Time <= opts_model$end_time) %>%
   mutate(
     Study = convert_study_to_age(Study),
     Condition = factor(
@@ -466,13 +466,24 @@ d %>%
     aes(x = Time, y = Prop) + 
     geom_hline(yintercept = .5, color = "white", size = 2) + 
     # geom_line(aes(group = interaction(Bias_Fam, ResearchID)), alpha = .16, color = constants$col_off_black) + 
-    geom_line(aes(group = ResearchID), data = . %>% filter(Bias_Fam == "Familiar"), 
-              alpha = .10, color = constants$col_off_black, position = position_jitter(height = .01)) +
-    stat_summary(aes(color = Study, linetype = Bias_Fam), fun.y = mean, geom = "line", size = 1.25) +
+    geom_line(
+      aes(group = ResearchID), 
+      data = . %>% filter(Bias_Fam == "Familiar"), 
+      alpha = .10, color = constants$col_off_black, 
+      position = position_jitter(height = .015)) +
+    geom_line(
+      aes(group = ResearchID), 
+      data = . %>% filter(Bias_Fam == "Unfamiliar"), 
+      alpha = .10, color = constants$col_off_black, 
+      position = position_jitter(height = .015)) +
+    stat_summary(
+      aes(color = Study, linetype = Bias_Fam), 
+      fun.y = mean, geom = "line", size = 1.25) +
     stat_summary(
       aes(color = Year, linetype = Bias_Fam), 
       data = . %>% mutate(Year = Study, Study = "All"), 
       fun.y = mean, geom = "line", size = 1.25) +
+    # facet_grid(Condition ~ Study, switch = "y") + 
     facet_grid(Condition ~ Study) + 
     labs(x = constants$x_time,
          y = constants$y_prop_fam,
