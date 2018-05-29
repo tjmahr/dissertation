@@ -19,8 +19,8 @@ rmd_files:
   - 14-aim1-familiar-word-recognition.Rmd
   - 16-aim1-lexical-competitors.Rmd
   - 18-aim1-general-discussion.Rmd
-  # - 20-part-aim2.Rmd
-  # - 22-aim2-methods.Rmd
+  - 20-part-aim2.Rmd
+  - 22-aim2-methods.Rmd
   # - 80-scratch.Rmd
   - 90-part-appendices.Rmd
   - 91-app-aim1-items.Rmd

@@ -256,7 +256,7 @@ n_lost_in_bad_version <- ids_by_version$`Early attention getter` %>%
   length()
 ```
 
-Table \@ref(tab:mp-screening-counts) shows the numbers of participants
+Table \@ref(tab:mp-screening-counts) shows the numbers of participants
 and trials excluded during each of year of the study due to unreliable
 data. There were more children in the second year than the first year
 due to a timing error in the initial version of this experiment, leading
@@ -308,34 +308,78 @@ criterion, I excluded participants who failed to provide at least
 `r rules$min_trials_per_condition` reliable trials per experimental
 condition.
 
-```{r}
-htmlent::ents$`less-than or equal to`
-```
-;
+### Classifying trials based on initial fixation location
 
-Because this is a two image task, I took into account the location of
-the child's gaze at the onset of the target noun. For each trial, I
-counted the number of looks to the familiar object and the unfamiliar
-object during the first 250 ms after target noun onset
-(specifically, 0 ≤ *time* < 250 ms). If the majority of the looks
-fell to the familiar object, then the trial was a familiar-initial
+During preliminary visualization of the study-level growth curves, I
+observed an increasing preference for the unfamiliar image for the
+nonword condition. The growth curves showed a typical pattern of a
+baseline at noun onset followed by a quick change in height as the word
+unfolded. For the nonword condition, this baseline level moved further
+from .5 (chance with two images) with each year of the study: Children
+became more likely to fixate on the novel object at the start of these
+trials. 
+
+Because this was a two-image task, I was able to account for the
+location of the child's gaze at the onset of the target noun. For each
+trial, I counted the number of looks to the familiar object and the
+unfamiliar object during the first 250 ms after target noun onset
+(specifically, 0 ≤ *time* \< 250 ms). If the majority of the looks
+landed on the familiar object, then the trial was a familiar-initial
 trial. An analogous rule labeled trials as unfamiliar-initial trials.
-Ties were broken by favoring the early viewed image. For example, a tie
-might be a trial with 7 frames of looking to the unfamiliar image,
+Ties were broken by favoring the earlier fixated image. For example, a
+tie might be a trial with 7 frames of looking to the unfamiliar image,
 followed by 1 frame between the two images, followed by 7 frames to the
 familiar image. In this case, the unfamilar image was viewed first, so
 the trial is classified as unfamiliar-initial. If there were no looks to
 either image during that window, the trial was not classified for either
-image and it was excluded. Only 5% of trials were excluded in this way.
+image and it was excluded.
 
-```{r, echo = FALSE}
-counts <- data %>% 
+Table \@ref(mp-initial-looks-counts) shows the number and percentage for
+the trial classification. The table shows that about 5% of trials were
+excluded because the child looked to neither image during the
+first 250 ms of the noun onset. The table also shows how the percentage
+of unfamiliar-initial trials increased with each year of the study.
+Accounting for this trend was the rationale for classifying trials based
+on the initial fixation location.
+
+```{r mp-initial-looks-counts, echo = FALSE}
+l_counts <- data %>% 
   distinct(Study, Condition, ResearchID, TrialID, Bias_Fam) %>% 
-  count(Study, Condition, Bias_Fam) %>% 
+  count(ResearchID, Study, Condition, Bias_Fam) %>% 
   group_by(Study, Condition) %>% 
-  mutate(prop = n / sum(n)) %>% 
-  filter(is.na(Bias_Fam)) %>% 
-  ungroup()
+  filter(!is.na(Bias_Fam)) %>% 
+  ungroup() %>% 
+  tidyr::complete(
+    tidyr::nesting(ResearchID, Study, Condition), 
+    Bias_Fam, 
+    fill = list(n = 0)) 
+
+counts <- l_counts %>% 
+  tidyr::spread(Bias_Fam, n)
+
+# library(lme4)
+# test <- glmer(
+#   cbind(Familiar, Unfamiliar) ~ 
+#     Study * Condition + 
+#     (1 | ResearchID:Condition),
+#   counts, 
+#   family = binomial)
+# summary(test)
+
+# ggplot(l_counts) + 
+#   aes(x = Study, y = n, color = Bias_Fam) + 
+#   geom_point(position = position_jitter(width = .2), alpha = .1) + 
+#   facet_wrap("Condition") + 
+#   stat_summary()
+
+
+
+fmt_n_with_percent <- function(xs, totals, digits = 3) {
+  proportion <- round((xs / totals), digits)
+  percent <- scales::percent(proportion)
+  sprintf("%s (%s)", xs, percent)
+}
+
 
 data %>% 
   mutate(
@@ -347,9 +391,31 @@ data %>%
   distinct(Study, Condition, ResearchID, TrialID, Bias_Fam) %>% 
   count(Study, Condition, Bias_Fam) %>% 
   tidyr::spread(Bias_Fam, n) %>% 
-  setNames(c("Study", "Condition", "Familiar-initial", 
-             "Unfamiliar-initial", "Neither (excluded)")) %>% 
-  knitr::kable()
+  mutate(
+    total = (Familiar + Unfamiliar + `<NA>`),
+    Familiar = fmt_n_with_percent(Familiar, total),
+    Unfamiliar = fmt_n_with_percent(Unfamiliar, total),
+    `<NA>` = fmt_n_with_percent(`<NA>`, total),
+    Study = Study %>% 
+      as.character() %>% 
+      printy::str_replace_same_as_previous(" ")) %>% 
+  select(-total) %>% 
+    # PropNA = PropNA %>% round(3) %>% scales::percent()) %>%
+  setNames(c("Study", "Condition", "Familiar initial",
+             "Unfamiliar initial", "Neither/excluded")) %>%
+  knitr::kable(
+    align = c("l", "l", "r", "r", "r"), 
+    booktabs = TRUE,
+    caption = "Number of trials classified based on initial fixation location.")
+
+# ggplot(counts) +
+#   aes(x = Study, y = Familiar / (Familiar + Unfamiliar), color = Condition) +
+#   geom_point(position = position_jitter(width = .2), alpha = .1) +
+#   geom_line(
+#     aes(group = ResearchID),
+#     data = . %>% sample_n_of(10, ResearchID)) +
+#   facet_wrap("Condition") +
+#   stat_summary()
 ```
 
 
@@ -405,7 +471,7 @@ into `r opts_model$bin_length`-ms (`r opts_model$bin_width`-frame) bins.
 For the real word and nonword trials, I modeled looks from XX to XX ms.
 For the mispronunciation trials, I modeled looks from XX to XX ms.
 Lastly, I aggregated looks by child, study, condition, initial fixation
-locaiton and time, and created orthogonal polynomials to use as time
+location, and time, and I created orthogonal polynomials to use as time
 features for the model.
 
 
@@ -453,7 +519,7 @@ of looks to the target image over time. The heavy lines are the averages
 of the lines for each year.
 
 ```{r aim2-spaghetti, fig.cap = "(ref:aim2-spaghetti)", echo = FALSE, message = FALSE, out.width = "100%", fig.height = 6, fig.width = 5}
-d %>% 
+d_plot <- d %>% 
   filter(250 <= Time, Time <= opts_model$end_time) %>%
   mutate(
     Study = convert_study_to_age(Study),
@@ -461,11 +527,13 @@ d %>%
       Condition, 
       levels = c("real", "nonsense", "MP"), 
       labels = c("Real word", "Nonword", "Mispronunciation"))) %>% 
-  filter(Condition != "Mispronunciation", !is.na(Bias_Fam)) %>%
+  filter(!is.na(Bias_Fam)) 
+
+p1 <- d_plot %>%
+  filter(Condition == "Real word") %>% 
   ggplot() + 
     aes(x = Time, y = Prop) + 
     geom_hline(yintercept = .5, color = "white", size = 2) + 
-    # geom_line(aes(group = interaction(Bias_Fam, ResearchID)), alpha = .16, color = constants$col_off_black) + 
     geom_line(
       aes(group = ResearchID), 
       data = . %>% filter(Bias_Fam == "Familiar"), 
@@ -474,21 +542,64 @@ d %>%
     geom_line(
       aes(group = ResearchID), 
       data = . %>% filter(Bias_Fam == "Unfamiliar"), 
-      alpha = .10, color = constants$col_off_black, 
+      alpha = .1, color = constants$col_off_black, 
       position = position_jitter(height = .015)) +
     stat_summary(
-      aes(color = Study, linetype = Bias_Fam), 
+      aes(color = Study,  linetype = Bias_Fam), 
       fun.y = mean, geom = "line", size = 1.25) +
-    stat_summary(
-      aes(color = Year, linetype = Bias_Fam), 
-      data = . %>% mutate(Year = Study, Study = "All"), 
-      fun.y = mean, geom = "line", size = 1.25) +
+    # stat_summary(
+    #   aes(color = Year), 
+    #   data = . %>% mutate(Year = Study, Study = "All"), 
+    #   fun.y = mean, geom = "line", size = 1.25) +
     # facet_grid(Condition ~ Study, switch = "y") + 
-    facet_grid(Condition ~ Study) + 
+    facet_grid(Bias_Fam ~ Study) + 
     labs(x = constants$x_time,
-         y = constants$y_prop_fam,
+         y = NULL,
          caption = "One line per child. Heavy line: Average of lines.") + 
+    guides(color = FALSE, linetype = FALSE) + 
+    theme(strip.background.y = element_blank(), 
+          strip.text.y = element_blank())
+
+p2 <- d_plot %>%
+  filter(Condition == "Real word") %>% 
+  ggplot() + 
+    aes(x = Time, y = Prop) + 
+    geom_hline(yintercept = .5, color = "white", size = 2) + 
+    stat_summary(
+      aes(color = Year, linetype = Bias_Fam),
+      data = . %>% mutate(Year = Study, Study = "All"),
+      fun.y = mean, geom = "line", size = 1.25) + 
+    labs(x = constants$x_time,
+         y = constants$y_prop_fam, caption = " ") + 
     guides(color = FALSE, linetype = FALSE)
+p2
+
+
+
+
+```
+
+```{r}
+library(patchwork)
+p3 <- p2 + 
+  annotate("text", x = 340, y = .95, hjust = 0, color = "grey20",
+           label = "trials starting on familiar image", size = 3.5) +
+  annotate("text", x = 340, y = .05, hjust = 0, color = "grey20",
+           label = "trials starting on unfamiliar image", size = 3.5)
+p3 
+
+cowplot::plot_grid(p3, p1, rel_widths = c(.4, .6), rel_heights = c(1, .8))
+
+# {p3 + ggtitle("test")} + {p1 +     theme(strip.background.x = element_blank(), 
+#           strip.text.x = element_blank())}
+
+p3 + p1 + plot_layout(ncol = 2, widths = c(4, 6), height = c(4, 5))  + 
+  plot_annotation(caption = "One line per child. Heavy line: Average of lines.")
+
+
+p1 + p2 + plot_layout(ncol = 2, widths = c(6, 4))
+p1 + p2 + plot_layout(ncol = 2, widths = c(6, 4)) + plot_annotation("Child hears real word")
+
 ```
 
 Bias calcuations!
