@@ -529,6 +529,13 @@ d_plot <- d %>%
       labels = c("Real word", "Nonword", "Mispronunciation"))) %>% 
   filter(!is.na(Bias_Fam)) 
 
+rw_age_labs <- tibble::tribble(
+  ~Bias_Fam, ~Study, ~Time, ~Prop,
+  "Familiar", "Age 3", 250, .08,
+  "Familiar", "Age 4", 250, .08,
+  "Familiar", "Age 5", 250, .08
+)
+
 p1 <- d_plot %>%
   filter(Condition == "Real word") %>% 
   ggplot() + 
@@ -536,29 +543,29 @@ p1 <- d_plot %>%
     geom_hline(yintercept = .5, color = "white", size = 2) + 
     geom_line(
       aes(group = ResearchID), 
-      data = . %>% filter(Bias_Fam == "Familiar"), 
-      alpha = .10, color = constants$col_off_black, 
-      position = position_jitter(height = .015)) +
-    geom_line(
-      aes(group = ResearchID), 
-      data = . %>% filter(Bias_Fam == "Unfamiliar"), 
-      alpha = .1, color = constants$col_off_black, 
+      color = constants$col_off_black, 
+      alpha = .10, 
       position = position_jitter(height = .015)) +
     stat_summary(
       aes(color = Study,  linetype = Bias_Fam), 
       fun.y = mean, geom = "line", size = 1.25) +
-    # stat_summary(
-    #   aes(color = Year), 
-    #   data = . %>% mutate(Year = Study, Study = "All"), 
-    #   fun.y = mean, geom = "line", size = 1.25) +
-    # facet_grid(Condition ~ Study, switch = "y") + 
-    facet_grid(Bias_Fam ~ Study) + 
-    labs(x = constants$x_time,
-         y = NULL,
-         caption = "One line per child. Heavy line: Average of lines.") + 
+    geom_text(
+      aes(color = Study, label = Study),
+      data = rw_age_labs,
+      size = 4.5, 
+      hjust = 0) +
+    facet_grid(Bias_Fam ~ Study) +
+    labs(
+      x = constants$x_time,
+      y = NULL,
+      caption = "One line per child. Heavy line: Average of lines.") + 
     guides(color = FALSE, linetype = FALSE) + 
-    theme(strip.background.y = element_blank(), 
-          strip.text.y = element_blank())
+    theme(
+      strip.background.y = element_blank(), 
+      strip.text.y = element_blank(),
+      strip.background.x = element_blank(), 
+      strip.text.x = element_blank())
+p1
 
 p2 <- d_plot %>%
   filter(Condition == "Real word") %>% 
@@ -566,44 +573,51 @@ p2 <- d_plot %>%
     aes(x = Time, y = Prop) + 
     geom_hline(yintercept = .5, color = "white", size = 2) + 
     stat_summary(
-      aes(color = Year, linetype = Bias_Fam),
-      data = . %>% mutate(Year = Study, Study = "All"),
+      aes(color = Study, linetype = Bias_Fam),
       fun.y = mean, geom = "line", size = 1.25) + 
-    labs(x = constants$x_time,
-         y = constants$y_prop_fam, caption = " ") + 
-    guides(color = FALSE, linetype = FALSE)
+    labs(
+      x = constants$x_time,
+      y = constants$y_prop_fam, 
+      caption = " ") + 
+    guides(color = FALSE, linetype = FALSE) + 
+    annotate(
+      geom = "text", x = 350, y = .97, hjust = 0, color = "grey20",
+      label = "trials starting on familiar image", size = 3.25) +
+    annotate(
+      "text", x = 350, y = .05, hjust = 0, color = "grey20",
+      label = "trials starting on unfamiliar image", size = 3.25)
 p2
 
-
-
-
 ```
 
-```{r}
+```{r aim2-real-word-spaghetti, fig.width = 7, fig.height = 5, out.width = "100%"}
 library(patchwork)
-p3 <- p2 + 
-  annotate("text", x = 340, y = .95, hjust = 0, color = "grey20",
-           label = "trials starting on familiar image", size = 3.5) +
-  annotate("text", x = 340, y = .05, hjust = 0, color = "grey20",
-           label = "trials starting on unfamiliar image", size = 3.5)
-p3 
+rw_super <- p2 + p1 + 
+  plot_layout(widths = c(4, 6)) + 
+  plot_annotation("\"find the dog\": Child hears a real word")
 
-cowplot::plot_grid(p3, p1, rel_widths = c(.4, .6), rel_heights = c(1, .8))
+p1_mp <- p1 %+% (d_plot %>% filter(Condition == "Mispronunciation"))
+p2_mp <- p2 %+% (d_plot %>% filter(Condition == "Mispronunciation"))
+mp_super <- p2_mp + p1_mp + 
+  plot_layout(widths = c(4, 6)) + 
+  plot_annotation("\"find the tog\": Child hears a mispronunciation")
 
-# {p3 + ggtitle("test")} + {p1 +     theme(strip.background.x = element_blank(), 
-#           strip.text.x = element_blank())}
+p1_nw <- p1 %+% (d_plot %>% filter(Condition == "Nonword"))
+p2_nw <- p2 %+% (d_plot %>% filter(Condition == "Nonword"))
+nw_super <- p2_nw + p1_nw + 
+  plot_layout(widths = c(4, 6)) + 
+  plot_annotation("\"find the vafe\": Child hears a nonword")
 
-p3 + p1 + plot_layout(ncol = 2, widths = c(4, 6), height = c(4, 5))  + 
-  plot_annotation(caption = "One line per child. Heavy line: Average of lines.")
-
-
-p1 + p2 + plot_layout(ncol = 2, widths = c(6, 4))
-p1 + p2 + plot_layout(ncol = 2, widths = c(6, 4)) + plot_annotation("Child hears real word")
-
+rw_super
 ```
 
-Bias calcuations!
+```{r aim2-nonword-spaghetti, fig.width = 7, fig.height = 5, out.width = "100%"}
+nw_super
+```
 
+```{r aim2-mispronunciation-spaghetti, fig.width = 7, fig.height = 5, out.width = "100%"}
+mp_super
+```
 
 
 ```{r}

@@ -1,5 +1,7 @@
 # Helpers
-#7A475D,#2C9286,#E7A750
+# 7A475D,#2C9286,#E7A750
+# tufts blue "#2980B9"
+# charcoal "#2C3E50"
 
 # ---- helpers ----
 library(dplyr)
@@ -12,7 +14,7 @@ constants <- list(
   x_time = "Time after target onset [ms]",
   y_logodds_target = "Log-odds looking to target",
   y_prop_target = "Proportion looks to target",
-  y_prop_fam = "Proportion looks to familiar",
+  y_prop_fam = "Proportion looks to familiar image",
   y_pred_elog_phon = "Predicted emp. log-odds [Phon.]",
   y_elog_phon = "Emp. log-odds(Phon. vs. Unrelated)",
   y_elog_semy = "Emp. log-odds(Sem. vs. Unrelated)",
