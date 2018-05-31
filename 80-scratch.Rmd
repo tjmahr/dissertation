@@ -161,3 +161,19 @@ Some text for this block.
 
 </div>
 \End{infobox}
+
+<!-- @Borovsky2016 take -->
+<!-- this idea a step further and have found *within-child* differences in word -->
+<!-- recognition on the basis of lexical development. The authors analyzed -->
+<!-- the vocabularies in a sample of 24-month-olds and identified semantic -->
+<!-- categories that were relatively dense or sparse for each child. These -->
+<!-- children were faster to fixate on a named word when the word came from -->
+<!-- one of the child's denser semantic networks. -->
+
+
+<!-- [^haystack]: I sometimes use a needle-in-a-haystack metaphor for -->
+<!-- lexical access and say that the way to cope with finding a needle in an -->
+<!-- ever-growing haystack is to sort the hay and organize the straws. (Or -->
+<!-- better yet, make it a *self-organizing* haystack.) I might apply the -->
+<!-- reasoning backwards in time too: Early on, with just a few words, an ad -->
+<!-- hoc or inefficient organization can suffice.  -->
