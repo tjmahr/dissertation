@@ -170,7 +170,7 @@ p1 <- ggplot(lpred_lm) +
   theme(
     strip.text = element_blank(), 
     axis.text.x = element_blank(),
-    axis.title.y = element_text(colour = "white"),
+    axis.title.y = element_blank(),
     axis.ticks.x = element_blank())
 
 p2 <- ggplot(lpred_lm) + 
@@ -215,16 +215,11 @@ p3 <- ggplot(lpred_lm) +
   theme(
     strip.text = element_blank(), 
     axis.text.x = element_blank(),
-    axis.title.y = element_text(colour = "white"),
+    axis.title.y = element_blank(),
     axis.ticks.x = element_blank())
 
-cowplot::plot_grid(
-  p1, p2, p3, ncol = 1, 
-  # This fudge factor corrects how the bottom plot has an x-axis title and the
-  # others do not. Without this fix, the spacing between the grid-lines would
-  # differ between the top two and bottom plots. As far as I can tell, this
-  # doesn't distort the text sizes.
-  rel_heights = c(.32, .32, .36))
+library(patchwork)
+p1 + p2 + p3 + plot_layout(ncol = 1)
 ```
 
 
