@@ -28,8 +28,7 @@ trials <- c(
 bias_familiarity <- tribble(
   ~Bias_ImageAOI, ~Bias_Fam,
   "Target", "Familiar",
-  "Distractor", "Unfamiliar"
-)
+  "Distractor", "Unfamiliar")
 
 trials <- trials %>% 
   left_join(bias_familiarity)
@@ -97,7 +96,7 @@ there were also trials in a *nonword* condition where the label was an
 unambiguous novel word (e.g., *cheem* presented with images of a bed and
 a novel-looking pastry mixer). Each nonword was constructed to match the
 phonotactic probability of one of the mispronunciations. 
-Figure \@ref(fig:`r sample-mp-screen`) shows the screens used in two
+Figure \@ref(fig:sample-mp-screen) shows the screens used in two
 trials. 
 Importantly, within a block of trials, the child never hears
 both the correct and mispronounced forms of the same word. A child
@@ -154,7 +153,7 @@ for an object.
 Data screening {#aim2-screening}
 ------------------------------------------------------------------------
 
-```{r aim2-screening-rules}
+```{r aim2-screening-rules, include = FALSE}
 # We use the following options for data screening.
 rules <- list(
   screening_window = c(0, 2000),
@@ -308,6 +307,9 @@ criterion, I excluded participants who failed to provide at least
 `r rules$min_trials_per_condition` reliable trials per experimental
 condition.
 
+
+
+
 ### Classifying trials based on initial fixation location
 
 During preliminary visualization of the study-level growth curves, I
@@ -334,7 +336,7 @@ the trial is classified as unfamiliar-initial. If there were no looks to
 either image during that window, the trial was not classified for either
 image and it was excluded.
 
-Table \@ref(mp-initial-looks-counts) shows the number and percentage for
+Table \@ref(tab:mp-initial-looks-counts) shows the number and percentage for
 the trial classification. The table shows that about 5% of trials were
 excluded because the child looked to neither image during the
 first 250 ms of the noun onset. The table also shows how the percentage
@@ -533,8 +535,7 @@ rw_age_labs <- tibble::tribble(
   ~Bias_Fam, ~Study, ~Time, ~Prop,
   "Familiar", "Age 3", 250, .08,
   "Familiar", "Age 4", 250, .08,
-  "Familiar", "Age 5", 250, .08
-)
+  "Familiar", "Age 5", 250, .08)
 
 p1 <- d_plot %>%
   filter(Condition == "Real word") %>% 
@@ -565,7 +566,6 @@ p1 <- d_plot %>%
       strip.text.y = element_blank(),
       strip.background.x = element_blank(), 
       strip.text.x = element_blank())
-p1
 
 p2 <- d_plot %>%
   filter(Condition == "Real word") %>% 
@@ -586,11 +586,10 @@ p2 <- d_plot %>%
     annotate(
       "text", x = 350, y = .05, hjust = 0, color = "grey20",
       label = "trials starting on unfamiliar image", size = 3.25)
-p2
 
 ```
 
-```{r aim2-real-word-spaghetti, fig.width = 7, fig.height = 5, out.width = "100%"}
+```{r aim2-real-word-spaghetti, fig.width = 7, fig.height = 4.5, out.width = "100%"}
 library(patchwork)
 rw_super <- p2 + p1 + 
   plot_layout(widths = c(4, 6)) + 
@@ -611,16 +610,16 @@ nw_super <- p2_nw + p1_nw +
 rw_super
 ```
 
-```{r aim2-nonword-spaghetti, fig.width = 7, fig.height = 5, out.width = "100%"}
+```{r aim2-nonword-spaghetti, fig.width = 7, fig.height = 4.5, out.width = "100%"}
 nw_super
 ```
 
-```{r aim2-mispronunciation-spaghetti, fig.width = 7, fig.height = 5, out.width = "100%"}
+```{r aim2-mispronunciation-spaghetti, fig.width = 7, fig.height = 4.5, out.width = "100%"}
 mp_super
 ```
 
 
-```{r}
+```{r, eval = FALSE}
 d2 <- binned %>% 
   left_join(trials) %>% 
   aggregate_looks(
@@ -677,6 +676,5 @@ d3_plot %>%
     facet_grid(. ~ Study) +
     labs(x = constants$x_time,
          y = constants$y_prop_target) 
-
 ```
 
