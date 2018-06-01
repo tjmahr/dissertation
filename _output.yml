@@ -8,7 +8,7 @@ bookdown::gitbook:
     "--bibliography", "./assets/packages.bib",
     "--filter", "pandoc-citeproc",
     "--filter", "./assets/fix-apa-ampersands.py",
-    "--include-after-body", "./move-refs.html"
+    "--include-after-body", "./assets/move-refs.html"
   ]
   config:
     toc:
