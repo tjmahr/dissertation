@@ -1,0 +1,52 @@
+Referent selection {#aim2-introduction}
+=======================================================================
+
+In the earlier chapters, I studied word recognition by examining how
+young listeners recognize familar words. But these children do not know
+all the words they encounter. Thus, another avenue for studying word
+recognition is to examine how listeners respond to unfamiliar or novel
+stimuli.
+
+One productive line of research has focused on how children respond to
+mispronunciations of familar words [e.g., @Swingley2000;
+@Swingley2002]. @WhiteMorgan2008 presented toddlers with images of a
+familiar and novel object, and children heard a correct production of
+the familiar object, mispronunciations of the familiar object of varying
+severity, or an unrelated nonword. Toddlers looked less to a familiar
+word when the first segment was mispronounced. Moreover, they
+demonstrated graded sensitivity such that a 1-feature mispronunciation
+yielded more looks to a familar image than a 2-feature mispronunciation,
+and a 2-feature mispronunciation yielded more looks than a 3-feature
+one. Finally, in the nonword condition, the children looked more to the
+novel object than the familiar one, demonstrating *fast referent
+selection* as they associated novel words to novel objects in the
+moment. A similar pattern of effects was observed in the
+mispronunciation study by @MPPaper with preschoolers mapping real words
+to familiar objects, nonwords to novel objects, and equivocating about
+mispronunciations of familiar words.
+
+_add more mispronunciation findings_
+
+As with lexical competition, it is unclear how children’s responses to
+mispronunciations and novel words change over time or how individual
+differences among children change over time. For example, do children
+become more forgiving of mispronunciations as they mature and learn more
+words? We might expect so, as children become more experienced at
+listening to noisy, degraded, or misspoken speech.
+
+_add more novel word selection findings_
+
+Another open question involves the development of fast referent
+selection. At face value, we might expect a child’s ability to associate
+new words with unfamiliar objects to be more direct measure of
+word-learning capacity than a child’s ability to process known words.
+Under this assumption, we would expect individual differences in fast
+referent selection to be highly correlated with vocabulary growth. But
+@McMurray2012 propose that the same basic process is at play in both
+recognition of familiar words and fast association of nonwords. In
+experiments, the observed behaviors are the same: Children hear a word
+and direct their attention to an appropriate referent. This project can
+tackle these questions by describing how mispronunciations are processed
+as children grow older and by examining whether familiar word
+recognition and fast referent selection dissociate and which one is a
+better predictor of vocabulary growth.

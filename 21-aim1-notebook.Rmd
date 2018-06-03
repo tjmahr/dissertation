@@ -19,87 +19,195 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 knitr::opts_chunk$set(cache = TRUE)
 ```
 
-Here is the first look at the raw, unscreened, unbinned data.
+```{r}
+d <- readr::read_csv("./data/aim2-model-ready.csv.gz") %>% 
+  filter(300 <= Time) %>% 
+  select(-starts_with("ot")) %>% 
+  polypoly::poly_add_columns(
+    Time, degree = 3, scale_width = 1, prefix = "ot")
 
-```{r raw-aim2, out.width = "100%", fig.show = 'hold', fig.height = 3, fig.width = 6, message = FALSE, warning = FALSE, echo = FALSE}
-# ## Raw data visualization
+
+ggplot(d %>% filter(!is.na(Bias_Fam))) + 
+  aes(x = Time, y = Prop, color = Bias_Fam) + 
+  facet_wrap(Condition ~ Study) + 
+  geom_line(aes(group = interaction(ResearchID, Bias_Fam)), alpha = .1) + 
+  guides(color = FALSE) + 
+  scale_color_viridis_d(end = .8) + 
+  stat_smooth(method = "gam", se = FALSE)
+
+
+
+
+summary(d)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r explore-rts, eval = FALSE}
+da <- readr::read_csv("./data/aim2-screened.csv.gz")
+
+rts <- da %>% 
+  filter(
+    Bias_Fam %in% c("Familiar", "Unfamiliar"), 
+    0 <= Time,
+    GazeByImageAOI %in% c("Target", "Distractor")) %>% 
+  group_by(
+    Study, Condition, ResearchID, TrialNo, TrialID, 
+    Bias_ImageAOI, GazeByImageAOI) %>% 
+  summarise(FirstLook = min(Time)) %>% 
+  ungroup()
+
+rts %>% 
+  filter(
+    200 <= FirstLook,
+    Condition == "real",
+    Bias_ImageAOI != GazeByImageAOI,
+    Bias_ImageAOI == "Distractor") %>% 
+  ggplot() + 
+    aes(x = FirstLook) + 
+    geom_histogram() +
+    facet_wrap(Study ~ Condition)
+
+rts %>% 
+  filter(
+    200 <= FirstLook,
+    Condition == "real",
+    Bias_ImageAOI != GazeByImageAOI,
+    Bias_ImageAOI == "Distractor") %>% 
+  ggplot() + 
+    aes(x = Study, y = FirstLook) + 
+    geom_point(position = position_jitter(width = .1)) + 
+    stat_summary(color = "red") + 
+    scale_y_log10()
+
+rts %>% 
+  filter(
+    200 <= FirstLook,
+    Bias_ImageAOI != GazeByImageAOI,
+    Bias_ImageAOI == "Distractor",
+    Condition != "nonsense") %>% 
+  ggplot() + 
+    aes(y = interaction(Study, Condition), x = FirstLook) + 
+    ggridges::stat_density_ridges()  
+
+rts %>% 
+  filter(
+    200 <= FirstLook,
+    Condition == "real",
+    Bias_ImageAOI != GazeByImageAOI,
+    Bias_ImageAOI == "Distractor") %>% 
+  ggplot() + 
+    aes(x = Study, y = FirstLook) + 
+    # geom_point(position = position_jitter(width = .1)) + 
+    stat_summary(
+      aes(group = ResearchID), 
+      position = position_jitter(width = .2)) + 
+    stat_summary(color = "red") + 
+    scale_y_log10()
+
+d_test <- rts %>% 
+  filter(
+    200 <= FirstLook,
+    Condition == "real",
+    Bias_ImageAOI != GazeByImageAOI,
+    Bias_ImageAOI == "Distractor") %>% 
+  mutate(S = factor(Study, c("TimePoint2", "TimePoint1", "TimePoint3")))
+
+library(lme4)
+try <- lmer(log(FirstLook) ~ S + (1 | ResearchID/S), d_test)
+summary(try)
+
+```
+
+```{r bayes-dead-end, eval = FALSE, include = FALSE}
+# library(rstanarm)
+# try <- stan_glmer(
+#   log(FirstLook) ~ S + (1 | ResearchID/S), 
+#   d_test, 
+#   family = gaussian(),
+#   prior = normal(0, 1),
+#   chains = 1, 
+#   iter = 1000)
+# summary(try)
 # 
-# First, let's plot the overall averages from each year.
-raw_data %>% 
-  mutate(Condition = factor(Condition, c("real", "MP", "nonsense"))) %>% 
-  ggplot() + 
-    aes(x = Time, y = Prop, color = Age) + 
-    geom_hline(size = 2, color = "white", yintercept = .5) +
-    stat_summary(fun.data = mean_se) +
-    facet_wrap("Condition") + 
-    labs(
-      x = "Time after noun onset [ms]",
-      y = "Proportion looks to familar",
-      caption = "Mean ± SE") +
-    theme(
-      legend.position = c(0.95, 0.95), 
-      legend.justification = c(1, 1))
-
-raw_data %>% 
-  mutate(Condition = factor(Condition, c("real", "MP", "nonsense"))) %>% 
-  ggplot() + 
-    aes(x = Time, y = Prop, color = Age) + 
-    geom_hline(size = 2, color = "white", yintercept = .5) +
-    stat_smooth() +
-    facet_wrap("Condition") + 
-    labs(
-      x = "Time after noun onset [ms]",
-      y = "Proportion looks to familar",
-      caption = "GAM smooth") +
-    theme(
-      legend.position = c(0.95, 0.95), 
-      legend.justification = c(1, 1))
+# pp_check(try)
+# pp <- posterior_predict(try)
+# t1 <- which(d_test$Study == "TimePoint1")
+# t2 <- which(d_test$Study == "TimePoint2")
+# t3 <- which(d_test$Study == "TimePoint3")
+# 
+# bayesplot::ppc_dens_overlay(log(d_test$FirstLook[t1]), yrep = pp[, t1], size = 0.25, alpha = 0.7, trim = FALSE,
+#   bw = "nrd0", adjust = 1, kernel = "gaussian", n_dens = 1024)
+# 
+# bayesplot::ppc_dens_overlay(
+#   log(d_test$FirstLook[t1]), 
+#   yrep = pp[sample(1:500, size = 50), t1])
+# 
+# bayesplot::ppc_dens_overlay(
+#   d_test$FirstLook[t1], 
+#   yrep = exp(pp[sample(1:500, size = 50), t1])) + 
+#   ggtitle("FirstLook ~ Study + (1 | ID/Study), Age 3, Real, Unfamiliar Initial") + 
+#   labs(caption = "Density of posterior predictions")
+# ggsave("misc/bayes-rts-real-age3-unfam.png")
+# 
+# bayesplot::ppc_dens_overlay(
+#   d_test$FirstLook[t2], 
+#   yrep = exp(pp[sample(1:500, size = 50), t2])) + 
+#   ggtitle("FirstLook ~ Study + (1 | ID/Study), Age 4, Real, Unfamiliar Initial") + 
+#   labs(caption = "Density of posterior predictions")
+# ggsave("misc/bayes-rts-real-age4-unfam.png")
+# 
+# 
+# bayesplot::ppc_dens_overlay(
+#   d_test$FirstLook[t3], 
+#   yrep = exp(pp[sample(1:500, size = 50), t3])) + 
+#   ggtitle("FirstLook ~ Study + (1 | ID/Study), Age 5, Real, Unfamiliar Initial") + 
+#   labs(caption = "Density of posterior predictions")
+# ggsave("misc/bayes-rts-real-age5-unfam.png")
+# 
 ```
 
-Observations:
-
-  - Probability of looking to familiar image given real word increased in
-    year 3. Kind of unexpected that they could improve noticeably on this simple
-    two-image task.
-  - Probability of looking to unfamiliar given a nonword increases each year.
-  - Probability of looking to familiar given a mispronunciation increased
-  - 250 to 1500 looks like a reasonable analysis window.
-  - Before the onset of the target word, there appears to be some looking
-    preferences—maybe—for the familiar at timepoint 1 and unfamiliar
-    in timepoint 3.
-  - The "peak" growth curve feature will need to be flipped for the nonword
-    trials.
 
 
 
 
-```{r clean-aim2, out.width = "100%", fig.show = 'hold', fig.height = 3, fig.width = 6, message = FALSE, warning = FALSE, echo = FALSE}
-# Plot the data after partial data screening. We include the curves from the
-# earlier plots in gray.
 
-agg_data <- data %>% 
-  aggregate_looks(
-    resp_def, Study + ResearchID + Condition + Time ~ GazeByImageAOI)
 
-agg_data %>% 
-  mutate(Condition = factor(Condition, c("real", "MP", "nonsense"))) %>% 
-  ggplot() + 
-    aes(x = Time, y = Prop, color = Study) + 
-    geom_hline(size = 2, color = "white", yintercept = .5) +
-    stat_smooth(
-      aes(group = Study), 
-      data = raw_data %>% 
-        mutate(Condition = factor(Condition, c("real", "MP", "nonsense"))), 
-      color = "gray70", se = FALSE) +
-    stat_smooth(se = FALSE) +
-    facet_wrap("Condition") + 
-    labs(
-      x = "Time after noun onset [ms]",
-      y = "Mean prop. looks to familar",
-      caption = "GAM smooth. Screened data drawn over raw data (gray).") +
-    guides(colour = guide_legend(override.aes = list(fill = NA))) + 
-    theme(
-        legend.position = c(0.95, 0.95), 
-        legend.justification = c(1, 1))
-```
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Observations: -->
+
+<!--   - Probability of looking to familiar image given real word increased in -->
+<!--     year 3. Kind of unexpected that they could improve noticeably on this simple -->
+<!--     two-image task. -->
+<!--   - Probability of looking to unfamiliar given a nonword increases each year. -->
+<!--   - Probability of looking to familiar given a mispronunciation increased -->
+<!--   - 250 to 1500 looks like a reasonable analysis window. -->
+<!--   - Before the onset of the target word, there appears to be some looking -->
+<!--     preferences—maybe—for the familiar at timepoint 1 and unfamiliar -->
+<!--     in timepoint 3. -->
+<!--   - The "peak" growth curve feature will need to be flipped for the nonword -->
+<!--     trials. -->

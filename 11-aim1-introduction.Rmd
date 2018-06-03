@@ -1,19 +1,6 @@
 Familiar word recognition {#aim1-introduction}
 =======================================================================
 
-```{r include = FALSE}
-knitr::read_chunk("./helpers.R")
-if (interactive()) source("./helpers.R")
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
-```
-
-```{r helpers, message = FALSE, warning = FALSE}
-```
-
-```{r include = FALSE}
-knitr::opts_chunk$set(cache = TRUE)
-```
-
 Lexical processing dynamics
 ------------------------------------------------------------------------
 
