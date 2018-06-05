@@ -21,28 +21,77 @@ knitr::opts_chunk$set(cache = TRUE)
 
 ```{r}
 d <- readr::read_csv("./data/aim2-model-ready.csv.gz") %>% 
+  filter(!is.na(Bias_Fam)) %>% 
   filter(300 <= Time) %>% 
   select(-starts_with("ot")) %>% 
   polypoly::poly_add_columns(
     Time, degree = 3, scale_width = 1, prefix = "ot")
 
-
-ggplot(d %>% filter(!is.na(Bias_Fam))) + 
+ggplot(d) + 
   aes(x = Time, y = Prop, color = Bias_Fam) + 
   facet_wrap(Condition ~ Study) + 
-  geom_line(aes(group = interaction(ResearchID, Bias_Fam)), alpha = .1) + 
+  geom_line(aes(group = interaction(ResearchID, Bias_Fam)), alpha = .1) +
   guides(color = FALSE) + 
   scale_color_viridis_d(end = .8) + 
-  stat_smooth(method = "gam", se = FALSE)
-
-
-
+  stat_smooth(method = "gam", formula = y ~ s(x), se = FALSE)
 
 summary(d)
 ```
 
 
 
+```{r}
+library(lme4)
+d_r_ui <- d %>% 
+  filter(Condition == "real", Bias_Fam == "Unfamiliar") %>% 
+  mutate(elog = empirical_logit(Target, Distractor))
+
+
+d_bias_target <- tibble::tribble(
+  ~Condition, ~Bias_Fam, ~Bias_Target,
+  "nonsense", "Familiar", "Distractor",
+  "nonsense", "Unfamiliar", "Target",
+  "real", "Familiar", "Target",
+  "real", "Unfamiliar", "Distractor")
+
+d_r_nw_vs <- d %>% 
+  select(-Primary, -.response_def, -Prop, -PropSE) %>% 
+  filter(Condition != "MP") %>% 
+  rename(Unfamiliar = Distractor, Familiar = Target) %>% 
+  mutate(
+    Target = ifelse(Condition == "nonsense", Unfamiliar, Familiar), 
+    Distractor = ifelse(Condition == "nonsense", Familiar, Unfamiliar)) %>% 
+  left_join(d_bias_target) %>% 
+  mutate(elog = empirical_logit(Target, Distractor))
+
+d_r_nw_dis <- d_r_nw_vs %>% 
+  filter(Bias_Target == "Distractor")
+
+library(lme4)
+m_e <- lmer(
+  elog ~ 
+    (ot1 + ot2 + ot3) * Study * Condition  + 
+    (ot1 + ot2 + ot3 | ResearchID/Condition/Study),
+  data = d_r_nw_dis)
+summary(m_e)
+readr::write_rds(m_e, "me.rds")
+d_r_ui %>% 
+  broom::augment()
+ggplot() + 
+  aes(x = Time, y = elog, color = Study) + 
+  stat_summary() + 
+  stat_summary(y = fitted(m_e), geom = "line", fun = mean)
+
+
+m <- glmer(
+  cbind(Target, Distractor) ~ 
+    (ot1 + ot2 + ot3) * Study + 
+    (ot1 | ResearchID) +
+    (ot1 + ot2 + ot3 | ResearchID:Study),
+  family = binomial,
+  data = d_r_ui)
+
+```
 
 
 
