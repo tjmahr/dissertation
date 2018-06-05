@@ -148,7 +148,9 @@ lpred_lm <- lpred %>%
     model = purrr::map(data, ~ lm(.posterior_value ~ ot1 + ot2 + ot3, .x)),
     coef = lapply(model, coef),
     auc = purrr::map_dbl(coef, purrr::pluck, 1),
-    slope = purrr::map_dbl(coef, purrr::pluck, 2)) %>% 
+    slope = purrr::map_dbl(coef, purrr::pluck, 2),
+    time2 = purrr::map_dbl(coef, purrr::pluck, 3),
+    time3 = purrr::map_dbl(coef, purrr::pluck, 4)) %>% 
   select(-model, -coef) %>% 
   tidyr::unnest(data) %>% 
   # Sort using the AUC values
@@ -221,6 +223,7 @@ p3 <- ggplot(lpred_lm) +
 library(patchwork)
 p1 + p2 + p3 + plot_layout(ncol = 1)
 ```
+
 
 
 
@@ -921,6 +924,34 @@ w_uis <- w_intervals %>%
 
 rm(ws, reduced_data, posterior_w)
 ```
+
+```{r, eval = FALSE}
+subtitle <- glue::glue(
+  "Kendall's W. Raters: 3 time points. Items: {n_rated} children.")
+
+library(extrafont)
+
+w_intervals2 <- w_intervals %>% 
+  mutate(
+    parameter = factor(parameter, labels = c(
+      "Random~ratings", "Time^3", "Time^2", "Time^1", 
+      "Average~probability", "Peak~probability"))) 
+
+ggplot(w_intervals2) + 
+  aes(y = parameter) +
+  geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
+  geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
+  geom_point(aes(x = m), size = 3, shape = 3) + 
+  scale_y_discrete(labels = parse_text) + 
+  theme_grey(base_size = 18, base_family = "Lato") +
+  labs(
+    x = NULL, 
+    y = NULL, 
+    title = "Concordance coefficients for growth curve features",
+    caption = constants$cap_median_90_50,
+    subtitle = subtitle) 
+```
+
 
 I used the `kendall()` function in the irr R package
 [vers. `r packageVersion("irr")`; @irr] to compute concordance
