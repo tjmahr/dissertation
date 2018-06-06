@@ -224,6 +224,180 @@ library(patchwork)
 p1 + p2 + p3 + plot_layout(ncol = 1)
 ```
 
+```{r poster-version-of-features, eval = FALSE}
+library(extrafont)
+
+dummy_data <- d_m %>%
+  filter(Study == "TimePoint2") %>%
+  distinct(Study, Time, ot1, ot2, ot3) %>%
+  mutate(
+    ResearchID = "NEW",
+    Primary = 0,
+    Others = 0)
+
+set.seed(02062018)
+
+lpred <- dummy_data %>%
+  tristan::augment_posterior_linpred(model = b, newdata = ., nsamples = 3)
+
+
+
+lpred_lm <- lpred %>%
+  tidyr::nest(-.draw) %>%
+  mutate(
+    model = purrr::map(data, ~ lm(.posterior_value ~ ot1 + ot2 + ot3, .x)),
+    coef = lapply(model, coef),
+    auc = purrr::map_dbl(coef, purrr::pluck, 1),
+    slope = purrr::map_dbl(coef, purrr::pluck, 2),
+    time2 = purrr::map_dbl(coef, purrr::pluck, 3),
+    time3 = purrr::map_dbl(coef, purrr::pluck, 4)) %>%
+  select(-model, -coef) %>%
+  tidyr::unnest(data) %>%
+  # Sort using the AUC values
+  mutate(.draw = forcats::fct_reorder(as.factor(.draw), auc))
+
+lpred_lm <- lpred_lm %>%
+  filter(.draw == 2)
+
+theme_poster <- theme_grey(base_size = 14, base_family = "Lato")
+
+p1 <- ggplot(lpred_lm) +
+  aes(x = ot1, y = .posterior_value, group = .draw) +
+  geom_line(linetype = "dashed", color = constants$col_off_black) +
+  geom_point(
+    data = lpred_lm %>% group_by(.draw) %>% top_n(5, .posterior_value),
+    size = 2, color = constants$col_off_black) +
+  geom_hline(
+    aes(yintercept = .posterior_value),
+    data = lpred_lm %>%
+      group_by(.draw) %>%
+      top_n(5, .posterior_value) %>%
+      summarise(.posterior_value = median(.posterior_value)),
+    size = .75,
+    color = constants$col_blue_highlight) +
+  annotate(
+    geom = "text", x = -.20, y = -.66,  color = constants$col_off_black,
+    label = "growth curve estimated\nfor each child x study", family = "Lato",
+    size = 3.5, vjust = 1, hjust = 0) +
+  annotate(
+    geom = "text", x = -.50, y = .9,  color = constants$col_blue_highlight,
+    label = "curve feature", family = "Lato",
+    size = 3.5, vjust = 1, hjust = 0) +
+  labs(
+    x = NULL,
+    y = constants$y_logodds_target,
+    title = "Peak probability") +
+  theme_poster +
+  theme(
+    strip.text = element_blank(),
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank(),
+    axis.title.y = element_text(hjust = 1),
+    axis.ticks.x = element_blank(),
+    axis.ticks.y = element_blank())
+
+
+p2 <- ggplot(lpred_lm) +
+  aes(x = ot1, y = .posterior_value, group = .draw) +
+  geom_line(linetype = "dashed", color = constants$col_off_black) +
+  geom_hline(
+    aes(yintercept = auc),
+    color = constants$col_blue_highlight,
+    size = .75) +
+  labs(
+    x = NULL,
+    y = constants$y_logodds_target,
+    title = "Average probability") +
+  theme_poster +
+  theme(
+    strip.text = element_blank(),
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    axis.ticks.x = element_blank(),
+    axis.ticks.y = element_blank())
+
+
+p3 <- ggplot(lpred_lm) +
+  aes(x = ot1, y = .posterior_value, group = .draw) +
+  geom_line(linetype = "dashed", color = constants$col_off_black) +
+  geom_abline(
+    aes(slope = slope, intercept = auc),
+    color = constants$col_blue_highlight,
+    size = .75) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Linear trend") +
+  theme_poster +
+  theme(
+    strip.text = element_blank(),
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    axis.ticks.y = element_blank())
+
+
+
+
+p4 <- ggplot(lpred_lm) +
+  aes(x = ot1, y = .posterior_value, group = .draw) +
+  geom_line(linetype = "dashed", color = constants$col_off_black) +
+  geom_line(
+    aes(y = ot2 * time2 + auc),
+    color = constants$col_blue_highlight,
+    size = .75) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Quadratic trend") +
+  theme_poster +
+  theme(
+    strip.text = element_blank(),
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    axis.ticks.y = element_blank()) 
+
+p5 <- ggplot(lpred_lm) +
+  aes(x = ot1, y = .posterior_value, group = .draw) +
+  geom_line(
+    linetype = "dashed", color = constants$col_off_black,
+    data = lpred_lm %>% filter(.posterior_value <= -.97)) +
+  geom_line(
+    linetype = "dashed", color = constants$col_off_black,
+    data = lpred_lm %>% filter(-.68 <= .posterior_value)) +
+  geom_line(
+    aes(y = ot3 * time3 + auc),
+    color = constants$col_blue_highlight,
+    size = .75) +
+  labs(
+    x = constants$x_time,
+    y = NULL,
+    title = "Cubic trend") +
+  theme_poster +
+  theme(
+    strip.text = element_blank(),
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank(),
+    axis.title.x = element_text(hjust = 1),
+    axis.ticks.x = element_blank(),
+    axis.ticks.y = element_blank()) +   
+  annotate(
+    geom = "text", x = -1.25, y = -.66,  color = constants$col_off_black,
+    label = "(These two features capture the curve shape\nand tend not to be behaviorally meaningful.)", 
+    family = "Lato",
+    size = 3.5, vjust = 1, hjust = 0)  + 
+  coord_cartesian(clip = "off", xlim = c(-.5, .5))
+
+library(patchwork)
+p1 + p2 + p3 + p4 + p5 + plot_layout(nrow = 1)
+tjmisc::ggpreview(width = 12, height = 3.5, dpi = 600)
+
+```
 
 
 
