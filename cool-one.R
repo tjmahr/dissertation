@@ -351,6 +351,7 @@ library(dplyr)
 library(ggplot2)
 stopifnot(package_version("2.2.1") < packageVersion("ggplot2"))
 library(extrafont)
+extrafont::font_import()
 library(patchwork)
 
 theme_poster <- theme_grey(base_size = 14, base_family = "Lato")

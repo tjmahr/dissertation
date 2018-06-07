@@ -680,6 +680,85 @@ p3 <- cowplot::plot_grid(p1, p2)
 print(p3)
 ```
 
+```{r, eval = FALSE}
+labs_fit_obs <- labs(
+  color = constants$lab_study,
+  fill = constants$lab_study,
+  x = constants$x_time,
+  caption = constants$cap_model_mean_data_mean_se)
+
+# Data for direct labeling of lines
+study_labs <- data.frame(
+  Age = c("Age 3", "Age 4", "Age 5"),
+  x = c(775, NA, 750),
+  y = c(.15, NA, .78)
+)
+
+library(extrafont)
+loadfonts()
+
+p1 <- phon_d %>%
+  left_join(recode_studies, by = c("Study", "S", "S2")) %>%
+  ggplot() +
+    aes(x = Time, y = fitted_elogit, color = Age) +
+    geom_hline(size = 2, yintercept = 0, color = "white") +
+    stat_summary(aes(y = elog), fun.data = mean_se, alpha = .7) +
+    geom_line(aes(y = fit), data = avg, size = 1) +
+    geom_text(
+      aes(label = Age, x = x, y = y), 
+      data = study_labs, 
+      size = 6, family = "Lato") +
+    coord_cartesian(ylim = c(-.35, .85)) +
+    labs_fit_obs +
+    labs(y = "Log-odds (phonological vs. unrelated)") +
+    guides(color = FALSE) + 
+    theme_grey(
+      base_size = 18, base_family = "Lato") + 
+    theme(
+      axis.title = element_text(hjust = 1))
+
+
+labs_model_ci <- labs(
+  color = constants$lab_study,
+  fill = constants$lab_study,
+  x = constants$x_time,
+  y = NULL,
+  caption = constants$cap_mean_95)
+
+p2 <- b2r %>%
+  get_predictions(
+    cond = list(
+      Time = unique(phon_d$Time),
+      S2 = unique(phon_d$S2)),
+    rm.ranef = TRUE,
+    print.summary = FALSE) %>%
+  left_join(recode_studies) %>%
+  ggplot() +
+    aes(x = Time, y = fit, fill = Age) +
+    geom_hline(size = 2, yintercept = 0, color = "white") +
+    geom_ribbon(aes(ymin = fit - CI, ymax = fit + CI), alpha = .2) +
+    geom_line(aes(color = Age), size = 1) +
+    geom_text(
+      aes(label = Age, color = Age, x = x, y = y), 
+      data = study_labs, size = 6, family = "Lato") +
+    coord_cartesian(ylim = c(-.35, .85)) +
+    labs_model_ci +
+    guides(color = FALSE, fill = FALSE) + 
+  theme_grey(
+      base_size = 18, base_family = "Lato") + 
+    theme(
+      axis.title = element_text(hjust = 1),
+      axis.text.y = element_blank(),
+      axis.ticks.y = element_blank())
+
+library(patchwork)
+p1 + p2
+    
+
+tjmisc::ggpreview(height = 5, width = 7.5, dpi = 600)
+```
+
+
 The early peaks occur when one would expect if children are acting on
 partial phonological information. The similarity between the
 phonological competitor and the target noun occurs early on in the
@@ -1011,6 +1090,85 @@ print(p3)
 #       printy::fmt_leading_zero()) %>%
 #   split(.$S2)
 ```
+
+```{r, eval = FALSE}
+labs_fit_obs <- labs(
+  color = constants$lab_study,
+  fill = constants$lab_study,
+  x = constants$x_time,
+  caption = constants$cap_model_mean_data_mean_se)
+
+# Data for direct labeling of lines
+study_labs <- data.frame(
+  Age = c("Age 3", "Age 4", "Age 5"),
+  x = c(1400, NA, 1330),
+  y = c(.42, NA, 1.1)
+)
+
+library(extrafont)
+loadfonts()
+
+p1 <- semy_d %>%
+  left_join(recode_studies, by = c("Study", "S", "S2")) %>%
+  ggplot() +
+    aes(x = Time, y = fitted_elogit, color = Age) +
+    geom_hline(size = 2, yintercept = 0, color = "white") +
+    stat_summary(aes(y = elog), fun.data = mean_se, alpha = .7) +
+    geom_line(aes(y = fit), data = avg, size = 1) +
+    geom_text(
+      aes(label = Age, x = x, y = y), 
+      data = study_labs, 
+      size = 6, family = "Lato") +
+    coord_cartesian(ylim = c(-.25, 1.1)) +
+    labs_fit_obs +
+    labs(y = "Log-odds (semantic vs. unrelated)") +
+    guides(color = FALSE) + 
+    theme_grey(
+      base_size = 18, base_family = "Lato") + 
+    theme(
+      axis.title = element_text(hjust = 1))
+
+p1
+labs_model_ci <- labs(
+  color = constants$lab_study,
+  fill = constants$lab_study,
+  x = constants$x_time,
+  y = NULL,
+  caption = constants$cap_mean_95)
+
+p2 <- s2r %>%
+  get_predictions(
+    cond = list(
+      Time = unique(semy_d$Time),
+      S2 = unique(semy_d$S2)),
+    rm.ranef = TRUE,
+    print.summary = FALSE) %>%
+  left_join(recode_studies) %>%
+  ggplot() +
+    aes(x = Time, y = fit, fill = Age) +
+    geom_hline(size = 2, yintercept = 0, color = "white") +
+    geom_ribbon(aes(ymin = fit - CI, ymax = fit + CI), alpha = .2) +
+    geom_line(aes(color = Age), size = 1) +
+    geom_text(
+      aes(label = Age, color = Age, x = x, y = y), 
+      data = study_labs, size = 6, family = "Lato") +
+    coord_cartesian(ylim = c(-.25, 1.1)) +
+    labs_model_ci +
+    guides(color = FALSE, fill = FALSE) + 
+  theme_grey(
+      base_size = 18, base_family = "Lato") + 
+    theme(
+      axis.title = element_text(hjust = 1),
+      axis.text.y = element_blank(), 
+      axis.ticks.y = element_blank())
+library(patchwork)
+p1 + p2
+    
+
+tjmisc::ggpreview(height = 5, width = 7.5, dpi = 600)
+```
+
+
 
 The average looks to the semantic foil over the unrelated image for
 age 4 was `r sem_tp2` emp. log-odds, `r sem_tp2_prop` proportion units.
