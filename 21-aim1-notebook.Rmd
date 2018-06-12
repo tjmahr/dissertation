@@ -68,28 +68,68 @@ d_r_nw_dis <- d_r_nw_vs %>%
   filter(Bias_Target == "Distractor")
 
 library(lme4)
-m_e <- lmer(
-  elog ~ 
-    (ot1 + ot2 + ot3) * Study * Condition  + 
-    (ot1 + ot2 + ot3 | ResearchID/Condition/Study),
-  data = d_r_nw_dis)
+# m_e <- lmer(
+#   elog ~ 
+#     (ot1 + ot2 + ot3) * Study * Condition  + 
+#     (ot1 + ot2 + ot3 | ResearchID/Condition/Study),
+#   data = d_r_nw_dis)
+# summary(m_e)
+# readr::write_rds(m_e, "me.rds")
+
+m_e <- readr::read_rds("me.rds")
 summary(m_e)
-readr::write_rds(m_e, "me.rds")
-d_r_ui %>% 
-  broom::augment()
-ggplot() + 
-  aes(x = Time, y = elog, color = Study) + 
+
+aug <- broom::augment(m_e, d_r_nw_dis) %>% 
+  as_tibble()
+
+diff_aug <- aug %>% 
+  mutate(
+    Prop = plogis(elog),
+    PropFitted = plogis(.fitted)) %>% 
+  select(Study:Condition, Time, Prop, PropFitted, elog, .fitted) %>% 
+  tidyr::gather("measure", "value", elog, .fitted, Prop, PropFitted) %>% 
+  tidyr::spread(Condition, value) %>% 
+  mutate(`real - nonsense` = real - nonsense) %>% 
+  tidyr::gather("Condition", "value", nonsense:`real - nonsense`) %>% 
+  tidyr::spread(measure, value)
+
+ggplot(diff_aug) + 
+  aes(x = Time, y = Prop , color = Condition, linetype = Condition) +
+  geom_hline(color = "white", size = 2, yintercept = .5) +
   stat_summary() + 
-  stat_summary(y = fitted(m_e), geom = "line", fun = mean)
+  stat_summary(aes(y = PropFitted), geom = "line", fun.y = mean) +
+  facet_wrap("Study")
+
+diff_aug %>% 
+  filter(Condition == "real - nonsense") %>% 
+  ggplot() + 
+    aes(x = Time, y = Prop) +
+    geom_hline(color = "white", size = 2, yintercept = 0) +
+    stat_summary(fun.data = median_hilow, size = 1.5,
+                 geom = "linerange",
+                 fun.args = list(conf.int = .5)) +
+    stat_summary(fun.data = median_hilow, 
+                 fun.args = list(conf.int = .9)) +
+    geom_hline(color = "white", size = .25, yintercept = 0) +
+    facet_wrap("Study")
 
 
-m <- glmer(
-  cbind(Target, Distractor) ~ 
-    (ot1 + ot2 + ot3) * Study + 
-    (ot1 | ResearchID) +
-    (ot1 + ot2 + ot3 | ResearchID:Study),
-  family = binomial,
-  data = d_r_ui)
+diff_aug %>% 
+  tjmisc::sample_n_of(4, ResearchID) %>% 
+  ggplot() + 
+    aes(x = Time, y = Prop , color = Condition, linetype = Condition) +
+    geom_hline(color = "white", size = 2, yintercept = .5) +
+    stat_summary(aes(y = Prop, group = interaction(Study, Condition)), geom = "line", fun.y = mean) +
+    facet_wrap("ResearchID")
+  
+
+# m <- glmer(
+#   cbind(Target, Distractor) ~ 
+#     (ot1 + ot2 + ot3) * Study + 
+#     (ot1 | ResearchID) +
+#     (ot1 + ot2 + ot3 | ResearchID:Study),
+#   family = binomial,
+#   data = d_r_ui)
 
 ```
 
