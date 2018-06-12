@@ -102,7 +102,7 @@ diff_aug <- aug %>%
 diff_aug %>% 
   select(-.draw) %>% 
   tidyr::nest(.posterior_value:PropFitted)
-
+diff_aug
 ggplot(diff_aug) + 
   aes(x = Time, y = Prop , color = Condition, linetype = Condition) +
   geom_hline(color = "white", size = 2, yintercept = .5) +
@@ -110,10 +110,14 @@ ggplot(diff_aug) +
   stat_summary(aes(y = PropFitted), fun.data = median_hilow) +
   facet_wrap("Study")
 
-diff_aug %>% 
+means <- diff_aug %>% 
+  group_by(.draw, Study, Condition, Time) %>%
+  summarize_at(vars(.posterior_value:PropFitted), mean, na.rm = TRUE)
+
+means %>% 
   filter(Condition == "real - nonsense") %>% 
   ggplot() + 
-    aes(x = Time, y = Prop) +
+    aes(x = Time, y = PropFitted ) +
     geom_hline(color = "white", size = 2, yintercept = 0) +
     stat_summary(fun.data = median_hilow, size = 1.5,
                  geom = "linerange",
@@ -121,6 +125,14 @@ diff_aug %>%
     stat_summary(fun.data = median_hilow, 
                  fun.args = list(conf.int = .9)) +
     geom_hline(color = "white", size = .25, yintercept = 0) +
+    facet_wrap("Study")
+
+diff_aug %>% 
+  filter(Condition == "real - nonsense") %>% 
+  ggplot() + 
+    aes(x = Time, y = PropFitted ) +
+    geom_hline(color = "white", size = 2, yintercept = 0) +
+    stat_summary(aes(group = .draw), fun.y =mean, geom = "line") +
     facet_wrap("Study")
 
 
