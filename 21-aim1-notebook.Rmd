@@ -16,6 +16,8 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 ```
 
 ```{r, include = FALSE}
+library(rstanarm)
+theme_set(theme_grey())
 knitr::opts_chunk$set(cache = TRUE)
 ```
 
@@ -41,7 +43,7 @@ summary(d)
 
 
 ```{r}
-library(lme4)
+
 d_r_ui <- d %>% 
   filter(Condition == "real", Bias_Fam == "Unfamiliar") %>% 
   mutate(elog = empirical_logit(Target, Distractor))
@@ -67,7 +69,7 @@ d_r_nw_vs <- d %>%
 d_r_nw_dis <- d_r_nw_vs %>% 
   filter(Bias_Target == "Distractor")
 
-library(lme4)
+# library(lme4)
 # m_e <- lmer(
 #   elog ~ 
 #     (ot1 + ot2 + ot3) * Study * Condition  + 
@@ -76,28 +78,36 @@ library(lme4)
 # summary(m_e)
 # readr::write_rds(m_e, "me.rds")
 
-m_e <- readr::read_rds("me.rds")
+m_e <- readr::read_rds("stan_me.rds.gz")
 summary(m_e)
+
+d <- tristan::augment_posterior_linpred(m_e, nsamples = 100)
+
 
 aug <- broom::augment(m_e, d_r_nw_dis) %>% 
   as_tibble()
+aug <- d
 
 diff_aug <- aug %>% 
   mutate(
     Prop = plogis(elog),
-    PropFitted = plogis(.fitted)) %>% 
-  select(Study:Condition, Time, Prop, PropFitted, elog, .fitted) %>% 
-  tidyr::gather("measure", "value", elog, .fitted, Prop, PropFitted) %>% 
+    PropFitted = plogis(.posterior_value)) %>% 
+  select(.draw, Study:Condition, Time, Prop, PropFitted, elog, .posterior_value) %>% 
+  tidyr::gather("measure", "value", elog, .posterior_value, Prop, PropFitted) %>% 
   tidyr::spread(Condition, value) %>% 
   mutate(`real - nonsense` = real - nonsense) %>% 
   tidyr::gather("Condition", "value", nonsense:`real - nonsense`) %>% 
   tidyr::spread(measure, value)
 
+diff_aug %>% 
+  select(-.draw) %>% 
+  tidyr::nest(.posterior_value:PropFitted)
+
 ggplot(diff_aug) + 
   aes(x = Time, y = Prop , color = Condition, linetype = Condition) +
   geom_hline(color = "white", size = 2, yintercept = .5) +
-  stat_summary() + 
-  stat_summary(aes(y = PropFitted), geom = "line", fun.y = mean) +
+  # stat_summary() + 
+  stat_summary(aes(y = PropFitted), fun.data = median_hilow) +
   facet_wrap("Study")
 
 diff_aug %>% 
