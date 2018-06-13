@@ -1,23 +1,228 @@
-Analysis of referent selection
+Development of referent selection
 =======================================================================
 
-```{r, include = FALSE}
-d_m <- readr::read_csv("./data/aim2-model-ready.csv.gz")
+```{r include = FALSE}
 knitr::read_chunk("./helpers.R")
 if (interactive()) source("./helpers.R")
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 ```
 
-```{r helpers, include = FALSE}
+```{r helpers, message = FALSE, warning = FALSE}
 ```
 
 ```{r, include = FALSE}
+library(rstanarm)
 knitr::opts_chunk$set(cache = TRUE)
+```
+
+```{r}
+d <- readr::read_csv("./data/aim2-model-ready.csv.gz") %>% 
+  filter(!is.na(Bias_Fam)) %>% 
+  filter(300 <= Time) %>% 
+  select(-starts_with("ot")) %>% 
+  polypoly::poly_add_columns(
+    Time, degree = 3, scale_width = 1, prefix = "ot")
+
+ggplot(d) + 
+  aes(x = Time, y = Prop, color = Bias_Fam) + 
+  facet_wrap(Condition ~ Study) + 
+  geom_line(aes(group = interaction(ResearchID, Bias_Fam)), alpha = .1) +
+  guides(color = FALSE) + 
+  scale_color_viridis_d(end = .8) + 
+  stat_smooth(method = "gam", formula = y ~ s(x), se = FALSE)
+
+summary(d)
 ```
 
 ## Nonwords versus real words
 
-```{r real-vs-nonword, out.width = "100%", fig.show = 'hold', fig.height = 3, fig.width = 6, message = FALSE, warning = FALSE, echo = FALSE}
-d_nonword <- d_m %>% 
+I asked whether the recognition of familiar words differed from the
+fast-selecting of referents for a nonword. I fit a Bayesian mixed
+effects logistic regression model, as in Chapter X. For the real word
+and nonword conditions, there is a well-defined target image. For real
+words, it is the familar image and for nonwords, it is the novel image.
+Therefore, I modeled the data under these assumptions. The outcome
+measures were therefore:
+
+* P(Look to familiar image | Hear a real word)
+* P(Look to unfamiliar image | Hear a nonword )
+
+The important analytic question is whether and when during a trial these
+two probabilities differ.
+
+
+This model is the same as the model from Chapter X except augumented with a
+Condition effect and its interactions.
+
+
+$$
+\text{log-odds}(\textit{looking}\,) = 
+  \beta_0 + 
+  \beta_1\text{Time}^1 + 
+  \beta_2\text{Time}^2 + 
+  \beta_3\text{Time}^3 \\
+  + \text{[Condition, Study, Condition x Study interactions]}
+$$
+
+
+
+<!-- For this task, I will model how the looks to the familiar image differ -->
+<!-- in each condition (real words, mispronunciations, nonwords) and how the -->
+<!-- growth curves for each condition change year over year. This model will -->
+<!-- use growth curve model described in [Growth Curve Analysis](#growth-curve-analysis) but -->
+<!-- augmented with Condition effects. -->
+
+<!-- I will examine whether and when any dissociation is observed for word -->
+<!-- recognition in the real word and nonword conditions. @McMurray2012 argue that  -->
+<!-- familiar word recognition and fast -->
+<!-- association for novel words reflect the same cognitive process: referent -->
+<!-- selection. Data from this task would support with this hypothesis when -->
+<!-- the growth curves for looks to the familiar image are symmetrical for -->
+<!-- the real word and nonword conditions. Figure \@ref(fig:le-means), showing data -->
+<!-- from @MPPaper [, _n_\ =\ 34 children, 30-46 months old], shows some -->
+<!-- symmetry for the real word and nonword conditions. -->
+
+<!-- I tested whether the two measures ever dissociate by computing the -->
+<!-- posterior predicted difference between the growth curves. This approach -->
+<!-- is similar to the bootstrap-based divergence analyses used in some word -->
+<!-- recognition experiments [e.g., @Oleson2015; @eyetrackingR]. The -->
+<!-- essential question is when—at which specific time points—do two growth -->
+<!-- curves differ from one another. The bootstrap approach -->
+<!-- uses resampling to get an estimate, whereas I use posterior -->
+<!-- predicted samples to estimate these differences. -->
+
+Specifically, I will compute the posterior-predicted looks to the
+familiar object in the real word condition, P(Familiar | Real Word, Time
+*t*, Child *i*) and the analogous looks to the unfamiliar object in the
+nonword condition, P(Unfamiliar | Nonword, Time *t*, Child *i*). The
+difference between these two probabilities estimates how the time course
+of word recognition differs between these two conditions, and I can use
+50% and 90% uncertainty intervals to determine during which time points
+the curves credibly differ from each other.
+
+I fit a model with weakly informative priors---see Appendix X. I modeled
+distractor-initial and target-initial trials separately.
+
+
+
+```{r}
+m_e <- readr::read_rds("stan_me.rds.gz")
+m_e
+d_r_nw_dis <- m_e$data
+d <- posterior_linpred(m_e, draws = 200)
+```
+
+```{r}
+d_r_nw_dis$Prop <- d_r_nw_dis$Target / (d_r_nw_dis$Target + d_r_nw_dis$Distractor)
+m_e$glmod
+
+dummy_data <- d_r_nw_dis %>% 
+  distinct(Study, Condition, Time, ot1, ot2, ot3) %>% 
+  mutate(ResearchID = "NEW",
+         Primary = 0, 
+         Others = 0)
+
+set.seed(11102017)
+lpred <- dummy_data %>% 
+  tristan::augment_posterior_linpred(m_e, newdata = ., nsamples = 100)
+
+
+dummy_data <- d_r_nw_dis %>% 
+  distinct(Study, Time, Condition, ot1, ot2, ot3) %>% 
+  mutate(
+    ResearchID = "001L",
+    Target = 0, 
+    Distractor = 0)
+dummy_data2 <- dummy_data %>% 
+  mutate(ResearchID = "NEW")
+dummy_data <- bind_rows(dummy_data, dummy_data2)
+
+set.seed(11102017)
+lpred <- dummy_data %>%
+  tristan::augment_posterior_linpred(
+    model = m_e, newdata = ., 
+    re.form = ~ (ot1 + ot2 + ot3 | ResearchID/Condition/Study),
+    transform = TRUE)
+
+# p <- posterior_linpred(m_e, transform = TRUE)
+# nrow(d_r_nw_dis)
+# ncol(p)
+rownames(summary(m_e))
+posterior_interval(m_e, regex_pars = "_NEW_")
+long <- p %>% 
+  as.data.frame() %>% 
+  as_tibble() %>% 
+  tibble::rowid_to_column(".draw") %>% 
+  tidyr::gather(".observation", ".posterior_value", -.draw) %>% 
+  mutate(.observation = as.numeric(.observation))
+
+d <- d_r_nw_dis %>% 
+  select(Study, ResearchID, Condition,Time)
+d$.observation <- seq_len(nrow(d))
+d <- left_join(d, long)
+
+lpred <- dummy_data %>%
+  tristan::augment_posterior_linpred(
+    model = m_e, newdata = ., re.form = NA,
+    transform = TRUE)
+
+# summary(lm(.posterior_value ~ (ot1 + ot2 + ot3) * Study * Condition, lpred))
+# peaks <- lpred %>% 
+#   group_by(Study, Condition, .draw) %>% 
+#   top_n(5, .posterior_value) %>% 
+#   mutate(med = median(.posterior_value)) %>% 
+#   select(.draw, Study, Condition, peek_accuracy = med) %>% 
+#   distinct() %>% 
+#   ungroup() %>% 
+#   mutate(peek_accuracy = peek_accuracy) %>% 
+#   tidyr::spread(Study, peek_accuracy) %>% 
+#   select(
+#     `Peak~~(Age~~3)` = TimePoint1,
+#     `Peak~~(Age~~4)` = TimePoint2,
+#     `Peak~~(Age~~5)` = TimePoint3)
+
+d_r_nw_dis$f <- fitted(m_e)
+ggplot(d_r_nw_dis) + 
+  aes(x = Time, y = Prop, color = Condition) + 
+  stat_summary() + 
+  facet_wrap("Study") + 
+  stat_summary(
+    aes(y = f),
+    fun.y = function(x) mean(x), 
+    geom = "line", data = d_r_nw_dis)  
+
+
+
+lpred %>% 
+  tjmisc::sample_n_of(200, .draw) %>%
+  mutate(Study = convert_study_to_age(Study)) %>% 
+  ggplot() + 
+    aes(x = Time, y = .posterior_value, color = Study) +
+    geom_line(
+      aes(group = interaction(Study, Condition, ResearchID, .draw)), 
+      alpha = .1) +
+    stat_summary(
+      aes(y = Prop, group = interaction(Study, Condition)), 
+      data = d_r_nw_dis %>% 
+        mutate(Study = convert_study_to_age(Study)), 
+      fun.y = "mean", geom = "line", 
+      color = constants$col_off_black, size = 1) + 
+    # geom_text(aes(color = "Age 5", label = "Age 5"), x = 1390, y = .83) +
+    # geom_text(aes(color = "Age 3", label = "Age 3"), x = 1380, y = .46) +
+    # expand_limits(y = .85) +
+    guides(color = "none") +
+    facet_wrap("Condition") +
+    labs(
+      title = "Observed means and 200 posterior fits",
+      x = constants$x_time,
+      y = constants$y_prop_target)
+```
+
+
+## Old dead code
+
+```{r real-vs-nonword, eval = FALSE, out.width = "100%", fig.show = 'hold', fig.height = 3, fig.width = 6, message = FALSE, warning = FALSE, echo = FALSE}
+d_nonword <- d %>% 
   filter(Condition != "MP") %>% 
   mutate(
     Distractor2 = ifelse(Condition == "nonsense", Target, Distractor),
@@ -60,10 +265,9 @@ and novel image for nonwords")
 #   facet_wrap("ResearchID")
 ```
 
-Let's cheat and offset the curves so they start at the same value. This can help
-us see how their heights compare.
-
-```{r}
+```{r, eval = FALSE}
+# Let's cheat and offset the curves so they start at the same value. This
+# can help us see how their heights compare.
 ggplot(d_nonword) + 
   aes(x = Time, y = Prop2, color = Study) + 
   geom_hline(yintercept = .5, color = "white", size = 2) +
@@ -93,12 +297,4 @@ ggplot(d_nonword) +
 
 ```
 
-
-```{r}
-d_mp <- d_m %>% 
-  filter(Condition == "MP")
-ggplot(d_mp) + 
-  aes(x = Time, y = Prop, color = Study) + 
-  stat_summary()
-```
 

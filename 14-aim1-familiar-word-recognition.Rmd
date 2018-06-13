@@ -396,7 +396,6 @@ p5 <- ggplot(lpred_lm) +
 library(patchwork)
 p1 + p2 + p3 + p4 + p5 + plot_layout(nrow = 1)
 tjmisc::ggpreview(width = 12, height = 3.5, dpi = 600)
-
 ```
 
 
