@@ -65,8 +65,25 @@ d_r_nw_vs <- d %>%
 d_r_nw_dis <- d_r_nw_vs %>% 
   filter(Bias_Target == "Distractor")
 
+d_r_nw_dis %>% 
+  filter(Trials < 4) %>% 
+  distinct(Study, ResearchID) %>% 
+  inner_join(d_r_nw_dis, .) %>% 
+  ggplot() + 
+    aes(x = Time, y = plogis(elog), color = Condition) + 
+    stat_summary()
+
+d_r_nw_dis %>% 
+  # filter(Trials > 4) %>% 
+  # distinct(Study, ResearchID) %>% 
+  # inner_join(d_r_nw_dis, .) %>% 
+  ggplot() + 
+    aes(x = Time, y = plogis(elog), color = Condition) + 
+    stat_summary()
+
+
 study_child_with_empty_cells <- d_r_nw_dis %>% 
-  filter(Trials == 0) %>% 
+  filter(Trials < 4) %>% 
   distinct(Study, ResearchID)
 
 d_r_nw_dis <- d_r_nw_dis %>% 
@@ -88,15 +105,17 @@ test_f <- bf(
     (ot1 + ot2 + ot3 | ResearchID/Condition), 
   family = binomial)
 
+prior_intercept <- set_prior("normal(0, 1)", class = "Intercept")
 prior_b <- set_prior("normal(0, 1)", class = "b")
 prior_ot1 <- set_prior("normal(0, 2)", class = "b", coef = "ot1")
 prior_cor <- set_prior("lkj(2)", class = "cor")
 prior_sd <- set_prior("student_t(3, 0, 5)", class = "sd")
-priors <- c(prior_b, prior_ot1, prior_cor, prior_sd)
+priors <- c(prior_intercept, prior_b, prior_ot1, prior_cor, prior_sd)
 
-# test_m <- brm(test_f, data = test_data, prior = priors, chains = 4, cores = 4)
-# readr::write_rds(test_m, "tp1_mp.rds.gz")
-test_m <- readr::read_rds("tp1_mp.rds.gz")
+test_m <- brm(test_f, data = test_data, prior = priors, chains = 4, cores = 4, 
+              control = list(adapt_delta = .95))
+readr::write_rds(test_m, "tp1_mp_2.rds.gz")
+# test_m <- readr::read_rds("tp1_mp.rds.gz")
 
 
 summary(test_m)
