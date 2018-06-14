@@ -99,6 +99,18 @@ test_data <- d_r_nw_dis %>%
     Study, ResearchID, Condition, Time, ot1:ot3, Target, Distractor, 
     Trials, elog)
 
+test_data_2 <- d_r_nw_dis %>%
+  filter(Study == "TimePoint2") %>% 
+  select(
+    Study, ResearchID, Condition, Time, ot1:ot3, Target, Distractor, 
+    Trials, elog)
+
+test_data_3 <- d_r_nw_dis %>%
+  filter(Study == "TimePoint3") %>% 
+  select(
+    Study, ResearchID, Condition, Time, ot1:ot3, Target, Distractor, 
+    Trials, elog)
+
 # Fit a hierarchical logistic regression model
 test_formula <- bf(
   Target | trials(Trials) ~ 
@@ -113,17 +125,45 @@ priors <- c(
   set_prior(class = "cor", "lkj(2)"),
   set_prior(class = "sd", "student_t(3, 0, 5)"))
 
-# Fit
-# test_m <- brm(
-#   formula = test_formula, 
-#   data = test_data, 
-#   prior = priors, 
-#   chains = 4, 
-#   cores = 4, 
-#   control = list(adapt_delta = .95))
+test_m_tp2 <- brm(
+  formula = test_formula,
+  data = test_data_2,
+  prior = priors,
+  chains = 4,
+  cores = 4,
+  control = list(adapt_delta = .95))
+readr::write_rds(test_m_tp2, "tp2_mp.rds.gz")
 
-# readr::write_rds(test_m, "tp1_mp_2.rds.gz")
-test_m <- readr::read_rds("tp1_mp_2.rds.gz")
+test_m_tp3 <- brm(
+  formula = test_formula,
+  data = test_data_3,
+  prior = priors,
+  chains = 4,
+  cores = 4,
+  control = list(adapt_delta = .95))
+readr::write_rds(test_m_tp3, "tp3_mp.rds.gz")
+
+test_formula_all <- bf(
+  Target | trials(Trials) ~ 
+    (ot1 + ot2 + ot3) * Condition * Study + 
+    (ot1 + ot2 + ot3 | ResearchID/Condition/Study), 
+  family = binomial)
+
+test_m_all <- brm(
+  formula = test_formula_all,
+  data = d_r_nw_dis,
+  prior = priors,
+  chains = 4,
+  cores = 4,
+  control = list(adapt_delta = .95))
+readr::write_rds(test_m_all, "all_mp.rds.gz")
+
+
+
+
+
+
+# test_m <- readr::read_rds("tp1_mp_2.rds.gz")
 
 
 summary(test_m)
