@@ -81,11 +81,34 @@ d_r_nw_dis <- d_r_nw_vs %>%
 m_e <- readr::read_rds("stan_me.rds.gz")
 summary(m_e)
 
+fixef(m_e)
+
+ok <- m_e$data %>% 
+  distinct(Time, Study, Condition, ot1, ot2, ot3) 
+
+mat <- model.matrix(Time ~ (ot1 + ot2 + ot3) * Study * Condition, ok)
+names(fixef(m_e)) == colnames(mat)
+
+
+str(m_e$glmod)
+
+m_e$glmod$reTrms$
+ok$y <- as.vector(mat %*% fixef(m_e))
+
+newdata <- m_e$data %>% 
+  distinct(Time, Condition, Study, ot1, ot2, ot3) %>% 
+  mutate(ResearchID = "NEW")
+
+ggplot(ok) + 
+  aes(x = Time, y = y, color = Condition) + 
+  geom_line() + 
+  facet_wrap("Study")
+
 d <- tristan::augment_posterior_linpred(m_e, nsamples = 100)
 
 
-aug <- broom::augment(m_e, d_r_nw_dis) %>% 
-  as_tibble()
+# aug <- broom::augment(m_e, d_r_nw_dis) %>% 
+#   as_tibble()
 aug <- d
 
 diff_aug <- aug %>% 
@@ -99,15 +122,16 @@ diff_aug <- aug %>%
   tidyr::gather("Condition", "value", nonsense:`real - nonsense`) %>% 
   tidyr::spread(measure, value)
 
-diff_aug %>% 
-  select(-.draw) %>% 
-  tidyr::nest(.posterior_value:PropFitted)
+# diff_aug %>% 
+#   select(-.draw) %>% 
+#   tidyr::nest(.posterior_value:PropFitted)
 diff_aug
+
 ggplot(diff_aug) + 
-  aes(x = Time, y = Prop , color = Condition, linetype = Condition) +
+  aes(x = Time, y = elog , color = Condition, linetype = Condition) +
   geom_hline(color = "white", size = 2, yintercept = .5) +
-  # stat_summary() + 
-  stat_summary(aes(y = PropFitted), fun.data = median_hilow) +
+  stat_summary() +
+  stat_summary(aes(y = .posterior_value), fun.y = mean, geom = "line") +
   facet_wrap("Study")
 
 means <- diff_aug %>% 

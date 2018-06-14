@@ -99,23 +99,31 @@ test_data <- d_r_nw_dis %>%
     Study, ResearchID, Condition, Time, ot1:ot3, Target, Distractor, 
     Trials, elog)
 
-test_f <- bf(
+# Fit a hierarchical logistic regression model
+test_formula <- bf(
   Target | trials(Trials) ~ 
     (ot1 + ot2 + ot3) * Condition + 
     (ot1 + ot2 + ot3 | ResearchID/Condition), 
   family = binomial)
 
-prior_intercept <- set_prior("normal(0, 1)", class = "Intercept")
-prior_b <- set_prior("normal(0, 1)", class = "b")
-prior_ot1 <- set_prior("normal(0, 2)", class = "b", coef = "ot1")
-prior_cor <- set_prior("lkj(2)", class = "cor")
-prior_sd <- set_prior("student_t(3, 0, 5)", class = "sd")
-priors <- c(prior_intercept, prior_b, prior_ot1, prior_cor, prior_sd)
+priors <- c(
+  set_prior(class = "Intercept", "normal(0, 1)"),
+  set_prior(class = "b", "normal(0, 1)"),
+  set_prior(class = "b", coef = "ot1", "normal(0, 2)"),
+  set_prior(class = "cor", "lkj(2)"),
+  set_prior(class = "sd", "student_t(3, 0, 5)"))
 
-test_m <- brm(test_f, data = test_data, prior = priors, chains = 4, cores = 4, 
-              control = list(adapt_delta = .95))
-readr::write_rds(test_m, "tp1_mp_2.rds.gz")
-# test_m <- readr::read_rds("tp1_mp.rds.gz")
+# Fit
+# test_m <- brm(
+#   formula = test_formula, 
+#   data = test_data, 
+#   prior = priors, 
+#   chains = 4, 
+#   cores = 4, 
+#   control = list(adapt_delta = .95))
+
+# readr::write_rds(test_m, "tp1_mp_2.rds.gz")
+test_m <- readr::read_rds("tp1_mp_2.rds.gz")
 
 
 summary(test_m)
@@ -124,9 +132,10 @@ prior_summary(test_m)
 p <- marginal_effects(test_m)
 # plot(p)
 
+sss <- test_data$ResearchID %>% sample(6)
 n <- test_data %>% 
   distinct(Condition, Time, ot1, ot2, ot3) %>% 
-  tidyr::crossing(., ResearchID = 1:2) %>% 
+  tidyr::crossing(., ResearchID = sss) %>% 
   mutate(Trials = 30)
 
 pl <- test_m %>% 
@@ -144,12 +153,28 @@ pl <- test_m %>%
   left_join(n %>% tibble::rowid_to_column(".observation"))
 
 inv_logit <- function(x) 1 / (1 + exp(-x))
+
+library("ggthemes")
+
 ggplot(pl) + 
   aes(x = Time, y = inv_logit(.posterior_value), color = Condition) +
-  # geom_line(aes(group = interaction(.draw, Condition)), alpha = .1) + 
-  stat_summary() +
-  stat_summary(aes(y = Target / Trials), data = test_data)
+  geom_line(aes(group = interaction(.draw, Condition)), alpha = .05) +
+  # stat_summary(aes(group = Condition), fun.data = median_hilow,
+               # alpha = .1) +
+  geom_line(aes(y = Target / Trials, group = Condition),
+               data = test_data %>% filter(ResearchID %in% sss),
+            color = "grey80") + 
+  facet_wrap("ResearchID") + 
+  theme_solarized_2(light = FALSE) + 
+  scale_color_solarized() + 
+  guides(color = "none") +
+  labs(
+    title = "Example observed means and 200 posterior fits",
+    x = constants$x_time,
+    y = constants$y_prop_target,
+    caption = "Sample of 6 of 149 total participants")
 
+test_m
 pp_check(test_m, nsamples = 50)
 pl <- test_m %>% 
   posterior_linpred( 
