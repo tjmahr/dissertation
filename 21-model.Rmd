@@ -215,18 +215,15 @@ library("ggthemes")
 inv_logit <- function(x) 1 / (1 + exp(-x))
 pl <- bind_rows(pl1, pl2)
 
-length(unique(test_data_2$ResearchID))
-
 ggplot(pl) + 
   aes(x = Time, y = inv_logit(.posterior_value), color = Condition) +
   geom_line(
     aes(group = interaction(.draw, Condition)), 
     alpha = .05) +
-  # stat_summary(aes(group = Condition), fun.data = median_hilow,
-               # alpha = .1) +
-  geom_line(aes(y = Target / Trials, group = Condition),
-               data = test_data %>% filter(ResearchID %in% sss),
-            color = "grey20") + 
+  geom_line(
+    aes(y = Target / Trials, group = Condition),
+    data = test_data %>% filter(ResearchID %in% sss),
+    color = "grey20") + 
   facet_wrap("ResearchID") + 
   # theme_solarized_2(light = FALSE) + 
   # scale_color_solarized() + 
@@ -237,58 +234,80 @@ ggplot(pl) +
     y = constants$y_prop_target,
     caption = "Sample of 8 of 155 total participants")
 
-test_m
-pp_check(test_m, nsamples = 50)
-pl <- test_m %>% 
-  posterior_linpred( 
-    newdata = n, 
-    allow_new_levels = TRUE, 
-    re_formula = NULL,
-    nsamples = 200) %>% 
-  as.data.frame() %>% 
-  as_tibble() %>% 
-  rlang::set_names(seq_len(nrow(n))) %>% 
-  tibble::rowid_to_column(".draw") %>% 
-  tidyr::gather(".observation", ".posterior_value", -.draw) %>% 
-  mutate(.observation = as.numeric(.observation)) %>% 
-  left_join(n %>% tibble::rowid_to_column(".observation"))
+diffs <- pl2 %>% 
+  select(.draw, .posterior_value, Condition, Time) %>% 
+  tidyr::spread(Condition, .posterior_value) %>% 
+  mutate(
+    nonsense_prop = plogis(nonsense), 
+    real_prop = plogis(real),
+    `real - nonsense` = real_prop - nonsense_prop) %>% 
+  select(.draw, Time, nonsense_prop, real_prop, `real - nonsense`)
+
+ggplot(diffs) + 
+  aes(x = Time, y = `real - nonsense`) + 
+  geom_line(aes(group = .draw), alpha = .1) + 
+  stat_summary(fun.data = median_hilow)
 
 
-plot(p)
-
-p <- plot(
-  marginal_effects(
-    test_m, 
-    method = "fitted", 
-    spaghetti = TRUE, 
-    nsamples = 200), 
-  ask = FALSE) 
-
-p[[3]] + 
-  stat_smooth(
-    aes(y = (Target / trials) * 21.5), 
-    data = test_data, alpha = 1, se = FALSE, size = 2)
+pl3 <- augment_linpred(
+  test_m, n2, allow_new_levels = TRUE, re_formula = NA, nsamples = 500)
 
 
-plot(marginal_effects(test_m, re_formula = NULL), ask = FALSE)
-plot(marginal_effects(test_m, re_formula = NULL, method = "predict"), ask = FALSE)
+diffs_2 <- pl3 %>% 
+  select(.draw, .posterior_value, Condition, Time) %>% 
+  tidyr::spread(Condition, .posterior_value) %>% 
+  mutate(
+    nonsense_prop = plogis(nonsense), 
+    real_prop = plogis(real),
+    `real - nonsense` = real_prop - nonsense_prop) %>% 
+  select(.draw, Time, nonsense_prop, real_prop, `real - nonsense`)
 
+ggplot(diffs_2) + 
+  aes(x = Time, y = `real - nonsense`) + 
+  geom_line(aes(group = .draw), alpha = .1) + 
+  stat_summary(fun.data = median_hilow)
 
-f <- bf(
-  Target | trials(trials) ~ 
-    (ot1 + ot2 + ot3) * Study * Condition  +
-    (ot1 + ot2 + ot3 | ResearchID/Condition/Study),
-  family = binomial)
-f
-set_p
-```
+emp_diffs <- test_data_2 %>% 
+  select(ResearchID, elog, Condition, Time) %>% 
+  tidyr::spread(Condition, elog) %>% 
+  mutate(
+    nonsense_prop = plogis(nonsense), 
+    real_prop = plogis(real),
+    `real - nonsense` = real_prop - nonsense_prop) %>% 
+  select(ResearchID, Time, nonsense_prop, real_prop, `real - nonsense`)
 
-
-```{r, eval = FALSE}
-library(brms)
+ggplot(emp_diffs) + 
+  aes(x = Time, y = `real - nonsense`) + 
+  geom_line(aes(group = ResearchID), alpha = .1) + 
+  stat_summary(fun.data = mean_cl_boot)
 
 
 
+pl2 %>% 
+  ggplot() + 
+    aes(x = Time, y = .posterior_value, color = Condition) + 
+    stat_summary(fun.data = median_hilow)
+
+pl4 <- augment_linpred(
+  test_m, n1, allow_new_levels = TRUE, re_formula = NULL, nsamples = 500)
+
+
+diffs_4 <- pl4 %>% 
+  select(.draw, ResearchID, .posterior_value, Condition, Time) %>% 
+  tidyr::spread(Condition, .posterior_value) %>% 
+  mutate(
+    nonsense_prop = plogis(nonsense), 
+    real_prop = plogis(real),
+    `real - nonsense` = real_prop - nonsense_prop) %>% 
+  select(.draw, ResearchID, Time, nonsense_prop, real_prop, `real - nonsense`)
+
+n1 %>% 
+  select(-Trials) %>% 
+  inner_join()
+ggplot(diffs_4) + 
+  aes(x = Time, y = `real - nonsense`) + 
+  stat_summary(aes(group = .draw), fun.y = mean, geom = "line") + 
+  stat_summary(data =)
 
 ```
 
