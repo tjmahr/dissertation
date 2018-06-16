@@ -97,14 +97,16 @@ ok$y <- as.vector(mat %*% fixef(m_e))
 
 newdata <- m_e$data %>% 
   distinct(Time, Condition, Study, ot1, ot2, ot3) %>% 
-  mutate(ResearchID = "NEW")
+  mutate(ResearchID = "NOPE")
+
+
 
 ggplot(ok) + 
   aes(x = Time, y = y, color = Condition) + 
   geom_line() + 
   facet_wrap("Study")
 
-d <- tristan::augment_posterior_linpred(m_e, nsamples = 100)
+d <- tristan::augment_posterior_linpred(m_e, newdata, nsamples = 100)
 
 
 # aug <- broom::augment(m_e, d_r_nw_dis) %>% 

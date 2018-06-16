@@ -163,13 +163,14 @@ priors <- c(
 #   control = list(adapt_delta = .95))
 # readr::write_rds(test_m_all, "all_mp.rds.gz")
 
-
-
+# test_m_all <- readr::read_rds("all_mp.rds.gz")
+# test_m_all
 
 
 
 test_m_tp1 <- readr::read_rds("tp1_mp_2.rds.gz")
 test_m_tp2 <- readr::read_rds("tp2_mp.rds.gz")
+test_m_tp3 <- readr::read_rds("tp3_mp.rds.gz")
 test_m <- test_m_tp2
 
 summary(test_m)
@@ -184,6 +185,14 @@ sss <- test_data$ResearchID %>% unique() %>% sample(8)
 n1 <- test_data %>% 
   distinct(Condition, Time, ot1, ot2, ot3) %>% 
   tidyr::crossing(., ResearchID = sss) %>% 
+  mutate(Trials = 30)
+
+n_tp1_all <- test_data_1 %>% 
+  distinct(ResearchID, Condition, Time, ot1, ot2, ot3) %>% 
+  mutate(Trials = 30)
+
+n_all <- test_data %>% 
+  distinct(ResearchID, Condition, Time, ot1, ot2, ot3) %>% 
   mutate(Trials = 30)
 
 n2 <- test_data %>% 
@@ -234,6 +243,8 @@ ggplot(pl) +
     y = constants$y_prop_target,
     caption = "Sample of 8 of 155 total participants")
 
+
+
 diffs <- pl2 %>% 
   select(.draw, .posterior_value, Condition, Time) %>% 
   tidyr::spread(Condition, .posterior_value) %>% 
@@ -246,7 +257,8 @@ diffs <- pl2 %>%
 ggplot(diffs) + 
   aes(x = Time, y = `real - nonsense`) + 
   geom_line(aes(group = .draw), alpha = .1) + 
-  stat_summary(fun.data = median_hilow)
+  stat_summary(fun.data = median_hilow) + 
+  ggtitle("Simulated participants")
 
 
 pl3 <- augment_linpred(
@@ -265,7 +277,14 @@ diffs_2 <- pl3 %>%
 ggplot(diffs_2) + 
   aes(x = Time, y = `real - nonsense`) + 
   geom_line(aes(group = .draw), alpha = .1) + 
-  stat_summary(fun.data = median_hilow)
+  stat_summary(fun.data = median_hilow) + 
+  ggtitle("Fixed effects predictions")
+
+ggplot(diffs_2) + 
+  aes(x = Time, y = real_prop) + 
+  geom_line(aes(group = .draw), alpha = .1) + 
+  stat_summary(fun.data = median_hilow) + 
+  ggtitle("Fixed effects predictions")
 
 emp_diffs <- test_data_2 %>% 
   select(ResearchID, elog, Condition, Time) %>% 
@@ -279,7 +298,9 @@ emp_diffs <- test_data_2 %>%
 ggplot(emp_diffs) + 
   aes(x = Time, y = `real - nonsense`) + 
   geom_line(aes(group = ResearchID), alpha = .1) + 
-  stat_summary(fun.data = mean_cl_boot)
+  stat_summary(fun.data = mean_cl_boot) + 
+  ggtitle("Empirical differences")
+
 
 
 
@@ -301,14 +322,117 @@ diffs_4 <- pl4 %>%
     `real - nonsense` = real_prop - nonsense_prop) %>% 
   select(.draw, ResearchID, Time, nonsense_prop, real_prop, `real - nonsense`)
 
-n1 %>% 
-  select(-Trials) %>% 
-  inner_join()
+
 ggplot(diffs_4) + 
   aes(x = Time, y = `real - nonsense`) + 
   stat_summary(aes(group = .draw), fun.y = mean, geom = "line") + 
-  stat_summary(data =)
+  stat_summary(
+    data = emp_diffs %>% semi_join(n1 %>% select(ResearchID)), color = "pink") + 
+  ggtitle("average for n=8")
 
+
+pl5 <- augment_linpred(
+  test_m, n_all, allow_new_levels = TRUE, re_formula = NULL, nsamples = 500)
+
+
+diffs_5 <- pl5 %>% 
+  select(.draw, ResearchID, .posterior_value, Condition, Time) %>% 
+  tidyr::spread(Condition, .posterior_value) %>% 
+  mutate(
+    nonsense_prop = plogis(nonsense), 
+    real_prop = plogis(real),
+    `real - nonsense` = real_prop - nonsense_prop) %>% 
+  select(.draw, ResearchID, Time, nonsense_prop, real_prop, `real - nonsense`)
+
+
+ggplot(diffs_5) + 
+  aes(x = Time, y = `real - nonsense`) + 
+  geom_hline(yintercept = 0) +
+  expand_limits(y = c(-.2, .2)) +
+  stat_summary(aes(group = .draw), fun.y = mean, geom = "line") + 
+  stat_summary(
+    data = emp_diffs %>% semi_join(n_all %>% select(ResearchID)), color = "pink") 
+
+ggplot(diffs_5) + 
+  aes(x = Time, y = real_prop ) + 
+  geom_hline(yintercept = 0) +
+  expand_limits(y = c(-.2, .2)) +
+  stat_summary(aes(group = .draw), fun.y = mean, geom = "line") + 
+  stat_summary(
+    data = emp_diffs %>% semi_join(n_all %>% select(ResearchID)), color = "blue") 
+
+ggplot(diffs_5) + 
+  aes(x = Time, y = nonsense_prop ) + 
+  geom_hline(yintercept = 0) +
+  expand_limits(y = c(-.2, .2)) +
+  stat_summary(aes(group = .draw), fun.y = mean, geom = "line") + 
+  stat_summary(
+    data = emp_diffs %>% semi_join(n_all %>% select(ResearchID)), color = "blue") 
+```
+
+
+Steps to do...
+
+- Describe the slope and peaks for each condition in each year
+- Quantify the difference between the conditions
+- When do the differences happen?
+- Find children with large differences in peaks.
+
+
+```{r}
+pl <- augment_linpred(
+  test_m_tp1, n_tp1_all, allow_new_levels = TRUE, 
+  re_formula = NULL, nsamples = 500)
+
+peaks <- pl %>% 
+  group_by(ResearchID, Condition, .draw) %>% 
+  top_n(5, .posterior_value) %>% 
+  summarise(med = median(plogis(.posterior_value))) 
+
+diffs <- peaks %>%
+  ungroup() %>% 
+  tidyr::spread(Condition, med) %>% 
+  mutate(diff = real - nonsense) %>% 
+  group_by(ResearchID) %>% 
+  summarise_at(vars(real, nonsense, diff), mean)
+
+scores <- readr::read_csv("./data-raw/test_scores.csv")
+tp3 <- scores %>% filter(Study == "TimePoint3")
+tp1 <- scores %>% filter(Study == "TimePoint1")
+tp2 <- scores %>% filter(Study == "TimePoint2")
+
+diffs %>% 
+  inner_join(tp3) %>% 
+  ggplot() + 
+    aes(x = diff, y = EVT_Standard) + 
+    geom_point() +
+    stat_smooth(method = "lm")
+
+w_evt <- scores %>% 
+  filter(Study != "TimePoint2") %>% 
+  select(ResearchID, Study, EVT_Standard) %>% 
+  tidyr::spread(Study, EVT_Standard) %>% 
+  left_join(diffs)
+
+summary(lm(scale(TimePoint3) ~ scale(TimePoint1) + scale(nonsense), w_evt))
+summary(lm(scale(TimePoint3) ~ scale(TimePoint1) + scale(nonsense), w_evt))
+summary(lm(scale(TimePoint3) ~ scale(TimePoint1) + scale(diff), w_evt))
+summary(lm(scale(TimePoint3) ~ scale(TimePoint1) + scale(real), w_evt))
+
+                                                                                                                                                           Hmisc::rcorr(as.matrix(w_evt[-1]))
+
+diffs %>% 
+  inner_join(tp3) %>% 
+  ggplot() + 
+    aes(x = real, y = EVT_Standard) + 
+    geom_point() +
+    stat_smooth(method = "lm")
+
+diffs %>% 
+  inner_join(tp3) %>% 
+  select(diff, real, nonsense, EVT_Standard) %>% 
+  as.matrix(.) %>% 
+  Hmisc::rcorr()
 ```
 
 
