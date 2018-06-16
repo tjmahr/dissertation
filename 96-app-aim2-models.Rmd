@@ -1,0 +1,80 @@
+Computational details for Specific Aim 2 {#aim2-gca-models}
+========================================================================
+
+Growth curve analyses
+------------------------------------------------------------------------
+
+These models were fit in R [vers. 3.5.0; @R-base] with the brms package
+[vers. 2.3.1; add citation].
+
+The orthogonal polynomial features for Time, they were scaled as in
+Specific Aim 1, so that the linear feature ranged from −.5 to .5. Under
+this scaling a unit change in Time^1^ was equal to change from the start
+to the end of the analysis window.
+
+The model formula used to specify the model with brms is printed below.
+The variables `ot1`, `ot2`, and `ot3` are the polynomial time features,
+`ResearchID` identifies children, and `Condition` identifies the
+experimental condition (either, the nonword or real word condition).
+`Target` counts the number of looks to the target image at each time
+bin; `trials()` is a flag that tells brms the number of trials for the
+binomial process. Here, it is the variable `Trials`, which is equal to
+the number of looks to target and distractor in each bin. 
+The syntax `(1 + ot1 + ot2 + ot3) * Condition` specifies a Time x
+Condition interaction; it says to estimate an intercept and the three
+time feature effects for each condition.
+The line `(ot1 + ot2 + ot3 | ResearchID/Condition)` describes the
+random-effect structure of the model with the `/` indicating that data
+from each `Condition` is nested within each `ResearchID`.
+
+```{r, eval = FALSE}
+library(brms)
+
+# Fit a hierarchical logistic regression model
+formula <- bf(
+  Target | trials(Trials) ~ 
+    (1 + ot1 + ot2 + ot3) * Condition + 
+    (1 + ot1 + ot2 + ot3 | ResearchID/Condition), 
+  family = binomial)
+```
+
+The priors for the model are described below. The regression effects
+(`class = "b"`) have a moderately informative prior of Normal(0, 1).
+Because most of the action in the growth curves is a sharp rise, the
+linear time effect `ot1` has a slightly wider prior of Normal(0, 2). A
+weakly informative LKJ(2) prior is put on the random effect
+correlations. I review the role of the LKJ prior in  
+[Appendix \@ref(aim1-gca-models)](#aim1-gca-models). A weakly informative
+prior is put on the random effect standard deviations
+Student-t([df] 7, [mean] 0, [sd] 3). The Student-t distribution
+with is like the normal distribution but it provides slightly thicker
+tails which allow extreme or outlying values.
+
+```{r, eval = FALSE, eval = FALSE}
+priors <- c(
+  set_prior(class = "Intercept", "normal(0, 1)"),
+  set_prior(class = "b", "normal(0, 1)"),
+  set_prior(class = "b", coef = "ot1", "normal(0, 2)"),
+  set_prior(class = "cor", "lkj(2)"),
+  set_prior(class = "sd", "student_t(7, 0, 3)"))
+```
+
+I fit a separate model for each year of the study using syntax like the
+following. This fits the model using four sampling `chains` in parallel
+over four processing `cores`. Early attempts at the model produced
+warnings, so I increased the `adapt_delta` control option to make the
+sampling more robust and eliminate the warnings.
+
+```{r, eval = FALSE}
+m_age3 <- brm(
+  formula = formula,
+  data = d_age3,
+  prior = priors,
+  chains = 4,
+  cores = 4,
+  control = list(adapt_delta = .99))
+
+# Save the output
+readr::write_rds(m_age3, "age3_mp.rds.gz")
+```
+

@@ -19,26 +19,19 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 knitr::opts_chunk$set(cache = TRUE)
 ```
 
-```{r}
+
+```{r, include = FALSE}
 d <- readr::read_csv("./data/aim2-model-ready.csv.gz") %>% 
   filter(!is.na(Bias_Fam)) %>% 
   filter(300 <= Time) %>% 
   select(-starts_with("ot")) %>% 
   polypoly::poly_add_columns(
     Time, degree = 3, scale_width = 1, prefix = "ot")
-
-ggplot(d) + 
-  aes(x = Time, y = Prop, color = Bias_Fam) + 
-  facet_wrap(Condition ~ Study) + 
-  geom_line(aes(group = interaction(ResearchID, Bias_Fam)), alpha = .1) +
-  guides(color = FALSE) + 
-  scale_color_viridis_d(end = .8) + 
-  stat_smooth(method = "gam", formula = y ~ s(x), se = FALSE)
 ```
 
 
 
-```{r}
+```{r, include = FALSE}
 # Flip things so that the nonword and real-word curves go upward
 d_r_ui <- d %>% 
   filter(Condition == "real", Bias_Fam == "Unfamiliar") %>% 
@@ -65,121 +58,64 @@ d_r_nw_vs <- d %>%
 d_r_nw_dis <- d_r_nw_vs %>% 
   filter(Bias_Target == "Distractor")
 
-d_r_nw_dis %>% 
-  filter(Trials < 4) %>% 
-  distinct(Study, ResearchID) %>% 
-  inner_join(d_r_nw_dis, .) %>% 
-  ggplot() + 
-    aes(x = Time, y = plogis(elog), color = Condition) + 
-    stat_summary()
-
-d_r_nw_dis %>% 
-  # filter(Trials > 4) %>% 
-  # distinct(Study, ResearchID) %>% 
-  # inner_join(d_r_nw_dis, .) %>% 
-  ggplot() + 
-    aes(x = Time, y = plogis(elog), color = Condition) + 
-    stat_summary()
-
-
 study_child_with_empty_cells <- d_r_nw_dis %>% 
   filter(Trials < 4) %>% 
   distinct(Study, ResearchID)
+
+study_counts <- study_child_with_empty_cells %>% 
+  count(Study) %>% 
+  split(.$Study) %>% 
+  lapply(pull, n) %>% 
+  set_names(stringr::str_replace, "TimePoint", "T")
+
+study_counts <- list(study_counts$n) %>% 
+  set_names(study_counts$Study)
 
 d_r_nw_dis <- d_r_nw_dis %>% 
   anti_join(study_child_with_empty_cells)
 ```
 
+  - I model data from `r min(d$Time)` ms to `r max(d$Time)`.
+  - I flipped the growth curve for the nonword condition so that it
+    reflects the proportion of looking to the unfamiliar object when
+    presented a nonword. Both the real word and nonword conditions
+    measure referent selection as the probability of fixating on the
+    appropriate referent when presented with a label.
+  - I removed any Study x Child levels if a child had fewer than 4
+    fixations in a single time bin. Put another way, children had to
+    have at least 4 looks to one of the images in every 50 ms time bin.
+    This screening removed `r study_counts$T1` children from Age 3,
+    `r study_counts$T2` from Age 4, and `r study_counts$T3` from Age 5.
+
+
+
 ```{r}
 library(brms)
 
-test_data_1 <- d_r_nw_dis %>%
-  filter(Study == "TimePoint1") %>% 
+d_r_nw_dis <- d_r_nw_dis %>% 
   select(
     Study, ResearchID, Condition, Time, ot1:ot3, Target, Distractor, 
     Trials, elog)
 
-test_data_2 <- d_r_nw_dis %>%
-  filter(Study == "TimePoint2") %>% 
-  select(
-    Study, ResearchID, Condition, Time, ot1:ot3, Target, Distractor, 
-    Trials, elog)
+d_tp1 <- d_r_nw_dis %>%
+  filter(Study == "TimePoint1") 
 
-test_data_3 <- d_r_nw_dis %>%
-  filter(Study == "TimePoint3") %>% 
-  select(
-    Study, ResearchID, Condition, Time, ot1:ot3, Target, Distractor, 
-    Trials, elog)
+d_tp2 <- d_r_nw_dis %>%
+  filter(Study == "TimePoint2") 
 
-# Fit a hierarchical logistic regression model
-test_formula <- bf(
-  Target | trials(Trials) ~ 
-    (ot1 + ot2 + ot3) * Condition + 
-    (ot1 + ot2 + ot3 | ResearchID/Condition), 
-  family = binomial)
+d_tp3 <- d_r_nw_dis %>%
+  filter(Study == "TimePoint3") 
 
-priors <- c(
-  set_prior(class = "Intercept", "normal(0, 1)"),
-  set_prior(class = "b", "normal(0, 1)"),
-  set_prior(class = "b", coef = "ot1", "normal(0, 2)"),
-  set_prior(class = "cor", "lkj(2)"),
-  set_prior(class = "sd", "student_t(3, 0, 5)"))
+m_tp1 <- readr::read_rds("data/tp1_mp.rds.gz")
+m_tp2 <- readr::read_rds("data/tp2_mp.rds.gz")
+m_tp3 <- readr::read_rds("data/tp3_mp.rds.gz")
 
-
-
-
-
-
-# test_m_tp2 <- brm(
-#   formula = test_formula,
-#   data = test_data_2,
-#   prior = priors,
-#   chains = 4,
-#   cores = 4,
-#   control = list(adapt_delta = .95))
-# readr::write_rds(test_m_tp2, "tp2_mp.rds.gz")
-
-# test_m_tp3 <- brm(
-#   formula = test_formula,
-#   data = test_data_3,
-#   prior = priors,
-#   chains = 4,
-#   cores = 4,
-#   control = list(adapt_delta = .95))
-# readr::write_rds(test_m_tp3, "tp3_mp.rds.gz")
-
-# test_formula_all <- bf(
-#   Target | trials(Trials) ~ 
-#     (ot1 + ot2 + ot3) * Condition * Study + 
-#     (ot1 + ot2 + ot3 | ResearchID/Condition/Study), 
-#   family = binomial)
-# 
-# test_m_all <- brm(
-#   formula = test_formula_all,
-#   data = d_r_nw_dis,
-#   prior = priors,
-#   chains = 4,
-#   cores = 4,
-#   control = list(adapt_delta = .95))
-# readr::write_rds(test_m_all, "all_mp.rds.gz")
-
-# test_m_all <- readr::read_rds("all_mp.rds.gz")
-# test_m_all
-
-
-
-test_m_tp1 <- readr::read_rds("tp1_mp_2.rds.gz")
-test_m_tp2 <- readr::read_rds("tp2_mp.rds.gz")
-test_m_tp3 <- readr::read_rds("tp3_mp.rds.gz")
-test_m <- test_m_tp2
+test_m <- m_tp2
 
 summary(test_m)
 prior_summary(test_m)
 
-p <- marginal_effects(test_m)
-# plot(p)
-
-test_data <- test_data_2
+test_data <- d_tp2
 sss <- test_data$ResearchID %>% unique() %>% sample(8)
 
 n1 <- test_data %>% 
@@ -187,12 +123,16 @@ n1 <- test_data %>%
   tidyr::crossing(., ResearchID = sss) %>% 
   mutate(Trials = 30)
 
-n_tp1_all <- test_data_1 %>% 
-  distinct(ResearchID, Condition, Time, ot1, ot2, ot3) %>% 
+n_tp1_all <- d_tp1 %>% 
+  distinct(Study, ResearchID, Condition, Time, ot1, ot2, ot3) %>% 
   mutate(Trials = 30)
 
-n_all <- test_data %>% 
-  distinct(ResearchID, Condition, Time, ot1, ot2, ot3) %>% 
+n_tp2_all <- d_tp2 %>% 
+  distinct(Study, ResearchID, Condition, Time, ot1, ot2, ot3) %>% 
+  mutate(Trials = 30)
+
+n_tp3_all <- d_tp3 %>% 
+  distinct(Study, ResearchID, Condition, Time, ot1, ot2, ot3) %>% 
   mutate(Trials = 30)
 
 n2 <- test_data %>% 
@@ -220,7 +160,6 @@ pl1 <- augment_linpred(
 pl2 <- augment_linpred(
   test_m, n2, allow_new_levels = TRUE, re_formula = NULL, nsamples = 500)
 
-library("ggthemes")
 inv_logit <- function(x) 1 / (1 + exp(-x))
 pl <- bind_rows(pl1, pl2)
 
@@ -286,7 +225,7 @@ ggplot(diffs_2) +
   stat_summary(fun.data = median_hilow) + 
   ggtitle("Fixed effects predictions")
 
-emp_diffs <- test_data_2 %>% 
+emp_diffs <- d_tp2 %>% 
   select(ResearchID, elog, Condition, Time) %>% 
   tidyr::spread(Condition, elog) %>% 
   mutate(
@@ -378,28 +317,190 @@ Steps to do...
 - When do the differences happen?
 - Find children with large differences in peaks.
 
-
 ```{r}
-pl <- augment_linpred(
-  test_m_tp1, n_tp1_all, allow_new_levels = TRUE, 
+tp1_fits <- augment_linpred(
+  m_tp1, n_tp1_all, allow_new_levels = TRUE, 
   re_formula = NULL, nsamples = 500)
 
-peaks <- pl %>% 
-  group_by(ResearchID, Condition, .draw) %>% 
+tp2_fits <- augment_linpred(
+  m_tp2, n_tp2_all, allow_new_levels = TRUE, 
+  re_formula = NULL, nsamples = 500)
+
+tp3_fits <- augment_linpred(
+  m_tp3, n_tp3_all, allow_new_levels = TRUE, 
+  re_formula = NULL, nsamples = 500)
+
+get_peaks <- . %>% 
+  group_by(Study, ResearchID, Condition, .draw) %>% 
   top_n(5, .posterior_value) %>% 
   summarise(med = median(plogis(.posterior_value))) 
 
-diffs <- peaks %>%
+peaks <- bind_rows(
+  tp1_fits %>% get_peaks(), 
+  tp2_fits %>% get_peaks(), 
+  tp3_fits %>% get_peaks())
+
+diff_dist <- peaks %>%
   ungroup() %>% 
   tidyr::spread(Condition, med) %>% 
-  mutate(diff = real - nonsense) %>% 
-  group_by(ResearchID) %>% 
-  summarise_at(vars(real, nonsense, diff), mean)
+  mutate(diff = real - nonsense)
 
+diffs <- diff_dist %>% 
+  group_by(Study, ResearchID) %>% 
+  summarise_at(vars(real, nonsense, diff), .funs = mean) %>% 
+  ungroup()
+
+ant <- data_frame(
+  diff = .6, 
+  Study = "Age 3", 
+  label = "Real word curves had higher peaks")
+
+ant2 <- data_frame(
+  diff = -.6, 
+  Study = "Age 3", 
+  label = "Nonword curves had higher peaks")
+
+diffs %>% 
+  mutate(Study = convert_study_to_age(Study)) %>% 
+  ggplot() + 
+    aes(x = Study, y = diff) + 
+    geom_text(
+      aes(label = label), 
+      data = bind_rows(ant, ant2), nudge_x = -.45, hjust = 0, 
+      color = "grey20", size = 3) +
+    geom_hline(yintercept = 0, size = 2, color = "white") + 
+    geom_point(position = position_jitter(width = .2), alpha = .3, shape = 1) +
+    stat_summary(fun.y = mean, geom = "point", size = 2) + 
+  labs(
+    title = "Differences in growth curve peaks",
+    x = NULL,
+    y = "Real word peak - nonword peak",
+    caption = "Open points: Participant means. Closed: Mean of means.")
+
+```
+
+## Which type of referent selection better predicts age 5 vocabulary
+
+In chapter X, I found that peak looking probability at age 3 was
+positively correlated with age 5 vocabulary. Above, I showed that the
+growth curve peaks differed between the two condition, especially at
+age 3. Therefore, one question is which growth curve measures best
+predicts vocabulary at age 5.
+
+For these analyses, I regressed Age 5 expressive vocabulary standard score onto the Age 3 expressive vocabuulary score, Age 3 real word peak and Age 3 nonword peaks.
+
+```{r}
 scores <- readr::read_csv("./data-raw/test_scores.csv")
-tp3 <- scores %>% filter(Study == "TimePoint3")
 tp1 <- scores %>% filter(Study == "TimePoint1")
 tp2 <- scores %>% filter(Study == "TimePoint2")
+tp3 <- scores %>% filter(Study == "TimePoint3")
+
+diffs %>% 
+  inner_join(tp3) %>% 
+  ggplot() + 
+    aes(x = diff, y = EVT_Standard) + 
+    geom_point() +
+    stat_smooth(method = "lm")
+
+# w_evt_dist <- scores %>% 
+#   filter(Study != "TimePoint2") %>% 
+#   select(ResearchID, Study, EVT_Standard) %>% 
+#   tidyr::spread(Study, EVT_Standard) %>% 
+#   inner_join(diff_dist)
+
+
+
+w_evt <- scores %>% 
+  filter(Study != "TimePoint2") %>% 
+  select(ResearchID, Study, EVT_Standard) %>% 
+  tidyr::spread(Study, EVT_Standard) %>% 
+  inner_join(diffs %>% filter(Study == "TimePoint1"))
+
+
+# 
+# model_one <- function(data) {
+#   lm(scale(TimePoint3) ~ scale(TimePoint1) + scale(nonsense) + scale(real), data)
+# }
+# 
+# nested <- w_evt_dist %>% 
+#   tidyr::nest(-.draw) %>% 
+#   mutate(
+#     model = data %>% purrr::map(model_one), 
+#     glance = model %>% purrr::map(broom::glance),
+#     coefs =  model %>% purrr::map(broom::tidy)) %>% 
+#   select(-model, -data) %>% 
+#   tidyr::unnest(glance) %>% 
+#   select(-(statistic:df), -df.residual) %>% 
+#   tidyr::unnest(coefs)
+# ggplot(nested) + 
+#   aes(x = term, y = estimate) + 
+#   stat_summary(fun.data = median_hilow)
+
+
+library(rstanarm)
+zzzzz <- stan_glm(
+  scale(TimePoint3) ~ scale(TimePoint1) + scale(nonsense) + scale(real),
+  data = w_evt,
+  family = gaussian,
+  prior = normal(0, .5, autoscale = FALSE))
+bayesplot::mcmc_intervals(as.matrix(zzzzz))
+bayesplot::mcmc_intervals(cbind(as.matrix(zzzzz), r2 = bayes_R2(zzzzz)))
+
+w_evt2 <- na.omit(w_evt)
+ppcor::pcor.test(w_evt2$TimePoint3, w_evt2$diff, w_evt2$TimePoint1)
+ppcor::pcor.test(w_evt2$TimePoint3, w_evt2$TimePoint1, w_evt2$diff)
+summary(lm(scale(TimePoint3) ~ scale(TimePoint1) + scale(diff), w_evt))
+summary(lm(TimePoint3 ~ TimePoint1 + scale(diff), w_evt))
+summary(lm(TimePoint3 ~ TimePoint1 + I(diff * 100), w_evt))
+
+
+
+
+
+w_evt %>%
+  modelr::add_residuals(lm(TimePoint3 ~ TimePoint1, .)) %>%
+  ggplot() +
+    aes(x = diff, y = resid) +
+    geom_point() +
+    stat_smooth(method = "lm")
+
+
+summary(lm(scale(TimePoint3) ~ scale(TimePoint1) + scale(nonsense) + scale(real), w_evt))
+summary(lm(scale(TimePoint3) ~ scale(TimePoint1) + scale(diff) + scale(real), w_evt))
+summary(lm(scale(TimePoint3) ~ scale(TimePoint1) + scale(nonsense), w_evt))
+summary(lm(scale(TimePoint3) ~ scale(TimePoint1) + scale(diff), w_evt))
+summary(lm(scale(TimePoint3) ~ scale(TimePoint1) + scale(real), w_evt))
+
+plot(density(rnorm(1000, 0, .5)))
+
+```
+
+
+
+When it comes to predicting age 5 vocabulary, the peak of the age 3 real word curve conveys no information over and above age 3 vocabulary level. The age 3 nonword peak or the difference in age 3 peaks both predicted age 5 vocabulary. If I had to choose one of these measure, I would prefer the nonword peak the difference measure can hide poor performance. In the data below, at diff = 0, the range of nonword peaks span from .25 to 1. A difference of 0 can capture ceiling and floor performance in both tasks.
+
+
+```{r}
+ggplot(w_evt) + 
+  aes(x = diff, y = nonsense) + 
+  geom_point()
+
+ggplot(diffs) + 
+  aes(x = real, y = nonsense) + 
+  stat_smooth(method = "lm") + 
+  geom_point() +
+  facet_wrap("Study") + 
+  geom_abline(slope = 1, intercept = 0) + 
+  expand_limits(x = 0)
+```
+
+
+
+```{r}
+scores <- readr::read_csv("./data-raw/test_scores.csv")
+tp1 <- scores %>% filter(Study == "TimePoint1")
+tp2 <- scores %>% filter(Study == "TimePoint2")
+tp3 <- scores %>% filter(Study == "TimePoint3")
 
 diffs %>% 
   inner_join(tp3) %>% 
@@ -419,7 +520,6 @@ summary(lm(scale(TimePoint3) ~ scale(TimePoint1) + scale(nonsense), w_evt))
 summary(lm(scale(TimePoint3) ~ scale(TimePoint1) + scale(diff), w_evt))
 summary(lm(scale(TimePoint3) ~ scale(TimePoint1) + scale(real), w_evt))
 
-                                                                                                                                                           Hmisc::rcorr(as.matrix(w_evt[-1]))
 
 diffs %>% 
   inner_join(tp3) %>% 
