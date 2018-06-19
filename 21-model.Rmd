@@ -91,6 +91,7 @@ d_r_nw_dis <- d_r_nw_dis %>%
 
 ```{r}
 library(brms)
+theme_set(theme_grey())
 
 d_r_nw_dis <- d_r_nw_dis %>% 
   select(
@@ -225,19 +226,20 @@ ggplot(diffs_2) +
   stat_summary(fun.data = median_hilow) + 
   ggtitle("Fixed effects predictions")
 
-emp_diffs <- d_tp2 %>% 
-  select(ResearchID, elog, Condition, Time) %>% 
+emp_diffs <- all_data %>% 
+  select(Study, ResearchID, elog, Condition, Time) %>% 
   tidyr::spread(Condition, elog) %>% 
   mutate(
     nonsense_prop = plogis(nonsense), 
     real_prop = plogis(real),
     `real - nonsense` = real_prop - nonsense_prop) %>% 
-  select(ResearchID, Time, nonsense_prop, real_prop, `real - nonsense`)
+  select(Study, ResearchID, Time, nonsense_prop, real_prop, `real - nonsense`)
 
 ggplot(emp_diffs) + 
   aes(x = Time, y = `real - nonsense`) + 
   geom_line(aes(group = ResearchID), alpha = .1) + 
   stat_summary(fun.data = mean_cl_boot) + 
+  facet_wrap("Study") +
   ggtitle("Empirical differences")
 
 
@@ -363,7 +365,7 @@ ant2 <- data_frame(
 diffs %>% 
   mutate(Study = convert_study_to_age(Study)) %>% 
   ggplot() + 
-    aes(x = Study, y = diff) + 
+    aes(x = Study, y = -diff) + 
     geom_text(
       aes(label = label), 
       data = bind_rows(ant, ant2), nudge_x = -.45, hjust = 0, 
@@ -374,16 +376,117 @@ diffs %>%
   labs(
     title = "Differences in growth curve peaks",
     x = NULL,
-    y = "Real word peak - nonword peak",
-    caption = "Open points: Participant means. Closed: Mean of means.")
+    y = "Nonword peak - real word peak",
+    caption = "Open points: Participant posterior means. Closed: Mean of means.") + 
+  theme(
+    axis.title.y = element_text(hjust = 1)
+  )
+```
+
+## Changes in referent selection
+
+```{r}
+all_fits <- bind_rows(tp1_fits, tp2_fits, tp3_fits) %>% 
+  mutate(Study = convert_study_to_age(Study))
+all_data <- bind_rows(d_tp1, d_tp2, d_tp3) %>% 
+  mutate(Study = convert_study_to_age(Study))
+
+curve_diffs <- all_fits %>% 
+  select(Study, .draw, ResearchID, .posterior_value, Condition, Time) %>% 
+  tidyr::spread(Condition, .posterior_value) %>% 
+  mutate(
+    nonsense_prop = plogis(nonsense), 
+    real_prop = plogis(real),
+    `real - nonsense` = real_prop - nonsense_prop) %>% 
+  select(Study, .draw, ResearchID, Time, nonsense_prop, real_prop, `real - nonsense`)
+
+
+some_fits <- all_fits %>% 
+  tjmisc::sample_n_of(50, .draw)
+
+some_curve_diffs <- curve_diffs %>% 
+  tjmisc::sample_n_of(50, .draw) 
+
+p_fits <- ggplot(some_fits) + 
+  aes(x = Time, y = plogis(.posterior_value), color = Condition) + 
+  stat_summary(
+    aes(group = interaction(.draw, Condition)),
+    geom = "line",
+    fun.y = mean,
+    alpha = .05) +
+  stat_summary(
+    aes(y = Target / Trials), 
+    data = all_data,
+    fun.y = mean,
+    geom = "point") +
+  geom_text(
+    aes(label = label, y = y),
+    data = data.frame(
+      Condition = c("nonsense", "real"),
+      Study = c("Age 4"), 
+      label = c("Nonwords", "Real words"), 
+      Time = c(300, 900), 
+      y = c(.82, .60)),
+    hjust = 0,
+    size = 3) + 
+  facet_wrap("Study") +
+  guides(color = FALSE) +
+  labs(
+    x = NULL, 
+    y = "Proportion looks to target") + 
+  theme(
+    axis.title.y = element_text(hjust = 1)
+  )
+p_fits
+
+
+p_diffs <- ggplot(some_curve_diffs) + 
+  aes(x = Time, y = -`real - nonsense`) + 
+  geom_hline(yintercept = 0, color = "white", size = 2) +
+  stat_summary(
+    data = emp_diffs,
+    color = "grey40",
+    fun.y = mean,
+    geom = "point") +
+  stat_summary(
+    aes(group = .draw), 
+    geom = "line", 
+    fun.y = mean, 
+    alpha = .05, color = constants$col_off_black) + 
+  geom_text(
+    aes(label = label, y = y),
+    data = data.frame(
+      Study = "Age 3", label = "Nonword\nadvantage", Time = 900, y = .10),
+    hjust = 0,
+    size = 3, color = constants$col_off_black) + 
+  facet_wrap("Study") + 
+  expand_limits(y = c(-.1, .2)) +
+  labs(
+    x = constants$x_time,
+    y = "Difference",
+    caption = "Lines: 50 posterior means. Points: Empirical means.") +
+  theme(
+    strip.background = element_blank(),
+    strip.text = element_blank(),
+    axis.title.x = element_text(hjust = 1),
+    axis.title.y = element_text(hjust = 1))
+p_diffs
+
+library(patchwork)
+p_fits + p_diffs + plot_layout(ncol = 1, heights = c(2, 1))
+
+
 
 ```
 
+
+
+
 ## Which type of referent selection better predicts age 5 vocabulary
 
-In chapter X, I found that peak looking probability at age 3 was
+In chapter X, I found that peak looking probability at age 3
 positively correlated with age 5 vocabulary. Above, I showed that the
-growth curve peaks differed between the two condition, especially at
+growth curve peaks differed between the two conditions, especially at
 age 3. Therefore, one question is which growth curve measures best
 predicts vocabulary at age 5.
 
@@ -396,11 +499,52 @@ tp2 <- scores %>% filter(Study == "TimePoint2")
 tp3 <- scores %>% filter(Study == "TimePoint3")
 
 diffs %>% 
+  filter(Study == "TimePoint1") %>% 
+  select(-Study) %>% 
   inner_join(tp3) %>% 
   ggplot() + 
-    aes(x = diff, y = EVT_Standard) + 
+    aes(x = -diff, y = EVT_Standard) + 
     geom_point() +
-    stat_smooth(method = "lm")
+    stat_smooth(method = "lm") + 
+  labs(
+    x = "Nonword advantage at age 3", 
+    y = "EVT Standard score at age 5")
+
+diffs %>% 
+  filter(Study == "TimePoint1") %>% 
+  select(-Study) %>% 
+  inner_join(tp3) %>% 
+  ggplot() + 
+    aes(x = real, y = EVT_Standard) + 
+    geom_point() +
+    stat_smooth(method = "lm") + 
+  labs(
+    x = "Real word peak at age 3", 
+    y = "EVT Standard score at age 5")
+
+diffs %>% 
+  filter(Study == "TimePoint1") %>% 
+  select(-Study) %>% 
+  inner_join(tp3) %>% 
+  ggplot() + 
+    aes(x = nonsense, y = EVT_Standard) + 
+    geom_point() +
+    stat_smooth(method = "lm") + 
+  labs(
+    x = "Nonword peak at age 3", 
+    y = "EVT Standard score at age 5")
+
+diffs %>% 
+  filter(Study == "TimePoint1") %>% 
+  select(-Study) %>% 
+  inner_join(tp3) %>% 
+  ggplot() + 
+    aes(x = real, y = EVT_Standard) + 
+    geom_point() +
+    stat_smooth(method = "lm") + 
+  labs(
+    x = "Real word peak at age 3", 
+    y = "EVT Standard score at age 5")
 
 # w_evt_dist <- scores %>% 
 #   filter(Study != "TimePoint2") %>% 
@@ -450,6 +594,8 @@ w_evt2 <- na.omit(w_evt)
 ppcor::pcor.test(w_evt2$TimePoint3, w_evt2$diff, w_evt2$TimePoint1)
 ppcor::pcor.test(w_evt2$TimePoint3, w_evt2$TimePoint1, w_evt2$diff)
 summary(lm(scale(TimePoint3) ~ scale(TimePoint1) + scale(diff), w_evt))
+summary(lm(scale(TimePoint3) ~ scale(TimePoint1) + scale(nonsense), w_evt))
+summary(lm(scale(TimePoint3) ~ scale(TimePoint1) + scale(real), w_evt))
 summary(lm(TimePoint3 ~ TimePoint1 + scale(diff), w_evt))
 summary(lm(TimePoint3 ~ TimePoint1 + I(diff * 100), w_evt))
 
