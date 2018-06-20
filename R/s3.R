@@ -4,6 +4,24 @@ aws.signature::use_credentials(profile = "tj")
 
 library(aws.s3)
 
+save_object_to_data <- function(file) {
+  paths <- get_data_paths(file)
+  save_object(paths$cloud, file = paths$local)
+}
+
+put_object_to_data <- function(file) {
+  paths <- get_data_paths(file)
+  put_object(paths$cloud, file = paths$local)
+}
+
+get_data_paths <- function(file) {
+  list(
+    local = file.path("./data", file),
+    cloud = file.path("s3://bunnyhat/data", file)
+  )
+}
+
+
 download_aim1_eyetracking_data <- function() {
   save_object(
     "s3://bunnyhat/data/aim1-screened.csv.gz",
@@ -131,3 +149,46 @@ upload_lkj_demo_data <- function() {
     file = "./data/aim1-lkj-prior-demo.csv.gz")
 }
 
+
+
+
+
+download_aim2_real_nonword_data <- function() {
+  save_object(
+    "s3://bunnyhat/data/aim2-model-ready.csv.gz",
+    file = "./data/aim2-model-ready.csv.gz")
+
+  save_object(
+    "s3://bunnyhat/data/aim2-real-vs-nw-modeled-data.rds.gz",
+    file = "./data/aim2-real-vs-nw-modeled-data.rds.gz")
+}
+
+upload_aim2_real_nonword_data <- function() {
+  put_object_to_data("aim2-model-ready.csv.gz")
+  put_object_to_data("aim2-real-vs-nw-modeled-data.rds.gz")
+}
+
+download_aim2_real_nonword_data <- function() {
+  save_object_to_data("aim2-model-ready.csv.gz")
+  save_object_to_data("aim2-real-vs-nw-modeled-data.rds.gz")
+}
+
+upload_aim2_real_nonword_models <- function() {
+  put_object_to_data("aim2-real-vs-nw-tp1.rds.gz")
+  put_object_to_data("aim2-real-vs-nw-tp2.rds.gz")
+  put_object_to_data("aim2-real-vs-nw-tp3.rds.gz")
+  put_object_to_data("aim2-real-vs-nw-all-peaks.rds.gz")
+  put_object_to_data("aim2-real-vs-nw-tp1-averages.rds.gz")
+  put_object_to_data("aim2-real-vs-nw-tp2-averages.rds.gz")
+  put_object_to_data("aim2-real-vs-nw-tp3-averages.rds.gz")
+}
+
+download_aim2_real_nonword_models <- function() {
+  save_object_to_data("aim2-real-vs-nw-tp1.rds.gz")
+  save_object_to_data("aim2-real-vs-nw-tp2.rds.gz")
+  save_object_to_data("aim2-real-vs-nw-tp3.rds.gz")
+  save_object_to_data("aim2-real-vs-nw-all-peaks.rds.gz")
+  save_object_to_data("aim2-real-vs-nw-tp1-averages.rds.gz")
+  save_object_to_data("aim2-real-vs-nw-tp2-averages.rds.gz")
+  save_object_to_data("aim2-real-vs-nw-tp3-averages.rds.gz")
+}

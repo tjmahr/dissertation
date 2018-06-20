@@ -31,6 +31,23 @@ constants <- list(
   cap_diff_95 = "Estimated difference with 95% interval"
 )
 
+library(extrafont)
+extrafont::loadfonts(quiet = TRUE)
+
+theme_teej <- function(base_size = 11, base_family = "Lato Medium",
+                       base_line_size = base_size / 22,
+                       base_rect_size = base_size / 22) {
+  theme_grey(
+    base_size = base_size,
+    base_family = base_family,
+    base_line_size = base_line_size,
+    base_rect_size = base_rect_size) %+replace%
+    theme(
+      axis.title = element_text(hjust = 1))
+}
+
+theme_set(theme_teej())
+
 aim1_stim <- list(
   good_phon = c(
     "bear", "bee", "bell", "dress", "drum", "flag", "fly",

@@ -224,7 +224,7 @@ library(patchwork)
 p1 + p2 + p3 + plot_layout(ncol = 1)
 ```
 
-```{r poster-version-of-features, eval = FALSE}
+```{r poster-version-of-features, eval = FALSE, include = FALSE}
 library(extrafont)
 
 dummy_data <- d_m %>%

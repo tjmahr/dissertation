@@ -27,11 +27,7 @@ d <- readr::read_csv("./data/aim2-model-ready.csv.gz") %>%
   select(-starts_with("ot")) %>% 
   polypoly::poly_add_columns(
     Time, degree = 3, scale_width = 1, prefix = "ot")
-```
 
-
-
-```{r, include = FALSE}
 # Flip things so that the nonword and real-word curves go upward
 d_r_ui <- d %>% 
   filter(Condition == "real", Bias_Fam == "Unfamiliar") %>% 
@@ -91,12 +87,11 @@ d_r_nw_dis <- d_r_nw_dis %>%
 
 ```{r}
 library(brms)
-theme_set(theme_grey())
+theme_set(theme_teej())
 
-d_r_nw_dis <- d_r_nw_dis %>% 
-  select(
-    Study, ResearchID, Condition, Time, ot1:ot3, Target, Distractor, 
-    Trials, elog)
+
+
+d_r_nw_dis <- readr::read_rds("./data/aim2-real-vs-nw-modeled-data.rds.gz")
 
 d_tp1 <- d_r_nw_dis %>%
   filter(Study == "TimePoint1") 
@@ -107,208 +102,70 @@ d_tp2 <- d_r_nw_dis %>%
 d_tp3 <- d_r_nw_dis %>%
   filter(Study == "TimePoint3") 
 
-m_tp1 <- readr::read_rds("data/tp1_mp.rds.gz")
-m_tp2 <- readr::read_rds("data/tp2_mp.rds.gz")
-m_tp3 <- readr::read_rds("data/tp3_mp.rds.gz")
+m_tp1 <- readr::read_rds("./data/aim2-real-vs-nw-tp1.rds.gz")
+m_tp2 <- readr::read_rds("./data/aim2-real-vs-nw-tp2.rds.gz")
+m_tp3 <- readr::read_rds("./data/aim2-real-vs-nw-tp3.rds.gz")
 
-test_m <- m_tp2
+peaks <- readr::read_rds("./data/aim2-real-vs-nw-all-peaks.rds.gz")
+```
 
-summary(test_m)
-prior_summary(test_m)
 
-test_data <- d_tp2
-sss <- test_data$ResearchID %>% unique() %>% sample(8)
-
-n1 <- test_data %>% 
-  distinct(Condition, Time, ot1, ot2, ot3) %>% 
-  tidyr::crossing(., ResearchID = sss) %>% 
-  mutate(Trials = 30)
-
-n_tp1_all <- d_tp1 %>% 
-  distinct(Study, ResearchID, Condition, Time, ot1, ot2, ot3) %>% 
-  mutate(Trials = 30)
-
-n_tp2_all <- d_tp2 %>% 
-  distinct(Study, ResearchID, Condition, Time, ot1, ot2, ot3) %>% 
-  mutate(Trials = 30)
-
-n_tp3_all <- d_tp3 %>% 
-  distinct(Study, ResearchID, Condition, Time, ot1, ot2, ot3) %>% 
-  mutate(Trials = 30)
-
-n2 <- test_data %>% 
-  distinct(Condition, Time, ot1, ot2, ot3) %>% 
-  tidyr::crossing(., ResearchID = "Simulated new participants (500)") %>% 
-  mutate(Trials = 30)
-
+```{r}
 augment_linpred <- function(model, data, ...) {
-  model %>% 
-    posterior_linpred(newdata = data, ...) %>% 
-    as.data.frame() %>% 
-    as_tibble() %>% 
-    rlang::set_names(seq_len(nrow(data))) %>% 
-    tibble::rowid_to_column(".draw") %>% 
-    tidyr::gather(".observation", ".posterior_value", -.draw) %>% 
-    mutate(.observation = as.numeric(.observation)) %>% 
+  model %>%
+    posterior_linpred(newdata = data, ...) %>%
+    as.data.frame() %>%
+    as_tibble() %>%
+    rlang::set_names(seq_len(nrow(data))) %>%
+    tibble::rowid_to_column(".draw") %>%
+    tidyr::gather(".observation", ".posterior_value", -.draw) %>%
+    mutate(.observation = as.numeric(.observation)) %>%
     left_join(
       data %>% tibble::rowid_to_column(".observation"),
       by = ".observation")
 }
 
-pl1 <- augment_linpred(
-  test_m, n1, allow_new_levels = TRUE, re_formula = NULL, nsamples = 200)
+d_test <- d_tp1 %>%
+  # sample_n_of(1, ResearchID) %>% 
+  filter(ResearchID == "089L") %>% 
+  mutate(
+    Trials_Old = Trials,
+    Prop = Target / Trials,
+    PropSE = lookr::se_prop(Prop, Trials)) %>% 
+  distinct(
+    ResearchID, Condition, Time, ot1, ot2, ot3, Prop, PropSE,
+    Trials_Old, Target) %>%
+  mutate(Trials = 30) %>% 
+  augment_linpred(m_tp1, ., nsamples = 100)
 
-pl2 <- augment_linpred(
-  test_m, n2, allow_new_levels = TRUE, re_formula = NULL, nsamples = 500)
+d_test <- d_test %>% 
+  mutate(Condition = ifelse(Condition == "nonsense", "nonwords", "real words"))
 
-inv_logit <- function(x) 1 / (1 + exp(-x))
-pl <- bind_rows(pl1, pl2)
-
-ggplot(pl) + 
-  aes(x = Time, y = inv_logit(.posterior_value), color = Condition) +
-  geom_line(
-    aes(group = interaction(.draw, Condition)), 
-    alpha = .05) +
-  geom_line(
-    aes(y = Target / Trials, group = Condition),
-    data = test_data %>% filter(ResearchID %in% sss),
-    color = "grey20") + 
-  facet_wrap("ResearchID") + 
-  # theme_solarized_2(light = FALSE) + 
-  # scale_color_solarized() + 
-  guides(color = guide_legend(override.aes = list(alpha = 1))) +
+ggplot(d_test) + 
+  aes(x = Time, y = plogis(.posterior_value), color = Condition) + 
+  geom_line(aes(group = interaction(Condition, .draw)), alpha = .2) + 
+  geom_pointrange(
+    aes(
+      y = Prop, 
+      ymin = Prop - PropSE, 
+      ymax = Prop + PropSE, 
+      group = Condition), 
+    color = "grey40") +
+  geom_text(
+    aes(y = Prop, label = Condition),
+    data = data_frame(
+      Time = c(500, 1200), 
+      Condition = c("real words", "nonwords"), 
+      Prop = c(.9, .1)),
+    family = "Lato Medium") +
   labs(
-    title = "Example observed means and 200 posterior fits",
+    title = "One child's data at age 3",
     x = constants$x_time,
     y = constants$y_prop_target,
-    caption = "Sample of 8 of 155 total participants")
+    caption = 
+      "Intervals: Observed proportions ± SE. Lines: 100 posterior fits") + 
+  guides(color = FALSE)
 
-
-
-diffs <- pl2 %>% 
-  select(.draw, .posterior_value, Condition, Time) %>% 
-  tidyr::spread(Condition, .posterior_value) %>% 
-  mutate(
-    nonsense_prop = plogis(nonsense), 
-    real_prop = plogis(real),
-    `real - nonsense` = real_prop - nonsense_prop) %>% 
-  select(.draw, Time, nonsense_prop, real_prop, `real - nonsense`)
-
-ggplot(diffs) + 
-  aes(x = Time, y = `real - nonsense`) + 
-  geom_line(aes(group = .draw), alpha = .1) + 
-  stat_summary(fun.data = median_hilow) + 
-  ggtitle("Simulated participants")
-
-
-pl3 <- augment_linpred(
-  test_m, n2, allow_new_levels = TRUE, re_formula = NA, nsamples = 500)
-
-
-diffs_2 <- pl3 %>% 
-  select(.draw, .posterior_value, Condition, Time) %>% 
-  tidyr::spread(Condition, .posterior_value) %>% 
-  mutate(
-    nonsense_prop = plogis(nonsense), 
-    real_prop = plogis(real),
-    `real - nonsense` = real_prop - nonsense_prop) %>% 
-  select(.draw, Time, nonsense_prop, real_prop, `real - nonsense`)
-
-ggplot(diffs_2) + 
-  aes(x = Time, y = `real - nonsense`) + 
-  geom_line(aes(group = .draw), alpha = .1) + 
-  stat_summary(fun.data = median_hilow) + 
-  ggtitle("Fixed effects predictions")
-
-ggplot(diffs_2) + 
-  aes(x = Time, y = real_prop) + 
-  geom_line(aes(group = .draw), alpha = .1) + 
-  stat_summary(fun.data = median_hilow) + 
-  ggtitle("Fixed effects predictions")
-
-emp_diffs <- all_data %>% 
-  select(Study, ResearchID, elog, Condition, Time) %>% 
-  tidyr::spread(Condition, elog) %>% 
-  mutate(
-    nonsense_prop = plogis(nonsense), 
-    real_prop = plogis(real),
-    `real - nonsense` = real_prop - nonsense_prop) %>% 
-  select(Study, ResearchID, Time, nonsense_prop, real_prop, `real - nonsense`)
-
-ggplot(emp_diffs) + 
-  aes(x = Time, y = `real - nonsense`) + 
-  geom_line(aes(group = ResearchID), alpha = .1) + 
-  stat_summary(fun.data = mean_cl_boot) + 
-  facet_wrap("Study") +
-  ggtitle("Empirical differences")
-
-
-
-
-pl2 %>% 
-  ggplot() + 
-    aes(x = Time, y = .posterior_value, color = Condition) + 
-    stat_summary(fun.data = median_hilow)
-
-pl4 <- augment_linpred(
-  test_m, n1, allow_new_levels = TRUE, re_formula = NULL, nsamples = 500)
-
-
-diffs_4 <- pl4 %>% 
-  select(.draw, ResearchID, .posterior_value, Condition, Time) %>% 
-  tidyr::spread(Condition, .posterior_value) %>% 
-  mutate(
-    nonsense_prop = plogis(nonsense), 
-    real_prop = plogis(real),
-    `real - nonsense` = real_prop - nonsense_prop) %>% 
-  select(.draw, ResearchID, Time, nonsense_prop, real_prop, `real - nonsense`)
-
-
-ggplot(diffs_4) + 
-  aes(x = Time, y = `real - nonsense`) + 
-  stat_summary(aes(group = .draw), fun.y = mean, geom = "line") + 
-  stat_summary(
-    data = emp_diffs %>% semi_join(n1 %>% select(ResearchID)), color = "pink") + 
-  ggtitle("average for n=8")
-
-
-pl5 <- augment_linpred(
-  test_m, n_all, allow_new_levels = TRUE, re_formula = NULL, nsamples = 500)
-
-
-diffs_5 <- pl5 %>% 
-  select(.draw, ResearchID, .posterior_value, Condition, Time) %>% 
-  tidyr::spread(Condition, .posterior_value) %>% 
-  mutate(
-    nonsense_prop = plogis(nonsense), 
-    real_prop = plogis(real),
-    `real - nonsense` = real_prop - nonsense_prop) %>% 
-  select(.draw, ResearchID, Time, nonsense_prop, real_prop, `real - nonsense`)
-
-
-ggplot(diffs_5) + 
-  aes(x = Time, y = `real - nonsense`) + 
-  geom_hline(yintercept = 0) +
-  expand_limits(y = c(-.2, .2)) +
-  stat_summary(aes(group = .draw), fun.y = mean, geom = "line") + 
-  stat_summary(
-    data = emp_diffs %>% semi_join(n_all %>% select(ResearchID)), color = "pink") 
-
-ggplot(diffs_5) + 
-  aes(x = Time, y = real_prop ) + 
-  geom_hline(yintercept = 0) +
-  expand_limits(y = c(-.2, .2)) +
-  stat_summary(aes(group = .draw), fun.y = mean, geom = "line") + 
-  stat_summary(
-    data = emp_diffs %>% semi_join(n_all %>% select(ResearchID)), color = "blue") 
-
-ggplot(diffs_5) + 
-  aes(x = Time, y = nonsense_prop ) + 
-  geom_hline(yintercept = 0) +
-  expand_limits(y = c(-.2, .2)) +
-  stat_summary(aes(group = .draw), fun.y = mean, geom = "line") + 
-  stat_summary(
-    data = emp_diffs %>% semi_join(n_all %>% select(ResearchID)), color = "blue") 
 ```
 
 
@@ -319,69 +176,64 @@ Steps to do...
 - When do the differences happen?
 - Find children with large differences in peaks.
 
+As in Chapter XX, I calculated the posterior distribution of growth
+curves for each child x condition x condition. To measure children's
+lexical processing, I used the peak value each growth curve by taking
+the median of the top 5 model fits. For each child, I calculated the
+difference between the peak of the real word and the nonword growth
+curves. This difference in peak values conveys the _condition advantage_ for a child. 
+The figure below visualizes the condition advantages.
+
 ```{r}
-tp1_fits <- augment_linpred(
-  m_tp1, n_tp1_all, allow_new_levels = TRUE, 
-  re_formula = NULL, nsamples = 500)
-
-tp2_fits <- augment_linpred(
-  m_tp2, n_tp2_all, allow_new_levels = TRUE, 
-  re_formula = NULL, nsamples = 500)
-
-tp3_fits <- augment_linpred(
-  m_tp3, n_tp3_all, allow_new_levels = TRUE, 
-  re_formula = NULL, nsamples = 500)
-
-get_peaks <- . %>% 
-  group_by(Study, ResearchID, Condition, .draw) %>% 
-  top_n(5, .posterior_value) %>% 
-  summarise(med = median(plogis(.posterior_value))) 
-
-peaks <- bind_rows(
-  tp1_fits %>% get_peaks(), 
-  tp2_fits %>% get_peaks(), 
-  tp3_fits %>% get_peaks())
-
-diff_dist <- peaks %>%
-  ungroup() %>% 
-  tidyr::spread(Condition, med) %>% 
-  mutate(diff = real - nonsense)
-
-diffs <- diff_dist %>% 
-  group_by(Study, ResearchID) %>% 
-  summarise_at(vars(real, nonsense, diff), .funs = mean) %>% 
-  ungroup()
-
 ant <- data_frame(
-  diff = .6, 
+  diff = -.6, 
   Study = "Age 3", 
   label = "Real word curves had higher peaks")
 
 ant2 <- data_frame(
-  diff = -.6, 
+  diff = .6, 
   Study = "Age 3", 
   label = "Nonword curves had higher peaks")
 
-diffs %>% 
+peaks %>% 
   mutate(Study = convert_study_to_age(Study)) %>% 
-  ggplot() + 
-    aes(x = Study, y = -diff) + 
-    geom_text(
-      aes(label = label), 
-      data = bind_rows(ant, ant2), nudge_x = -.45, hjust = 0, 
-      color = "grey20", size = 3) +
-    geom_hline(yintercept = 0, size = 2, color = "white") + 
-    geom_point(position = position_jitter(width = .2), alpha = .3, shape = 1) +
-    stat_summary(fun.y = mean, geom = "point", size = 2) + 
-  labs(
-    title = "Differences in growth curve peaks",
-    x = NULL,
-    y = "Nonword peak - real word peak",
-    caption = "Open points: Participant posterior means. Closed: Mean of means.") + 
-  theme(
-    axis.title.y = element_text(hjust = 1)
-  )
+  group_by(Study, ResearchID) %>% 
+  summarise_at(vars(nonsense:diff), mean) %>% 
+    ggplot() + 
+      aes(x = Study, y = diff) + 
+      geom_text(
+        aes(label = label), 
+        data = bind_rows(ant, ant2), nudge_x = -.45, hjust = 0, 
+        color = "grey20", size = 3) +
+      geom_hline(yintercept = 0, size = 2, color = "white") + 
+      geom_point(position = position_jitter(width = .2), alpha = .3, shape = 1) +
+      stat_summary(fun.y = mean, geom = "point", size = 2) + 
+    labs(
+      title = "Differences in growth curve peaks",
+      x = NULL,
+      y = "Nonword peak - real word peak",
+      caption = "Open points: Participant posterior means. Closed: Mean of means.") + 
+    theme(
+      axis.title.y = element_text(hjust = 1)
+    )
 ```
+
+```{r}
+peaks %>% 
+  mutate(Study = convert_study_to_age(Study)) %>% 
+  select(-diff) %>% 
+  group_by(Study, ResearchID) %>% 
+  summarise_at(vars(nonsense:real), mean) %>% 
+  ungroup() %>% 
+  tidyr::gather("Condition", "Value", nonsense:real) %>% 
+  tidyr::unite("Var", c("Study", "Condition")) %>% 
+  tidyr::spread(Var, Value) %>% 
+  select(-1) %>% 
+  as.matrix() %>% 
+  Hmisc::rcorr()
+  
+```
+
 
 ## Changes in referent selection
 
