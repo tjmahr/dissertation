@@ -25,6 +25,8 @@ constants <- list(
   col_off_black = "#111111",
   col_infobox_blue = "#EEF7FA",
   col_infobox_plot_bg = "#E5EAEF",
+  col_darker_coral = "#BB655F",
+  col_darker_turquoise = "#009DA1",
   cap_median_90_50 = "Posterior median with 90% and 50% intervals",
   cap_90_50 = "90% and 50% intervals",
   cap_mean_95 = "Fitted means with 95% interval",
