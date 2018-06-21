@@ -45,7 +45,13 @@ theme_teej <- function(base_size = 11, base_family = "Lato Medium",
     base_line_size = base_line_size,
     base_rect_size = base_rect_size) %+replace%
     theme(
-      axis.title = element_text(hjust = 1))
+      axis.title = element_text(hjust = 1),
+      strip.text = element_text(
+        hjust = 0,
+        family = base_family,
+        size = rel(1.1),
+        margin = margin(base_size/2, base_size/2, base_size/2, base_size/6)),
+      strip.background = element_rect(fill = NA))
 }
 
 theme_set(theme_teej())

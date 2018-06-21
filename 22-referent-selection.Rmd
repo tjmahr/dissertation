@@ -1,3 +1,36 @@
+```{r include=FALSE, cache=FALSE}
+# ---- set-options ----
+library(methods)
+knitr::opts_chunk$set(
+  tidy = FALSE,
+  collapse = TRUE,
+  comment = "#>",
+  out.width = 80,
+  fig.align = "center"
+)
+
+options(width = 80)
+
+
+# ---- knitr-helper-functions ----
+is_word_output <- function() {
+  knitr::opts_knit$get("rmarkdown.pandoc.to") == "docx"
+}
+is_html_output <- knitr:::is_html_output
+is_latex_output <- knitr:::is_latex_output
+
+# Make a function that prints a string of characters if the output is pdf
+make_latex_decorator <- function(output, otherwise) {
+  function() {
+    if (is_latex_output()) output else otherwise
+  }
+}
+
+# insert_pause <- make_latex_decorator(". . .", "\n")
+# insert_slide_break <- make_latex_decorator("----", "\n")
+# insert_inc_bullet <- make_latex_decorator("> *", "*")
+insert_html_math <- make_latex_decorator("", "$$")
+```
 Development of referent selection
 =======================================================================
 
@@ -15,7 +48,9 @@ library(rstanarm)
 knitr::opts_chunk$set(cache = TRUE)
 ```
 
-```{r}
+
+
+```{r, include = FALSE}
 d <- readr::read_csv("./data/aim2-model-ready.csv.gz") %>% 
   filter(!is.na(Bias_Fam)) %>% 
   filter(300 <= Time) %>% 
@@ -23,16 +58,84 @@ d <- readr::read_csv("./data/aim2-model-ready.csv.gz") %>%
   polypoly::poly_add_columns(
     Time, degree = 3, scale_width = 1, prefix = "ot")
 
-ggplot(d) + 
-  aes(x = Time, y = Prop, color = Bias_Fam) + 
-  facet_wrap(Condition ~ Study) + 
-  geom_line(aes(group = interaction(ResearchID, Bias_Fam)), alpha = .1) +
-  guides(color = FALSE) + 
-  scale_color_viridis_d(end = .8) + 
-  stat_smooth(method = "gam", formula = y ~ s(x), se = FALSE)
+# Flip things so that the nonword and real-word curves go upward
+d_r_ui <- d %>% 
+  filter(Condition == "real", Bias_Fam == "Unfamiliar") %>% 
+  mutate(elog = empirical_logit(Target, Distractor))
 
-summary(d)
+d_bias_target <- tibble::tribble(
+  ~Condition, ~Bias_Fam, ~Bias_Target,
+  "nonsense", "Familiar", "Distractor",
+  "nonsense", "Unfamiliar", "Target",
+  "real", "Familiar", "Target",
+  "real", "Unfamiliar", "Distractor")
+
+d_r_nw_vs <- d %>% 
+  select(-Primary, -.response_def, -Prop, -PropSE) %>% 
+  filter(Condition != "MP") %>% 
+  rename(Unfamiliar = Distractor, Familiar = Target) %>% 
+  mutate(
+    Target = ifelse(Condition == "nonsense", Unfamiliar, Familiar), 
+    Distractor = ifelse(Condition == "nonsense", Familiar, Unfamiliar),
+    Trials = Target + Distractor) %>% 
+  left_join(d_bias_target) %>% 
+  mutate(elog = empirical_logit(Target, Distractor))
+
+d_r_nw_dis <- d_r_nw_vs %>% 
+  filter(Bias_Target == "Distractor")
+
+study_child_with_empty_cells <- d_r_nw_dis %>% 
+  filter(Trials < 4) %>% 
+  distinct(Study, ResearchID)
+
+study_counts <- study_child_with_empty_cells %>% 
+  count(Study) %>% 
+  split(.$Study) %>% 
+  lapply(pull, n) %>% 
+  set_names(stringr::str_replace, "TimePoint", "T")
+
+d_r_nw_dis <- d_r_nw_dis %>% 
+  anti_join(study_child_with_empty_cells)
 ```
+
+```{r, include = FALSE}
+library(brms)
+theme_set(theme_teej())
+
+augment_linpred <- function(model, data, ...) {
+  model %>%
+    posterior_linpred(newdata = data, ...) %>%
+    as.data.frame() %>%
+    as_tibble() %>%
+    rlang::set_names(seq_len(nrow(data))) %>%
+    tibble::rowid_to_column(".draw") %>%
+    tidyr::gather(".observation", ".posterior_value", -.draw) %>%
+    mutate(.observation = as.numeric(.observation)) %>%
+    left_join(
+      data %>% tibble::rowid_to_column(".observation"),
+      by = ".observation")
+}
+
+d_r_nw_dis <- readr::read_rds("./data/aim2-real-vs-nw-modeled-data.rds.gz")
+
+d_tp1 <- d_r_nw_dis %>%
+  filter(Study == "TimePoint1") 
+
+d_tp2 <- d_r_nw_dis %>%
+  filter(Study == "TimePoint2") 
+
+d_tp3 <- d_r_nw_dis %>%
+  filter(Study == "TimePoint3") 
+
+m_tp1 <- readr::read_rds("./data/aim2-real-vs-nw-tp1.rds.gz")
+m_tp2 <- readr::read_rds("./data/aim2-real-vs-nw-tp2.rds.gz")
+m_tp3 <- readr::read_rds("./data/aim2-real-vs-nw-tp3.rds.gz")
+
+peaks <- readr::read_rds("./data/aim2-real-vs-nw-all-peaks.rds.gz")
+```
+
+
+
 
 ## Nonwords versus real words
 
@@ -40,29 +143,268 @@ I asked whether the recognition of familiar words differed from the
 fast-selecting of referents for a nonword. I fit a Bayesian mixed
 effects logistic regression model, as in Chapter X. For the real word
 and nonword conditions, there is a well-defined target image. For real
-words, it is the familar image and for nonwords, it is the novel image.
+words, it is the familar image, and for nonwords, it is the novel image.
 Therefore, I modeled the data under these assumptions. The outcome
 measures were therefore:
 
 * P(Look to familiar image | Hear a real word)
 * P(Look to unfamiliar image | Hear a nonword )
 
-The important analytic question is whether and when during a trial these
-two probabilities differ.
+The important analytic question is whether and to what degree these two
+probabilities differ. This growth curve model is similar to the one in
+Chapter X with cubic polynomial and a condition effect which interacts
+with time features. Thus, the basic model is:
+
+`r insert_html_math()`
+\small
+\begin{align*}
+   \text{log-odds}(\mathit{looking\,}) =\
+    &\beta_0 + 
+      \beta_1\text{Time}^1 + 
+      \beta_2\text{Time}^2 + 
+      \beta_3\text{Time}^3\ + 
+      &\text{[nonword growth curve]} \\
+    (&\gamma_0 + 
+      \gamma_1\text{Time}^1 + 
+      \gamma_2\text{Time}^2 +
+      \gamma_3\text{Time}^3)*\text{Condition} \
+      &\text{[adjustments for real words]} \\
+\end{align*}
+`r insert_html_math()`
+
+I fit a separate model for each year of the study.[^bayes-fail]
+[Appendix \@ref(aim2-gca-models)](#aim2-gca-models) contains the R code
+used to fit these models along with a description of the specifications
+represented by the model syntax. I used moderately informative
+priors---see Appendix X. For these analyses, I limited my attention to
+the distractor-initial.
 
 
-This model is the same as the model from Chapter X except augumented with a
-Condition effect and its interactions.
+[^bayes-fail]: A single model containing all three years with
+corresponding year effects, year-by-time interactions, and
+year-by-condition-by-time conditions had difficulty converging, and even
+when a working model was obtained, a bug in the modeling software
+prevented me from obtaining posterior predictions. I reported the bug in
+an issue for the package's source code repository. 
 
 
-$$
-\text{log-odds}(\textit{looking}\,) = 
-  \beta_0 + 
-  \beta_1\text{Time}^1 + 
-  \beta_2\text{Time}^2 + 
-  \beta_3\text{Time}^3 \\
-  + \text{[Condition, Study, Condition x Study interactions]}
-$$
+  - I model data from `r min(d$Time)` ms to `r max(d$Time)`.
+  - I flipped the growth curve for the nonword condition so that it
+    reflects the proportion of looking to the unfamiliar object when
+    presented a nonword. Both the real word and nonword conditions
+    measure referent selection as the probability of fixating on the
+    appropriate referent when presented with a label.
+
+I removed any Study x Child levels if a child had fewer than 4
+fixations in a single time bin. Put another way, children had to
+have at least 4 looks to one of the images in every 50 ms time bin.
+This screening removed `r study_counts$T1` children from Age 3,
+`r study_counts$T2` from Age 4, and `r study_counts$T3` from Age 5.
+
+
+
+The figure below shows group average of growth curves---that is, I
+averaged the participant's individual model-estimated or empirial growth
+curves together--for each condition and age. 
+The two condition did not reliable differ at age 3: the real-word condition effect on the intercept was x [XX,XX] and its effect on the linear time term was x [xx, xx]. 
+
+There was an unexpected advantage for the nonword condition at age 4 and age 5. The real-word effect was negative at age 4, x [xx,xx], so that on average, children looked less to target on the real words than the nonword trials. There was marginal effect linear time effect at age 4, []. The curve for real words is probably less steep at age 4 but values near zero remain plausible. At age 5, only the intercept difference is credible, x  [xx,xx].
+
+
+```{r aim2-real-nonword-means, echo = FALSE}
+# m_tp1
+# m_tp2
+# m_tp3
+# m_tp3
+
+# Sets for predictions
+n_tp1_all <- d_tp1 %>%
+  distinct(Study, ResearchID, Condition, Time, ot1, ot2, ot3) %>%
+  mutate(Trials = 30)
+
+n_tp2_all <- d_tp2 %>%
+  distinct(Study, ResearchID, Condition, Time, ot1, ot2, ot3) %>%
+  mutate(Trials = 30)
+
+n_tp3_all <- d_tp3 %>%
+  distinct(Study, ResearchID, Condition, Time, ot1, ot2, ot3) %>%
+  mutate(Trials = 30)
+
+tp1_fits <- augment_linpred(
+  m_tp1, n_tp1_all, allow_new_levels = TRUE,
+  re_formula = NULL, nsamples = 100)
+
+tp2_fits <- augment_linpred(
+  m_tp2, n_tp2_all, allow_new_levels = TRUE,
+  re_formula = NULL, nsamples = 100)
+
+tp3_fits <- augment_linpred(
+  m_tp3, n_tp3_all, allow_new_levels = TRUE,
+  re_formula = NULL, nsamples = 100)
+
+all_fits <- bind_rows(tp1_fits, tp2_fits, tp3_fits) %>% 
+  mutate(Study = convert_study_to_age(Study))
+
+all_data <- bind_rows(d_tp1, d_tp2, d_tp3) %>% 
+  mutate(Study = convert_study_to_age(Study)) 
+
+emp_diffs <- all_data %>% 
+  mutate(Prop = Target / Trials) %>% 
+  select(Study, ResearchID, Prop, Condition, Time) %>% 
+  tidyr::spread(Condition, Prop) %>% 
+  mutate(
+    nonsense_prop = nonsense, 
+    real_prop = real,
+    `nonsense - real` = nonsense_prop - real_prop) %>% 
+  select(Study, ResearchID, Time, nonsense_prop, real_prop, `nonsense - real`)
+
+curve_diffs <- all_fits %>% 
+  select(Study, .draw, ResearchID, .posterior_value, Condition, Time) %>% 
+  tidyr::spread(Condition, .posterior_value) %>% 
+  mutate(
+    nonsense_prop = plogis(nonsense), 
+    real_prop = plogis(real),
+    `nonsense - real` = nonsense_prop - real_prop) %>% 
+  select(
+    Study, .draw, ResearchID, Time, 
+    nonsense_prop, real_prop, `nonsense - real`)
+
+some_fits <- all_fits %>% 
+  tjmisc::sample_n_of(100, .draw)
+
+some_curve_diffs <- curve_diffs %>% 
+  tjmisc::sample_n_of(100, .draw) 
+
+p_fits <- ggplot(some_fits) + 
+  aes(x = Time, y = plogis(.posterior_value), color = Condition) + 
+  stat_summary(
+    aes(y = Target / Trials), 
+    data = all_data,
+    fun.data = mean_se,
+    geom = "pointrange") +
+  # stat_summary(
+  #   aes(y = Target / Trials), 
+  #   data = all_data %>% filter(Condition == "nonsense"),
+  #   color = constants$col_darker_coral,
+  #   fun.data = mean_se,
+  #   geom = "pointrange") +
+  # stat_summary(
+  #   aes(y = Target / Trials), 
+  #   data = all_data %>% filter(Condition == "real"),
+  #   color = constants$col_darker_turquoise,
+  #   fun.data = mean_se,
+  #   geom = "pointrange") +
+  # stat_summary(
+  #   aes(group = interaction(.draw, Condition)),
+  #   geom = "line",
+  #   fun.y = mean,
+  #   alpha = .05) +
+  geom_text(
+    aes(label = label, y = y),
+    data = data.frame(
+      Condition = c("nonsense", "real"),
+      Study = c("Age 4"), 
+      label = c("nonwords", "real words"), 
+      Time = c(300, 900), 
+      y = c(.82, .60)),
+    hjust = 0,
+    size = 3,
+    family = "Lato Medium") + 
+  facet_wrap("Study") +
+  guides(color = FALSE) +
+  labs(
+    x = NULL, 
+    y = "Proportion looks to target")
+# p_fits
+# 
+# 
+# p_diffs <- ggplot(some_curve_diffs) + 
+#   aes(x = Time, y = `nonsense - real`) + 
+#   geom_hline(yintercept = 0, color = "white", size = 2) +
+#   # stat_summary(
+#   #   data = emp_diffs,
+#   #   color = "grey40",
+#   #   fun.data = mean_se,
+#   #   geom = "pointrange") +
+#   stat_summary(
+#     aes(group = .draw), 
+#     geom = "line", 
+#     fun.y = mean, 
+#     alpha = .05, color = constants$col_off_black) + 
+#   geom_text(
+#     aes(label = label, y = y),
+#     data = data.frame(
+#       Study = "Age 3", label = "nonword\nadvantage", Time = 900, y = .10),
+#     hjust = 0,
+#     size = 3, 
+#     color = constants$col_off_black,
+#     family = "Lato Medium") + 
+#   facet_wrap("Study") + 
+#   expand_limits(y = c(-.1, .2)) +
+#   labs(
+#     x = constants$x_time,
+#     y = "Difference",
+#     caption = "Intervals: Empirical mean ± SE. Lines: 100 posterior means.") +
+#   theme(
+#     strip.background = element_blank(),
+#     strip.text = element_blank(),
+#     axis.title.x = element_text(hjust = 1),
+#     axis.title.y = element_text(hjust = 1))
+# # p_diffs
+
+
+library(patchwork)
+# p_fits + p_diffs + plot_layout(ncol = 1, heights = c(2, 1))
+p_fits + 
+  labs(
+    x = constants$x_time,
+    caption = "Intervals: Empirical mean ± SE. Lines: 100 posterior means.")
+
+
+p_fits + theme_teej()
+  theme(
+    strip.text = element_text(hjust = 0, family = "Lato Medium", size = 12),
+    strip.text.x = element_text(margin = margin(12/2, 12/2, 12/2, 12/6)),
+    strip.text.y = element_text(margin = margin(12/2, 12/2, 12/2, 12/12)),
+    strip.background = element_rect(fill = NA))
+xxx <- hrbrthemes::theme_ipsum()
+xxx$strip.text
+xxx$plot.title
+# scales::show_col(scales::hue_pal(h.start = 20)(2), labels = FALSE)
+# scales::show_col(scales::viridis_pal(begin = .2, end = .8, option = "B")(3), labels = FALSE)
+# scales::show_col(scales::viridis_pal(begin = 0, end = .8, option = "C")(3), labels = FALSE)
+# scales::show_col(scales::viridis_pal(begin = 0, end = .8, option = "D")(3), labels = FALSE)
+```
+
+
+
+<!-- To evaluate the growth curve peaks, I computed the growth curve peak for -->
+<!-- each participant x study x condition in each posterior sample and -->
+<!-- averaged over the posterior to get an average growth curve peak. I used -->
+<!-- a linear mixed effects model to regress growth curve peak onto age group -->
+<!-- and experimental condition and age x condition with randomly varying -->
+<!-- intercepts for each child and each child-year. -->
+
+The growth curve peaks follow a similar pattern of results. At age 3,
+the average peak value was ... for real words and ... for nonwords. The
+conditions did not significantly differ at this age. The nonword peaks
+were significantly higher greater than real word peaks at age 4 [blah
+vs. blah, p=value.] and at age 5 although the difference was smaller
+[blah vs. blah, p=value.].
+
+Importantly, the average real word peaks was xx at age 3 which that
+children were beginning to reach ceiling performance early on. This is a
+task for toddlers.
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -91,210 +433,13 @@ $$
 <!-- uses resampling to get an estimate, whereas I use posterior -->
 <!-- predicted samples to estimate these differences. -->
 
-Specifically, I will compute the posterior-predicted looks to the
-familiar object in the real word condition, P(Familiar | Real Word, Time
-*t*, Child *i*) and the analogous looks to the unfamiliar object in the
-nonword condition, P(Unfamiliar | Nonword, Time *t*, Child *i*). The
-difference between these two probabilities estimates how the time course
-of word recognition differs between these two conditions, and I can use
-50% and 90% uncertainty intervals to determine during which time points
-the curves credibly differ from each other.
-
-I fit a model with weakly informative priors---see Appendix X. I modeled
-distractor-initial and target-initial trials separately.
-
-
-
-```{r}
-m_e <- readr::read_rds("stan_me.rds.gz")
-m_e
-d_r_nw_dis <- m_e$data
-d <- posterior_linpred(m_e, draws = 200)
-```
-
-```{r}
-d_r_nw_dis$Prop <- d_r_nw_dis$Target / (d_r_nw_dis$Target + d_r_nw_dis$Distractor)
-m_e$glmod
-
-dummy_data <- d_r_nw_dis %>% 
-  distinct(Study, Condition, Time, ot1, ot2, ot3) %>% 
-  mutate(ResearchID = "NEW",
-         Primary = 0, 
-         Others = 0)
-
-set.seed(11102017)
-lpred <- dummy_data %>% 
-  tristan::augment_posterior_linpred(m_e, newdata = ., nsamples = 100)
-
-
-dummy_data <- d_r_nw_dis %>% 
-  distinct(Study, Time, Condition, ot1, ot2, ot3) %>% 
-  mutate(
-    ResearchID = "001L",
-    Target = 0, 
-    Distractor = 0)
-dummy_data2 <- dummy_data %>% 
-  mutate(ResearchID = "NEW")
-dummy_data <- bind_rows(dummy_data, dummy_data2)
-
-set.seed(11102017)
-lpred <- dummy_data %>%
-  tristan::augment_posterior_linpred(
-    model = m_e, newdata = ., 
-    re.form = ~ (ot1 + ot2 + ot3 | ResearchID/Condition/Study),
-    transform = TRUE)
-
-# p <- posterior_linpred(m_e, transform = TRUE)
-# nrow(d_r_nw_dis)
-# ncol(p)
-rownames(summary(m_e))
-posterior_interval(m_e, regex_pars = "_NEW_")
-long <- p %>% 
-  as.data.frame() %>% 
-  as_tibble() %>% 
-  tibble::rowid_to_column(".draw") %>% 
-  tidyr::gather(".observation", ".posterior_value", -.draw) %>% 
-  mutate(.observation = as.numeric(.observation))
-
-d <- d_r_nw_dis %>% 
-  select(Study, ResearchID, Condition,Time)
-d$.observation <- seq_len(nrow(d))
-d <- left_join(d, long)
-
-lpred <- dummy_data %>%
-  tristan::augment_posterior_linpred(
-    model = m_e, newdata = ., re.form = NA,
-    transform = TRUE)
-
-# summary(lm(.posterior_value ~ (ot1 + ot2 + ot3) * Study * Condition, lpred))
-# peaks <- lpred %>% 
-#   group_by(Study, Condition, .draw) %>% 
-#   top_n(5, .posterior_value) %>% 
-#   mutate(med = median(.posterior_value)) %>% 
-#   select(.draw, Study, Condition, peek_accuracy = med) %>% 
-#   distinct() %>% 
-#   ungroup() %>% 
-#   mutate(peek_accuracy = peek_accuracy) %>% 
-#   tidyr::spread(Study, peek_accuracy) %>% 
-#   select(
-#     `Peak~~(Age~~3)` = TimePoint1,
-#     `Peak~~(Age~~4)` = TimePoint2,
-#     `Peak~~(Age~~5)` = TimePoint3)
-
-d_r_nw_dis$f <- fitted(m_e)
-ggplot(d_r_nw_dis) + 
-  aes(x = Time, y = Prop, color = Condition) + 
-  stat_summary() + 
-  facet_wrap("Study") + 
-  stat_summary(
-    aes(y = f),
-    fun.y = function(x) mean(x), 
-    geom = "line", data = d_r_nw_dis)  
-
-
-
-lpred %>% 
-  tjmisc::sample_n_of(200, .draw) %>%
-  mutate(Study = convert_study_to_age(Study)) %>% 
-  ggplot() + 
-    aes(x = Time, y = .posterior_value, color = Study) +
-    geom_line(
-      aes(group = interaction(Study, Condition, ResearchID, .draw)), 
-      alpha = .1) +
-    stat_summary(
-      aes(y = Prop, group = interaction(Study, Condition)), 
-      data = d_r_nw_dis %>% 
-        mutate(Study = convert_study_to_age(Study)), 
-      fun.y = "mean", geom = "line", 
-      color = constants$col_off_black, size = 1) + 
-    # geom_text(aes(color = "Age 5", label = "Age 5"), x = 1390, y = .83) +
-    # geom_text(aes(color = "Age 3", label = "Age 3"), x = 1380, y = .46) +
-    # expand_limits(y = .85) +
-    guides(color = "none") +
-    facet_wrap("Condition") +
-    labs(
-      title = "Observed means and 200 posterior fits",
-      x = constants$x_time,
-      y = constants$y_prop_target)
-```
-
-
-## Old dead code
-
-```{r real-vs-nonword, eval = FALSE, out.width = "100%", fig.show = 'hold', fig.height = 3, fig.width = 6, message = FALSE, warning = FALSE, echo = FALSE}
-d_nonword <- d %>% 
-  filter(Condition != "MP") %>% 
-  mutate(
-    Distractor2 = ifelse(Condition == "nonsense", Target, Distractor),
-    Target2 = ifelse(Condition == "nonsense", Distractor, Target),
-    Prop2 = Target2 / (Target2 + Distractor2))
-
-code1 <- c(TimePoint1 = "Age 3", TimePoint2 = "Age 4", TimePoint3 = "Age 5")
-code2 <- c(nonsense = "Nonword", real = "Real word")
-
-d_nonword <- d_nonword %>% 
-  mutate(
-    `Child hears` = factor(code2[Condition], c("Real word", "Nonword")),
-    age = code1[Study])
-
-ggplot(d_nonword) + 
-  aes(x = Time, y = Prop2) + 
-  geom_hline(yintercept = .5, color = "white", size = 2) +
-  # stat_summary(color = "grey50") + 
-  stat_summary(aes(color =  `Child hears`)) + 
-  facet_wrap("age") + 
-  labs(
-    x = "Time after noun onset [ms]",
-    y = "Prop looks to familar image for real words
-and novel image for nonwords")
-  
-
-# m <- glmer(
-#   cbind(Target2, Distractor2) ~
-#     (ot1 + ot2 + ot3) * Condition +
-#     (ot1 + ot2 + ot3 | ResearchID/Condition),
-#   family = binomial,
-#   data = d_nonword %>% filter(Study == "TimePoint3"))
-
-# broom::augment(m, d_m3) %>% 
-#   tjmisc::sample_n_of(9, ResearchID) %>% 
-#   ggplot() + 
-#     aes(x = Time, color = Condition) + 
-#   geom_point(aes(y = Prop)) +
-#   geom_line(aes(y = plogis(.fitted))) +
-#   facet_wrap("ResearchID")
-```
-
-```{r, eval = FALSE}
-# Let's cheat and offset the curves so they start at the same value. This
-# can help us see how their heights compare.
-ggplot(d_nonword) + 
-  aes(x = Time, y = Prop2, color = Study) + 
-  geom_hline(yintercept = .5, color = "white", size = 2) +
-  # stat_summary(color = "grey50") + 
-  stat_summary(
-    aes(y = Prop2 - .07),
-    data = . %>% filter(Condition == "real", Study == "TimePoint1")) + 
-  stat_summary(
-    aes(y = Prop2 - .04),
-    data = . %>% filter(Condition == "real", Study == "TimePoint3")) + 
-  stat_summary(
-    aes(y = Prop2 + .01),
-    data = . %>% filter(Condition == "real", Study == "TimePoint2")) + 
-  stat_summary(
-    aes(y = Prop2 - .04),
-    data = . %>% filter(Condition == "nonsense", Study == "TimePoint1")) + 
-  stat_summary(
-    aes(y = Prop2 - .09),
-    data = . %>% filter(Condition == "nonsense", Study == "TimePoint2")) + 
-  stat_summary(
-    aes(y = Prop2 - .13),
-    data = . %>% filter(Condition == "nonsense", Study == "TimePoint3")) + 
-  facet_wrap("`Child hears`")  + 
-  labs(
-    y = "Proportion (shifted so first point = .5)"
-  )
-
-```
+<!-- Specifically, I will compute the posterior-predicted looks to the -->
+<!-- familiar object in the real word condition, P(Familiar | Real Word, Time -->
+<!-- *t*, Child *i*) and the analogous looks to the unfamiliar object in the -->
+<!-- nonword condition, P(Unfamiliar | Nonword, Time *t*, Child *i*). The -->
+<!-- difference between these two probabilities estimates how the time course -->
+<!-- of word recognition differs between these two conditions, and I can use -->
+<!-- 50% and 90% uncertainty intervals to determine during which time points -->
+<!-- the curves credibly differ from each other. -->
 
 
