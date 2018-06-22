@@ -240,13 +240,6 @@ nw_peak_lme_tp3 <- do_it_1 %>%
 ```
 
 
-The figure below shows group average of growth curves---that is, I
-averaged the participant's individual model-estimated or empirial growth
-curves together--for each condition and age. 
-The two condition did not reliable differ at age 3: the real-word condition effect on the intercept was x [XX,XX] and its effect on the linear time term was x [xx, xx]. 
-
-There was an unexpected advantage for the nonword condition at age 4 and age 5. The real-word effect was negative at age 4, x [xx,xx], so that on average, children looked less to target on the real words than the nonword trials. There was marginal effect linear time effect at age 4, []. The curve for real words is probably less steep at age 4 but values near zero remain plausible. At age 5, only the intercept difference is credible, x  [xx,xx].
-
 <!-- To evaluate the growth curve peaks, I computed the growth curve peak for -->
 <!-- each participant x study x condition in each posterior sample and -->
 <!-- averaged over the posterior to get an average growth curve peak. I used -->
@@ -289,75 +282,6 @@ nw_peak_lme_tp3
 
 
 
-As in Chapter XX, I calculated the posterior distribution of growth
-curves for each child x condition x year To measure children's
-lexical processing, I used the peak value each growth curve by taking
-the median of the top 5 model fits. For each child, I calculated the
-difference between the peak of the real word and the nonword growth
-curves. This difference in peak values conveys the *condition advantage*
-for a child. The figure below visualizes the condition advantages.
-
-```{r}
-ant <- data_frame(
-  diff = -.6, 
-  Study = "Age 3", 
-  label = "Real word curves had higher peaks")
-
-ant2 <- data_frame(
-  diff = .6, 
-  Study = "Age 3", 
-  label = "Nonword curves had higher peaks")
-
-peaks %>% 
-  mutate(Study = convert_study_to_age(Study)) %>% 
-  group_by(Study, ResearchID) %>% 
-  summarise_at(vars(nonsense:diff), mean) %>% 
-  select(-diff) %>%
-  tidyr::gather("Condition", "Peak", -Study, -ResearchID) %>%
-  ungroup() %>% 
-    ggplot() + 
-      aes(x = Study, y = Peak, color = Condition) + 
-      # geom_text(
-      #   aes(label = label), 
-      #   data = bind_rows(ant, ant2), nudge_x = -.45, hjust = 0, 
-      #   color = "grey20", size = 3, family = "Lato Medium") +
-      geom_point(
-        position = position_jitterdodge(jitter.width = 0.2, dodge.width = 1), 
-        alpha = .4, shape = 1) +
-      # stat_summary(
-      #   fun.data = median_hilow, fun.args = list(conf.int=.5),
-      #   position = position_dodge(width = .3)) +
-      stat_summary(
-        fun.y = mean,
-        geom = "point",
-        position = position_dodge(width = .3)) +
-    labs(
-      title = "Growth curve peaks",
-      x = NULL,
-      y = "Peak",
-      caption = "Open points: Participant means. Closed: Mean of means.") + 
-    scale_y_continuous(breaks = c(0, .2, .4, .6, .8, 1)) + 
-  guides(color = FALSE)
-
-peaks %>% 
-  mutate(Study = convert_study_to_age(Study)) %>% 
-  group_by(Study, ResearchID) %>% 
-  summarise_at(vars(nonsense:diff), mean) %>% 
-    ggplot() + 
-      aes(x = Study, y = diff) + 
-      geom_text(
-        aes(label = label), 
-        data = bind_rows(ant, ant2), nudge_x = -.45, hjust = 0, 
-        color = "grey20", size = 3, family = "Lato Medium") +
-      geom_hline(yintercept = 0, size = 2, color = "white") + 
-      geom_point(position = position_jitter(width = .2), alpha = .3, shape = 1) +
-      stat_summary(fun.y = mean, geom = "point", size = 2) + 
-    labs(
-      title = "Differences in growth curve peaks",
-      x = NULL,
-      y = "Nonword peak - real word peak",
-      caption = "Open points: Participant posterior means. Closed: Mean of means.") 
-```
 
 ```{r}
 # peaks %>% 

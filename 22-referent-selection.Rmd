@@ -1,36 +1,4 @@
-```{r include=FALSE, cache=FALSE}
-# ---- set-options ----
-library(methods)
-knitr::opts_chunk$set(
-  tidy = FALSE,
-  collapse = TRUE,
-  comment = "#>",
-  out.width = 80,
-  fig.align = "center"
-)
 
-options(width = 80)
-
-
-# ---- knitr-helper-functions ----
-is_word_output <- function() {
-  knitr::opts_knit$get("rmarkdown.pandoc.to") == "docx"
-}
-is_html_output <- knitr:::is_html_output
-is_latex_output <- knitr:::is_latex_output
-
-# Make a function that prints a string of characters if the output is pdf
-make_latex_decorator <- function(output, otherwise) {
-  function() {
-    if (is_latex_output()) output else otherwise
-  }
-}
-
-# insert_pause <- make_latex_decorator(". . .", "\n")
-# insert_slide_break <- make_latex_decorator("----", "\n")
-# insert_inc_bullet <- make_latex_decorator("> *", "*")
-insert_html_math <- make_latex_decorator("", "$$")
-```
 Development of referent selection
 =======================================================================
 
@@ -214,7 +182,8 @@ averaged the participant's individual model-estimated or empirical
 growth curves together--for each condition and age. 
 
 
-```{r aim2-real-nonword-means, echo = FALSE}
+```{r aim2-real-nonword-means, out.width = "80%", fig.height = 5, fig.width = 6}
+theme_set(theme_teej())
 # m_tp1
 # m_tp2
 # m_tp3
@@ -326,7 +295,7 @@ probability by taking the median of top five points in a growth curve,
 and this peak provides a measure of uncertainty (higher peaks indicate
 less uncertainty). 
 
-I evaluate the condition effects by looking at the effect of the real
+I evaluated the condition effects by looking at the effect of the real
 word condition on the intercept and linear time terms. The two
 conditions did not reliable differ at age 3. The real-word condition
 effect on the intercept was `r r_ot0_uis$tp1` and its interaction with
@@ -347,17 +316,24 @@ curve model through intercept effects, although it is plausible that
 children's nonword growth curves were steeper than the real word curves
 at age 4.
 
+```{r}
+
+```
 
 
+The growth curve peaks follow a similar pattern of results. At age 3,
+the average peak value was ... for real words and ... for nonwords. The
+conditions did not significantly differ at this age. The nonword peaks
+were significantly higher greater than real word peaks at age 4 [blah
+vs. blah, p=value.] and at age 5 although the difference was smaller
+[blah vs. blah, p=value.].
 
 
+```{r}
+
+```
 
 
-The advantage of nonwords over real words was an unexpected. My
-pre-analysis hypotheses were that word recognition in the real word
-condition would be easier than in the nonword condition, or failing
-that, the two conditions would not reliably differ. I had discounted the
-possibility of an overall advantage for nonwords over real words.
 
 
 <!-- To evaluate the growth curve peaks, I computed the growth curve peak for -->
@@ -367,12 +343,6 @@ possibility of an overall advantage for nonwords over real words.
 <!-- and experimental condition and age x condition with randomly varying -->
 <!-- intercepts for each child and each child-year. -->
 
-The growth curve peaks follow a similar pattern of results. At age 3,
-the average peak value was ... for real words and ... for nonwords. The
-conditions did not significantly differ at this age. The nonword peaks
-were significantly higher greater than real word peaks at age 4 [blah
-vs. blah, p=value.] and at age 5 although the difference was smaller
-[blah vs. blah, p=value.].
 
 Importantly, the average real word peaks was xx at age 3 which that
 children were beginning to reach ceiling performance early on. This is a
@@ -381,10 +351,98 @@ task for toddlers.
 
 
 
+### Points for discussion
+
+The advantage of nonwords over real words was an unexpected. My
+pre-analysis hypotheses were that word recognition in the real word
+condition would be easier than in the nonword condition, or failing
+that, the two conditions would not reliably differ. I had discounted the
+possibility of an overall advantage for nonwords over real words.
 
 
+As in Chapter XX, I calculated the posterior distribution of growth
+curves for each child x condition x year. To measure children's
+lexical processing, I used the peak value each growth curve by taking
+the median of the top 5 model fits. For each child, I calculated the
+difference between the peak of the real word and the nonword growth
+curves. This difference in peak values conveys the *condition advantage*
+for a child. The figure below visualizes the condition advantages.
+
+```{r aim2-gca-peaks, out.width = "50%", fig.height = 3, fig.width = 4}
+ant <- data_frame(
+  diff = -.6, 
+  Study = "Age 3", 
+  label = "Real word curves had higher peaks")
+
+ant2 <- data_frame(
+  diff = .6, 
+  Study = "Age 3", 
+  label = "Nonword curves had higher peaks")
+
+peaks %>% 
+  mutate(Study = convert_study_to_age(Study)) %>% 
+  group_by(Study, ResearchID) %>% 
+  summarise_at(vars(nonsense:diff), mean) %>% 
+  select(-diff) %>%
+  tidyr::gather("Condition", "Peak", -Study, -ResearchID) %>%
+  ungroup() %>% 
+    ggplot() + 
+      aes(x = Study, y = Peak, color = Condition) + 
+      geom_text(
+        aes(label = label),
+        data = data_frame(
+          Peak = c(1.06), 
+          label = c("nonwords", "real words"),
+          Condition = c("nonsense", "real"),
+          Study = "Age 3"), 
+        position = position_dodge(width = 1.1), 
+        size = 3, 
+        family = "Lato Medium") +
+      geom_point(
+        position = position_jitterdodge(jitter.width = 0.2, dodge.width = 1.05), 
+        alpha = .4, shape = 1) +
+      guides(color = FALSE) +
+      geom_boxplot(
+        width = .2, 
+        position = position_dodge(width = .3), 
+        outlier.alpha = 0)  +
+    labs(
+      title = "Growth curve peaks",
+      x = NULL,
+      y = NULL,
+      caption = "Open points: Participant means.") + 
+    scale_y_continuous(
+      minor_breaks = c(.1, .3, .5, .7, .9),
+      breaks = c(0, .2, .4, .6, .8, 1))
+
+```
 
 
+```{r aim2-gca-diffs, out.width = "50%", fig.height = 3, fig.width = 4}
+theme_set(theme_teej())
+
+peaks %>% 
+  mutate(Study = convert_study_to_age(Study)) %>% 
+  group_by(Study, ResearchID) %>% 
+  summarise_at(vars(nonsense:diff), mean) %>% 
+    ggplot() + 
+      aes(x = Study, y = diff) + 
+      geom_text(
+        aes(label = label), 
+        data = bind_rows(ant, ant2), nudge_x = -.45, hjust = 0, 
+        color = "grey20", size = 3, family = "Lato Medium") +
+      geom_hline(yintercept = 0, size = 2, color = "white") + 
+      geom_boxplot(width = .4, fill = NA, outlier.alpha = 0) +
+      geom_point(position = position_jitter(width = .2), alpha = .3, shape = 1) +
+      stat_summary(fun.y = mean, geom = "point", size = 2) + 
+    labs(
+      title = "Differences in growth curve peaks",
+      x = NULL,
+      y = "Nonword peak - real word peak",
+      caption = "Open points: Participant posterior means. Closed: Mean of means.") 
+
+
+```
 
 
 

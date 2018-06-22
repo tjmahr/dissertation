@@ -1,0 +1,198 @@
+
+
+```{r}
+m_e <- readr::read_rds("stan_me.rds.gz")
+m_e
+d_r_nw_dis <- m_e$data
+d <- posterior_linpred(m_e, draws = 200)
+```
+
+```{r}
+d_r_nw_dis$Prop <- d_r_nw_dis$Target / (d_r_nw_dis$Target + d_r_nw_dis$Distractor)
+m_e$glmod
+
+dummy_data <- d_r_nw_dis %>% 
+  distinct(Study, Condition, Time, ot1, ot2, ot3) %>% 
+  mutate(ResearchID = "NEW",
+         Primary = 0, 
+         Others = 0)
+
+set.seed(11102017)
+lpred <- dummy_data %>% 
+  tristan::augment_posterior_linpred(m_e, newdata = ., nsamples = 100)
+
+
+dummy_data <- d_r_nw_dis %>% 
+  distinct(Study, Time, Condition, ot1, ot2, ot3) %>% 
+  mutate(
+    ResearchID = "001L",
+    Target = 0, 
+    Distractor = 0)
+dummy_data2 <- dummy_data %>% 
+  mutate(ResearchID = "NEW")
+dummy_data <- bind_rows(dummy_data, dummy_data2)
+
+set.seed(11102017)
+lpred <- dummy_data %>%
+  tristan::augment_posterior_linpred(
+    model = m_e, newdata = ., 
+    re.form = ~ (ot1 + ot2 + ot3 | ResearchID/Condition/Study),
+    transform = TRUE)
+
+# p <- posterior_linpred(m_e, transform = TRUE)
+# nrow(d_r_nw_dis)
+# ncol(p)
+rownames(summary(m_e))
+posterior_interval(m_e, regex_pars = "_NEW_")
+long <- p %>% 
+  as.data.frame() %>% 
+  as_tibble() %>% 
+  tibble::rowid_to_column(".draw") %>% 
+  tidyr::gather(".observation", ".posterior_value", -.draw) %>% 
+  mutate(.observation = as.numeric(.observation))
+
+d <- d_r_nw_dis %>% 
+  select(Study, ResearchID, Condition,Time)
+d$.observation <- seq_len(nrow(d))
+d <- left_join(d, long)
+
+lpred <- dummy_data %>%
+  tristan::augment_posterior_linpred(
+    model = m_e, newdata = ., re.form = NA,
+    transform = TRUE)
+
+# summary(lm(.posterior_value ~ (ot1 + ot2 + ot3) * Study * Condition, lpred))
+# peaks <- lpred %>% 
+#   group_by(Study, Condition, .draw) %>% 
+#   top_n(5, .posterior_value) %>% 
+#   mutate(med = median(.posterior_value)) %>% 
+#   select(.draw, Study, Condition, peek_accuracy = med) %>% 
+#   distinct() %>% 
+#   ungroup() %>% 
+#   mutate(peek_accuracy = peek_accuracy) %>% 
+#   tidyr::spread(Study, peek_accuracy) %>% 
+#   select(
+#     `Peak~~(Age~~3)` = TimePoint1,
+#     `Peak~~(Age~~4)` = TimePoint2,
+#     `Peak~~(Age~~5)` = TimePoint3)
+
+d_r_nw_dis$f <- fitted(m_e)
+ggplot(d_r_nw_dis) + 
+  aes(x = Time, y = Prop, color = Condition) + 
+  stat_summary() + 
+  facet_wrap("Study") + 
+  stat_summary(
+    aes(y = f),
+    fun.y = function(x) mean(x), 
+    geom = "line", data = d_r_nw_dis)  
+
+
+
+lpred %>% 
+  tjmisc::sample_n_of(200, .draw) %>%
+  mutate(Study = convert_study_to_age(Study)) %>% 
+  ggplot() + 
+    aes(x = Time, y = .posterior_value, color = Study) +
+    geom_line(
+      aes(group = interaction(Study, Condition, ResearchID, .draw)), 
+      alpha = .1) +
+    stat_summary(
+      aes(y = Prop, group = interaction(Study, Condition)), 
+      data = d_r_nw_dis %>% 
+        mutate(Study = convert_study_to_age(Study)), 
+      fun.y = "mean", geom = "line", 
+      color = constants$col_off_black, size = 1) + 
+    # geom_text(aes(color = "Age 5", label = "Age 5"), x = 1390, y = .83) +
+    # geom_text(aes(color = "Age 3", label = "Age 3"), x = 1380, y = .46) +
+    # expand_limits(y = .85) +
+    guides(color = "none") +
+    facet_wrap("Condition") +
+    labs(
+      title = "Observed means and 200 posterior fits",
+      x = constants$x_time,
+      y = constants$y_prop_target)
+```
+
+
+## Old dead code
+
+```{r real-vs-nonword, eval = FALSE, out.width = "100%", fig.show = 'hold', fig.height = 3, fig.width = 6, message = FALSE, warning = FALSE, echo = FALSE}
+d_nonword <- d %>% 
+  filter(Condition != "MP") %>% 
+  mutate(
+    Distractor2 = ifelse(Condition == "nonsense", Target, Distractor),
+    Target2 = ifelse(Condition == "nonsense", Distractor, Target),
+    Prop2 = Target2 / (Target2 + Distractor2))
+
+code1 <- c(TimePoint1 = "Age 3", TimePoint2 = "Age 4", TimePoint3 = "Age 5")
+code2 <- c(nonsense = "Nonword", real = "Real word")
+
+d_nonword <- d_nonword %>% 
+  mutate(
+    `Child hears` = factor(code2[Condition], c("Real word", "Nonword")),
+    age = code1[Study])
+
+ggplot(d_nonword) + 
+  aes(x = Time, y = Prop2) + 
+  geom_hline(yintercept = .5, color = "white", size = 2) +
+  # stat_summary(color = "grey50") + 
+  stat_summary(aes(color =  `Child hears`)) + 
+  facet_wrap("age") + 
+  labs(
+    x = "Time after noun onset [ms]",
+    y = "Prop looks to familar image for real words
+and novel image for nonwords")
+  
+
+# m <- glmer(
+#   cbind(Target2, Distractor2) ~
+#     (ot1 + ot2 + ot3) * Condition +
+#     (ot1 + ot2 + ot3 | ResearchID/Condition),
+#   family = binomial,
+#   data = d_nonword %>% filter(Study == "TimePoint3"))
+
+# broom::augment(m, d_m3) %>% 
+#   tjmisc::sample_n_of(9, ResearchID) %>% 
+#   ggplot() + 
+#     aes(x = Time, color = Condition) + 
+#   geom_point(aes(y = Prop)) +
+#   geom_line(aes(y = plogis(.fitted))) +
+#   facet_wrap("ResearchID")
+```
+
+```{r, eval = FALSE}
+# Let's cheat and offset the curves so they start at the same value. This
+# can help us see how their heights compare.
+ggplot(d_nonword) + 
+  aes(x = Time, y = Prop2, color = Study) + 
+  geom_hline(yintercept = .5, color = "white", size = 2) +
+  # stat_summary(color = "grey50") + 
+  stat_summary(
+    aes(y = Prop2 - .07),
+    data = . %>% filter(Condition == "real", Study == "TimePoint1")) + 
+  stat_summary(
+    aes(y = Prop2 - .04),
+    data = . %>% filter(Condition == "real", Study == "TimePoint3")) + 
+  stat_summary(
+    aes(y = Prop2 + .01),
+    data = . %>% filter(Condition == "real", Study == "TimePoint2")) + 
+  stat_summary(
+    aes(y = Prop2 - .04),
+    data = . %>% filter(Condition == "nonsense", Study == "TimePoint1")) + 
+  stat_summary(
+    aes(y = Prop2 - .09),
+    data = . %>% filter(Condition == "nonsense", Study == "TimePoint2")) + 
+  stat_summary(
+    aes(y = Prop2 - .13),
+    data = . %>% filter(Condition == "nonsense", Study == "TimePoint3")) + 
+  facet_wrap("`Child hears`")  + 
+  labs(
+    y = "Proportion (shifted so first point = .5)"
+  )
+
+
+
+
+```
+
+
