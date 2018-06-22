@@ -39,21 +39,26 @@ extrafont::loadfonts(quiet = TRUE)
 theme_teej <- function(base_size = 11, base_family = "Lato Medium",
                        base_line_size = base_size / 22,
                        base_rect_size = base_size / 22) {
-  theme_grey(
+  half_line <- base_size / 2
+
+  start <- theme_grey(
     base_size = base_size,
     base_family = base_family,
     base_line_size = base_line_size,
-    base_rect_size = base_rect_size) %+replace%
+    base_rect_size = base_rect_size)
+
+  start %+replace%
     theme(
       axis.title = element_text(hjust = 1),
       strip.text = element_text(
-        hjust = 0,
-        family = base_family,
-        size = rel(1.1),
-        margin = margin(base_size/2, base_size/2, base_size/2, base_size/6)),
-      strip.background = element_rect(fill = NA))
+        hjust = 0, family = "Lato Medium", size = rel(1),
+        margin = margin(
+          t = 0.80 * half_line,
+          r = 0.25 * half_line,
+          b = 0.80 * half_line,
+          l = 0.25 * half_line)),
+      strip.background = element_rect(fill = NA, colour = NA))
 }
-
 theme_set(theme_teej())
 
 aim1_stim <- list(
@@ -77,6 +82,27 @@ convert_study_to_age <- function(xs) {
     xs,
     levels = c("TimePoint1", "TimePoint2", "TimePoint3"),
     labels = c("Age 3", "Age 4", "Age 5"))
+}
+
+convert_condition_to_name <- function(xs) {
+  factor(
+    xs,
+    levels = c("nonsense", "real", "MP"),
+    labels = c("nonwords", "real words", "mispronunciations"))
+}
+
+augment_linpred <- function(model, data, ...) {
+  model %>%
+    posterior_linpred(newdata = data, ...) %>%
+    as.data.frame() %>%
+    as_tibble() %>%
+    rlang::set_names(seq_len(nrow(data))) %>%
+    tibble::rowid_to_column(".draw") %>%
+    tidyr::gather(".observation", ".posterior_value", -.draw) %>%
+    mutate(.observation = as.numeric(.observation)) %>%
+    left_join(
+      data %>% tibble::rowid_to_column(".observation"),
+      by = ".observation")
 }
 
 parse_text <- function(x) parse(text = x)
@@ -150,3 +176,60 @@ get_para_estimate <- function(summary, term) {
     pull(estimate)
 }
 
+pluck <- purrr::pluck
+
+get_pts <- function(x, n = 2) {
+  x %>%
+    lapply(
+      . %>%
+        pluck("m") %>%
+        printy::fmt_fix_digits(n) %>%
+        printy::fmt_minus_sign())
+}
+
+get_uis <- function(x, n = 2) {
+  fmt_one_ui <- . %>%
+    printy::fmt_fix_digits(n) %>%
+    printy::fmt_minus_sign()
+
+  fmt_ui <- . %>%
+    glue::glue_data("{fmt_one_ui(ll)}--{fmt_one_ui(hh)}")
+
+  x %>%
+    lapply(fmt_ui)
+}
+
+get_cor_pts <- function(x, n = 2) {
+  fmt_cor <- . %>%
+    printy::fmt_fix_digits(n) %>%
+    printy::fmt_leading_zero() %>%
+    printy::fmt_minus_sign()
+
+  x %>%
+    lapply(. %>% pluck("m") %>% fmt_cor())
+}
+
+get_cor_uis <- function(x, n = 2) {
+  fmt_cor <- . %>%
+    printy::fmt_fix_digits(n) %>%
+    printy::fmt_leading_zero() %>%
+    printy::fmt_minus_sign()
+
+  x %>%
+    lapply(. %>% glue::glue_data("{fmt_cor(ll)}--{fmt_cor(hh)}"))
+}
+
+fmt_inline_median_interval <- function(x, n = 2) {
+  pts <- get_pts(x, n)
+  uis <- get_uis(x, n)
+
+  purrr::map2(pts, uis,
+    function(a, b) sprintf("%s [%s]", a,b)
+  )
+}
+
+add_ui_slug_to_first <- function(x, slug = "90%&nbsp;UI: ") {
+  x[[1]] <- x[[1]] %>%
+    stringr::str_replace(" \\[", paste0(" [", slug))
+  x
+}

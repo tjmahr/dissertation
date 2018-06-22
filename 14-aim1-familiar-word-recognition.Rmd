@@ -726,42 +726,6 @@ cowplot::plot_grid(p1, p23, ncol = 2)
 ```
 
 ```{r, include = FALSE}
-pluck <- purrr::pluck
-
-get_pts <- function(x, n = 2) {
-  x %>% 
-    lapply(. %>% pluck("m") %>% printy::fmt_fix_digits(n))
-} 
-
-get_uis <- function(x, n = 2) {
-  fmt_ui <- . %>% 
-    glue::glue_data(
-      "{printy::fmt_fix_digits(ll,n)}--{printy::fmt_fix_digits(hh,n)}") 
-  
-  x %>% 
-    lapply(fmt_ui) 
-} 
-
-get_cor_pts <- function(x, n = 2) {
-  fmt_cor <- . %>%
-    printy::fmt_fix_digits(n) %>% 
-    printy::fmt_leading_zero() %>% 
-    printy::fmt_minus_sign()
-  
-  x %>% 
-    lapply(. %>% pluck("m") %>% fmt_cor())
-}
-  
-get_cor_uis <- function(x, n = 2) {
-  fmt_cor <- . %>%
-    printy::fmt_fix_digits(n) %>% 
-    printy::fmt_leading_zero() %>% 
-    printy::fmt_minus_sign()
-  
-  x %>% 
-    lapply(. %>% glue::glue_data("{fmt_cor(ll)}--{fmt_cor(hh)}")) 
-}
-
 props <- props %>% 
   mutate(
     parameter = parameter %>% 
