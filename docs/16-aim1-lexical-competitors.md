@@ -223,6 +223,9 @@ panel visualizes estimated means and their 95% confidence intervals.
 <p class="caption">(\#fig:phon-vs-unre-fits)(ref:phon-vs-unre-fits)</p>
 </div>
 
+
+
+
 The early peaks occur when one would expect if children are acting on
 partial phonological information. The similarity between the
 phonological competitor and the target noun occurs early on in the
@@ -359,6 +362,10 @@ intervals.
 <img src="16-aim1-lexical-competitors_files/figure-html/semy-vs-unre-fits-1.png" alt="(ref:semy-vs-unre-fits)" width="80%" />
 <p class="caption">(\#fig:semy-vs-unre-fits)(ref:semy-vs-unre-fits)</p>
 </div>
+
+
+
+
 
 The average looks to the semantic foil over the unrelated image for
 age 4 was 0.44 emp. log-odds, .61 proportion units.

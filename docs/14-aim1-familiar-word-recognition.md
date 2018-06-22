@@ -119,6 +119,8 @@ are simulations of new participants at Age 4.
 
 
 
+
+
 Year over year changes in word recognition performance
 ------------------------------------------------------------------------
 
@@ -138,6 +140,95 @@ the observed average growth curve in each study.
 <img src="14-aim1-familiar-word-recognition_files/figure-html/average-growth-curves-1.png" alt="(ref:average-growth-curves)" width="50%" />
 <p class="caption">(\#fig:average-growth-curves)(ref:average-growth-curves)</p>
 </div>
+
+
+
+```r
+
+
+lpred <- lpred %>% 
+  select(-(ot1:Others)) %>% 
+  select(Study, Time, everything())
+
+lpred_intervals <- lpred %>% 
+  select(Study, Time, .posterior_value) %>%
+  mutate(.posterior_value = plogis(.posterior_value)) %>% 
+  tidyr::nest(-Time, -Study) %>% 
+  mutate(intervals = purrr::map(data, bayesplot::mcmc_intervals_data)) %>% 
+  select(-data) %>% 
+  tidyr::unnest(intervals) %>% 
+  mutate(
+    Study = convert_study_to_age(Study),
+    Facet = "Averages from model")
+
+d_m %>% 
+  mutate(Study = convert_study_to_age(Study), Facet = Study) %>% 
+  ggplot() + 
+    aes(x = Time, y = Prop) + 
+    geom_hline(yintercept = .25, color = "white", size = 2) + 
+    geom_line(
+      aes(group = ResearchID), alpha = .16, 
+      color = constants$col_off_black) + 
+    stat_summary(
+      fun.y = mean, geom = "line", size = 1.25, 
+      color = constants$col_blue_highlight) +
+    geom_ribbon(
+      aes(y = NULL, ymin = ll, ymax = hh, group = Study), 
+      data = lpred_intervals, alpha = .2) +
+    geom_line(
+      aes(y = m, group = Study), data = lpred_intervals, size = 1.25, 
+      color = constants$col_blue_highlight) +
+    geom_text(
+      aes(label = "Age 5"), x = 1360, y = .835, family = "Lato", size = 5,
+      data = data.frame(Facet = "Averages from model")) +
+    geom_text(
+      aes(label = "Age 3"), x = 1340, y = .42, family = "Lato", size = 5,
+      data = data.frame(Facet = "Averages from model")) +
+    facet_grid(. ~ Facet) + 
+    labs(x = constants$x_time,
+         y = constants$y_prop_target,
+         caption = "One line: One child's raw data. Heavy lines: Study averages.") + 
+    theme_grey(base_size = 18, base_family = "Lato") + 
+    theme(
+      axis.title.x = element_text(hjust = 1), 
+      axis.title.y = element_text(hjust = 1),
+      strip.background = element_blank(),
+      strip.text = element_text(
+        size = 18,
+        hjust = 0, margin = margin(0, 0, 7.2, 0, "pt")))
+
+tjmisc::ggpreview(width = 12, height = 5, dpi = 600)
+
+
+t <- theme_grey(base_size = 18, base_family = "Lato")
+t$strip.text
+t$plot.title
+lpred %>% 
+  tjmisc::sample_n_of(200, .draw) %>% 
+  mutate(Study = convert_study_to_age(Study),
+         Facet = Study) %>% 
+  ggplot() + 
+  aes(x = Time, y = plogis(.posterior_value), color = Study) +
+  geom_hline(yintercept = .25, color = "white", size = 2) +
+  geom_line(
+    aes(group = interaction(Study, .draw)), 
+    alpha = .1) +
+  stat_summary(
+    aes(y = Prop, group = Study), 
+    data = d_m %>% 
+      mutate(Study = convert_study_to_age(Study)), 
+    fun.y = "mean", geom = "line", 
+    color = constants$col_off_black, size = 1) + 
+  geom_text(aes(color = "Age 5", label = "Age 5"), x = 1390, y = .83) +
+  geom_text(aes(color = "Age 3", label = "Age 3"), x = 1380, y = .46) +
+  expand_limits(y = .85) +
+  guides(color = "none") +
+  labs(
+    title = "Observed means and 200 posterior fits",
+    x = constants$x_time,
+    y = constants$y_prop_target)
+```
+
 
 Figure \@ref(fig:effects2) depicts uncertainty intervals with
 the model's average effects of each timepoint on the growth curve
@@ -343,6 +434,35 @@ the three years of the study.
 <img src="14-aim1-familiar-word-recognition_files/figure-html/kendall-stats-1.png" alt="(ref:kendall-stats)" width="80%" />
 <p class="caption">(\#fig:kendall-stats)(ref:kendall-stats)</p>
 </div>
+
+
+```r
+subtitle <- glue::glue(
+  "Kendall's W. Raters: 3 time points. Items: {n_rated} children.")
+
+library(extrafont)
+
+w_intervals2 <- w_intervals %>% 
+  mutate(
+    parameter = factor(parameter, labels = c(
+      "Random~ratings", "Time^3", "Time^2", "Time^1", 
+      "Average~probability", "Peak~probability"))) 
+
+ggplot(w_intervals2) + 
+  aes(y = parameter) +
+  geom_linerangeh(aes(xmin = ll, xmax = hh)) + 
+  geom_linerangeh(aes(xmin = l, xmax = h), size = 2) +
+  geom_point(aes(x = m), size = 3, shape = 3) + 
+  scale_y_discrete(labels = parse_text) + 
+  theme_grey(base_size = 18, base_family = "Lato") +
+  labs(
+    x = NULL, 
+    y = NULL, 
+    title = "Concordance coefficients for growth curve features",
+    caption = constants$cap_median_90_50,
+    subtitle = subtitle) 
+```
+
 
 I used the `kendall()` function in the irr R package
 [vers. 0.84; @irr] to compute concordance

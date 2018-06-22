@@ -32,8 +32,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="aim1-gca-models.html">
-<link rel="next" href="references.html">
+<link rel="prev" href="aim2-method.html">
+<link rel="next" href="vw-experiment-items.html">
 <style type="text/css">
 p.abstract{
   text-align: center;
@@ -209,26 +209,99 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="related-work" class="section level1">
-<h1><span class="header-section-number">C</span> Related work</h1>
-<p>In this section, I clarify relationships between this project and other word recognition research reported from our lab. In short, our lab has reported results about the two-image and four-image experiments from cross-sectional samples, describing child-level measures that predict performance in these tasks. In contrast, my dissertation 1) focuses on the longitudinal development of word recognition and 2) engages with the fine-grained details of lexical processing.</p>
-<p><span class="citation">Law et al. (<a href="#ref-RWLPaper">2016</a>)</span> analyzed data from the four-image experiment in Specific Aim 1. This study featured a diverse cross-sectional sample of 60 children, half of whom received the experiment in African American English and half received it in Mainstream American English. The sample ranged in age from 28 to 60 months. The study included data from 23 participants from year 1 of the longitudinal study (i.e., what I refer to as age 3) in order to enrich parts of the sample demographics. For this manuscript, we analyzed how vocabulary and maternal education predicted looking patterns, including relative looks to the semantic and phonological foils, but with conventional polynomial growth curves. The use of generalized additive models is an innovation I developed for my dissertation.</p>
-<p><span class="citation">Law &amp; Edwards (<a href="#ref-MPPaper">2015</a>)</span> analyzed a different version of the mispronunciation experiment on a different sample of children (<em>n</em> = 34, 30–46 months old). This earlier version included both real word and the mispronunciation of the real word in the same block of trial. For example, a child would hear “dog” and “tog” during the same session of the experiment. This design might subtly temper the effect of mispronounced stimuli by allowing the listener to compare the mispronunciation to its correctly produced counterpart. The version of the experiment in Specific Aim 2 separates the real words and mispronunciations so that a child never hears a familiar word and its mispronunciation during the same block of trials. With this design, there is no explicit point of comparison for the mispronunciation, and the child has to rely on his or her own lexical representations when processing these words.</p>
-<p>Mahr and Edwards (in press) was the manuscript I originally authored for my preliminary examinations. The paper analyzes the same kinds of relations as <span class="citation">Weisleder &amp; Fernald (<a href="#ref-Weisleder2013">2013</a>)</span> which showed that lexical processing efficiency mediated the effect of language input on future vocabulary size. Specifically, I asked whether word recognition performance on the four-image task of Specific Aim 1, vocabulary size, and home language input data from year 1 (age 3) predicted vocabulary size at year 2 (age 4). The paper only examined looks to the familiar image from one year of the study, so it did not analyze any lexical competition effects or the development of word recognition within children. In short, we found that receptive vocabulary was more sensitive to variability in lexical processing and home language input than expressive vocabulary.</p>
+<div id="development-of-referent-selection" class="section level1">
+<h1><span class="header-section-number">Chapter 10</span> Development of referent selection</h1>
+<div id="nonwords-versus-real-words" class="section level2">
+<h2><span class="header-section-number">10.1</span> Nonwords versus real words</h2>
+<p>I asked whether the recognition of familiar words differed from the fast-selecting of referents for a nonword. I fit a Bayesian mixed effects logistic regression model, as in Chapter X. For the real word and nonword conditions, there is a well-defined target image. For real words, it is the familar image, and for nonwords, it is the novel image. Therefore, I modeled the data under these assumptions. The outcome measures were therefore:</p>
+<ul>
+<li>P(Look to familiar image | Hear a real word)</li>
+<li>P(Look to unfamiliar image | Hear a nonword )</li>
+</ul>
+<p>The important analytic question is whether and to what degree these two probabilities differ. This growth curve model is similar to the one in Chapter X with cubic polynomial and a condition effect which interacts with time features. Thus, the basic model is:</p>
+<p><span class="math display">\[
+\small
+\begin{align*}
+   \text{log-odds}(\mathit{looking\,}) =\
+    &amp;\beta_0 + 
+      \beta_1\text{Time}^1 + 
+      \beta_2\text{Time}^2 + 
+      \beta_3\text{Time}^3\ + 
+      &amp;\text{[nonword growth curve]} \\
+    (&amp;\gamma_0 + 
+      \gamma_1\text{Time}^1 + 
+      \gamma_2\text{Time}^2 +
+      \gamma_3\text{Time}^3)*\text{Condition} \
+      &amp;\text{[adjustments for real words]} \\
+\end{align*}
+\]</span></p>
+<p>I fit a separate model for each year of the study.<a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a> <a href="#aim2-gca-models">Appendix <a href="#aim2-gca-models"><strong>??</strong></a></a> contains the R code used to fit these models along with a description of the specifications represented by the model syntax. I used moderately informative priors—see Appendix X. For these analyses, I limited my attention to the distractor-initial.</p>
+<ul>
+<li>I model data from 300 ms to 1500.</li>
+<li>I flipped the growth curve for the nonword condition so that it reflects the proportion of looking to the unfamiliar object when presented a nonword. Both the real word and nonword conditions measure referent selection as the probability of fixating on the appropriate referent when presented with a label.</li>
+</ul>
+<p>I removed any Study x Child levels if a child had fewer than 4 fixations in a single time bin. Put another way, children had to have at least 4 looks to one of the images in every 50 ms time bin. This screening removed 13 children from Age 3, 15 from Age 4, and 6 from Age 5.</p>
+<p>The figure below shows group average of growth curves—that is, I averaged the participant’s individual model-estimated or empirical growth curves together–for each condition and age.</p>
+<p><img src="22-referent-selection_files/figure-html/aim2-real-nonword-means-1.png" width="80" style="display: block; margin: auto;" /></p>
+<p>Recall from earlier chapters that in these growth curve models, I consider only the intercept and linear time terms to be behaviorally meaningful parameters. The intercept measures overall the average growth curve value so it reflects looking reliability, and the linear time term measures the overall stepness of the growth so it reflects lexical processing efficiency. I also derive a measure of peak looking probability by taking the median of top five points in a growth curve, and this peak provides a measure of uncertainty (higher peaks indicate less uncertainty).</p>
+<p>I evaluated the condition effects by looking at the effect of the real word condition on the intercept and linear time terms. The two conditions did not reliable differ at age 3. The real-word condition effect on the intercept was −0.19 [90% UI: −0.43–0.05] and its interaction with the linear time term was 0.45 [−0.05–0.94]. Both these 90% intervals include 0 as a plausible estimate for the condition difference, so I conclude that the conditions did not differ on average at age 3.</p>
+<p>There was an advantage for the nonword condition at age 4 and age 5. The real-word effect was negative at age 4, −0.82 [−1.01–−0.62], so that on average, children looked less to target on the real words than the nonword trials. There was a suggestive effect linear time effect at age 4, −0.52 [−0.96–−0.04]. The curve for real words was probably less steep at age 4 but values near 0 remain plausible. At age 5, only the intercept difference was credible, −0.48 [−0.70–−0.27]. In general, children performed better in the nonword condition than the real word condition at age 4 and age 5. This difference shows up in the growth curve model through intercept effects, although it is plausible that children’s nonword growth curves were steeper than the real word curves at age 4.</p>
+<p>The growth curve peaks follow a similar pattern of results. At age 3, the average peak value was … for real words and … for nonwords. The conditions did not significantly differ at this age. The nonword peaks were significantly higher greater than real word peaks at age 4 [blah vs. blah, p=value.] and at age 5 although the difference was smaller [blah vs. blah, p=value.].</p>
+<!-- To evaluate the growth curve peaks, I computed the growth curve peak for -->
+<!-- each participant x study x condition in each posterior sample and -->
+<!-- averaged over the posterior to get an average growth curve peak. I used -->
+<!-- a linear mixed effects model to regress growth curve peak onto age group -->
+<!-- and experimental condition and age x condition with randomly varying -->
+<!-- intercepts for each child and each child-year. -->
+<p>Importantly, the average real word peaks was xx at age 3 which that children were beginning to reach ceiling performance early on. This is a task for toddlers.</p>
+<div id="points-for-discussion" class="section level3">
+<h3><span class="header-section-number">10.1.1</span> Points for discussion</h3>
+<p>The advantage of nonwords over real words was an unexpected. My pre-analysis hypotheses were that word recognition in the real word condition would be easier than in the nonword condition, or failing that, the two conditions would not reliably differ. I had discounted the possibility of an overall advantage for nonwords over real words.</p>
+<p>As in Chapter XX, I calculated the posterior distribution of growth curves for each child x condition x year. To measure children’s lexical processing, I used the peak value each growth curve by taking the median of the top 5 model fits. For each child, I calculated the difference between the peak of the real word and the nonword growth curves. This difference in peak values conveys the <em>condition advantage</em> for a child. The figure below visualizes the condition advantages.</p>
+<p><img src="22-referent-selection_files/figure-html/unnamed-chunk-9-1.png" width="80" style="display: block; margin: auto;" /><img src="22-referent-selection_files/figure-html/unnamed-chunk-9-2.png" width="80" style="display: block; margin: auto;" /></p>
+<!-- For this task, I will model how the looks to the familiar image differ -->
+<!-- in each condition (real words, mispronunciations, nonwords) and how the -->
+<!-- growth curves for each condition change year over year. This model will -->
+<!-- use growth curve model described in [Growth Curve Analysis](#growth-curve-analysis) but -->
+<!-- augmented with Condition effects. -->
+<!-- I will examine whether and when any dissociation is observed for word -->
+<!-- recognition in the real word and nonword conditions. @McMurray2012 argue that  -->
+<!-- familiar word recognition and fast -->
+<!-- association for novel words reflect the same cognitive process: referent -->
+<!-- selection. Data from this task would support with this hypothesis when -->
+<!-- the growth curves for looks to the familiar image are symmetrical for -->
+<!-- the real word and nonword conditions. Figure \@ref(fig:le-means), showing data -->
+<!-- from @MPPaper [, _n_\ =\ 34 children, 30-46 months old], shows some -->
+<!-- symmetry for the real word and nonword conditions. -->
+<!-- I tested whether the two measures ever dissociate by computing the -->
+<!-- posterior predicted difference between the growth curves. This approach -->
+<!-- is similar to the bootstrap-based divergence analyses used in some word -->
+<!-- recognition experiments [e.g., @Oleson2015; @eyetrackingR]. The -->
+<!-- essential question is when—at which specific time points—do two growth -->
+<!-- curves differ from one another. The bootstrap approach -->
+<!-- uses resampling to get an estimate, whereas I use posterior -->
+<!-- predicted samples to estimate these differences. -->
+<!-- Specifically, I will compute the posterior-predicted looks to the -->
+<!-- familiar object in the real word condition, P(Familiar | Real Word, Time -->
+<!-- *t*, Child *i*) and the analogous looks to the unfamiliar object in the -->
+<!-- nonword condition, P(Unfamiliar | Nonword, Time *t*, Child *i*). The -->
+<!-- difference between these two probabilities estimates how the time course -->
+<!-- of word recognition differs between these two conditions, and I can use -->
+<!-- 50% and 90% uncertainty intervals to determine during which time points -->
+<!-- the curves credibly differ from each other. -->
+
+</div>
+</div>
+</div>
 
 
+
 </div>
-<h3>References</h3>
-<div id="refs" class="references">
-<div id="ref-RWLPaper">
-<p>Law, F., II, Mahr, T., Schneeberg, A., &amp; Edwards, J. R. (2016). Vocabulary size and auditory word recognition in preschool children. <em>Applied Psycholinguistics</em>. doi:<a href="https://doi.org/10.1017/S0142716416000126">10.1017/S0142716416000126</a></p>
-</div>
-<div id="ref-MPPaper">
-<p>Law, F., II, &amp; Edwards, J. R. (2015). Effects of vocabulary size on online lexical processing by preschoolers. <em>Language Learning and Development</em>, <em>11</em>(4), 331–355. doi:<a href="https://doi.org/10.1080/15475441.2014.961066">10.1080/15475441.2014.961066</a></p>
-</div>
-<div id="ref-Weisleder2013">
-<p>Weisleder, A., &amp; Fernald, A. (2013). Talking to children matters: Early language experience strengthens processing and builds vocabulary. <em>Psychological Science</em>, <em>24</em>(11), 2143–52. doi:<a href="https://doi.org/10.1177/0956797613488145">10.1177/0956797613488145</a></p>
-</div>
+<div class="footnotes">
+<hr />
+<ol start="8">
+<li id="fn8"><p>A single model containing all three years with corresponding year effects, year-by-time interactions, and year-by-condition-by-time conditions had difficulty converging, and even when a working model was obtained, a bug in the modeling software prevented me from obtaining posterior predictions. I reported the bug in an issue for the package’s source code repository.<a href="development-of-referent-selection.html#fnref8">↩</a></p></li>
+</ol>
 </div>
 <script type="text/javascript">
   $("div.page-wrapper > h3").appendTo(".page-inner > section");
@@ -243,8 +316,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           </div>
         </div>
       </div>
-<a href="aim1-gca-models.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="aim2-method.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="vw-experiment-items.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
