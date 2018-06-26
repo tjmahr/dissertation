@@ -25,7 +25,7 @@
 <meta name="author" content="Tristan Mahr">
 
 
-<meta name="date" content="2018-06-22">
+<meta name="date" content="2018-06-26">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -247,89 +247,6 @@ Figure 6.1: Illustration of the three growth curve features and how they describ
 Figure 6.2: The model estimated an average word recognition growth for each study, and the colored lines represent 200 posterior samples of these growth curves. The thick dark lines represent the observed average growth curve in each study.
 </p>
 </div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-
-lpred &lt;-<span class="st"> </span>lpred <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>(ot1<span class="op">:</span>Others)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">select</span>(Study, Time, <span class="kw">everything</span>())
-
-lpred_intervals &lt;-<span class="st"> </span>lpred <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">select</span>(Study, Time, .posterior_value) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">.posterior_value =</span> <span class="kw">plogis</span>(.posterior_value)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>tidyr<span class="op">::</span><span class="kw">nest</span>(<span class="op">-</span>Time, <span class="op">-</span>Study) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">intervals =</span> purrr<span class="op">::</span><span class="kw">map</span>(data, bayesplot<span class="op">::</span>mcmc_intervals_data)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>data) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>tidyr<span class="op">::</span><span class="kw">unnest</span>(intervals) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">mutate</span>(
-    <span class="dt">Study =</span> <span class="kw">convert_study_to_age</span>(Study),
-    <span class="dt">Facet =</span> <span class="st">&quot;Averages from model&quot;</span>)
-
-d_m <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Study =</span> <span class="kw">convert_study_to_age</span>(Study), <span class="dt">Facet =</span> Study) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> Prop) <span class="op">+</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> .<span class="dv">25</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">geom_line</span>(
-      <span class="kw">aes</span>(<span class="dt">group =</span> ResearchID), <span class="dt">alpha =</span> .<span class="dv">16</span>, 
-      <span class="dt">color =</span> constants<span class="op">$</span>col_off_black) <span class="op">+</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">stat_summary</span>(
-      <span class="dt">fun.y =</span> mean, <span class="dt">geom =</span> <span class="st">&quot;line&quot;</span>, <span class="dt">size =</span> <span class="fl">1.25</span>, 
-      <span class="dt">color =</span> constants<span class="op">$</span>col_blue_highlight) <span class="op">+</span>
-<span class="st">    </span><span class="kw">geom_ribbon</span>(
-      <span class="kw">aes</span>(<span class="dt">y =</span> <span class="ot">NULL</span>, <span class="dt">ymin =</span> ll, <span class="dt">ymax =</span> hh, <span class="dt">group =</span> Study), 
-      <span class="dt">data =</span> lpred_intervals, <span class="dt">alpha =</span> .<span class="dv">2</span>) <span class="op">+</span>
-<span class="st">    </span><span class="kw">geom_line</span>(
-      <span class="kw">aes</span>(<span class="dt">y =</span> m, <span class="dt">group =</span> Study), <span class="dt">data =</span> lpred_intervals, <span class="dt">size =</span> <span class="fl">1.25</span>, 
-      <span class="dt">color =</span> constants<span class="op">$</span>col_blue_highlight) <span class="op">+</span>
-<span class="st">    </span><span class="kw">geom_text</span>(
-      <span class="kw">aes</span>(<span class="dt">label =</span> <span class="st">&quot;Age 5&quot;</span>), <span class="dt">x =</span> <span class="dv">1360</span>, <span class="dt">y =</span> .<span class="dv">835</span>, <span class="dt">family =</span> <span class="st">&quot;Lato&quot;</span>, <span class="dt">size =</span> <span class="dv">5</span>,
-      <span class="dt">data =</span> <span class="kw">data.frame</span>(<span class="dt">Facet =</span> <span class="st">&quot;Averages from model&quot;</span>)) <span class="op">+</span>
-<span class="st">    </span><span class="kw">geom_text</span>(
-      <span class="kw">aes</span>(<span class="dt">label =</span> <span class="st">&quot;Age 3&quot;</span>), <span class="dt">x =</span> <span class="dv">1340</span>, <span class="dt">y =</span> .<span class="dv">42</span>, <span class="dt">family =</span> <span class="st">&quot;Lato&quot;</span>, <span class="dt">size =</span> <span class="dv">5</span>,
-      <span class="dt">data =</span> <span class="kw">data.frame</span>(<span class="dt">Facet =</span> <span class="st">&quot;Averages from model&quot;</span>)) <span class="op">+</span>
-<span class="st">    </span><span class="kw">facet_grid</span>(. <span class="op">~</span><span class="st"> </span>Facet) <span class="op">+</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">labs</span>(<span class="dt">x =</span> constants<span class="op">$</span>x_time,
-         <span class="dt">y =</span> constants<span class="op">$</span>y_prop_target,
-         <span class="dt">caption =</span> <span class="st">&quot;One line: One child&#39;s raw data. Heavy lines: Study averages.&quot;</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">18</span>, <span class="dt">base_family =</span> <span class="st">&quot;Lato&quot;</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">theme</span>(
-      <span class="dt">axis.title.x =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="dv">1</span>), 
-      <span class="dt">axis.title.y =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="dv">1</span>),
-      <span class="dt">strip.background =</span> <span class="kw">element_blank</span>(),
-      <span class="dt">strip.text =</span> <span class="kw">element_text</span>(
-        <span class="dt">size =</span> <span class="dv">18</span>,
-        <span class="dt">hjust =</span> <span class="dv">0</span>, <span class="dt">margin =</span> <span class="kw">margin</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="fl">7.2</span>, <span class="dv">0</span>, <span class="st">&quot;pt&quot;</span>)))
-
-tjmisc<span class="op">::</span><span class="kw">ggpreview</span>(<span class="dt">width =</span> <span class="dv">12</span>, <span class="dt">height =</span> <span class="dv">5</span>, <span class="dt">dpi =</span> <span class="dv">600</span>)
-
-
-t &lt;-<span class="st"> </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">18</span>, <span class="dt">base_family =</span> <span class="st">&quot;Lato&quot;</span>)
-t<span class="op">$</span>strip.text
-t<span class="op">$</span>plot.title
-lpred <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>tjmisc<span class="op">::</span><span class="kw">sample_n_of</span>(<span class="dv">200</span>, .draw) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Study =</span> <span class="kw">convert_study_to_age</span>(Study),
-         <span class="dt">Facet =</span> Study) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Time, <span class="dt">y =</span> <span class="kw">plogis</span>(.posterior_value), <span class="dt">color =</span> Study) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> .<span class="dv">25</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_line</span>(
-    <span class="kw">aes</span>(<span class="dt">group =</span> <span class="kw">interaction</span>(Study, .draw)), 
-    <span class="dt">alpha =</span> .<span class="dv">1</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">stat_summary</span>(
-    <span class="kw">aes</span>(<span class="dt">y =</span> Prop, <span class="dt">group =</span> Study), 
-    <span class="dt">data =</span> d_m <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">      </span><span class="kw">mutate</span>(<span class="dt">Study =</span> <span class="kw">convert_study_to_age</span>(Study)), 
-    <span class="dt">fun.y =</span> <span class="st">&quot;mean&quot;</span>, <span class="dt">geom =</span> <span class="st">&quot;line&quot;</span>, 
-    <span class="dt">color =</span> constants<span class="op">$</span>col_off_black, <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">color =</span> <span class="st">&quot;Age 5&quot;</span>, <span class="dt">label =</span> <span class="st">&quot;Age 5&quot;</span>), <span class="dt">x =</span> <span class="dv">1390</span>, <span class="dt">y =</span> .<span class="dv">83</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">color =</span> <span class="st">&quot;Age 3&quot;</span>, <span class="dt">label =</span> <span class="st">&quot;Age 3&quot;</span>), <span class="dt">x =</span> <span class="dv">1380</span>, <span class="dt">y =</span> .<span class="dv">46</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">expand_limits</span>(<span class="dt">y =</span> .<span class="dv">85</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="st">&quot;none&quot;</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">labs</span>(
-    <span class="dt">title =</span> <span class="st">&quot;Observed means and 200 posterior fits&quot;</span>,
-    <span class="dt">x =</span> constants<span class="op">$</span>x_time,
-    <span class="dt">y =</span> constants<span class="op">$</span>y_prop_target)</code></pre></div>
 <p>Figure <a href="fam-rec.html#fig:effects2">6.3</a> depicts uncertainty intervals with the model’s average effects of each timepoint on the growth curve features. The intercept and linear time effects increased each year, confirming that children become more reliable and faster at recognizing words as they grow older. The peak probability also increased each year. For each effect, the change from age 3 to age 4 is approximately the same as the change from age 4 to age 5, as illustrated in Figure <a href="fam-rec.html#fig:pairwise-effects">6.4</a>.</p>
 
 <div class="figure" style="text-align: center"><span id="fig:effects2"></span>
@@ -389,30 +306,6 @@ Figure 6.7: Ranges of predictions for simulated participants over the course of 
 Figure 6.8: Uncertainty intervals for the Kendall’s coefficient of concordance. Random ratings provide a baseline of null <em>W</em> statistics. The peak, intercept and linear time features are decisively non-null, indicating a significant degree of correspondence in children’s relative word recognition reliability and efficiency over the three years of the study.
 </p>
 </div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">subtitle &lt;-<span class="st"> </span>glue<span class="op">::</span><span class="kw">glue</span>(
-  <span class="st">&quot;Kendall&#39;s W. Raters: 3 time points. Items: {n_rated} children.&quot;</span>)
-
-<span class="kw">library</span>(extrafont)
-
-w_intervals2 &lt;-<span class="st"> </span>w_intervals <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">mutate</span>(
-    <span class="dt">parameter =</span> <span class="kw">factor</span>(parameter, <span class="dt">labels =</span> <span class="kw">c</span>(
-      <span class="st">&quot;Random~ratings&quot;</span>, <span class="st">&quot;Time^3&quot;</span>, <span class="st">&quot;Time^2&quot;</span>, <span class="st">&quot;Time^1&quot;</span>, 
-      <span class="st">&quot;Average~probability&quot;</span>, <span class="st">&quot;Peak~probability&quot;</span>))) 
-
-<span class="kw">ggplot</span>(w_intervals2) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">aes</span>(<span class="dt">y =</span> parameter) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_linerangeh</span>(<span class="kw">aes</span>(<span class="dt">xmin =</span> ll, <span class="dt">xmax =</span> hh)) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">geom_linerangeh</span>(<span class="kw">aes</span>(<span class="dt">xmin =</span> l, <span class="dt">xmax =</span> h), <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> m), <span class="dt">size =</span> <span class="dv">3</span>, <span class="dt">shape =</span> <span class="dv">3</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">scale_y_discrete</span>(<span class="dt">labels =</span> parse_text) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">theme_grey</span>(<span class="dt">base_size =</span> <span class="dv">18</span>, <span class="dt">base_family =</span> <span class="st">&quot;Lato&quot;</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">labs</span>(
-    <span class="dt">x =</span> <span class="ot">NULL</span>, 
-    <span class="dt">y =</span> <span class="ot">NULL</span>, 
-    <span class="dt">title =</span> <span class="st">&quot;Concordance coefficients for growth curve features&quot;</span>,
-    <span class="dt">caption =</span> constants<span class="op">$</span>cap_median_90_<span class="dv">50</span>,
-    <span class="dt">subtitle =</span> subtitle) </code></pre></div>
 <p>I used the <code>kendall()</code> function in the irr R package <span class="citation">(vers. 0.84; Gamer, Lemon, &amp; Singh, <a href="#ref-irr">2012</a>)</span> to compute concordance statistics. Figure <a href="fam-rec.html#fig:kendall-stats">6.8</a> depicts uncertainty intervals for the Kendall <em>W</em>’s for these growth curve features. The 90% uncertainty interval of <em>W</em> statistics from random ratings, [.28–.39], subsumes the intervals for the Time<sup>2</sup> effect [.30–.35] and the Time<sup>3</sup> effect [.28–.35], indicating that these values do not differentiate children in a longitudinally stable way. Earlier, I claimed that only the intercept, linear time, and peak features have psychologically meaningful interpretations and that the higher-order time features mainly act to capture the curvature of the data. These null concordance statistics support that claim because the Time<sup>2</sup> and Time<sup>3</sup> features differentiate children across studies as well as random numbers.</p>
 <p>Concordance is strongest for the peak feature, <em>W</em> = .59 [.57–.60] and the intercept term, <em>W</em> = .58 [.57–.60], followed by the linear time term, <em>W</em> = .50 [.48–.52]. Because these values are far removed from the statistics for random ratings, I conclude that there is a credible degree of correspondence across studies when ranking children using their peak looking probability, average look probability (the intercept) or their growth curve slope (linear time).</p>
 <p><strong>Summary</strong>. Growth curve features measured individual differences in word recognition performance. By using Kendall’s <em>W</em> to measure the degree of concordance among growth curve features over time, I tested whether individual differences in lexical processing persisted over development. I found that the peak looking probability, average looking probability and linear time features were stable over time. Children who relatively fast (or reliable) at word recognition at one age were also relatively fast (or reliable) at other ages too.</p>

@@ -13,7 +13,7 @@ if (interactive()) source("./helpers.R")
 ```{r packages, include = FALSE}
 library(rstanarm)
 library(bayesplot)
-theme_set(theme_grey())
+theme_set(theme_teej())
 library(stringr)
 library(ggstance)
 knitr::opts_chunk$set(cache = TRUE)
@@ -128,7 +128,7 @@ relate to word recognition performance.
 how they describe lexical processing performance. The three curves used
 are simulations of new participants at Age 4.
 
-```{r curve-features, fig.cap = "(ref:curve-features)", echo = FALSE, out.width = "80%", fig.height = 5.5, fig.width = 5.5}
+```{r curve-features, fig.cap = "(ref:curve-features)", echo = FALSE, out.width = "80%", fig.height = 5, fig.width = 5}
 dummy_data <- d_m %>% 
   filter(Study == "TimePoint2") %>% 
   distinct(Study, Time, ot1, ot2, ot3) %>% 
@@ -141,7 +141,6 @@ set.seed(02062018)
 
 lpred <- dummy_data %>% 
   tristan::augment_posterior_linpred(model = b, newdata = ., nsamples = 3) 
-
 lpred_lm <- lpred %>% 
   tidyr::nest(-.draw) %>% 
   mutate(
@@ -156,6 +155,8 @@ lpred_lm <- lpred %>%
   # Sort using the AUC values
   mutate(.draw = forcats::fct_reorder(as.factor(.draw), auc))
 
+subtheme <- theme_teej(base_size = 10)
+
 p1 <- ggplot(lpred_lm) + 
   aes(x = ot1, y = .posterior_value, group = .draw) + 
   geom_line(linetype = "dashed", color = constants$col_off_black) + 
@@ -168,11 +169,10 @@ p1 <- ggplot(lpred_lm) +
     y = constants$y_logodds_target,
     title = "Intercept term represents average probability") + 
   facet_wrap(".draw") + 
-  theme_grey(base_size = 9) + 
+  subtheme +
   theme(
     strip.text = element_blank(), 
     axis.text.x = element_blank(),
-    axis.title.y = element_blank(),
     axis.ticks.x = element_blank())
 
 p2 <- ggplot(lpred_lm) + 
@@ -187,12 +187,13 @@ p2 <- ggplot(lpred_lm) +
     x = NULL,
     y = constants$y_logodds_target,
     title = "Linear time term represents processing efficiency") +
-  theme_grey(base_size = 9) + 
+  subtheme +
   theme(
     strip.text = element_blank(), 
     axis.text.x = element_blank(),
     axis.title.x = element_blank(),
-    axis.ticks.x = element_blank())
+    axis.ticks.x = element_blank(),
+    axis.title.y = element_blank())
 
 p3 <- ggplot(lpred_lm) + 
   aes(x = ot1, y = .posterior_value, group = .draw) + 
@@ -213,7 +214,7 @@ p3 <- ggplot(lpred_lm) +
     x = constants$x_time,
     y = constants$y_logodds_target,
     title = "Peak probability is derived from median of top five points") + 
-  theme_grey(base_size = 9) + 
+  subtheme +
   theme(
     strip.text = element_blank(), 
     axis.text.x = element_blank(),
@@ -239,8 +240,6 @@ set.seed(02062018)
 
 lpred <- dummy_data %>%
   tristan::augment_posterior_linpred(model = b, newdata = ., nsamples = 3)
-
-
 
 lpred_lm <- lpred %>%
   tidyr::nest(-.draw) %>%
@@ -296,7 +295,6 @@ p1 <- ggplot(lpred_lm) +
     axis.ticks.x = element_blank(),
     axis.ticks.y = element_blank())
 
-
 p2 <- ggplot(lpred_lm) +
   aes(x = ot1, y = .posterior_value, group = .draw) +
   geom_line(linetype = "dashed", color = constants$col_off_black) +
@@ -318,7 +316,6 @@ p2 <- ggplot(lpred_lm) +
     axis.ticks.x = element_blank(),
     axis.ticks.y = element_blank())
 
-
 p3 <- ggplot(lpred_lm) +
   aes(x = ot1, y = .posterior_value, group = .draw) +
   geom_line(linetype = "dashed", color = constants$col_off_black) +
@@ -338,9 +335,6 @@ p3 <- ggplot(lpred_lm) +
     axis.title.x = element_blank(),
     axis.ticks.x = element_blank(),
     axis.ticks.y = element_blank())
-
-
-
 
 p4 <- ggplot(lpred_lm) +
   aes(x = ot1, y = .posterior_value, group = .draw) +
@@ -456,8 +450,12 @@ lpred %>%
         mutate(Study = convert_study_to_age(Study)), 
       fun.y = "mean", geom = "line", 
       color = constants$col_off_black, size = 1) + 
-    geom_text(aes(color = "Age 5", label = "Age 5"), x = 1390, y = .83) +
-    geom_text(aes(color = "Age 3", label = "Age 3"), x = 1380, y = .46) +
+    geom_text(
+      aes(color = "Age 5", label = "Age 5"), 
+      x = 1390, y = .83, family = "Lato") +
+    geom_text(
+      aes(color = "Age 3", label = "Age 3"), 
+      x = 1380, y = .46, family = "Lato") +
     expand_limits(y = .85) +
     guides(color = "none") +
     labs(
@@ -467,9 +465,7 @@ lpred %>%
 ```
 
 
-```{r, eval = FALSE}
-
-
+```{r poster-version-of-averages, eval = FALSE, include = FALSE}
 lpred <- lpred %>% 
   select(-(ot1:Others)) %>% 
   select(Study, Time, everything())
@@ -522,37 +518,7 @@ d_m %>%
         hjust = 0, margin = margin(0, 0, 7.2, 0, "pt")))
 
 tjmisc::ggpreview(width = 12, height = 5, dpi = 600)
-
-
-t <- theme_grey(base_size = 18, base_family = "Lato")
-t$strip.text
-t$plot.title
-lpred %>% 
-  tjmisc::sample_n_of(200, .draw) %>% 
-  mutate(Study = convert_study_to_age(Study),
-         Facet = Study) %>% 
-  ggplot() + 
-  aes(x = Time, y = plogis(.posterior_value), color = Study) +
-  geom_hline(yintercept = .25, color = "white", size = 2) +
-  geom_line(
-    aes(group = interaction(Study, .draw)), 
-    alpha = .1) +
-  stat_summary(
-    aes(y = Prop, group = Study), 
-    data = d_m %>% 
-      mutate(Study = convert_study_to_age(Study)), 
-    fun.y = "mean", geom = "line", 
-    color = constants$col_off_black, size = 1) + 
-  geom_text(aes(color = "Age 5", label = "Age 5"), x = 1390, y = .83) +
-  geom_text(aes(color = "Age 3", label = "Age 3"), x = 1380, y = .46) +
-  expand_limits(y = .85) +
-  guides(color = "none") +
-  labs(
-    title = "Observed means and 200 posterior fits",
-    x = constants$x_time,
-    y = constants$y_prop_target)
 ```
-
 
 Figure \@ref(fig:effects2) depicts uncertainty intervals with
 the model's average effects of each timepoint on the growth curve
@@ -670,6 +636,12 @@ pairwise <- draws %>%
         "paste(Age, phantom(l), 5)-paste(Age, phantom(l), 4)", 
         "paste(Age, phantom(l), 5)-paste(Age, phantom(l), 3)")))
 
+pairwise$parameter <- ifelse(
+  pairwise$parameter == "Time",
+  "Time^phantom(1)",
+  pairwise$parameter) %>%
+  factor(levels = c("Intercept", "Peak", "Time^phantom(1)", "Time^2", "Time^3"))
+
 p1 <- ggplot(pairwise %>% filter(!(parameter %in% c("Peak", "Intercept")))) + 
   aes(y = forcats::fct_rev(pair)) +
   geom_vline(xintercept = 0, size = 2, color = "white") +
@@ -687,13 +659,15 @@ p1 <- ggplot(pairwise %>% filter(!(parameter %in% c("Peak", "Intercept")))) +
     y = NULL, 
     title = "Differences in average effects",
     caption = " ") + 
+  theme_grey() +
   theme(
     strip.placement = "outside", 
     strip.background = element_rect(fill = NA),
     axis.text.y = element_text(size = rel(1.2)),
     strip.text.y = element_text(
-      size = rel(1.4), 
-      margin = margin(0, 10, 0, 5, "pt")))
+      # hjust = .5,
+      margin = margin(0, 10, 0, 5, "pt"),
+      size = rel(1.4)))
 
 p2 <- ggplot(pairwise %>% filter(parameter %in% c("Peak", "Intercept"))) + 
   aes(y = forcats::fct_rev(pair)) +
@@ -711,18 +685,22 @@ p2 <- ggplot(pairwise %>% filter(parameter %in% c("Peak", "Intercept"))) +
     x = NULL, 
     y = NULL, 
     title = "  ",
-    caption = constants$cap_median_90_50) + 
+    caption = constants$cap_median_90_50) +
+  theme_grey() +
   theme(
     strip.placement = "outside", 
     strip.background = element_rect(fill = NA),
     axis.text.y = element_text(size = rel(1.2)),
     strip.text.y = element_text(
-      size = rel(1.4), 
-      margin = margin(0, 10, 0, 5, "pt")))
+      # hjust = .5,
+      margin = margin(0, 10, 0, 5, "pt"),
+      size = rel(1.4)))
 
 p3 <- ggplot() + theme_void()
-p23 <- cowplot::plot_grid(p2, p3, ncol = 1, rel_heights = c(.66, .33))
+p23 <- cowplot::plot_grid(p2, p3, ncol = 1, rel_heights = c(.72, .28))
 cowplot::plot_grid(p1, p23, ncol = 2)
+# p23 <- p2 + plot_spacer() + plot_layout(ncol = 1, heights = c(4, 2))
+# p1 + p23 + plot_layout(ncol = 2, widths = c(2, 2)) + plot_annotation(caption = constants$cap_median_90_50)
 ```
 
 ```{r, include = FALSE}
@@ -967,7 +945,7 @@ range_labels <- tibble::tribble(
 ggplot(by_draw %>% mutate(Study = convert_study_to_age(Study))) +
   aes(x = Time, y = extent, color = Study) +
   geom_point() + 
-  geom_text(aes(label = Study), data = range_labels) +
+  geom_text(aes(label = Study), data = range_labels, family = "Lato") +
   facet_wrap("range", labeller = label_parsed) +
   expand_limits(y = .06) +
   labs(
@@ -1150,7 +1128,7 @@ w_uis <- w_intervals %>%
 rm(ws, reduced_data, posterior_w)
 ```
 
-```{r, eval = FALSE}
+```{r, eval = FALSE, include = FALSE}
 subtitle <- glue::glue(
   "Kendall's W. Raters: 3 time points. Items: {n_rated} children.")
 

@@ -89,7 +89,7 @@ averaged the participant's individual model-estimated or empirical
 growth curves together--for each condition and age. 
 
 
-<img src="22-referent-selection_files/figure-html/aim2-real-nonword-means-1.png" width="80" style="display: block; margin: auto;" />
+<img src="22-referent-selection_files/figure-html/aim2-real-nonword-means-1.png" width="80%" style="display: block; margin: auto;" />
 
 Recall from earlier chapters that in these growth curve models, I
 consider only the intercept and linear time terms to be behaviorally
@@ -170,9 +170,10 @@ difference between the peak of the real word and the nonword growth
 curves. This difference in peak values conveys the *condition advantage*
 for a child. The figure below visualizes the condition advantages.
 
-<img src="22-referent-selection_files/figure-html/unnamed-chunk-9-1.png" width="80" style="display: block; margin: auto;" /><img src="22-referent-selection_files/figure-html/unnamed-chunk-9-2.png" width="80" style="display: block; margin: auto;" />
+<img src="22-referent-selection_files/figure-html/aim2-gca-peaks-1.png" width="50%" style="display: block; margin: auto;" />
 
 
+<img src="22-referent-selection_files/figure-html/aim2-gca-diffs-1.png" width="50%" style="display: block; margin: auto;" />
 
 
 
