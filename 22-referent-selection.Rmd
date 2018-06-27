@@ -422,21 +422,16 @@ real_ceilings <- ceilings  %>%
 #   ungroup() 
 ```
 
-
-
-The growth curve peaks follow a similar pattern of results. 
-
-Figure X
-shows the distribution of the posterior means of the growth curves for
-condition. Here, descriptive statistics reveal a great deal about developmental trends for this task.
-
-At age 3, the median peak values are similar around 80%. The peaks
-increase for the nonword condition in the following year, with a median
-value of .... It is worth emphasizing what this median tells us: At
-age 4, half of the children had a peak looking probability of xxx. In
-other words, children are performing at the ceiling on this task by
-age 4. To quantify the degree of ceiling performance, I calculcated the
-number of children per condition with a growth curve peak greater than
+Figure X shows the distribution of the posterior means of the growth
+curves for condition. Here, descriptive statistics reveal a great deal
+about developmental trends for this task. At age 3, the median peak
+values are similar around 80%. The peaks increase for the nonword
+condition in the following year, with a median value of .... It is worth
+emphasizing what this median tells us: At age 4, half of the children
+had a peak looking probability of xxx. In other words, children are
+performing at the ceiling on this task by age 4. To quantify the degree
+of ceiling performance, I calculcated the number of children per
+condition with a growth curve peak greater than
 or equal to .99 over the posterior distribution. For the nonword
 condition, there were `r nons_ceilings$TP1` children who performed at
 ceiling at age 3, `r nons_ceilings$TP2` at age 4, `r nons_ceilings$TP3`
@@ -445,7 +440,7 @@ attaining ceiling performance was more uneven: there were
 `r real_ceilings$TP1` ceiling performers at age 3,
 `r real_ceilings$TP2`, and `r real_ceilings$TP2` at age 5.
 
-```{r}
+```{r, echo = FALSE}
 rw_peak_lme_tp2 <- do_it_1 %>%
   select(-diff) %>%
   tidyr::gather("Condition", "Peak", -Study, -ResearchID) %>%
@@ -474,22 +469,70 @@ nw_peak_lme_tp3 <- do_it_1 %>%
   lme4::lmer(Peak ~ Condition * Study + (1 | ResearchID/Study), .) %>%
   broom::tidy("fixed")
 
+pull_effect_est <- function(output, effect, flip = FALSE) {
+  flip_sign <- function(x) if (flip) x * - 1 else x
+  
+  b <- output %>% 
+    filter(term == effect) %>%
+    pull(estimate) %>% 
+    flip_sign() %>% 
+    printy::fmt_fix_digits(2) %>% 
+    printy::fmt_leading_zero()
+  
+  t <- output %>% 
+  filter(term == effect) %>%
+  pull(statistic) %>% 
+  flip_sign() %>% 
+  printy::fmt_fix_digits(2)
+  
+  list(b = b, t = t)
+}
+
+t2_real <- pull_effect_est(nw_peak_lme_tp2, "Conditionreal", TRUE)
+t1_real <- pull_effect_est(nw_peak_lme_tp1, "Conditionreal", FALSE)
+t3_real <- pull_effect_est(nw_peak_lme_tp3, "Conditionreal", TRUE)
+
+t2_t1 <- pull_effect_est(nw_peak_lme_tp2, "StudyTimePoint1", TRUE)
+t2_t3 <- pull_effect_est(nw_peak_lme_tp2, "StudyTimePoint3", FALSE)
+
+t2_t3_real <- pull_effect_est(rw_peak_lme_tp2, "StudyTimePoint3", FALSE)
 ```
 
-To compare peaks between studies more formally, I fit a linear mixed
-effects model---with restricted maximum likelihood--i.e., using
-lme4---to regress growth curve peak onto age group and experimental
-condition and age x condition with randomly varying intercepts for child
-and child-year. For these comparisons, I declare significance when the
-t-value statistic for a model fixed effect has a magnitude of 2 or
-greater. At age 3, the two condition did not significantly differ (t =
-). At age 4, nonword peaks were xx greater than the real word peaks (t =
-) and at age 5, the nonword peaks were xxx greater than the real word
-peaks (t = ). For the nonword condition there was a significant increase
-in the peaks from age 3 to age 4 (change = , t = ) whereas there was no
-improvement from age 4 to age 5 (change =, t = ). In the real word
-condition, there was only significant improvement from age 4 to age 5.
-(change = , t = ).
+
+To compare peaks between studies formally, I fit a linear mixed effects
+model---with restricted maximum likelihood via the lme4 R package
+[vers. `r packageVersion("lme4")`; @lme4]. I regressed the growth
+curve peaks onto experimental condition, age group, and the age x
+condition interaction with randomly varying intercepts for child and
+child-year. This modeling software does provide *p*-values for its
+effects estimates, so for these comparisons, I decided that an effect
+was significant when the t-value statistic for a model fixed effect
+showed a magnitude of 2 or greater. In practical terms, this convention
+interprets an effect as significant when its estimate is at least 2
+standard errors away from zero. (@GelmanHill use this approach with
+mixed models too.)
+
+At age 3, the two conditions did not significantly differ,
+B<sub>real-nonword</sub> = `r t1_real$b`, *t* = `r t1_real$t`. At age 4,
+nonword peaks were on average `r t2_real$b` proportion units greater
+than the real word peaks, *t* = `r t2_real$t`, and at age 5, the nonword
+peaks were `r t3_real$b` proportion units greater than the real word
+peaks, *t* = `r t3_real$t`. For the nonword condition there was a
+significant increase in the peaks from age 3 to age 4, B<sub>4-3</sub> =
+`r t2_t1$b`, *t* = `r t2_t1$t`, whereas there was no improvement from
+age 4 to age 5, *t* = `r t2_t3$t`. In the real word condition, there was
+only a significant improvement from age 4 to age 5, B<sub>5-4</sub> =
+`r t2_t3_real$b`, *t* = `r t2_t3_real$t`.
+
+
+<!-- [pvalues]: The lme4 package does not provide *p*-values because it is -->
+<!-- unclear what number to use for the degrees of freedom with hierarchical -->
+<!-- or repeated measures data. One approach is the so-called "normal -->
+<!-- approximation" which treats t-values like z-scores---i.e., drawn from a -->
+<!-- normal distribution with mean 0 and standard deviation 1. Under this -->
+<!-- approach, conventional significance obtains when is greater than or -->
+<!-- equal to 1.96 in magnitude. I use 2 as the cutoff because I find significance thresholds are arbitrary. -->
+
 
 In short, there is a decisive advantage for the nonword condition after
 age 3. Further, performance begins to saturate at age 4 with the group
@@ -503,7 +546,7 @@ is more anomalous with performance only increasing from age 4 to age 5.
 <!-- [blah vs. blah, p=value.]. -->
 
 
-```{r}
+```{r, eval = FALSE}
 
 # meds <- peaks %>% 
 #   group_by(Study, .draw) %>%
