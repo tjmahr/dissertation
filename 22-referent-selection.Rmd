@@ -12,8 +12,13 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 ```
 
 ```{r, include = FALSE}
-library(rstanarm)
 knitr::opts_chunk$set(cache = TRUE)
+
+scale_color_real_non <- function(..., palette = "Cheerful and sleek") {
+  ggthemes::scale_color_canva(
+    ...,
+    palette = palette)
+}
 ```
 
 
@@ -281,8 +286,8 @@ ggplot(some_fits) +
   labs(
     x = constants$x_time, 
     y = "Proportion looks to target",
-    caption = "Intervals: Empirical mean ± SE. Lines: 100 posterior means.")
-
+    caption = "Intervals: Empirical mean ± SE. Lines: 100 posterior means.") + 
+  scale_color_real_non()
 ```
 
 Recall from earlier chapters that in these growth curve models, I
@@ -292,8 +297,8 @@ curve value so it reflects looking reliability, and the linear time term
 measures the overall stepness of the growth so it reflects lexical
 processing efficiency. I also derive a measure of peak looking
 probability by taking the median of top five points in a growth curve,
-and this peak provides a measure of uncertainty (higher peaks indicate
-less uncertainty). 
+and this peak provides a measure of lexical processing uncertainty
+(higher peaks indicate less uncertainty about a word).
 
 I evaluated the condition effects by looking at the effect of the real
 word condition on the intercept and linear time terms. The two
@@ -316,32 +321,217 @@ curve model through intercept effects, although it is plausible that
 children's nonword growth curves were steeper than the real word curves
 at age 4.
 
+
+```{r aim2-gca-peaks, out.width = "50%", fig.height = 3, fig.width = 4}
+ant <- data_frame(
+  diff = -.6, 
+  Study = "Age 3", 
+  label = "Real word curves had higher peaks")
+
+ant2 <- data_frame(
+  diff = .6, 
+  Study = "Age 3", 
+  label = "Nonword curves had higher peaks")
+
+# TODO add n's to x axis
+
+peaks %>% 
+  mutate(Study = convert_study_to_age(Study)) %>% 
+  group_by(Study, ResearchID) %>% 
+  summarise_at(vars(nonsense:diff), mean) %>% 
+  select(-diff) %>%
+  tidyr::gather("Condition", "Peak", -Study, -ResearchID) %>%
+  ungroup() %>% 
+  mutate(Condition = convert_condition_to_name(Condition)) %>% 
+    ggplot() + 
+      aes(x = Study, y = Peak, color = Condition) + 
+      geom_text(
+        aes(label = Condition),
+        data = data_frame(
+          Peak = c(1.06), 
+          label = c("nonwords", "real words"),
+          Condition = c("nonsense", "real"),
+          Study = "Age 3") %>% 
+          mutate(Condition = convert_condition_to_name(Condition)), 
+        position = position_dodge(width = 1.1), 
+        size = 3, 
+        family = "Lato Medium") +
+      geom_point(
+        position = position_jitterdodge(jitter.width = 0.2, dodge.width = 1.05), 
+        alpha = .5, shape = 1) +
+      guides(color = FALSE) +
+      geom_boxplot(
+        width = .2, 
+        position = position_dodge(width = .3), 
+        outlier.alpha = 0)  +
+    labs(
+      title = "Growth curve peaks",
+      x = NULL,
+      y = NULL,
+      caption = "Open points: Participant posterior means.") + 
+    scale_y_continuous(
+      minor_breaks = c(.1, .3, .5, .7, .9),
+      breaks = c(0, .2, .4, .6, .8, 1)) +
+    scale_color_real_non()
+
+# do_it_1 <- peaks %>% 
+#   group_by(Study, ResearchID) %>%
+#   summarise_at(vars(nonsense:diff), funs(mean)) %>%
+#   ungroup() 
+# 
+# do_it_1 %>% 
+#   group_by(Study) %>% 
+#   summarise(
+#     real_ceiling = sum(real >= .99),
+#     real_ceiling_prop = real_ceiling / n(),
+#     nonsense_ceiling = sum(nonsense >= .99),
+#     nonsense_ceiling_prop = nonsense_ceiling / n(), 
+#     n = n())
+
+ceilings <- peaks %>% 
+  group_by(Study, .draw) %>% 
+  summarise(
+    real = sum(real >= .99),
+    nonsense = sum(nonsense >= .99)) %>% 
+  ungroup() %>% 
+  select(Study, real, nonsense) %>%
+  tidyr::nest(-Study) %>% 
+  mutate(intervals = data %>% purrr::map(bayesplot::mcmc_intervals_data)) %>% 
+  select(-data) %>% 
+  tidyr::unnest(intervals) %>% 
+  mutate(
+    Study = stringr::str_replace(Study, "TimePoint", "TP"),
+    parameter = stringr::str_replace(parameter, "nonsense", "nons"))
+
+nons_ceilings <- ceilings  %>% 
+  filter(parameter == "nons") %>% 
+  split(.$Study) %>% 
+  fmt_inline_median_interval() %>% 
+  add_ui_slug_to_first(slug = "90%&nbsp;UI: ")
+
+real_ceilings <- ceilings  %>% 
+  filter(parameter == "real") %>% 
+  split(.$Study) %>% 
+  fmt_inline_median_interval()
+# peaks %>% 
+#   mutate(Study = convert_study_to_age(Study)) %>% 
+#   group_by(Study, ResearchID) %>% 
+#   summarise_at(vars(nonsense:diff), mean) %>% 
+#   select(-diff) %>%
+#   tidyr::gather("Condition", "Peak", -Study, -ResearchID) %>%
+#   ungroup() 
+```
+
+
+
+The growth curve peaks follow a similar pattern of results. 
+
+Figure X
+shows the distribution of the posterior means of the growth curves for
+condition. Here, descriptive statistics reveal a great deal about developmental trends for this task.
+
+At age 3, the median peak values are similar around 80%. The peaks
+increase for the nonword condition in the following year, with a median
+value of .... It is worth emphasizing what this median tells us: At
+age 4, half of the children had a peak looking probability of xxx. In
+other words, children are performing at the ceiling on this task by
+age 4. To quantify the degree of ceiling performance, I calculcated the
+number of children per condition with a growth curve peak greater than
+or equal to .99 over the posterior distribution. For the nonword
+condition, there were `r nons_ceilings$TP1` children who performed at
+ceiling at age 3, `r nons_ceilings$TP2` at age 4, `r nons_ceilings$TP3`
+and at age 5. For the real word condition, the number of children
+attaining ceiling performance was more uneven: there were
+`r real_ceilings$TP1` ceiling performers at age 3,
+`r real_ceilings$TP2`, and `r real_ceilings$TP2` at age 5.
+
 ```{r}
+rw_peak_lme_tp2 <- do_it_1 %>%
+  select(-diff) %>%
+  tidyr::gather("Condition", "Peak", -Study, -ResearchID) %>%
+  mutate(Condition = forcats::fct_rev(Condition)) %>%
+  mutate(Study = factor(Study, c("TimePoint2", "TimePoint1", "TimePoint3"))) %>% 
+  lme4::lmer(Peak ~ Condition * Study + (1 | ResearchID/Study), .) %>%
+  broom::tidy("fixed")
+
+nw_peak_lme_tp1 <- do_it_1 %>% 
+  select(-diff) %>%
+  tidyr::gather("Condition", "Peak", -Study, -ResearchID) %>%
+  lme4::lmer(Peak ~ Condition * Study + (1 | ResearchID/Study), .) %>%
+  broom::tidy("fixed")
+
+nw_peak_lme_tp2 <- do_it_1 %>% 
+  select(-diff) %>%
+  tidyr::gather("Condition", "Peak", -Study, -ResearchID) %>%
+  mutate(Study = factor(Study, c("TimePoint2", "TimePoint1", "TimePoint3"))) %>% 
+  lme4::lmer(Peak ~ Condition * Study + (1 | ResearchID/Study), .) %>%
+  broom::tidy("fixed")
+
+nw_peak_lme_tp3 <- do_it_1 %>% 
+  select(-diff) %>%
+  tidyr::gather("Condition", "Peak", -Study, -ResearchID) %>%
+  mutate(Study = factor(Study, c("TimePoint3", "TimePoint1", "TimePoint2"))) %>% 
+  lme4::lmer(Peak ~ Condition * Study + (1 | ResearchID/Study), .) %>%
+  broom::tidy("fixed")
+
+```
+
+To compare peaks between studies more formally, I fit a linear mixed
+effects model---with restricted maximum likelihood--i.e., using
+lme4---to regress growth curve peak onto age group and experimental
+condition and age x condition with randomly varying intercepts for child
+and child-year. For these comparisons, I declare significance when the
+t-value statistic for a model fixed effect has a magnitude of 2 or
+greater. At age 3, the two condition did not significantly differ (t =
+). At age 4, nonword peaks were xx greater than the real word peaks (t =
+) and at age 5, the nonword peaks were xxx greater than the real word
+peaks (t = ). For the nonword condition there was a significant increase
+in the peaks from age 3 to age 4 (change = , t = ) whereas there was no
+improvement from age 4 to age 5 (change =, t = ). In the real word
+condition, there was only significant improvement from age 4 to age 5.
+(change = , t = ).
+
+In short, there is a decisive advantage for the nonword condition after
+age 3. Further, performance begins to saturate at age 4 with the group
+averages above 90% peak looking probabilities. The real word condition
+is more anomalous with performance only increasing from age 4 to age 5.
+
+<!-- The -->
+<!-- conditions did not significantly differ at this age. The nonword peaks -->
+<!-- were significantly higher greater than real word peaks at age 4 [blah -->
+<!-- vs. blah, p=value.] and at age 5 although the difference was smaller -->
+<!-- [blah vs. blah, p=value.]. -->
+
+
+```{r}
+
+# meds <- peaks %>% 
+#   group_by(Study, .draw) %>%
+#   summarise(
+#     non_50 = median(nonsense),
+#     non_05 = quantile(nonsense, .05),
+#     non_95 = quantile(nonsense, .95))
+
+do_it_1 %>% filter(nonsense >= .99) %>% count(Study)
+
+
+do_it_1 <- peaks %>% 
+  group_by(Study, ResearchID) %>%
+  summarise_at(vars(nonsense:diff), funs(mean)) %>%
+  ungroup() 
+
+do_it_1 %>% count(Study)
+
+do_it_1 %>% 
+  group_by(Study) %>% 
+  summarise(med_non = median(nonsense))
 
 ```
 
 
-The growth curve peaks follow a similar pattern of results. At age 3,
-the average peak value was ... for real words and ... for nonwords. The
-conditions did not significantly differ at this age. The nonword peaks
-were significantly higher greater than real word peaks at age 4 [blah
-vs. blah, p=value.] and at age 5 although the difference was smaller
-[blah vs. blah, p=value.].
 
 
-```{r}
-
-```
-
-
-
-
-<!-- To evaluate the growth curve peaks, I computed the growth curve peak for -->
-<!-- each participant x study x condition in each posterior sample and -->
-<!-- averaged over the posterior to get an average growth curve peak. I used -->
-<!-- a linear mixed effects model to regress growth curve peak onto age group -->
-<!-- and experimental condition and age x condition with randomly varying -->
-<!-- intercepts for each child and each child-year. -->
+To evaluate the growth curve peaks, 
 
 
 Importantly, the average real word peaks was xx at age 3 which that
@@ -368,55 +558,6 @@ difference between the peak of the real word and the nonword growth
 curves. This difference in peak values conveys the *condition advantage*
 for a child. The figure below visualizes the condition advantages.
 
-```{r aim2-gca-peaks, out.width = "50%", fig.height = 3, fig.width = 4}
-ant <- data_frame(
-  diff = -.6, 
-  Study = "Age 3", 
-  label = "Real word curves had higher peaks")
-
-ant2 <- data_frame(
-  diff = .6, 
-  Study = "Age 3", 
-  label = "Nonword curves had higher peaks")
-
-peaks %>% 
-  mutate(Study = convert_study_to_age(Study)) %>% 
-  group_by(Study, ResearchID) %>% 
-  summarise_at(vars(nonsense:diff), mean) %>% 
-  select(-diff) %>%
-  tidyr::gather("Condition", "Peak", -Study, -ResearchID) %>%
-  ungroup() %>% 
-    ggplot() + 
-      aes(x = Study, y = Peak, color = Condition) + 
-      geom_text(
-        aes(label = label),
-        data = data_frame(
-          Peak = c(1.06), 
-          label = c("nonwords", "real words"),
-          Condition = c("nonsense", "real"),
-          Study = "Age 3"), 
-        position = position_dodge(width = 1.1), 
-        size = 3, 
-        family = "Lato Medium") +
-      geom_point(
-        position = position_jitterdodge(jitter.width = 0.2, dodge.width = 1.05), 
-        alpha = .4, shape = 1) +
-      guides(color = FALSE) +
-      geom_boxplot(
-        width = .2, 
-        position = position_dodge(width = .3), 
-        outlier.alpha = 0)  +
-    labs(
-      title = "Growth curve peaks",
-      x = NULL,
-      y = NULL,
-      caption = "Open points: Participant means.") + 
-    scale_y_continuous(
-      minor_breaks = c(.1, .3, .5, .7, .9),
-      breaks = c(0, .2, .4, .6, .8, 1))
-
-```
-
 
 ```{r aim2-gca-diffs, out.width = "50%", fig.height = 3, fig.width = 4}
 theme_set(theme_teej())
@@ -427,20 +568,19 @@ peaks %>%
   summarise_at(vars(nonsense:diff), mean) %>% 
     ggplot() + 
       aes(x = Study, y = diff) + 
-      geom_text(
-        aes(label = label), 
-        data = bind_rows(ant, ant2), nudge_x = -.45, hjust = 0, 
-        color = "grey20", size = 3, family = "Lato Medium") +
       geom_hline(yintercept = 0, size = 2, color = "white") + 
       geom_boxplot(width = .4, fill = NA, outlier.alpha = 0) +
       geom_point(position = position_jitter(width = .2), alpha = .3, shape = 1) +
-      stat_summary(fun.y = mean, geom = "point", size = 2) + 
-    labs(
-      title = "Differences in growth curve peaks",
-      x = NULL,
-      y = "Nonword peak - real word peak",
-      caption = "Open points: Participant posterior means. Closed: Mean of means.") 
-
+      geom_text(
+        aes(label = label), 
+        data = bind_rows(ant, ant2), nudge_x = -.45, hjust = 0, 
+        color = "grey10", size = 3, family = "Lato Medium") +
+      labs(
+        title = "Differences in growth curve peaks",
+        x = NULL,
+        y = "Nonword - real word",
+        caption = "Open points: Participant posterior means.") + 
+  theme_teej()
 
 ```
 
@@ -482,4 +622,14 @@ peaks %>%
 <!-- 50% and 90% uncertainty intervals to determine during which time points -->
 <!-- the curves credibly differ from each other. -->
 
+```{r}
+# too_check <- peaks %>% filter(real < .2) %>% distinct(Study, ResearchID)
+# 
+# d %>% 
+#   inner_join(too_check) %>% 
+#   ggplot() + 
+#   aes(x = Time, y = Prop, color = Condition, linetype = Bias_Fam) + 
+#   geom_line() + 
+#   facet_wrap("ResearchID")
+```
 

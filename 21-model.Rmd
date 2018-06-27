@@ -24,6 +24,35 @@ knitr::opts_chunk$set(cache = TRUE)
 ```
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ```{r}
 
 
@@ -127,42 +156,6 @@ peaks %>%
 ggplot(real_peaks) + 
   aes(x = term, y = estimate) + 
   stat_summary(fun.data = median_hilow)
-
-do_it_1 <- peaks %>% 
-  group_by(Study, ResearchID) %>%
-  summarise_at(vars(nonsense:diff), funs(mean)) %>%
-  ungroup() %>% 
-  select(Study, ResearchID, nonsense:diff) %>% 
-  mutate(Study = factor(Study, c("TimePoint2", "TimePoint1", "TimePoint3")))
-
-# do_it_1 %>% 
-#   lm(nonsense ~ Study, .) %>% 
-#   summary()
-# 
-# do_it_1 %>% 
-#   lm(real ~ Study, .) %>% 
-#   summary()
-
-
-rw_peak_lme_tp2 <- do_it_1 %>% 
-  select(-diff) %>%
-  tidyr::gather("Condition", "Peak", -Study, -ResearchID) %>%
-  mutate(Condition = forcats::fct_rev(Condition)) %>% 
-  lme4::lmer(Peak ~ Condition * Study + (1 | ResearchID/Study), .) %>%
-  summary()
-
-nw_peak_lme_tp2 <- do_it_1 %>% 
-  select(-diff) %>%
-  tidyr::gather("Condition", "Peak", -Study, -ResearchID) %>%
-  lme4::lmer(Peak ~ Condition * Study + (1 | ResearchID/Study), .) %>%
-  summary()
-
-nw_peak_lme_tp3 <- do_it_1 %>% 
-  select(-diff) %>%
-  tidyr::gather("Condition", "Peak", -Study, -ResearchID) %>%
-  mutate(Study = factor(Study, c("TimePoint3", "TimePoint1", "TimePoint2"))) %>% 
-  lme4::lmer(Peak ~ Condition * Study + (1 | ResearchID/Study), .) %>%
-  summary()
 
 # ggplot(do_it_1) + 
 #   aes(x = Study, y = nonsense) + 

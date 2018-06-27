@@ -87,8 +87,8 @@ convert_study_to_age <- function(xs) {
 convert_condition_to_name <- function(xs) {
   factor(
     xs,
-    levels = c("nonsense", "real", "MP"),
-    labels = c("nonwords", "real words", "mispronunciations"))
+    levels = c("real", "nonsense", "MP"),
+    labels = c("real words", "nonwords", "mispronunciations"))
 }
 
 augment_linpred <- function(model, data, ...) {
