@@ -506,11 +506,11 @@ curve peaks onto experimental condition, age group, and the age x
 condition interaction with randomly varying intercepts for child and
 child-year. This modeling software does provide *p*-values for its
 effects estimates, so for these comparisons, I decided that an effect
-was significant when the t-value statistic for a model fixed effect
+was significant when the *t* statistic for a model fixed effect
 showed a magnitude of 2 or greater. In practical terms, this convention
 interprets an effect as significant when its estimate is at least 2
 standard errors away from zero. (@GelmanHill use this approach with
-mixed models too.)
+mixed models.)
 
 At age 3, the two conditions did not significantly differ,
 B<sub>real-nonword</sub> = `r t1_real$b`, *t* = `r t1_real$t`. At age 4,
