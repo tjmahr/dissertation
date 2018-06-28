@@ -151,18 +151,6 @@ upload_lkj_demo_data <- function() {
 
 
 
-
-
-download_aim2_real_nonword_data <- function() {
-  save_object(
-    "s3://bunnyhat/data/aim2-model-ready.csv.gz",
-    file = "./data/aim2-model-ready.csv.gz")
-
-  save_object(
-    "s3://bunnyhat/data/aim2-real-vs-nw-modeled-data.rds.gz",
-    file = "./data/aim2-real-vs-nw-modeled-data.rds.gz")
-}
-
 upload_aim2_real_nonword_data <- function() {
   put_object_to_data("aim2-model-ready.csv.gz")
   put_object_to_data("aim2-real-vs-nw-modeled-data.rds.gz")
