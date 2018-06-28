@@ -25,7 +25,7 @@
 <meta name="author" content="Tristan Mahr">
 
 
-<meta name="date" content="2018-06-26">
+<meta name="date" content="2018-06-28">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -177,7 +177,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="10" data-path="development-of-referent-selection.html"><a href="development-of-referent-selection.html"><i class="fa fa-check"></i><b>10</b> Development of referent selection</a><ul>
 <li class="chapter" data-level="10.1" data-path="development-of-referent-selection.html"><a href="development-of-referent-selection.html#nonwords-versus-real-words"><i class="fa fa-check"></i><b>10.1</b> Nonwords versus real words</a><ul>
-<li class="chapter" data-level="10.1.1" data-path="development-of-referent-selection.html"><a href="development-of-referent-selection.html#points-for-discussion"><i class="fa fa-check"></i><b>10.1.1</b> Points for discussion</a></li>
+<li class="chapter" data-level="10.1.1" data-path="development-of-referent-selection.html"><a href="development-of-referent-selection.html#within-child-condition-effects"><i class="fa fa-check"></i><b>10.1.1</b> Within child condition effects</a></li>
+</ul></li>
+<li class="chapter" data-level="10.2" data-path="development-of-referent-selection.html"><a href="development-of-referent-selection.html#which-type-of-referent-selection-better-predicts-age-5-vocabulary"><i class="fa fa-check"></i><b>10.2</b> Which type of referent selection better predicts age 5 vocabulary</a><ul>
+<li class="chapter" data-level="10.2.1" data-path="development-of-referent-selection.html"><a href="development-of-referent-selection.html#points-for-discussion"><i class="fa fa-check"></i><b>10.2.1</b> Points for discussion</a></li>
 </ul></li>
 </ul></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
@@ -223,7 +226,7 @@ Figure 7.1: Because children looked more to the target as they grew older, they 
 </p>
 </div>
 <p>As in the models from the previous chapter, I downsampled the data into 50-ms (3-frame) bins in order to smooth the data. For these trials, I modeled the looks from 0 to 1500 ms, and I aggregated looks by child, study and time bin. To account for the sparseness of the data, I used the empirical log-odds (or empirical logit) transformation <span class="citation">(Barr, <a href="#ref-Barr2008">2008</a>)</span>. This transformation adds .5 to the looking counts. For example, a time-frame with 4 looks to the phonological foil and 1 look to the unrelated image has a conventional log-odds of log(4/1) = 1.39 and empirical log-odds of log(4.5/1.5) = 1.10. This transformation fills in bins with 0 looks with .5/.5 (avoiding 0/0 problems), and it dampens the extremeness of some probabilities that arise in sparse count data.</p>
-<p>To model these data, I fit a generalized additive model with fast restricted maximum likelihood estimation <span class="citation">(see Sóskuthy, <a href="#ref-Soskuthy2017">2017</a> for a tutorial for linguists; Winter &amp; Wieling, <a href="#ref-Winter2016">2016</a>; Wood, <a href="#ref-Wood2017">2017</a>)</span>. Box 1 provides a brief overview of these models. I used the mgcv R package <span class="citation">(vers. 1.8.23; Wood, <a href="#ref-Wood2017">2017</a>)</span> with support from the tools in the itsadug R package <span class="citation">(vers. 2.3; van Rij, Wieling, Baayen, &amp; van Rijn, <a href="#ref-itsadug">2017</a>)</span>.<a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a> <a href="aim1-gca-models.html#aim1-gca-models">Appendix <a href="aim1-gca-models.html#aim1-gca-models">B</a></a> contains the R code used to fit these models along with a description of the specifications represented by the model syntax.</p>
+<p>To model these data, I fit a generalized additive model with fast restricted maximum likelihood estimation <span class="citation">(see Sóskuthy, <a href="#ref-Soskuthy2017">2017</a> for a tutorial for linguists; Winter &amp; Wieling, <a href="#ref-Winter2016">2016</a>; Wood, <a href="#ref-Wood2017">2017</a>)</span>. Box 1 provides a brief overview of these models. I used the mgcv R package <span class="citation">(vers. 1.8.24; Wood, <a href="#ref-Wood2017">2017</a>)</span> with support from the tools in the itsadug R package <span class="citation">(vers. 2.3; van Rij, Wieling, Baayen, &amp; van Rijn, <a href="#ref-itsadug">2017</a>)</span>.<a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a> <a href="aim1-gca-models.html#aim1-gca-models">Appendix <a href="aim1-gca-models.html#aim1-gca-models">B</a></a> contains the R code used to fit these models along with a description of the specifications represented by the model syntax.</p>
 
 <div class="infobox">
 <p><strong>Box 1: Intuition behind generalized additive models</strong>.</p>

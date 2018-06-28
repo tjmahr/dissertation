@@ -1,5 +1,4 @@
 
-
 Development of referent selection
 =======================================================================
 
@@ -98,8 +97,8 @@ curve value so it reflects looking reliability, and the linear time term
 measures the overall stepness of the growth so it reflects lexical
 processing efficiency. I also derive a measure of peak looking
 probability by taking the median of top five points in a growth curve,
-and this peak provides a measure of uncertainty (higher peaks indicate
-less uncertainty). 
+and this peak provides a measure of lexical processing uncertainty
+(higher peaks indicate less uncertainty about a word).
 
 I evaluated the condition effects by looking at the effect of the real
 word condition on the intercept and linear time terms. The two
@@ -125,31 +124,207 @@ at age 4.
 
 
 
-The growth curve peaks follow a similar pattern of results. At age 3,
-the average peak value was ... for real words and ... for nonwords. The
-conditions did not significantly differ at this age. The nonword peaks
-were significantly higher greater than real word peaks at age 4 [blah
-vs. blah, p=value.] and at age 5 although the difference was smaller
-[blah vs. blah, p=value.].
+<img src="22-referent-selection_files/figure-html/aim2-gca-peaks-1.png" width="50%" style="display: block; margin: auto;" />
+
+Figure X shows the distribution of the posterior means of the growth
+curves for condition. Here, descriptive statistics reveal a great deal
+about developmental trends for this task. At age 3, the median peak
+values are similar around 80%. The peaks increase for the nonword
+condition in the following year, with a median value of .... It is worth
+emphasizing what this median tells us: At age 4, half of the children
+had a peak looking probability of xxx. In other words, children are
+performing at the ceiling on this task by age 4. To quantify the degree
+of ceiling performance, I calculcated the number of children per
+condition with a growth curve peak greater than
+or equal to .99 over the posterior distribution. For the nonword
+condition, there were 23.00 [90%&nbsp;UI: 20.00--26.00] children who performed at
+ceiling at age 3, 41.00 [36.00--45.00] at age 4, 40.00 [36.00--44.00]
+and at age 5. For the real word condition, the number of children
+attaining ceiling performance was more uneven: there were
+20.00 [16.00--24.00] ceiling performers at age 3,
+13.00 [10.00--16.00], and 13.00 [10.00--16.00] at age 5.
+
+
+
+To compare peaks looking probabilities between ages, I fit a linear mixed effects
+model with restricted maximum likelihood via the lme4 R package
+[vers. 1.1.17; @lme4]. I regressed the growth
+curve peaks onto experimental condition, age group, and the age x
+condition interaction. The model included randomly varying intercepts for child and
+child-year. This modeling software does not provide *p*-values for its
+effects estimates, so for these comparisons, I decided that an effect
+was significant when the *t* statistic for a model fixed effect
+has an absolute value of 2 or greater. In practical terms, this convention
+interprets an effect as significant when its estimate is at least 2
+standard errors away from 0. (@GelmanHill use this approach with
+mixed models.)
+
+At age 3, the two conditions did not significantly differ,
+B<sub>real-nonword</sub> = .01, *t* = 0.95. At age 4,
+nonword peaks were on average .09 proportion units greater
+than the real word peaks, *t* = 5.79, and at age 5, the nonword
+peaks were .04 proportion units greater than the real word
+peaks, *t* = 2.56. For the nonword condition there was a
+significant increase in the peaks from age 3 to age 4, *B*<sub>4-3</sub>
+= .10, *t* = 5.99, whereas there was no improvement from
+age 4 to age 5, *t* = 0.37. In the real word condition, there was
+only a significant improvement from age 4 to age 5, *B*<sub>5-4</sub> =
+.06, *t* = 3.25.
+
+
+<!-- [pvalues]: The lme4 package does not provide *p*-values because it is -->
+<!-- unclear what number to use for the degrees of freedom with hierarchical -->
+<!-- or repeated measures data. One approach is the so-called "normal -->
+<!-- approximation" which treats t-values like z-scores---i.e., drawn from a -->
+<!-- normal distribution with mean 0 and standard deviation 1. Under this -->
+<!-- approach, conventional significance obtains when is greater than or -->
+<!-- equal to 1.96 in magnitude. I use 2 as the cutoff because I find significance thresholds are arbitrary. -->
+
+
+**Summary**. There is a decisive advantage for the nonword condition
+after age 3. Performance begins to saturate at age 4 with the group
+averages for peak looking probabilities over 90%. The real word
+condition is more anomalous with performance only showing average
+increases from age 4 to age 5.
+
+<!-- The -->
+<!-- conditions did not significantly differ at this age. The nonword peaks -->
+<!-- were significantly higher greater than real word peaks at age 4 [blah -->
+<!-- vs. blah, p=value.] and at age 5 although the difference was smaller -->
+<!-- [blah vs. blah, p=value.]. -->
 
 
 
 
+### Within child condition effects
+
+...
+
+## Which type of referent selection better predicts age 5 vocabulary
+
+I hypothesized that performance on the nonword condition would be a
+better predictor of future vocabulary size than the real word condition.
+This hypothesis follows from the assumption that fast referent
+selection, as opposed to familiar word recognition, is a more relevant
+skill for word-learning. Put another way, a child's ability to quickly
+map a novel word to a referent is more closely related to the demands of
+in the moment word-learning than familiar word recognition.
+
+In chapter X, I found that peak looking probability at age 3 positively
+correlated with age 5 vocabulary. Pairing this finding with my
+hypothesis, I predicted that the growth curve peaks in the nonword
+condition at age 3 would be better predictors of vocabulary at age 5
+than the real word peaks at age 3.
+
+For these analyses, I regressed age-5 expressive vocabulary standard
+scores onto the age-3 expressive vocabulary score and onto age-3 real
+word peaks and age-3 nonword peaks. As expected, there was a strong
+relationship between age 3 and age 5 vocabulary, blah, blah, *R*^2^ = blah. A standard deviation increase in bocabulary at age 3 predicted an x SD increase (standard score points) at age 5. There was no effect of age-3 peak over and above age-3 vocabulary. There was a significant effect of the nonword peak, delta*R*^2^ = blah, over and above age-3 vocabulary. A .1 increase nonword peak probability predicted an increase of blah.
 
 
-
-<!-- To evaluate the growth curve peaks, I computed the growth curve peak for -->
-<!-- each participant x study x condition in each posterior sample and -->
-<!-- averaged over the posterior to get an average growth curve peak. I used -->
-<!-- a linear mixed effects model to regress growth curve peak onto age group -->
-<!-- and experimental condition and age x condition with randomly varying -->
-<!-- intercepts for each child and each child-year. -->
+<img src="22-referent-selection_files/figure-html/age-5-from-peaks-1.png" width="50%" style="display: block; margin: auto;" /><img src="22-referent-selection_files/figure-html/age-5-from-peaks-2.png" width="50%" style="display: block; margin: auto;" /><img src="22-referent-selection_files/figure-html/age-5-from-peaks-3.png" width="50%" style="display: block; margin: auto;" />
 
 
-Importantly, the average real word peaks was xx at age 3 which that
-children were beginning to reach ceiling performance early on. This is a
-task for toddlers.
+```
+#> 
+#> Call:
+#> lm(formula = scale(TimePoint3) ~ scale(TimePoint1), data = w_evt)
+#> 
+#> Residuals:
+#>      Min       1Q   Median       3Q      Max 
+#> -2.06427 -0.49523  0.05418  0.45853  1.85324 
+#> 
+#> Coefficients:
+#>                   Estimate Std. Error t value Pr(>|t|)    
+#> (Intercept)       0.006696   0.065536   0.102    0.919    
+#> scale(TimePoint1) 0.701418   0.066348  10.572   <2e-16 ***
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> 
+#> Residual standard error: 0.7051 on 114 degrees of freedom
+#>   (27 observations deleted due to missingness)
+#> Multiple R-squared:  0.495,	Adjusted R-squared:  0.4906 
+#> F-statistic: 111.8 on 1 and 114 DF,  p-value: < 2.2e-16
+#> 
+#> Call:
+#> lm(formula = scale(TimePoint3) ~ scale(TimePoint1) + scale(nonsense), 
+#>     data = w_evt)
+#> 
+#> Residuals:
+#>      Min       1Q   Median       3Q      Max 
+#> -1.90820 -0.48102 -0.00153  0.44206  1.71467 
+#> 
+#> Coefficients:
+#>                     Estimate Std. Error t value Pr(>|t|)    
+#> (Intercept)       -0.0006292  0.0636482  -0.010  0.99213    
+#> scale(TimePoint1)  0.6577832  0.0661923   9.937  < 2e-16 ***
+#> scale(nonsense)    0.1953632  0.0688071   2.839  0.00536 ** 
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> 
+#> Residual standard error: 0.6843 on 113 degrees of freedom
+#>   (27 observations deleted due to missingness)
+#> Multiple R-squared:  0.5287,	Adjusted R-squared:  0.5203 
+#> F-statistic: 63.37 on 2 and 113 DF,  p-value: < 2.2e-16
+#> 
+#> Call:
+#> lm(formula = scale(TimePoint3) ~ scale(TimePoint1) + scale(real), 
+#>     data = w_evt)
+#> 
+#> Residuals:
+#>      Min       1Q   Median       3Q      Max 
+#> -2.01574 -0.49171  0.07312  0.44064  1.77233 
+#> 
+#> Coefficients:
+#>                   Estimate Std. Error t value Pr(>|t|)    
+#> (Intercept)        0.00719    0.06574   0.109    0.913    
+#> scale(TimePoint1)  0.70627    0.06714  10.519   <2e-16 ***
+#> scale(real)       -0.03638    0.06653  -0.547    0.586    
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> 
+#> Residual standard error: 0.7073 on 113 degrees of freedom
+#>   (27 observations deleted due to missingness)
+#> Multiple R-squared:  0.4964,	Adjusted R-squared:  0.4875 
+#> F-statistic: 55.69 on 2 and 113 DF,  p-value: < 2.2e-16
+#> 
+#> Call:
+#> lm(formula = scale(TimePoint3) ~ scale(TimePoint1) + scale(diff), 
+#>     data = w_evt)
+#> 
+#> Residuals:
+#>      Min       1Q   Median       3Q      Max 
+#> -1.74706 -0.48540  0.07322  0.46396  1.45289 
+#> 
+#> Coefficients:
+#>                   Estimate Std. Error t value Pr(>|t|)    
+#> (Intercept)       0.002282   0.063599   0.036   0.9714    
+#> scale(TimePoint1) 0.682369   0.064714  10.544   <2e-16 ***
+#> scale(diff)       0.190080   0.066697   2.850   0.0052 ** 
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> 
+#> Residual standard error: 0.6841 on 113 degrees of freedom
+#>   (27 observations deleted due to missingness)
+#> Multiple R-squared:  0.5289,	Adjusted R-squared:  0.5206 
+#> F-statistic: 63.43 on 2 and 113 DF,  p-value: < 2.2e-16
+```
 
+
+*** 
+
+to fold in
+
+As in Chapter XX, I calculated the posterior distribution of growth
+curves for each child x condition x year. To measure children's
+lexical processing, I used the peak value each growth curve by taking
+the median of the top 5 model fits. For each child, I calculated the
+difference between the peak of the real word and the nonword growth
+curves. This difference in peak values conveys the *condition advantage*
+for a child. The figure below visualizes the condition advantages.
+
+
+<img src="22-referent-selection_files/figure-html/aim2-gca-diffs-1.png" width="50%" style="display: block; margin: auto;" />
 
 
 
@@ -160,22 +335,6 @@ pre-analysis hypotheses were that word recognition in the real word
 condition would be easier than in the nonword condition, or failing
 that, the two conditions would not reliably differ. I had discounted the
 possibility of an overall advantage for nonwords over real words.
-
-
-As in Chapter XX, I calculated the posterior distribution of growth
-curves for each child x condition x year. To measure children's
-lexical processing, I used the peak value each growth curve by taking
-the median of the top 5 model fits. For each child, I calculated the
-difference between the peak of the real word and the nonword growth
-curves. This difference in peak values conveys the *condition advantage*
-for a child. The figure below visualizes the condition advantages.
-
-<img src="22-referent-selection_files/figure-html/aim2-gca-peaks-1.png" width="50%" style="display: block; margin: auto;" />
-
-
-<img src="22-referent-selection_files/figure-html/aim2-gca-diffs-1.png" width="50%" style="display: block; margin: auto;" />
-
-
 
 
 
@@ -212,5 +371,6 @@ for a child. The figure below visualizes the condition advantages.
 <!-- of word recognition differs between these two conditions, and I can use -->
 <!-- 50% and 90% uncertainty intervals to determine during which time points -->
 <!-- the curves credibly differ from each other. -->
+
 
 

@@ -82,7 +82,7 @@ To model these data, I fit a generalized additive model with fast
 restricted maximum likelihood estimation [@Wood2017; @Winter2016;
 see @Soskuthy2017 for a tutorial for linguists]. Box 1 provides a brief
 overview of these models. I used the mgcv R package
-[vers. 1.8.23; @Wood2017] with support from the
+[vers. 1.8.24; @Wood2017] with support from the
 tools in the itsadug R package [vers. 2.3;
 @itsadug].[^gca-fail] [Appendix \@ref(aim1-gca-models)](#aim1-gca-models)
 contains the R code used to fit these models along with a description of 
