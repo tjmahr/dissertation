@@ -1,3 +1,36 @@
+```{r include=FALSE, cache=FALSE}
+# ---- set-options ----
+library(methods)
+knitr::opts_chunk$set(
+  tidy = FALSE,
+  collapse = TRUE,
+  comment = "#>",
+  out.width = 80,
+  fig.align = "center"
+)
+
+options(width = 80)
+
+
+# ---- knitr-helper-functions ----
+is_word_output <- function() {
+  knitr::opts_knit$get("rmarkdown.pandoc.to") == "docx"
+}
+is_html_output <- knitr:::is_html_output
+is_latex_output <- knitr:::is_latex_output
+
+# Make a function that prints a string of characters if the output is pdf
+make_latex_decorator <- function(output, otherwise) {
+  function() {
+    if (is_latex_output()) output else otherwise
+  }
+}
+
+# insert_pause <- make_latex_decorator(". . .", "\n")
+# insert_slide_break <- make_latex_decorator("----", "\n")
+# insert_inc_bullet <- make_latex_decorator("> *", "*")
+insert_html_math <- make_latex_decorator("", "$$")
+```
 Development of referent selection
 =======================================================================
 
@@ -11,7 +44,7 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 ```
 
 ```{r, include = FALSE}
-knitr::opts_chunk$set(cache = TRUE)
+# knitr::opts_chunk$set(cache = TRUE)
 
 scale_color_real_non <- function(..., palette = "Cheerful and sleek") {
   ggthemes::scale_color_canva(
@@ -324,7 +357,8 @@ at age 4.
 ```{r}
 do_it_1 <- peaks %>%
   group_by(Study, ResearchID) %>%
-  summarise_at(vars(nonsense:diff), funs(mean)) %>%
+  summarise_at(vars(nonsense:diff), funs(mean, sd)) %>%
+  rename(nonsense = nonsense_mean, real = real_mean, diff = diff_mean) %>% 
   ungroup()
 
 # do_it_1 %>% 
@@ -368,9 +402,10 @@ real_ceilings <- ceilings  %>%
 #   select(-diff) %>%
 #   tidyr::gather("Condition", "Peak", -Study, -ResearchID) %>%
 #   ungroup() 
+theme_set(theme_teej())
 ```
 
-```{r aim2-gca-peaks, out.width = "50%", fig.height = 3, fig.width = 4}
+```{r aim2-gca-peaks, out.width = "50%", fig.height = 2.5, fig.width = 4}
 ant <- data_frame(
   diff = -.6, 
   Study = "Age 3", 
@@ -401,7 +436,7 @@ peaks %>%
           Condition = c("nonsense", "real"),
           Study = "Age 3") %>% 
           mutate(Condition = convert_condition_to_name(Condition)), 
-        position = position_dodge(width = 1.1), 
+        position = position_dodge(width = 1.15), 
         size = 3, 
         family = "Lato Medium") +
       geom_point(
@@ -421,6 +456,7 @@ peaks %>%
       minor_breaks = c(.1, .3, .5, .7, .9),
       breaks = c(0, .2, .4, .6, .8, 1)) +
     scale_color_real_non()
+
 
 ```
 
@@ -573,121 +609,142 @@ hypothesis, I predicted that the growth curve peaks in the nonword
 condition at age 3 would be better predictors of vocabulary at age 5
 than the real word peaks at age 3.
 
-For these analyses, I regressed age-5 expressive vocabulary standard
-scores onto the age-3 expressive vocabulary score and onto age-3 real
-word peaks and age-3 nonword peaks. As expected, there was a strong
-relationship between age 3 and age 5 vocabulary, blah, blah, *R*^2^ = blah. A standard deviation increase in bocabulary at age 3 predicted an x SD increase (standard score points) at age 5. There was no effect of age-3 peak over and above age-3 vocabulary. There was a significant effect of the nonword peak, delta*R*^2^ = blah, over and above age-3 vocabulary. A .1 increase nonword peak probability predicted an increase of blah.
-
-
-```{r, age-5-from-peaks, out.width = "50%", fig.height = 3, fig.width = 3}
+```{r}
 scores <- readr::read_csv("./data-raw/test_scores.csv")
 tp1 <- scores %>% filter(Study == "TimePoint1")
 tp2 <- scores %>% filter(Study == "TimePoint2")
 tp3 <- scores %>% filter(Study == "TimePoint3")
 
-# mod_robust <- brm(bf(EVT_Standard ~ diff),
-#                   family=student,
-#                   data = testy, cores=4)
-# 
-# mod_robust
-# 
-# summary(lm(EVT_Standard ~ diff, data = testy))
-# plot(marginal_effects(mod_robust, spaghetti = TRUE, nsamples = 100), points = TRUE)
-# 
-# do_it_1 %>% 
-#   filter(Study == "TimePoint1") %>% 
-#   select(-Study) %>% 
-#   inner_join(tp3) %>% 
-#   ggplot() + 
-#     aes(x = diff, y = EVT_Standard) + 
-#     geom_point() +
-#     stat_smooth(method = "lm") + 
-#   labs(
-#     x = "Nonword advantage at age 3", 
-#     y = "EVT-2 standard score at age 5")
-# 
-# do_it_1 %>% 
-#   filter(Study == "TimePoint1") %>% 
-#   select(-Study) %>% 
-#   inner_join(tp3) %>% 
-#   ggplot() + 
-#     aes(x = real, y = EVT_Standard) + 
-#     geom_point() +
-#     stat_smooth(method = "lm") + 
-#   labs(
-#     x = "Real word peak at age 3", 
-#     y = "EVT-2 standard score at age 5")
-# 
-# do_it_1 %>% 
-#   filter(Study == "TimePoint1") %>% 
-#   select(-Study) %>% 
-#   inner_join(tp3) %>% 
-#   ggplot() + 
-#     aes(x = nonsense, y = EVT_Standard) + 
-#     geom_point() +
-#     stat_smooth(method = "lm") + 
-#   labs(
-#     x = "Nonword peak at age 3", 
-#     y = "EVT-2 standard score at age 5")
-# 
-
-
-
-
-
-# w_evt_dist <- scores %>% 
-#   filter(Study != "TimePoint2") %>% 
-#   select(ResearchID, Study, EVT_Standard) %>% 
-#   tidyr::spread(Study, EVT_Standard) %>% 
-#   inner_join(diff_dist)
-
 w_evt <- scores %>% 
   filter(Study != "TimePoint2") %>% 
   select(ResearchID, Study, EVT_Standard) %>% 
   tidyr::spread(Study, EVT_Standard) %>% 
-  inner_join(do_it_1 %>% filter(Study == "TimePoint1"))
-
-
-w_evt %>%
+  inner_join(do_it_1 %>% filter(Study == "TimePoint1")) %>% 
   modelr::add_residuals(
-    model = lm(TimePoint3 ~ TimePoint1, .),
-    var = "EVT_Residualized") %>%
+    lm(TimePoint3 ~ TimePoint1, .), 
+    "EVT_Residualized")
+
+
+p1 <- ggplot(w_evt) + 
+  aes(x = nonsense, y = EVT_Residualized) + 
+  geom_point() + 
+  geom_segment(
+    aes(
+      x = nonsense - nonsense_sd, xend = nonsense + nonsense_sd, 
+      y = EVT_Residualized, yend = EVT_Residualized)) + 
+  # geom_line(aes(y = .posterior_value * 14.56344, group = .draw), data = try, alpha = .02) +
+  geom_line(aes(y = .posterior_value * 14.56344, group = .draw), data = try2, alpha = .02, color = "blue") +
+  labs(title = "error = .001")
+
+evt_t1_z <- lm(scale(TimePoint3) ~ scale(TimePoint1), w_evt)
+evt_t1 <- lm(TimePoint3 ~ scale(TimePoint1), w_evt)
+
+evt_t1_z_nonsense <- lm(scale(TimePoint3) ~ scale(TimePoint1) + nonsense, w_evt)
+evt_t1_nonsense <- lm(TimePoint3 ~ TimePoint1 + nonsense, w_evt)
+
+evt_t1_z_real <- lm(scale(TimePoint3) ~ scale(TimePoint1) + real, w_evt)
+
+evt_t1_z_real <- lm(scale(TimePoint3) ~ scale(TimePoint1) + real, w_evt)
+
+p_real <- evt_t1_z_real %>% 
+  broom::tidy(conf.int = TRUE) %>%
+  filter(term == "real") %>% 
+  pull(p.value) %>% 
+  printy::fmt_p_value(digits = 2) 
+
+p_nonsense <- evt_t1_z_nonsense %>% 
+  broom::tidy(conf.int = TRUE) %>%
+  filter(term == "nonsense") %>% 
+  pull(p.value) %>% 
+  printy::fmt_p_value() 
+
+evt_z_nonsense <- lm(scale(TimePoint3) ~ nonsense, w_evt)
+evt_nonsense <- lm(TimePoint3 ~  nonsense, w_evt)
+
+for_pred <- na.omit(w_evt)
+
+adj_rsquare <- function(model) {
+  summary(model)[["adj.r.squared"]]
+}
+
+t1_sd <- round(sd(for_pred$TimePoint1))
+t3_sd_change <- evt_t1_z$coef[2] %>% round(2)
+t3_change <- round(coef(evt_t1)[2])
+
+
+nonsense_change <- {coef(evt_t1_nonsense)[3] / 10} %>% 
+  printy::fmt_fix_digits(1)
+
+z_nonsense_change <- {coef(evt_t1_z_nonsense)[3] / 10} %>% 
+  printy::fmt_fix_digits(2)
+
+base_r2 <- evt_t1 %>% 
+  adj_rsquare() %>% 
+  printy::fmt_fix_digits(2) %>% 
+  printy::fmt_leading_zero()
+
+nonsense_delta <- adj_rsquare(evt_t1_z_nonsense) - adj_rsquare(evt_t1)
+nonsense_delta <- nonsense_delta %>% 
+  printy::fmt_fix_digits(2) %>% 
+  printy::fmt_leading_zero()
+# 
+# real_delta <- adj_rsquare(evt_t1_z_real) - adj_rsquare(evt_t1)
+# real_delta <- real_delta %>% 
+#   printy::fmt_fix_digits(3) %>% 
+#   printy::fmt_leading_zero()
+# 
+
+```
+
+
+For these analyses, I regressed age-5 expressive vocabulary standard
+scores onto the age-3 expressive vocabulary score and onto age-3 real
+word peaks or age-3 nonword peaks. There were `r nobs(evt_t1)` children
+with data available for this analysis. There was an expected strong
+relationship between age 3 and age 5 vocabulary, *R*^2^ = `r base_r2`.
+A 1-SD (`r t1_sd`-point) increase in vocabulary at age 3 predicted an
+`r t3_sd_change`-SD (`r t3_change`-point) increase at age 5. There was
+no effect of age-3 peak over and above age-3 vocabulary, *p* = `p_real`.
+There was a significant effect of the nonword peak, *p* =
+`r p_nonsense`, *ΔR*^2^ = `r nonsense_delta`, over and above age-3
+vocabulary. A .1 increase in nonword peak probability predicted a
+`r z_nonsense_change`-SD (`r nonsense_change`-point) increase in age-5
+vocabulary.
+
+
+```{r, age-5-from-peaks, out.width = "100%", fig.height = 2.5, fig.width = 6}
+p1 <- w_evt %>%
   ggplot() +
     aes(x = nonsense, y = EVT_Residualized) +
     geom_point() +
     stat_smooth(method = "lm") + 
     labs(
-      x = "Nonword peak at age 3", 
+      x = "Nonword peak", 
       y = "Residualized age-5 EVT-2 score")
 
-w_evt %>%
-  modelr::add_residuals(
-    model = lm(TimePoint3 ~ TimePoint1, .),
-    var = "EVT_Residualized") %>%
+p2 <- w_evt %>%
   ggplot() +
     aes(x = real, y = EVT_Residualized) +
     geom_point() +
     stat_smooth(method = "lm") + 
     labs(
-      x = "Real word peak at age 3", 
+      x = "Real word peak", 
       y = "Residualized age-5 EVT-2 score")
 
-
-w_evt %>%
-  modelr::add_residuals(
-    model = lm(TimePoint3 ~ TimePoint1, .),
-    var = "EVT_Residualized") %>%
+p3 <- w_evt %>%
   ggplot() +
     aes(x = diff, y = EVT_Residualized) +
     geom_point() +
     stat_smooth(method = "lm") + 
     labs(
-      x = "Nonword advantage at age 3", 
+      x = "Nonword advantage", 
       y = "Residualized age-5 EVT-2 score")
+
+library(patchwork)
+p1 + p2 + p3 + plot_layout(nrow = 1) + plot_annotation(caption = "Age 3 predictors")
 ```
 
 ```{r}
-summary(lm(scale(TimePoint3) ~ scale(TimePoint1), w_evt))
 summary(lm(scale(TimePoint3) ~ scale(TimePoint1) + scale(nonsense), w_evt))
 summary(lm(scale(TimePoint3) ~ scale(TimePoint1) + scale(real), w_evt))
 summary(lm(scale(TimePoint3) ~ scale(TimePoint1) + scale(diff), w_evt))
