@@ -78,3 +78,10 @@ m_age3 <- brm(
 readr::write_rds(m_age3, "age3_mp.rds.gz")
 ```
 
+I originally tried a single model containing all three years with
+corresponding year effects, year-by-time interactions, and
+year-by-condition-by-time conditions. But this model had difficulty
+converging, and even when a passable model was obtained, a bug in the
+modeling software prevented me from obtaining posterior predictions. I
+reported the bug in an issue for the package's source code repository. 
+

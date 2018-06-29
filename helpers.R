@@ -193,7 +193,7 @@ get_uis <- function(x, n = 2) {
     printy::fmt_minus_sign()
 
   fmt_ui <- . %>%
-    glue::glue_data("{fmt_one_ui(ll)}--{fmt_one_ui(hh)}")
+    glue::glue_data("{fmt_one_ui(ll)}, {fmt_one_ui(hh)}")
 
   x %>%
     lapply(fmt_ui)
@@ -216,7 +216,7 @@ get_cor_uis <- function(x, n = 2) {
     printy::fmt_minus_sign()
 
   x %>%
-    lapply(. %>% glue::glue_data("{fmt_cor(ll)}--{fmt_cor(hh)}"))
+    lapply(. %>% glue::glue_data("{fmt_cor(ll)}, {fmt_cor(hh)}"))
 }
 
 fmt_inline_median_interval <- function(x, n = 2) {
@@ -232,4 +232,12 @@ add_ui_slug_to_first <- function(x, slug = "90%&nbsp;UI: ") {
   x[[1]] <- x[[1]] %>%
     stringr::str_replace(" \\[", paste0(" [", slug))
   x
+}
+
+
+fct_add_counts <- function(xs, fmt = "{levels} ({counts})") {
+  levels <- names(table(xs))
+  counts <- unname(table(xs))
+  with_counts <- as.character(glue::glue(fmt))
+  factor(xs, levels, labels = with_counts)
 }
