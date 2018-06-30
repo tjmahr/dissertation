@@ -765,7 +765,7 @@ w_l %>%
     geom_point(color = "grey40") +
     stat_smooth(method = "lm", color = constants$col_blue_highlight) + 
     facet_wrap("var", scales = "free_x") +
-    scale_x_continuous(labels = fmt_axis_props) +
+    # scale_x_continuous(labels = fmt_axis_props) +
     # scale_x_continuous(breaks = step_by_25, labels = fmt_axis_props) +
     labs(
       x = "Age 3 measures", 

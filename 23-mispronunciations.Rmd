@@ -1,0 +1,274 @@
+Sensitivity to mispronunciations
+=======================================================================
+
+```{r, include = FALSE}
+knitr::read_chunk("./helpers.R")
+if (interactive()) source("./helpers.R")
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+```{r helpers, message = FALSE, warning = FALSE}
+```
+
+```{r, include = FALSE}
+# knitr::opts_chunk$set(cache = TRUE)
+```
+
+```{r}
+d_raw <- readr::read_csv("./data/aim2-model-ready.csv.gz") %>% 
+  select(-starts_with("ot"))
+  # filter(!is.na(Bias_Fam)) %>% 
+  # filter(0 <= Time) %>% 
+# %>% 
+#   polypoly::poly_add_columns(
+#     Time, degree = 3, scale_width = 1, prefix = "ot")
+
+# Flip things so that the nonword and real-word curves go upward
+d_raw_mp <- d_raw %>% 
+  filter(Condition == "MP") 
+
+d_raw_all <- d_raw %>% 
+  filter(Condition == "MP") %>% 
+  group_by(Study, ResearchID, Time) %>% 
+  summarise(
+    Bias_Fam = "all",
+    Distractor = sum(Distractor),
+    Target = sum(Target),
+    Looks = sum(Looks),
+    Elsewhere = sum(Elsewhere),
+    Missing = sum(Missing), 
+    Primary = sum(Primary),
+    Trials = Primary + Distractor,
+    Prop = Primary / Trials,
+    PropSE = se_prop(Prop, Trials),
+    PropNA = Missing / Looks
+  )
+
+d_raw_mp %>% 
+  bind_rows(d_raw_all) %>%
+  ggplot() + 
+    aes(x = Time, y = Prop, color = Study) + 
+    stat_summary() + 
+    facet_grid(~ Bias_Fam)
+
+
+
+
+d <- d_raw %>% 
+  select(-starts_with("ot")) %>% 
+  filter(Condition == "MP", !is.na(Bias_Fam), 300 <= Time) %>% 
+  mutate(Trials = Target + Distractor) %>% 
+  polypoly::poly_add_columns(
+    Time, degree = 3, scale_width = 1, prefix = "ot")
+
+
+
+
+d %>% 
+  tjmisc::sample_n_of(20, ResearchID) %>% 
+  ggplot() + 
+    aes(x = Time, y = Prop) + 
+    geom_line(aes(group = interaction(ResearchID))) +
+    facet_grid(Study ~ Bias_Fam) + 
+    stat_summary() + 
+  labs(
+    title = "Results for 20 random children")
+
+
+
+library(lme4)
+
+study_child_with_empty_cells <- d %>% 
+  filter(Trials < 4) %>% 
+  distinct(Study, ResearchID, Bias_Fam)
+
+# study_counts <- study_child_with_empty_cells %>% 
+#   count(Study) %>% 
+#   split(.$Study) %>% 
+#   lapply(pull, n) %>% 
+#   set_names(stringr::str_replace, "TimePoint", "T")
+
+d <- d %>% 
+  anti_join(study_child_with_empty_cells)
+
+d_u <- d %>% filter(Bias_Fam == "Unfamiliar")
+m_u <- glmer(
+  cbind(Target, Distractor) ~ 
+    (ot1 + ot2 + ot3) * Study + 
+    (ot1 + ot2 + ot3 | ResearchID/Study),
+  family = binomial,
+  data = d_u
+) 
+
+
+d_u_1 <- d %>% filter(Bias_Fam == "Unfamiliar", Study == "TimePoint1")
+m_u_1 <- glmer(
+  cbind(Target, Distractor) ~ 
+    (ot1 + ot2 + ot3) + 
+    (ot1 + ot2 + ot3 | ResearchID),
+  family = binomial,
+  data = d_u_1
+) 
+d_u_1 <- d %>% filter(Bias_Fam == "Unfamiliar", Study == "TimePoint1")
+m_u_1 <- glmer(
+  cbind(Target, Distractor) ~ 
+    (ot1 + ot2 + ot3) + 
+    (ot1 + ot2 + ot3 | ResearchID),
+  family = binomial,
+  data = d_u_1
+) 
+
+a_u_1 <- broom::augment(m_u_1) %>% 
+  select(-1) %>% 
+  left_join(d_u_1)
+
+ggplot(a_u_1) + 
+  aes(x = Time, y = Prop) + 
+  geom_line(
+    aes(group = ResearchID), 
+    position = position_jitter(height = .01), 
+    alpha = .4) + 
+  stat_summary(aes(color = "empirical")) + 
+  stat_summary(aes(y = plogis(.fixed), color = "fixef")) + 
+  stat_summary(aes(y = plogis(.fitted), color = "fitted"))
+
+
+peak <- a_u_1 %>% 
+  group_by(Study, ResearchID) %>% 
+  top_n(5, plogis(.fitted)) %>% 
+  summarise(
+    peak = median(plogis(.fitted))
+  )
+
+
+ggplot(a_u_1) + 
+  aes(x = Time, y =  plogis(.fitted)) + 
+  geom_line(
+    aes(group = ResearchID), 
+    # position = position_jitter(height = .01), 
+    alpha = .4) 
+
+
+d_f_1 <- d %>% filter(Bias_Fam == "Familiar", Study == "TimePoint1")
+m_f_1 <- glmer(
+  cbind(Target, Distractor) ~ 
+    (ot1 + ot2 + ot3) + 
+    (ot1 + ot2 + ot3 | ResearchID),
+  family = binomial,
+  data = d_f_1
+) 
+summary(m_f_1)
+
+
+a_f_1 <- broom::augment(m_f_1) %>% 
+  select(-1) %>% 
+  left_join(d_f_1)
+
+ggplot(a_f_1) + 
+  aes(x = Time, y =  plogis(.fitted)) + 
+  geom_line(
+    aes(group = ResearchID), 
+    # position = position_jitter(height = .01), 
+    alpha = .4) 
+
+ggplot(a_f_1) + 
+  aes(x = Time, y = Prop) + 
+  geom_line(
+    aes(group = ResearchID), 
+    position = position_jitter(height = .01), 
+    alpha = .4) + 
+  stat_summary(aes(color = "empirical")) + 
+  stat_summary(aes(y = plogis(.fixed), color = "fixef")) + 
+  stat_summary(aes(y = plogis(.fitted), color = "fitted"))
+
+
+
+med5 <- function(a, b, c, d, e) {
+  cbind(a, b, c, d, e) %>% 
+    apply(1, median, na.rm = TRUE)
+}
+
+rolling_med <- function(xs, steps = 5) {
+  stopifnot(steps %% 2 == 1)
+  lags <- seq_len(steps) - median(seq_len(steps))
+  lags
+
+  cols <- matrix(rep(xs, steps), ncol = 5)
+  
+  for (lag_i in seq_along(lags)) {
+    cols[, lag_i] <- Hmisc::Lag(cols[, lag_i], lags[lag_i])
+  }  
+  
+  apply(cols, 1, median, na.rm = TRUE)
+}
+
+
+
+try2 <- try2 %>% 
+  group_by(Study, ResearchID) %>%
+  mutate(
+    lag1 = lag(.fitted, 1),
+    lag2 = lag(.fitted, 2),
+    lead1 = lead(.fitted, 1),
+    lead2 = lead(.fitted, 2),
+    rolling_med = plogis(med5(.fitted, lag1, lag2, lead2, lead1)),
+    again = plogis(rolling_med(.fitted, 5))) %>% 
+  ungroup()
+
+all.equal(try2$again == try2$rolling_med)
+
+peaks2 <- try2 %>% 
+  group_by(Study, ResearchID) %>% 
+  top_n(-1, zip) %>% 
+  top_n(-1, Time - median(Time)) %>% 
+  ungroup()
+
+hist(peaks2$zip)
+
+try2 %>% 
+  # tjmisc::sample_n_of(1, ResearchID) %>% 
+  ggplot() + 
+    aes(x = Time, y =  plogis(.fitted)) + 
+    geom_line(
+      aes(group = ResearchID), 
+      # position = position_jitter(height = .01), 
+      alpha = .4) + 
+    geom_point(aes(y = zip), data = peaks)
+
+
+
+
+# try %>% 
+#   tjmisc::sample_n_of(9, ResearchID) %>% 
+#   ggplot() + 
+#   aes(x = Time, y = Prop) + 
+#   # geom_line(
+#   #   aes(group = ResearchID), 
+#   #   position = position_jitter(height = .01), 
+#   #   alpha = .4) + 
+#   geom_pointrange(aes(color = "empirical", ymin = Prop - PropSE, ymax = Prop + PropSE)) +
+#   geom_smooth(aes(color = "lm fit"), method = "lm", se = FALSE, formula = y ~ poly(x, 3), size = 2, alpha = .5) +
+#   # geom_line(aes(y = plogis(.fixed), color = "fixed effect"), size = 2, alpha = .5) + 
+#   geom_line(aes(y = plogis(.fitted), color = "mixed model"), size = 2, alpha = .5) +
+#   facet_wrap("ResearchID") + 
+#   NULL
+# 
+
+
+d_r_nw_dis <- d_r_nw_vs %>% 
+  filter(Bias_Target == "Distractor")
+
+study_child_with_empty_cells <- d_r_nw_dis %>% 
+  filter(Trials < 4) %>% 
+  distinct(Study, ResearchID)
+
+study_counts <- study_child_with_empty_cells %>% 
+  count(Study) %>% 
+  split(.$Study) %>% 
+  lapply(pull, n) %>% 
+  set_names(stringr::str_replace, "TimePoint", "T")
+
+d_r_nw_dis <- d_r_nw_dis %>% 
+  anti_join(study_child_with_empty_cells)
+```
+
