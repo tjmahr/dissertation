@@ -241,3 +241,10 @@ fct_add_counts <- function(xs, fmt = "{levels} ({counts})") {
   with_counts <- as.character(glue::glue(fmt))
   factor(xs, levels, labels = with_counts)
 }
+
+
+scale_color_real_non <- function(..., palette = "Cheerful and sleek") {
+  ggthemes::scale_color_canva(
+    ...,
+    palette = palette)
+}

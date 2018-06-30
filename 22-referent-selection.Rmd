@@ -12,12 +12,6 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 
 ```{r, include = FALSE}
 # knitr::opts_chunk$set(cache = TRUE)
-
-scale_color_real_non <- function(..., palette = "Cheerful and sleek") {
-  ggthemes::scale_color_canva(
-    ...,
-    palette = palette)
-}
 ```
 
 
@@ -257,15 +251,15 @@ ant_0 <- data.frame(
 ggplot(some_fits) + 
   aes(x = Time, y = plogis(.posterior_value), color = Condition) + 
   stat_summary(
-    aes(y = Target / Trials), 
-    data = all_data,
-    fun.data = mean_se,
-    geom = "pointrange") +
-  stat_summary(
     aes(group = interaction(.draw, Condition)),
     geom = "line",
     fun.y = mean,
     alpha = .05) +
+  stat_summary(
+    aes(y = Target / Trials), 
+    data = all_data,
+    fun.data = mean_se,
+    geom = "pointrange") +
   geom_text(
     aes(label = Condition, y = y),
     data = ant_0,
@@ -750,12 +744,29 @@ w_l <- w_evt %>%
   mutate(
     var = factor(var, c("Real word peak", "Nonword peak", "Nonword advantage")))
 
+fmt_axis_props <- function(xs) {
+  ifelse(xs == 0, "0", printy::fmt_leading_zero(xs)) 
+}
+
+step_by_25 <- function(x) {
+  steps <- (x %/% .25)
+  seq(from = steps[1] - 1, to = steps[2] + 1) * .25
+}
+
 w_l %>%
+  # add dummy point to real word peaks so that panel has the same range and
+  # width as the nonword peaks
+  tibble::add_row(
+    ResearchID = "1", EVT_Residualized = NA, 
+    var = "Real word peak", value = .01) %>% 
   ggplot() +
     aes(x = value, y = EVT_Residualized) +
+    geom_hline(yintercept = 0, color = "white",  size = 2) + 
     geom_point(color = "grey40") +
     stat_smooth(method = "lm", color = constants$col_blue_highlight) + 
     facet_wrap("var", scales = "free_x") +
+    scale_x_continuous(labels = fmt_axis_props) +
+    # scale_x_continuous(breaks = step_by_25, labels = fmt_axis_props) +
     labs(
       x = "Age 3 measures", 
       y = "Age 5 EVT-2 (Adj.)",
