@@ -174,16 +174,16 @@ to proportions.
 
 
 The average looking probability (intercept feature) was 0.38
-[90% UI: 0.37--0.40] at age 3, 0.49
-[0.47--0.50] at age 4, and 0.56 [0.54--0.57] at
+[90% UI: 0.37, 0.40] at age 3, 0.49
+[0.47, 0.50] at age 4, and 0.56 [0.54, 0.57] at
 age 5. The averages increased by 0.10
-[0.09--0.11] from age 3 to age 4 and by 0.07
-[0.06--0.09] from age 4 to age 5. The peak looking
-probability was 0.55 [0.53--0.57] at age 3,
-0.68 [0.67--0.70] at age 4, and 0.77
-[0.76--0.78] at age 5. The peak values increased by
-0.13 [0.11--0.16] from age 3 to age 4 and
-by 0.09 [0.07--0.10] from age 4 to age 5.
+[0.09, 0.11] from age 3 to age 4 and by 0.07
+[0.06, 0.09] from age 4 to age 5. The peak looking
+probability was 0.55 [0.53, 0.57] at age 3,
+0.68 [0.67, 0.70] at age 4, and 0.77
+[0.76, 0.78] at age 5. The peak values increased by
+0.13 [0.11, 0.16] from age 3 to age 4 and
+by 0.09 [0.07, 0.10] from age 4 to age 5.
 These results numerically confirm the hypothesis that children would
 improve in their word recognition reliability, both in terms of average
 looking and in terms of peak looking, each year. The changes in peak 
@@ -279,9 +279,9 @@ The developmental pattern of increasing reliability and decreasing
 variability was also observed for the growth curve peaks. For the
 synthetic participants, the model predicted that individual peak
 probabilities will increase each year, peak<sub>3</sub> =
-0.55 [90% UI: 0.35--0.77],
-peak<sub>4</sub> = 0.69 [0.48--0.86],
-peak<sub>5</sub> = 0.78 [0.59--0.91].
+0.55 [90% UI: 0.35, 0.77],
+peak<sub>4</sub> = 0.69 [0.48, 0.86],
+peak<sub>5</sub> = 0.78 [0.59, 0.91].
 Moreover, the range of plausible values for the individual peaks
 narrowed each for the simulated data. For instance, the difference
 between the 95^th^ and 5^th^ percentiles was 0.43 for
@@ -357,9 +357,9 @@ I used the `kendall()` function in the irr R package
 statistics. Figure \@ref(fig:kendall-stats) depicts uncertainty intervals
 for the Kendall *W*'s for these growth curve features. The 90%
 uncertainty interval of *W* statistics from random ratings,
-[.28--.39], subsumes the intervals for the Time^2^
-effect [.30--.35] and the Time^3^ effect
-[.28--.35], indicating that these values do not
+[.28, .39], subsumes the intervals for the Time^2^
+effect [.30, .35] and the Time^3^ effect
+[.28, .35], indicating that these values do not
 differentiate children in a longitudinally stable way. Earlier, I
 claimed that only the intercept, linear time, and peak features have
 psychologically meaningful interpretations and that the higher-order
@@ -369,9 +369,9 @@ Time^3^ features differentiate children across studies as well as random
 numbers.
 
 Concordance is strongest for the peak feature, *W* = .59
-[.57--.60] and the intercept term, *W* =
-.58 [.57--.60], followed by the
-linear time term, *W* = .50 [.48--.52].
+[.57, .60] and the intercept term, *W* =
+.58 [.57, .60], followed by the
+linear time term, *W* = .50 [.48, .52].
 Because these values are far removed from the statistics for random
 ratings, I conclude that there is a credible degree of correspondence
 across studies when ranking children using their peak looking
@@ -417,28 +417,28 @@ were found between the growth curve features at age 3.
 
 Growth curve peaks from age 3 correlated with age 5 vocabulary with
 *r* = .52 [90% UI
-.50--.54], but the concurrent peaks from age 5
+.50, .54], but the concurrent peaks from age 5
 showed a correlation of just *r* = .31
-[.29--.33], a difference between age-3 and
+[.29, .33], a difference between age-3 and
 age-5 correlations of *r*<sub>3−5</sub> =
 .21
-[.18--.24]. A similar pattern held for
+[.18, .24]. A similar pattern held for
 lexical processing efficiency values. Linear time features from age 3
 correlated with age 5 vocabulary with *r* =
-.41 [.39--.44],
+.41 [.39, .44],
 whereas the concurrent lexical processing values from age 5 only showed
 a correlation of *r* = .28
-[.26--.31], a difference of *r*<sub>3−5</sub> =
+[.26, .31], a difference of *r*<sub>3−5</sub> =
 .13
-[.10--.16]. For the average looking
+[.10, .16]. For the average looking
 probabilities, the correlation for age 3, *r* =
-.39 [.39--.44], was
+.39 [.39, .44], was
 probably only slightly greater than the correlation for age 4,
 *r*<sub>3−4</sub> = .02
-[&minus;.01--.04] but considerably greater than the
+[&minus;.01, .04] but considerably greater than the
 concurrent correlation at age 5, *r*<sub>3−5</sub> =
 .08
-[.05--.10].
+[.05, .10].
 
 (ref:evt2-gca-cors) Uncertainty intervals for the correlations of growth
 curve features at each timepoint with age-5 expressive vocabulary (EVT-2
@@ -454,19 +454,19 @@ age-5 expressive vocabulary.
 
 Peak looking probabilities from age 3 were strongly correlated with
 age 4 receptive vocabulary, *r* = .62
-[.61--.64], and this correlation was much
+[.61, .64], and this correlation was much
 greater than the correlation observed for the age 4 growth curve peaks,
 *r*<sub>3−4</sub> = .26
-[.23--.29]. The correlation for age 3
+[.23, .29]. The correlation for age 3
 average looking probabilities, *r* = .45
-[.44--.47], was greater than the age 4
+[.44, .47], was greater than the age 4
 correlation, *r*<sub>3−4</sub> =
 .08
-[.06--.11], and the correlation for age 3
+[.06, .11], and the correlation for age 3
 linear time features, *r* = .51
-[.49--.54], was likewise greater,
+[.49, .54], was likewise greater,
 *r*<sub>3−4</sub> = .22
-[.19--.26].
+[.19, .26].
 
 (ref:ppvt4-gca-cors) Uncertainty intervals for the correlations of
 growth curve features from age 43 and age 44 with age-4 receptive vocabulary

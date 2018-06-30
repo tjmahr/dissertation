@@ -5,7 +5,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   out.width = 80,
-  fig.align = "center"
+  fig.align = "center",
+  dpi = 300
 )
 
 options(width = 80)
