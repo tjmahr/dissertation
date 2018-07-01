@@ -111,16 +111,15 @@ r_ot1_uis <- effects %>%
 
 
 
-## Nonwords versus real words
+## Nonwords versus familiar words
 
 I asked whether the recognition of familiar words differed from the
 fast-selecting of referents for nonwords. I fit a Bayesian mixed-effects
 logistic regression growth-curve model, as in Chapter X. For the real word and
 nonword conditions, there is a well-defined target image: the familar
-image for real words, and the novel/unfamiliar image for nonwords.
-Therefore, I modeled the data under these assumptions. The outcome
-measures were the probabilities of fixating to the target image in each
-condition:
+image for real words and the novel/unfamiliar image for nonwords.
+Under these assumptions, the outcome measures were the probabilities of
+fixating to the target image in each condition:
 
 * P(Look to familiar image | Hear a real word)
 * P(Look to unfamiliar image | Hear a nonword)
@@ -128,9 +127,10 @@ condition:
 Both the real word and nonword conditions measure referent selection as
 the probability of fixating on the appropriate referent when presented
 with a label. The important analytic question is whether and to what
-degree these two probabilities differ. This growth curve model is
-similar to the one in Chapter X with cubic polynomial and a condition
-effect which interacts with time features. Thus, the basic model is:
+degree these two probabilities differ. The growth curve model is
+similar to the one in Chapter X with cubic polynomial but it adds a
+condition effect which interacts with time features. Thus, the basic
+model is:
 
 `r insert_html_math()`
 \small
@@ -152,17 +152,20 @@ effect which interacts with time features. Thus, the basic model is:
 I fit a separate model for each year of the study.
 [Appendix \@ref(aim2-gca-models)](#aim2-gca-models) contains the R code
 used to fit these models along with a description of the specifications
-represented by the model syntax. 
+represented by the model syntax. The mixed model included by-child and
+by-child-by-condition random effects so that it captured how some of a
+child's growth curve features may be similar between the conditions and
+may differ between conditions.
 
 For these analyses, I limited focus to distractor-initial
 trials, and modeled the data from `r min(d$Time)` ms to `r max(d$Time)`
-after target onset. I removed any Study x Child levels if a child had fewer than 4
+after target onset. I removed any Age x Child levels if a child had fewer than 4
 fixations in a single time bin. In other words, children had to
 have at least 4 looks to one of the images in every 50 ms time bin.
 This screening removed `r study_counts$T1` children from age 3,
 `r study_counts$T2` from age 4, and `r study_counts$T3` from age 5.
 
-Figure \@ref(fig:aim2-real-nonword-means) shows group averages of growth
+Figure \@ref(fig:aim2-real-nonword-means) shows the group averages of the growth
 curves. For each condition and age, I computed the empirical growth
 curve for each participant, and I averaged the participants' growth
 curves together to obtain group averages. I also applied this process
@@ -275,29 +278,29 @@ ggplot(some_fits) +
   scale_color_real_non()
 ```
 
-In chapter XX, I state that for these growth curve models that I
-consider only the intercept and linear time terms to be behaviorally
-meaningful model parameters. The intercept measures overall the average growth
-curve value so it reflects _looking reliability_, and the linear time term
-measures the overall stepness of the growth so it reflects _lexical
-processing efficiency_. I also derive a measure of peak looking
+In chapter XX, I claim that for these growth curve models that only the
+intercept and linear time terms to be behaviorally meaningful model
+parameters. The intercept measures overall the average growth curve
+value so it reflects *looking reliability*, and the linear time term
+measures the overall stepness of the growth so it reflects *lexical
+processing efficiency*. I also derived a measure of peak looking
 probability by taking the median of top five points in a growth curve,
-and this peak provides a measure of *word recognition certainty*.
-Higher peaks indicate less uncertainty about a word.
+and this peak provides a measure of *word recognition certainty*. Higher
+peaks indicate less uncertainty about a word.
 
 I evaluated the condition effects by looking at the effect of the real
 word condition on the intercept and linear time terms. The two
-conditions did not reliable differ at age 3. The real-word condition
+conditions did not reliably differ at age 3. The real-word condition
 effect on the intercept was `r r_ot0_uis$tp1` and its interaction with
 the linear time term was `r r_ot1_uis$tp1`. Both these 90% intervals
 include 0 as a plausible estimate for the condition difference, so there
-is still uncertainty about the sign of the effect. I therefore conclude
+is uncertainty about the sign of the effect. I therefore conclude
 that the conditions did not credibly differ on average at age 3.
 
 There was an advantage for the nonword condition at age 4 and age 5. The
 real-word effect was negative at age 4, `r r_ot0_uis$tp2`, so that on
-average, children looked less to target on the real words than the
-nonword trials. There was a suggestive effect linear time effect at
+average, children looked less to target for the real words than the
+nonwords. There was a suggestive effect linear time effect at
 age 4, `r r_ot1_uis$tp2`. The curve for real words was probably less
 steep at age 4 but values near 0 remain plausible. At age 5, only the
 intercept difference was credible, `r r_ot0_uis$tp3`. In general,
@@ -342,13 +345,13 @@ ceilings <- peaks %>%
 nons_ceilings <- ceilings  %>% 
   filter(parameter == "nons") %>% 
   split(.$Study) %>% 
-  fmt_inline_median_interval() %>% 
+  fmt_inline_median_interval(0) %>% 
   add_ui_slug_to_first(slug = "90%&nbsp;UI: ")
 
 real_ceilings <- ceilings  %>% 
   filter(parameter == "real") %>% 
   split(.$Study) %>% 
-  fmt_inline_median_interval()
+  fmt_inline_median_interval(0)
 # peaks %>% 
 #   mutate(Study = convert_study_to_age(Study)) %>% 
 #   group_by(Study, ResearchID) %>% 
@@ -359,23 +362,13 @@ real_ceilings <- ceilings  %>%
 theme_set(theme_teej())
 ```
 
-Figure \@ref(fig:aim2-gca-peaks) shows the the posterior means of the growth
-curves peaks for each participant. Here, descriptive statistics help reveal 
-the developmental trends for this task. At age 3, the median peak
-values are similar around 80%. The peaks increase for the nonword
-condition in the following year, with a median value of .... It is worth
-emphasizing what this median tells us: At age 4, half of the children
-had a peak looking probability of xxx. In other words, children are
-performing at the ceiling on this task by age 4. To quantify the degree
-of ceiling performance, I calculcated the number of children per
-condition with a growth curve peak greater than
-or equal to .99 over the posterior distribution. For the nonword
-condition, there were `r nons_ceilings$TP1` children who performed at
-ceiling at age 3, `r nons_ceilings$TP2` at age 4, `r nons_ceilings$TP3`
-and at age 5. For the real word condition, the number of children
-attaining ceiling performance was more uneven: there were
-`r real_ceilings$TP1` ceiling performers at age 3,
-`r real_ceilings$TP2`, and `r real_ceilings$TP2` at age 5.
+Next, I analyzed the children's model-estimated growth curve peaks. Each
+posterior sample of the model represents a plausible set of growth curve
+parameters for the data, so for each of these samples, I calculated the
+growth curves for each child and the peaks of the growth curves.
+Figure \@ref(fig:aim2-gca-peaks) shows the the posterior averages of the
+growth curves peaks for each participant.
+
 
 (ref:aim2-gca-peaks) Growth curve peaks by child, condition and year of
 the study. The movement of the medians conveys how the nonword peaks
@@ -439,21 +432,40 @@ ggplot(condition_means) +
 ```
 
 
+```{r}
+meds_by_year <- do_it_1 %>% 
+  group_by(Study) %>% 
+  summarise(nonsense = median(nonsense), real = median(real))
+tp2_non_med <- meds_by_year %>% 
+  filter(Study == "TimePoint2") %>% 
+  pull(nonsense) %>% 
+  printy::fmt_fix_digits(2) %>% 
+  printy::fmt_leading_zero()
+```
 
+Descriptive statistics help reveal the developmental trends for this
+task. At age 3, the median peak values are similar for the two
+conditions, both around .83. The peaks increase for the nonword
+condition in the following year with a median value of `r tp2_non_med`.
+It is worth emphasizing what this statistic tells us: At age 4, half of
+the children had a peak looking probability of `r tp2_non_med` *or
+greater*. In other words, children are performing near the ceiling on
+this task by age 4. 
 
-
-
-
-
-
-
-
-
+To quantify the degree of ceiling performance, I calculated the number
+of children per condition with a growth curve peak greater than or equal
+to .99 over the posterior distribution. For the nonword condition, there
+were `r nons_ceilings$TP1` children who performed at ceiling at age 3,
+`r nons_ceilings$TP2` at age 4, `r nons_ceilings$TP3` and at age 5. For
+the real word condition, the number of children attaining ceiling
+performance was more uneven: there were `r real_ceilings$TP1`
+ceiling-performers at age 3, `r real_ceilings$TP2` at age 4, and
+`r real_ceilings$TP2` at age 5.
 
 
 ```{r, echo = FALSE}
 rw_peak_lme_tp2 <- do_it_1 %>%
-  select(-diff) %>%
+  select(Study, ResearchID, nonsense, real) %>%
   tidyr::gather("Condition", "Peak", -Study, -ResearchID) %>%
   mutate(Condition = forcats::fct_rev(Condition)) %>%
   mutate(Study = factor(Study, c("TimePoint2", "TimePoint1", "TimePoint3"))) %>% 
@@ -461,20 +473,20 @@ rw_peak_lme_tp2 <- do_it_1 %>%
   broom::tidy("fixed")
 
 nw_peak_lme_tp1 <- do_it_1 %>% 
-  select(-diff) %>%
+  select(Study, ResearchID, nonsense, real) %>%
   tidyr::gather("Condition", "Peak", -Study, -ResearchID) %>%
   lme4::lmer(Peak ~ Condition * Study + (1 | ResearchID/Study), .) %>%
   broom::tidy("fixed")
 
 nw_peak_lme_tp2 <- do_it_1 %>% 
-  select(-diff) %>%
+  select(Study, ResearchID, nonsense, real) %>%
   tidyr::gather("Condition", "Peak", -Study, -ResearchID) %>%
   mutate(Study = factor(Study, c("TimePoint2", "TimePoint1", "TimePoint3"))) %>% 
   lme4::lmer(Peak ~ Condition * Study + (1 | ResearchID/Study), .) %>%
   broom::tidy("fixed")
 
 nw_peak_lme_tp3 <- do_it_1 %>% 
-  select(-diff) %>%
+  select(Study, ResearchID, nonsense, real) %>%
   tidyr::gather("Condition", "Peak", -Study, -ResearchID) %>%
   mutate(Study = factor(Study, c("TimePoint3", "TimePoint1", "TimePoint2"))) %>% 
   lme4::lmer(Peak ~ Condition * Study + (1 | ResearchID/Study), .) %>%
@@ -512,18 +524,18 @@ t2_t3 <- pull_effect_est(nw_peak_lme_tp2, "StudyTimePoint3", FALSE)
 t2_t3_real <- pull_effect_est(rw_peak_lme_tp2, "StudyTimePoint3", FALSE)
 ```
 
-To compare peaks looking probabilities between ages, I fit a linear mixed effects
-model with restricted maximum likelihood via the lme4 R package
-[vers. `r packageVersion("lme4")`; @lme4]. I regressed the growth
-curve peaks onto experimental condition, age group, and the age x
-condition interaction. The model included randomly varying intercepts for child and
-child-year. This modeling software does not provide *p*-values for its
-effects estimates, so for these comparisons, I decided that an effect
-was significant when the *t* statistic for a model fixed effect
-has an absolute value of 2 or greater. In practical terms, this convention
-interprets an effect as significant when its estimate is at least 2
-standard errors away from 0. (@GelmanHill use this approach with
-mixed models.)
+To compare peaks looking probabilities between ages, I fit a linear
+mixed effects model with restricted maximum likelihood via the lme4 R
+package [vers. `r packageVersion("lme4")`; @lme4]. I regressed the
+children's average growth curve peaks onto experimental condition, age
+group, and the age x condition interaction. The model included randomly
+varying intercepts for child and child-year. This modeling software does
+not provide *p*-values for its effects estimates, so for these
+comparisons, I decided that an effect was significant when the *t*
+statistic for a model fixed effect has an absolute value of 2 or
+greater. In practical terms, this convention interprets an effect as
+"significant" when its estimate is at least 2 standard errors away
+from 0. (@GelmanHill use this approach when with mixed models.)
 
 At age 3, the two conditions did not significantly differ,
 B<sub>real-nonword</sub> = `r t1_real$b`, *t* = `r t1_real$t`. At age 4,
