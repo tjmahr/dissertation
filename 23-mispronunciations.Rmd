@@ -117,7 +117,9 @@ priors <- c(
   set_prior(class = "b", "normal(0, 1)"),
   set_prior(class = "b", coef = "ot1", "normal(0, 2)"),
   set_prior(class = "cor", "lkj(2)"),
-  set_prior(class = "sd", "student_t(7, 0, 3)"))
+  set_prior(class = "sd", "student_t(7, 0, 2)"))
+
+
 
 mp_unfam <- brm(
   formula = formula,
