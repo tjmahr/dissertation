@@ -100,6 +100,38 @@ m_u <- glmer(
   data = d_u
 ) 
 
+summary(m_u)
+readr::write_rds(m_u, "m_u_all.rds.gz")
+
+library(brms)
+
+# Fit a hierarchical logistic regression model
+formula <- bf(
+  Target | trials(Trials) ~ 
+    (1 + ot1 + ot2 + ot3) * Study + 
+    (1 + ot1 + ot2 + ot3 | ResearchID/Study), 
+  family = binomial)
+
+priors <- c(
+  set_prior(class = "Intercept", "normal(0, 1)"),
+  set_prior(class = "b", "normal(0, 1)"),
+  set_prior(class = "b", coef = "ot1", "normal(0, 2)"),
+  set_prior(class = "cor", "lkj(2)"),
+  set_prior(class = "sd", "student_t(7, 0, 3)"))
+
+mp_unfam <- brm(
+  formula = formula,
+  data = d_u,
+  prior = priors,
+  chains = 4,
+  cores = 4,
+  control = list(adapt_delta = .99, max_treedepth = 15))
+
+# Save the output
+readr::write_rds(mp_unfam, "mp_unfam2.rds.gz")
+
+
+
 
 d_u_1 <- d %>% filter(Bias_Fam == "Unfamiliar", Study == "TimePoint1")
 m_u_1 <- glmer(
