@@ -3,6 +3,17 @@
 # tufts blue "#2980B9"
 # charcoal "#2C3E50"
 
+# "Cool and calm"
+# "Sun and sky"
+# "Cheerful brights"
+# "Violet sunset"
+# "Sun and sky"
+# "Warm and cool"
+# "Bright and painterly"
+# "Bold and punchy"
+# "Warm and wonderful"
+# "Tropical tones"
+
 # ---- helpers ----
 library(dplyr)
 library(rlang)
@@ -247,4 +258,19 @@ scale_color_real_non <- function(..., palette = "Cheerful and sleek") {
   ggthemes::scale_color_canva(
     ...,
     palette = palette)
+}
+
+scale_color_study <- function(..., end = .6, option = "D") {
+  ggplot2::scale_color_viridis_d(
+    ...,
+    end = end,
+    option = option)
+}
+
+scale_fill_study <- function(..., end = .6, option = "D") {
+  ggplot2::scale_fill_viridis_d(
+    ...,
+    end = end,
+    option = option)
+
 }
