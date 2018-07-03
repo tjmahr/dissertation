@@ -5,7 +5,7 @@ Growth curve analyses
 ------------------------------------------------------------------------
 
 These models were fit in R [vers. 3.5.0; @R-base] with the brms package
-[vers. 2.3.1; add citation].
+[vers. 2.3.1; @brms].
 
 The orthogonal polynomial features for Time, they were scaled as in
 Specific Aim 1, so that the linear feature ranged from −.5 to .5. Under
@@ -84,4 +84,13 @@ year-by-condition-by-time conditions. But this model had difficulty
 converging, and even when a passable model was obtained, a bug in the
 modeling software prevented me from obtaining posterior predictions. I
 reported the bug in an issue for the package's source code repository. 
+
+### Model summaries
+
+### Real words versus nonwords at age 3
+
+```{r}
+m1 <- readr::read_rds("./data/aim2-real-vs-nw-tp1.rds.gz")
+summary(m1, priors = TRUE)
+```
 
