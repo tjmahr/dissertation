@@ -62,7 +62,7 @@ m <- stan_glmer(
   family = binomial,
   prior = normal(0, 1),
   prior_intercept = normal(0, 5),
-  prior_covariance = decov(1, 1, 1),
+  prior_covariance = decov(2, 1, 1),
   data = d_m)
 
 # Save the output

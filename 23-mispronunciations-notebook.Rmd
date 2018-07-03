@@ -51,18 +51,12 @@ d_raw_mp %>%
     stat_summary() + 
     facet_grid(~ Bias_Fam)
 
-
-
-
 d <- d_raw %>% 
   select(-starts_with("ot")) %>% 
   filter(Condition == "MP", !is.na(Bias_Fam), 300 <= Time) %>% 
   mutate(Trials = Target + Distractor) %>% 
   polypoly::poly_add_columns(
     Time, degree = 3, scale_width = 1, prefix = "ot")
-
-
-
 
 d %>% 
   tjmisc::sample_n_of(20, ResearchID) %>% 
@@ -73,10 +67,6 @@ d %>%
     stat_summary() + 
   labs(
     title = "Results for 20 random children")
-
-
-
-library(lme4)
 
 study_child_with_empty_cells <- d %>% 
   filter(Trials < 4) %>% 
@@ -117,7 +107,7 @@ priors <- c(
   set_prior(class = "b", "normal(0, 1)"),
   set_prior(class = "b", coef = "ot1", "normal(0, 2)"),
   set_prior(class = "cor", "lkj(2)"),
-  set_prior(class = "sd", "student_t(7, 0, 3)"))
+  set_prior(class = "sd", "student_t(7, 0, 2)"))
 
 # mp_unfam <- brm(
 #   formula = formula,
@@ -129,7 +119,7 @@ priors <- c(
 # 
 # # Save the output
 # readr::write_rds(mp_unfam, "mp_unfam2.rds.gz")
-mp_unfam <- readr::read_rds("data/aim2-mp_unfam.rds.gz")
+mp_unfam <- readr::read_rds("data/aim2-mp-unfam2.rds.gz")
 mp_unfam
 
 fits <- augment_linpred(mp_unfam, d_u, nsamples = 100)
@@ -144,14 +134,69 @@ fits %>%
       group = interaction(Study, .draw, ResearchID),
       y = plogis(.posterior_value)),
     alpha = .05) + 
-  facet_wrap("ResearchID")
+  facet_wrap("ResearchID") 
+
+# Population averages vs average of lines in sample
+fits2 <- augment_linpred(mp_unfam, d_u, re_formula = NA, nsamples = 100)
+fits2 %>% 
+  ggplot() + 
+  aes(x = Time, y = Prop, color = Study) + 
+  stat_summary() +
+  geom_line(
+    aes(
+      group = interaction(Study, .draw),
+      y = plogis(.posterior_value)),
+    data = . %>% filter(ResearchID == "036L"),
+    alpha = .05) + 
+  labs(
+    caption = "fixed-effect predictions")
+
+
+# Average of posterior fits of lines in sample vs average of lines in sample
+fits %>% 
+  ggplot() + 
+  aes(x = Time, y = Prop, color = Study) + 
+  stat_summary() +
+  stat_summary(
+    aes(group = interaction(Study, .draw), y = plogis(.posterior_value)),
+    geom = "line",
+    fun.y = "mean",
+    alpha = .05) + 
+  labs(
+    caption = "averages of posterior fits")
+
+newdata <- d_u %>% 
+  distinct(Time, ot1, ot2, ot3, Study) %>% 
+  mutate(ResearchID = "zzz", Target = 0, Trials = 30)
+fits3 <- augment_linpred(
+  mp_unfam, newdata, nsamples = 1000, allow_new_levels = TRUE)
+
+d_u %>% 
+  ggplot() + 
+  aes(x = Time, y = Prop, color = Study) + 
+  stat_summary() +
+  stat_summary(
+    aes(group = interaction(Study), y = plogis(.posterior_value)),
+    alpha = .1,
+    fun.data = mean_cl_normal,
+    geom = "ribbon",
+    data = fits3) + 
+  labs(
+    caption = "averages of posterior fits")
 
 
 
-s
 
 
 
+
+
+
+
+
+library(bayesplot)
+theme_set(theme_teej())
+mcmc_intervals(as.matrix(mp_unfam), regex_pars = "b_")
 
 
 
