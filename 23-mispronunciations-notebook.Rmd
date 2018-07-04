@@ -15,9 +15,8 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 constants$cap_emp_and_sim <- 
   "Points: Emprical means ± SE.
 Ribbons: Mean ± 95% CI for 1000 simulated children."
-
-
-
+library(bayesplot)
+theme_set(theme_teej())
 ```
 
 ```{r}
@@ -64,71 +63,121 @@ d <- d_raw %>%
   polypoly::poly_add_columns(
     Time, degree = 3, scale_width = 1, prefix = "ot")
 
-d %>% 
-  tjmisc::sample_n_of(20, ResearchID) %>% 
-  ggplot() + 
-    aes(x = Time, y = Prop) + 
-    geom_line(aes(group = interaction(ResearchID))) +
-    facet_grid(Study ~ Bias_Fam) + 
-    stat_summary() + 
-  labs(
-    title = "Results for 20 random children")
+# d %>% 
+#   tjmisc::sample_n_of(20, ResearchID) %>% 
+#   ggplot() + 
+#     aes(x = Time, y = Prop) + 
+#     geom_line(aes(group = interaction(ResearchID))) +
+#     facet_grid(Study ~ Bias_Fam) + 
+#     stat_summary() + 
+#   labs(
+#     title = "Results for 20 random children")
 
 study_child_with_empty_cells <- d %>% 
   filter(Trials < 4) %>% 
   distinct(Study, ResearchID, Bias_Fam)
 
-# study_counts <- study_child_with_empty_cells %>% 
-#   count(Study) %>% 
-#   split(.$Study) %>% 
-#   lapply(pull, n) %>% 
-#   set_names(stringr::str_replace, "TimePoint", "T")
+study_counts <- study_child_with_empty_cells %>%
+  count(Study, Bias_Fam) %>% 
+  tidyr::complete(Bias_Fam, Study, fill = list(n = 0))
+
+study_counts_f <- study_counts %>%
+  filter(Bias_Fam == "Familiar") %>% 
+  split(.$Study) %>%
+  lapply(pull, n) %>%
+  set_names(stringr::str_replace, "TimePoint", "T")
+
+study_counts_u <- study_counts %>%
+  filter(Bias_Fam == "Unfamiliar") %>% 
+  split(.$Study) %>%
+  lapply(pull, n) %>%
+  set_names(stringr::str_replace, "TimePoint", "T")
 
 d <- d %>% 
   anti_join(study_child_with_empty_cells)
 
 d_u <- d %>% filter(Bias_Fam == "Unfamiliar")
 d_f <- d %>% filter(Bias_Fam == "Familiar")
-# m_u <- glmer(
-#   cbind(Target, Distractor) ~ 
-#     (ot1 + ot2 + ot3) * Study + 
-#     (ot1 + ot2 + ot3 | ResearchID/Study),
-#   family = binomial,
-#   data = d_u
-# ) 
-# 
-# summary(m_u)
-# readr::write_rds(m_u, "m_u_all.rds.gz")
+
 
 library(brms)
-
-# Fit a hierarchical logistic regression model
-formula <- bf(
-  Target | trials(Trials) ~ 
-    (1 + ot1 + ot2 + ot3) * Study + 
-    (1 + ot1 + ot2 + ot3 | ResearchID/Study), 
-  family = binomial)
-
-priors <- c(
-  set_prior(class = "Intercept", "normal(0, 1)"),
-  set_prior(class = "b", "normal(0, 1)"),
-  set_prior(class = "b", coef = "ot1", "normal(0, 2)"),
-  set_prior(class = "cor", "lkj(2)"),
-  set_prior(class = "sd", "student_t(7, 0, 2)"))
-
-# mp_unfam <- brm(
-#   formula = formula,
-#   data = d_u,
-#   prior = priors,
-#   chains = 4,
-#   cores = 4,
-#   control = list(adapt_delta = .99, max_treedepth = 15))
-# 
-# # Save the output
-# readr::write_rds(mp_unfam, "mp_unfam2.rds.gz")
 mp_unfam <- readr::read_rds("data/aim2-mp-unfam2.rds.gz")
 mp_unfam
 
+mp_fam <- readr::read_rds("data/aim2-mp-fam.rds.gz")
+mp_fam
+
+
+```
+
+For the mispronunciation trials, there is no correct "target", as there
+is in the nonword trials and real word trials. I separated the
+mispronunciation trials based on initial fixation location. One model
+handled trials a child's gaze started on the familiar object and another
+model handled trials starting on the unfamiliar object. For these
+models, I fit a growth curve model that included indicators for Age and
+interations Time × Age interactions, like the one from chapter XX. The
+basic model was therefore:
+
+`r insert_html_math()`
+\small
+\begin{align*}
+   \text{log-odds}(\mathit{looking\,}) =\
+    &\beta_0 + 
+      \beta_1\text{Time}^1 + 
+      \beta_2\text{Time}^2 + 
+      \beta_3\text{Time}^3\ + 
+      &\text{[age 3 growth curve]} \\
+    (&\gamma_{0} + 
+      \gamma_{1}\text{Time}^1 + 
+      \gamma_{2}\text{Time}^2 +
+      \gamma_{3}\text{Time}^3)*\text{Age4}\ + \
+      &\text{[adjustments for age 4]} \\
+    (&\delta_{0} + 
+      \delta_{1}\text{Time}^1 + 
+      \delta_{2}\text{Time}^2 +
+      \delta_{3}\text{Time}^3)*\text{Age5} \
+      &\text{[adjustments for age 5]} \\
+\end{align*}
+`r insert_html_math()`
+
+[Appendix \@ref(aim2-gca-models)](#aim2-gca-models) contains the R code
+used to fit these models along with a description of the specifications
+represented by the model syntax. The mixed model included by-child and
+by-child-by-age random effects so that it captured how some of a child's
+growth curve features may be similar over developmental time
+and may differ at each age.
+
+For these analyses, I modeled the data from `r min(d$Time)`
+to `r max(d$Time)` ms after target onset. As in the real-word vs.
+nonword analyses, I removed any Age × Child levels if a child had fewer
+than 4 fixations in a single time bin. In other words, children had to
+have at least 4 looks to one of the images in every 50 ms time bin. For
+the familiar-initial trials, this screening removed
+`r study_counts_f$T1` children from age 3, `r study_counts_f$T2` from
+age 4, and `r study_counts_f$T3` from age 5, and for the
+unfamiliar-initial trials, this screening removed `r study_counts_u$T1`,
+`r study_counts_u$T2`, and `r study_counts_u$T3` children from age 3,
+age 4, and age 5, respectively.
+
+## Unfamiliar-initial trials
+
+When children start on the image of a novel object and hear a
+mispronunciation, they tend to look to the familiar image. The growth
+curves all cross the .5 threshold, so that the children on average look
+more the familiar image than the unfamilar image. Granted, this
+tendency is not as great as that observed for the nonwords or real
+words. For those conditions, the average growth curves reached a peak of
+around .77 at age 3 whereas for the mispronunciations the peak is around
+.62. Thus, children show much greater uncertainty compared to the other
+two conditions. Similarly, for the real word condition, the average
+age 3 growth curve crosses the .5 looking probability around 775 ms
+after target onset whereas in the mispronunciation condition, this
+threshold is crossed at 1000 ms.
+
+For the age 3 word
+
+```{r unfam-initial-mp-trias, fig.width=6, fig.height=4, out.width="80%"}
 # fits <- augment_linpred(mp_unfam, d_u, nsamples = 100)
 # 
 # fits %>% 
@@ -184,8 +233,7 @@ df_u_label <- tibble::tribble(
   ~Study, ~Time, ~Prop,
   "Age 3", 1050, .42,
   # "Age 4", 1000, .42,
-  "Age 5", 1300, .73
-)
+  "Age 5", 1300, .73)
 
 d_u_plotting <- d_u %>% 
   mutate(Study = convert_study_to_age(Study)) 
@@ -232,6 +280,10 @@ ggplot(d_u_plotting) +
     y = constants$y_prop_fam,
     caption = constants$cap_emp_and_sim)
 
+  
+```
+
+```{r}
 
 
 constants
@@ -243,8 +295,7 @@ constants
 
 
 
-library(bayesplot)
-theme_set(theme_teej())
+
 mcmc_intervals(as.matrix(mp_unfam), regex_pars = "b_")
 zoo::rollmedian(x, 5, fill = NA)
 length(zoo::rollmedian(x, 5))
@@ -256,11 +307,11 @@ try2 <- fits %>%
   mutate(
     med = zoo::rollmedian(.posterior_value, 5, fill = "extend")
   )
-  
+
 ```
 
+
 ```{r}
-mp_fam <- readr::read_rds("data/aim2-mp-fam.rds.gz")
 
 # fits <- augment_linpred(mp_fam, d_f, nsamples = 100)
 # 
