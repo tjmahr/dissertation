@@ -41,7 +41,12 @@ constants <- list(
   cap_median_90_50 = "Posterior median with 90% and 50% intervals",
   cap_90_50 = "90% and 50% intervals",
   cap_mean_95 = "Fitted means with 95% interval",
-  cap_diff_95 = "Estimated difference with 95% interval"
+  cap_diff_95 = "Estimated difference with 95% interval",
+  note_mp_fam =
+    "Mispronunciation trials starting on familiar image",
+  note_mp_unfam =
+    "Mispronunciation trials starting on unfamiliar image",
+  note_unfam = "Trials starting on unfamiliar image"
 )
 
 library(extrafont)

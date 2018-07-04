@@ -12,6 +12,12 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 
 ```{r, include = FALSE}
 # knitr::opts_chunk$set(cache = TRUE)
+constants$cap_emp_and_sim <- 
+  "Points: Emprical means ± SE.
+Ribbons: Mean ± 95% CI for 1000 simulated children."
+
+
+
 ```
 
 ```{r}
@@ -123,74 +129,112 @@ priors <- c(
 mp_unfam <- readr::read_rds("data/aim2-mp-unfam2.rds.gz")
 mp_unfam
 
-fits <- augment_linpred(mp_unfam, d_u, nsamples = 100)
+# fits <- augment_linpred(mp_unfam, d_u, nsamples = 100)
+# 
+# fits %>% 
+#   sample_n_of(4, ResearchID) %>% 
+#   ggplot() + 
+#   aes(x = Time, y = Prop, color = Study) + 
+#   geom_line() + 
+#   geom_line(
+#     aes(
+#       group = interaction(Study, .draw, ResearchID),
+#       y = plogis(.posterior_value)),
+#     alpha = .05) + 
+#   facet_wrap("ResearchID") 
 
-fits %>% 
-  sample_n_of(4, ResearchID) %>% 
-  ggplot() + 
-  aes(x = Time, y = Prop, color = Study) + 
-  geom_line() + 
-  geom_line(
-    aes(
-      group = interaction(Study, .draw, ResearchID),
-      y = plogis(.posterior_value)),
-    alpha = .05) + 
-  facet_wrap("ResearchID") 
+# # Population averages vs average of lines in sample
+# fits2 <- augment_linpred(mp_unfam, d_u, re_formula = NA, nsamples = 100)
+# fits2 %>% 
+#   ggplot() + 
+#   aes(x = Time, y = Prop, color = Study) + 
+#   stat_summary() +
+#   geom_line(
+#     aes(
+#       group = interaction(Study, .draw),
+#       y = plogis(.posterior_value)),
+#     data = . %>% filter(ResearchID == "036L"),
+#     alpha = .05) + 
+#   labs(
+#     caption = "fixed-effect predictions")
+# 
 
-# Population averages vs average of lines in sample
-fits2 <- augment_linpred(mp_unfam, d_u, re_formula = NA, nsamples = 100)
-fits2 %>% 
-  ggplot() + 
-  aes(x = Time, y = Prop, color = Study) + 
-  stat_summary() +
-  geom_line(
-    aes(
-      group = interaction(Study, .draw),
-      y = plogis(.posterior_value)),
-    data = . %>% filter(ResearchID == "036L"),
-    alpha = .05) + 
-  labs(
-    caption = "fixed-effect predictions")
-
-
-# Average of posterior fits of lines in sample vs average of lines in sample
-fits %>% 
-  ggplot() + 
-  aes(x = Time, y = Prop, color = Study) + 
-  stat_summary() +
-  stat_summary(
-    aes(group = interaction(Study, .draw), y = plogis(.posterior_value)),
-    geom = "line",
-    fun.y = "mean",
-    alpha = .05) + 
-  labs(
-    caption = "averages of posterior fits")
+# # Average of posterior fits of lines in sample vs average of lines in sample
+# fits %>% 
+#   ggplot() + 
+#   aes(x = Time, y = Prop, color = Study) + 
+#   stat_summary() +
+#   stat_summary(
+#     aes(group = interaction(Study, .draw), y = plogis(.posterior_value)),
+#     geom = "line",
+#     fun.y = "mean",
+#     alpha = .05) + 
+#   labs(
+#     caption = "averages of posterior fits")
 
 newdata <- d_u %>% 
   distinct(Time, ot1, ot2, ot3, Study) %>% 
   mutate(ResearchID = "zzz", Target = 0, Trials = 30)
-fits3 <- augment_linpred(
-  mp_unfam, newdata, nsamples = 1000, allow_new_levels = TRUE) 
 
-d_u %>% 
-  ggplot() + 
+m_u_new_fits <- augment_linpred(
+  mp_unfam, newdata, nsamples = 1000, allow_new_levels = TRUE) %>% 
+  mutate(Study = convert_study_to_age(Study)) 
+
+df_u_label <- tibble::tribble(
+  ~Study, ~Time, ~Prop,
+  "Age 3", 1050, .42,
+  # "Age 4", 1000, .42,
+  "Age 5", 1300, .73
+)
+
+d_u_plotting <- d_u %>% 
+  mutate(Study = convert_study_to_age(Study)) 
+
+
+ggplot(d_u_plotting) + 
   aes(x = Time, y = Prop, color = Study) + 
-  stat_summary() + 
+  geom_hline(yintercept = .5, size = 2, color = "white") +
+  stat_summary(fun.data = mean_se, geom = "pointrange") + 
   stat_summary(
-    aes(group = interaction(Study), fill = Study, y = plogis(.posterior_value)),
-    alpha = .3,
-    color = NA, 
+    aes(group = Study, fill = Study, y = plogis(.posterior_value)),
+    data = m_u_new_fits,
     fun.data = mean_cl_normal,
     geom = "ribbon",
-    data = fits3) + 
+    alpha = .3,
+    color = NA) + 
   stat_summary(
-    aes(group = interaction(Study), y = plogis(.posterior_value)),
-    # alpha = .1,
+    aes(group = Study, y = plogis(.posterior_value)),
+    data = m_u_new_fits,
     fun.y = mean,
-    geom = "line",
-    data = fits3) + 
+    geom = "line") + 
+  geom_text(
+    aes(label = Study),
+    data = df_u_label,
+    size = 5, 
+    family = "Lato Semibold") +
+  geom_text(
+    aes(label = label),
+    data = data_frame(
+      Time = 425, 
+      Prop = .11, 
+      label = constants$note_mp_unfam),
+    size = 3, 
+    hjust = 0,
+    color = constants$col_off_black,
+    family = "Lato") +
+  scale_fill_study() + 
+  scale_color_study() + 
+  expand_limits(y = .76) +
+  guides(color = FALSE, fill = FALSE) +
+  theme(plot.caption = element_text(lineheight = 1.2)) +
   labs(
-    caption = "mean with 95% of 1000 simulated new participants")
+    x = constants$x_time,
+    y = constants$y_prop_fam,
+    caption = constants$cap_emp_and_sim)
+
+
+
+constants
 
 
 
@@ -218,109 +262,107 @@ try2 <- fits %>%
 ```{r}
 mp_fam <- readr::read_rds("data/aim2-mp-fam.rds.gz")
 
-d_f
+# fits <- augment_linpred(mp_fam, d_f, nsamples = 100)
+# 
+# fits %>% 
+#   sample_n_of(4, ResearchID) %>%
+#   # filter(ResearchID == "644L") %>% 
+#   ggplot() + 
+#   aes(x = Time, y = Prop, color = Study) + 
+#   geom_pointrange(aes(ymin = Prop - PropSE, ymax = Prop + PropSE)) + 
+#   geom_line(
+#     aes(
+#       group = interaction(Study, .draw, ResearchID),
+#       y = plogis(.posterior_value)),
+#     alpha = .05) + 
+#   facet_wrap("ResearchID") 
+# 
+# # Population averages vs average of lines in sample
+# fits2 <- augment_linpred(mp_fam, d_f, re_formula = NA, nsamples = 100)
+# fits2 %>% 
+#   ggplot() + 
+#   aes(x = Time, y = Prop, color = Study) + 
+#   stat_summary() +
+#   geom_line(
+#     aes(
+#       group = interaction(Study, .draw),
+#       y = plogis(.posterior_value)),
+#     data = . %>% filter(ResearchID == "036L"),
+#     alpha = .05) + 
+#   labs(
+#     caption = "fixed-effect predictions")
+# 
+# 
+# # Average of posterior fits of lines in sample vs average of lines in sample
+# fits %>% 
+#   ggplot() + 
+#   aes(x = Time, y = Prop, color = Study) + 
+#   stat_summary() +
+#   stat_summary(
+#     aes(group = interaction(Study, .draw), y = plogis(.posterior_value)),
+#     geom = "line",
+#     fun.y = "mean",
+#     alpha = .05) + 
+#   labs(
+#     caption = "averages of posterior fits")
 
-fits <- augment_linpred(mp_fam, d_f, nsamples = 100)
-
-fits %>% 
-  sample_n_of(4, ResearchID) %>%
-  # filter(ResearchID == "644L") %>% 
-  ggplot() + 
-  aes(x = Time, y = Prop, color = Study) + 
-  geom_pointrange(aes(ymin = Prop - PropSE, ymax = Prop + PropSE)) + 
-  geom_line(
-    aes(
-      group = interaction(Study, .draw, ResearchID),
-      y = plogis(.posterior_value)),
-    alpha = .05) + 
-  facet_wrap("ResearchID") 
-
-# Population averages vs average of lines in sample
-fits2 <- augment_linpred(mp_fam, d_f, re_formula = NA, nsamples = 100)
-fits2 %>% 
-  ggplot() + 
-  aes(x = Time, y = Prop, color = Study) + 
-  stat_summary() +
-  geom_line(
-    aes(
-      group = interaction(Study, .draw),
-      y = plogis(.posterior_value)),
-    data = . %>% filter(ResearchID == "036L"),
-    alpha = .05) + 
-  labs(
-    caption = "fixed-effect predictions")
-
-
-# Average of posterior fits of lines in sample vs average of lines in sample
-fits %>% 
-  ggplot() + 
-  aes(x = Time, y = Prop, color = Study) + 
-  stat_summary() +
-  stat_summary(
-    aes(group = interaction(Study, .draw), y = plogis(.posterior_value)),
-    geom = "line",
-    fun.y = "mean",
-    alpha = .05) + 
-  labs(
-    caption = "averages of posterior fits")
-
-newdata <- d_f %>% 
+f_newdata <- d_f %>% 
   distinct(Time, ot1, ot2, ot3, Study) %>% 
   mutate(ResearchID = "zzz", Target = 0, Trials = 30)
-fits3 <- augment_linpred(
-  mp_fam, newdata, nsamples = 1000, allow_new_levels = TRUE) 
 
+m_f_new_fits <- augment_linpred(
+  mp_fam, f_newdata, nsamples = 1000, allow_new_levels = TRUE) %>% 
+  mutate(Study = convert_study_to_age(Study))
 
-df_label <- tibble::tribble(
+df_f_label <- tibble::tribble(
   ~Study, ~Time, ~Prop,
   "Age 3", 650, .80,
-  "Age 4", 1000, .42,
-  "Age 5", 1400, .66
-)
+  "Age 4", 1000, .41,
+  "Age 5", 1400, .66)
 
-d_plotting <- d_f %>% 
+df_f_plotting <- d_f %>% 
   mutate(Study = convert_study_to_age(Study)) 
 
-ggplot(d_plotting) + 
+ggplot(df_f_plotting) + 
   aes(x = Time, y = Prop, color = Study) + 
   geom_hline(yintercept = .5, size = 2, color = "white") +
-  stat_summary(fun.data = mean_se) + 
+  stat_summary(fun.data = mean_se, geom = "pointrange") + 
   stat_summary(
     aes(group = Study, fill = Study, y = plogis(.posterior_value)),
-    alpha = .3,
-    color = NA, 
+    data = m_f_new_fits,
     fun.data = mean_cl_normal,
     geom = "ribbon",
-    data = fits3 %>% mutate(Study = convert_study_to_age(Study))) + 
+    alpha = .3,
+    color = NA) + 
   stat_summary(
-    aes(group = interaction(Study), y = plogis(.posterior_value)),
+    aes(group = Study, y = plogis(.posterior_value)),
+    data = m_f_new_fits,
     fun.y = mean,
-    geom = "line",
-    data = fits3 %>% mutate(Study = convert_study_to_age(Study))) + 
+    geom = "line") + 
   geom_text(
     aes(label = Study),
-    data = df_label,
+    data = df_f_label,
     size = 5, 
     family = "Lato Semibold") +
   geom_text(
     aes(label = label),
     data = data_frame(
-      Time = 400, 
+      Time = 410, 
       Prop = .93, 
-      label = "Trials starting on familiar object"),
+      label = constants$note_mp_fam),
     size = 3, 
     hjust = 0,
     color = constants$col_off_black,
     family = "Lato") +
-  # Expand the plot area a bit
-  geom_blank(aes(y = .38, x = 800)) +
   scale_fill_study() + 
   scale_color_study() + 
+  expand_limits(y = .38) +
   guides(color = FALSE, fill = FALSE) +
+  theme(plot.caption = element_text(lineheight = 1.2)) +
   labs(
     x = constants$x_time,
     y = constants$y_prop_fam,
-    caption = "Ribbons: Mean with 95% CI for 1000 simulated children")
+    caption = constants$cap_emp_and_sim)
 
 
 
