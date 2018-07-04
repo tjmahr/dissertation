@@ -162,20 +162,7 @@ age 4, and age 5, respectively.
 
 ## Unfamiliar-initial trials
 
-When children start on the image of a novel object and hear a
-mispronunciation, they tend to look to the familiar image. The growth
-curves all cross the .5 threshold, so that the children on average look
-more the familiar image than the unfamilar image. Granted, this
-tendency is not as great as that observed for the nonwords or real
-words. For those conditions, the average growth curves reached a peak of
-around .77 at age 3 whereas for the mispronunciations the peak is around
-.62. Thus, children show much greater uncertainty compared to the other
-two conditions. Similarly, for the real word condition, the average
-age 3 growth curve crosses the .5 looking probability around 775 ms
-after target onset whereas in the mispronunciation condition, this
-threshold is crossed at 1000 ms.
 
-For the age 3 word
 
 ```{r unfam-initial-mp-trias, fig.width=6, fig.height=4, out.width="80%"}
 # fits <- augment_linpred(mp_unfam, d_u, nsamples = 100)
@@ -280,10 +267,65 @@ ggplot(d_u_plotting) +
     y = constants$y_prop_fam,
     caption = constants$cap_emp_and_sim)
 
-  
+test <- posterior_samples(mp_unfam, pars = "^b_") %>% 
+  mutate(
+    b_Intercept_Age3 = b_Intercept,
+    b_Intercept_Age4 = b_Intercept + b_StudyTimePoint2,
+    b_Intercept_Age5 = b_Intercept + b_StudyTimePoint3,
+    b_ot1_Age3 = b_ot1,
+    b_ot1_Age4 = b_ot1 + `b_ot1:StudyTimePoint2`,
+    b_ot1_Age5 = b_ot1 + `b_ot1:StudyTimePoint3`,
+    b_ot2_Age3 = b_ot2,
+    b_ot2_Age4 = b_ot2 + `b_ot2:StudyTimePoint2`,
+    b_ot2_Age5 = b_ot2 + `b_ot2:StudyTimePoint3`,
+    b_ot3_Age3 = b_ot3,
+    b_ot3_Age4 = b_ot3 + `b_ot3:StudyTimePoint2`,
+    b_ot3_Age5 = b_ot3 + `b_ot3:StudyTimePoint3`,
+    d_Intercept_Age4 = b_Intercept_Age4 - b_Intercept_Age3,
+    d_Intercept_Age5 = b_Intercept_Age5 - b_Intercept_Age4,
+    d_ot1_Age4 = b_ot1_Age4 - b_ot1_Age3,
+    d_ot1_Age5 = b_ot1_Age5 - b_ot1_Age4,
+    d_ot2_Age4 = b_ot2_Age4 - b_ot2_Age3,
+    d_ot2_Age5 = b_ot2_Age5 - b_ot2_Age4,
+    d_ot3_Age4 = b_ot3_Age4 - b_ot3_Age3,
+    d_ot3_Age5 = b_ot3_Age5 - b_ot3_Age4)
+
+mcmc_intervals(test, regex_pars = "Age")
 ```
 
+When children start on the image of a novel object and hear a
+mispronunciation, they tend to look to the familiar image. Figure XX shows the average of children's growth curves along with the model's average of 1000 simulated children. The growth
+curves all cross the .5 threshold, so that the children on average look
+more the familiar image than the unfamilar image. Granted, this
+tendency is not as great as that observed for the nonwords or real
+words. For those conditions, the average growth curves reached a peak of
+around .77 at age 3 whereas for the mispronunciations the peak is around
+.62. Thus, children show much greater uncertainty compared to the other
+two conditions. Similarly, for the real word condition, the average
+age 3 growth curve crosses the .5 looking probability around 775 ms
+after target onset whereas in the mispronunciation condition, this
+threshold is crossed at 1000 ms.
+
+One can readily appreciate that children more quickly and more reliably
+look to the familiar image at age 5, while the differences between age 3
+and age 4 are less clear cut.
+
 ```{r}
+mp_unfam
+```
+
+
+
+
+
+
+
+
+
+
+
+
+```{r, eval = FALSE}
 
 
 constants
