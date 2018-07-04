@@ -76,7 +76,7 @@ d %>%
 
 
 
-library(lme4)
+# library(lme4)
 
 study_child_with_empty_cells <- d %>% 
   filter(Trials < 4) %>% 
@@ -92,16 +92,17 @@ d <- d %>%
   anti_join(study_child_with_empty_cells)
 
 d_u <- d %>% filter(Bias_Fam == "Unfamiliar")
-m_u <- glmer(
-  cbind(Target, Distractor) ~ 
-    (ot1 + ot2 + ot3) * Study + 
-    (ot1 + ot2 + ot3 | ResearchID/Study),
-  family = binomial,
-  data = d_u
-) 
-
-summary(m_u)
-readr::write_rds(m_u, "m_u_all.rds.gz")
+d_f <- d %>% filter(Bias_Fam == "Familiar")
+# m_u <- glmer(
+#   cbind(Target, Distractor) ~ 
+#     (ot1 + ot2 + ot3) * Study + 
+#     (ot1 + ot2 + ot3 | ResearchID/Study),
+#   family = binomial,
+#   data = d_u
+# ) 
+# 
+# summary(m_u)
+# readr::write_rds(m_u, "m_u_all.rds.gz")
 
 library(brms)
 
@@ -127,11 +128,25 @@ mp_unfam <- brm(
   prior = priors,
   chains = 4,
   cores = 4,
+  iter = 3000,
+  control = list(
+    adapt_delta = .995, 
+    max_treedepth = 15))
+
+# Save the output
+readr::write_rds(mp_unfam, "mp_unfam3.rds.gz")
+mp_unfam
+
+mp_fam <- brm(
+  formula = formula,
+  data = d_f,
+  prior = priors,
+  chains = 4,
+  cores = 4,
   control = list(adapt_delta = .99, max_treedepth = 15))
 
 # Save the output
-readr::write_rds(mp_unfam, "mp_unfam2.rds.gz")
-
+readr::write_rds(mp_fam, "mp_fam.rds.gz")
 
 
 
