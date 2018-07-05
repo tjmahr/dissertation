@@ -94,10 +94,19 @@ recode_studies <- tibble::tribble(
 )
 
 convert_study_to_age <- function(xs) {
-  factor(
-    xs,
-    levels = c("TimePoint1", "TimePoint2", "TimePoint3"),
-    labels = c("Age 3", "Age 4", "Age 5"))
+  already_converted <- all(unique(xs) %in% c("Age 3", "Age 4", "Age 5"))
+  if (!already_converted) {
+    xs <- factor(
+      xs,
+      levels = c("TimePoint1", "TimePoint2", "TimePoint3"),
+      labels = c("Age 3", "Age 4", "Age 5"))
+  } else {
+    xs <- factor(
+      xs,
+      levels = c("Age 3", "Age 4", "Age 5"),
+      labels = c("Age 3", "Age 4", "Age 5"))
+  }
+  xs
 }
 
 convert_condition_to_name <- function(xs) {

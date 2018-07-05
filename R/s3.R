@@ -180,3 +180,13 @@ download_aim2_real_nonword_models <- function() {
   save_object_to_data("aim2-real-vs-nw-tp2-averages.rds.gz")
   save_object_to_data("aim2-real-vs-nw-tp3-averages.rds.gz")
 }
+
+upload_aim2_mp_models <- function() {
+  put_object_to_data("aim2-mp-fam.rds.gz")
+  put_object_to_data("aim2-mp-unfam.rds.gz")
+}
+
+download_aim2_mp_models <- function() {
+  save_object_to_data("aim2-mp-fam.rds.gz")
+  save_object_to_data("aim2-mp-unfam.rds.gz")
+}

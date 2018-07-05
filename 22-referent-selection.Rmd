@@ -249,7 +249,7 @@ ant_0 <- data.frame(
   Condition = c("nonsense", "real"),
   Study = c("Age 4"), 
   Time = c(300, 900), 
-  y = c(.82, .60)) %>% 
+  y = c(.83, .60)) %>% 
   mutate(Condition = convert_condition_to_name(Condition))
 
 ggplot(some_fits) + 
@@ -268,13 +268,25 @@ ggplot(some_fits) +
     aes(label = Condition, y = y),
     data = ant_0,
     hjust = 0,
-    size = 3,
-    family = "Lato Medium") + 
+    size = 3.5,
+    family = "Lato Semibold") + 
+  geom_text(
+    aes(label = label, y = Prop),
+    data = data_frame(
+      Study = "Age 3",
+      Time = 600, 
+      Prop = .15, 
+      label = constants$note_unfam %>% 
+        strwrap(width = 20) %>% paste0(collapse = "\n")),
+    size = 3, 
+    hjust = 0,
+    color = constants$col_off_black,
+    family = "Lato") +
   facet_wrap("Study") +
   guides(color = FALSE) +
   labs(
     x = constants$x_time, 
-    y = "Proportion looks to target",
+    y = constants$y_prop_target,
     caption = "Intervals: Empirical mean ± SE. Lines: 100 posterior means.") + 
   scale_color_real_non()
 ```
