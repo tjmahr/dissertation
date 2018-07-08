@@ -17,6 +17,9 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 
 
 ```{r load-aim2-nw-data, include = FALSE}
+constants$cap_emp_and_draw <- 
+  "Intervals: Empirical mean ± SE. Lines: 100 posterior means."
+
 d <- readr::read_csv("./data/aim2-model-ready.csv.gz") %>% 
   filter(!is.na(Bias_Fam)) %>% 
   filter(300 <= Time) %>% 
@@ -254,6 +257,7 @@ ant_0 <- data.frame(
 
 ggplot(some_fits) + 
   aes(x = Time, y = plogis(.posterior_value), color = Condition) + 
+  geom_hline(yintercept = .5, size = 2, color = "white") +
   stat_summary(
     aes(group = interaction(.draw, Condition)),
     geom = "line",
@@ -287,7 +291,7 @@ ggplot(some_fits) +
   labs(
     x = constants$x_time, 
     y = constants$y_prop_target,
-    caption = "Intervals: Empirical mean ± SE. Lines: 100 posterior means.") + 
+    caption = constants$cap_emp_and_draw) + 
   scale_color_real_non()
 ```
 

@@ -1,3 +1,37 @@
+```{r include=FALSE, cache=FALSE}
+# ---- set-options ----
+library(methods)
+knitr::opts_chunk$set(
+  tidy = FALSE,
+  collapse = TRUE,
+  comment = "#>",
+  out.width = 80,
+  fig.align = "center",
+  dpi = 300
+)
+
+options(width = 80)
+
+
+# ---- knitr-helper-functions ----
+is_word_output <- function() {
+  knitr::opts_knit$get("rmarkdown.pandoc.to") == "docx"
+}
+is_html_output <- knitr:::is_html_output
+is_latex_output <- knitr:::is_latex_output
+
+# Make a function that prints a string of characters if the output is pdf
+make_latex_decorator <- function(output, otherwise) {
+  function() {
+    if (is_latex_output()) output else otherwise
+  }
+}
+
+# insert_pause <- make_latex_decorator(". . .", "\n")
+# insert_slide_break <- make_latex_decorator("----", "\n")
+# insert_inc_bullet <- make_latex_decorator("> *", "*")
+insert_html_math <- make_latex_decorator("", "$$")
+```
 Sensitivity to mispronunciations
 =======================================================================
 
@@ -15,6 +49,9 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 constants$cap_emp_and_sim <- 
   "Points: Emprical means ± SE.
 Ribbons: Mean ± 95% CI for 1000 simulated children."
+constants$cap_emp_and_draw <- 
+  "Intervals: Empirical mean ± SE. Lines: 100 posterior means."
+
 library(bayesplot)
 theme_set(theme_teej())
 ```
@@ -49,12 +86,12 @@ d_raw_all <- d_raw %>%
     PropNA = Missing / Looks
   )
 
-d_raw_mp %>% 
-  bind_rows(d_raw_all) %>%
-  ggplot() + 
-    aes(x = Time, y = Prop, color = Study) + 
-    stat_summary() + 
-    facet_grid(~ Bias_Fam)
+# d_raw_mp %>% 
+#   bind_rows(d_raw_all) %>%
+#   ggplot() + 
+#     aes(x = Time, y = Prop, color = Study) + 
+#     stat_summary() + 
+#     facet_grid(~ Bias_Fam)
 
 d <- d_raw %>% 
   select(-starts_with("ot")) %>% 
@@ -62,16 +99,6 @@ d <- d_raw %>%
   mutate(Trials = Target + Distractor) %>% 
   polypoly::poly_add_columns(
     Time, degree = 3, scale_width = 1, prefix = "ot")
-
-# d %>% 
-#   tjmisc::sample_n_of(20, ResearchID) %>% 
-#   ggplot() + 
-#     aes(x = Time, y = Prop) + 
-#     geom_line(aes(group = interaction(ResearchID))) +
-#     facet_grid(Study ~ Bias_Fam) + 
-#     stat_summary() + 
-#   labs(
-#     title = "Results for 20 random children")
 
 study_child_with_empty_cells <- d %>% 
   filter(Trials < 4) %>% 
@@ -99,9 +126,11 @@ d <- d %>%
 d_u <- d %>% filter(Bias_Fam == "Unfamiliar")
 d_f <- d %>% filter(Bias_Fam == "Familiar")
 
+readr::write_csv(d_u, "./data/aim2-mp-unfam-modeled-data.csv.gz")
+readr::write_csv(d_f, "./data/aim2-mp-fam-modeled-data.csv.gz")
 
 library(brms)
-mp_unfam <- readr::read_rds("data/aim2-mp-unfam2.rds.gz")
+mp_unfam <- readr::read_rds("./data/aim2-mp-unfam.rds.gz")
 mp_unfam
 
 mp_fam <- readr::read_rds("data/aim2-mp-fam.rds.gz")
@@ -151,9 +180,9 @@ and may differ at each age.
 For these analyses, I modeled the data from `r min(d$Time)`
 to `r max(d$Time)` ms after target onset. As in the real-word vs.
 nonword analyses, I removed any Age × Child levels if a child had fewer
-than 4 fixations in a single time bin. In other words, children had to
-have at least 4 looks to one of the images in every 50 ms time bin. For
-the familiar-initial trials, this screening removed
+than 4 fixations in a single time bin. Children had to
+have at least 4 looks to one of the two images in every 50 ms time bin.
+For the familiar-initial trials, this screening removed
 `r study_counts_f$T1` children from age 3, `r study_counts_f$T2` from
 age 4, and `r study_counts_f$T3` from age 5, and for the
 unfamiliar-initial trials, this screening removed `r study_counts_u$T1`,
@@ -209,18 +238,21 @@ age 4, and age 5, respectively.
 #     caption = "averages of posterior fits")
 
 newdata <- d_u %>% 
-  distinct(Time, ot1, ot2, ot3, Study) %>% 
-  mutate(ResearchID = "zzz", Target = 0, Trials = 30)
+  distinct(Study, ResearchID, Time, ot1, ot2, ot3) %>% 
+  mutate(Target = 0, Trials = 30)
 
 m_u_new_fits <- augment_linpred(
-  mp_unfam, newdata, nsamples = 1000, allow_new_levels = TRUE) %>% 
-  mutate(Study = convert_study_to_age(Study)) 
+  mp_unfam, newdata, nsamples = 100, allow_new_levels = TRUE) %>% 
+  mutate(Study = convert_study_to_age(Study)) %>% 
+  group_by(Study, .draw, Time) %>% 
+  summarise(Prop = mean(plogis(.posterior_value))) %>% 
+  group_by(Study, .draw)
 
 df_u_label <- tibble::tribble(
   ~Study, ~Time, ~Prop,
   "Age 3", 1050, .42,
   # "Age 4", 1000, .42,
-  "Age 5", 1300, .73)
+  "Age 5", 1300, .72)
 
 d_u_plotting <- d_u %>% 
   mutate(Study = convert_study_to_age(Study)) 
@@ -230,18 +262,7 @@ ggplot(d_u_plotting) +
   aes(x = Time, y = Prop, color = Study) + 
   geom_hline(yintercept = .5, size = 2, color = "white") +
   stat_summary(fun.data = mean_se, geom = "pointrange") + 
-  stat_summary(
-    aes(group = Study, fill = Study, y = plogis(.posterior_value)),
-    data = m_u_new_fits,
-    fun.data = mean_cl_normal,
-    geom = "ribbon",
-    alpha = .3,
-    color = NA) + 
-  stat_summary(
-    aes(group = Study, y = plogis(.posterior_value)),
-    data = m_u_new_fits,
-    fun.y = mean,
-    geom = "line") + 
+  geom_line(aes(group = .group), data = m_u_new_fits, alpha = .05) +
   geom_text(
     aes(label = Study),
     data = df_u_label,
@@ -257,15 +278,13 @@ ggplot(d_u_plotting) +
     hjust = 0,
     color = constants$col_off_black,
     family = "Lato") +
-  scale_fill_study() + 
   scale_color_study() + 
   expand_limits(y = .76) +
-  guides(color = FALSE, fill = FALSE) +
-  theme(plot.caption = element_text(lineheight = 1.2)) +
+  guides(color = FALSE) +
   labs(
     x = constants$x_time,
     y = constants$y_prop_fam,
-    caption = constants$cap_emp_and_sim)
+    caption = constants$cap_emp_and_draw)
 
 test <- posterior_samples(mp_unfam, pars = "^b_") %>% 
   mutate(
@@ -281,8 +300,14 @@ test <- posterior_samples(mp_unfam, pars = "^b_") %>%
     b_ot3_Age3 = b_ot3,
     b_ot3_Age4 = b_ot3 + `b_ot3:StudyTimePoint2`,
     b_ot3_Age5 = b_ot3 + `b_ot3:StudyTimePoint3`,
+    b_Intercept_Prop_Age3 = plogis(b_Intercept_Age3),
+    b_Intercept_Prop_Age4 = plogis(b_Intercept_Age4),
+    b_Intercept_Prop_Age5 = plogis(b_Intercept_Age5),
     d_Intercept_Age4 = b_Intercept_Age4 - b_Intercept_Age3,
     d_Intercept_Age5 = b_Intercept_Age5 - b_Intercept_Age4,
+    d_Intercept_Prop_Age4 = b_Intercept_Prop_Age4 - b_Intercept_Prop_Age3,
+    d_Intercept_Prop_Age5 = b_Intercept_Prop_Age5 - b_Intercept_Prop_Age4,
+    d_Intercept_Prop_Age5_3 = b_Intercept_Prop_Age5 - b_Intercept_Prop_Age3,
     d_ot1_Age4 = b_ot1_Age4 - b_ot1_Age3,
     d_ot1_Age5 = b_ot1_Age5 - b_ot1_Age4,
     d_ot2_Age4 = b_ot2_Age4 - b_ot2_Age3,
@@ -290,122 +315,142 @@ test <- posterior_samples(mp_unfam, pars = "^b_") %>%
     d_ot3_Age4 = b_ot3_Age4 - b_ot3_Age3,
     d_ot3_Age5 = b_ot3_Age5 - b_ot3_Age4)
 
+mcmc_intervals(test, regex_pars = "Intercept_A")
+mcmc_intervals(test, regex_pars = "Intercept_Prop")
+mcmc_intervals(test, regex_pars = "ot1_Age")
+mcmc_intervals(test, regex_pars = "ot2_Age")
+mcmc_intervals(test, regex_pars = "ot3_Age")
+mcmc_intervals(test, regex_pars = "Intercept_Prop")
 mcmc_intervals(test, regex_pars = "Age")
+
+m_fit <- readr::read_csv("aim2-mp-unfam-peaks.csv.gz")
+group_average_peaks <- m_fit %>%
+  mutate(
+    Study = convert_study_to_age(Study),
+    Peak = plogis(med)) %>%
+  group_by(Study, .draw) %>%
+  summarise_at(vars(Peak), mean, na.rm = TRUE) %>% 
+  ungroup() %>% 
+  tidyr::spread(Study, Peak) %>% 
+  select(-.draw) %>% 
+  mutate(d_43 = `Age 4` - `Age 3`, d_54 = `Age 5` - `Age 4`) %>% 
+  mcmc_intervals_data()
+
+group_peaks <- group_average_peaks %>% 
+  split(.$parameter) %>% 
+  lapply(pull, m) %>% 
+  lapply(printy::fmt_fix_digits, 2) %>% 
+  lapply(printy::fmt_leading_zero)
+
+# d_u_plotting %>% 
+#   filter(Study == "Age 3", ResearchID == "006L") %>% 
+#   mutate(Study = "TimePoint1") %>% 
+#   augment_linpred(mp_unfam, ., nsamples = 100) %>% 
+#   ggplot() + 
+#     aes(x = Time, y = Prop) + 
+#   geom_pointrange(aes(ymin = Prop - PropSE, ymax = Prop + PropSE)) + 
+#   geom_line(aes(group = .draw, y = plogis(.posterior_value)), alpha = .1) 
+#   
+# m_fit %>% 
+#   mutate(
+#     Study = convert_study_to_age(Study),
+#     Peak = plogis(med)) %>% 
+#   filter(Study == "Age 3", ResearchID == "006L") %>% View
+
+
+
+i_ints <- mcmc_intervals_data(test, regex_pars = "Prop_Age") %>% 
+  split(.$parameter) %>% 
+  fmt_inline_median_interval() %>% 
+  add_ui_slug_to_first("90% UI: ")
 ```
 
 When children start on the image of a novel object and hear a
-mispronunciation, they tend to look to the familiar image. Figure XX shows the average of children's growth curves along with the model's average of 1000 simulated children. The growth
-curves all cross the .5 threshold, so that the children on average look
-more the familiar image than the unfamilar image. Granted, this
-tendency is not as great as that observed for the nonwords or real
+mispronunciation, they tend to look to the familiar image. Figure XX
+shows the average of children's growth curves along with the 100
+model-estimated group averages. The growth curves all cross the .5
+threshold, so that the children on average look more to the familiar
+image than the unfamilar image. Granted, the
+degree of referent selection here is not as great as that observed for the nonwords or real
 words. For those conditions, the average growth curves reached a peak of
-around .77 at age 3 whereas for the mispronunciations the peak is around
-.62. Thus, children show much greater uncertainty compared to the other
+around .77 at age 3 whereas for the mispronunciations the age-3 peak is around
+.62. Children show greater uncertainty compared to the other
 two conditions. Similarly, for the real word condition, the average
-age 3 growth curve crosses the .5 looking probability around 775 ms
+age 3 growth curve crosses .5 looking probability around 775 ms
 after target onset whereas in the mispronunciation condition, this
-threshold is crossed at 1000 ms.
+threshold is crossed at 1000 ms. Children associate the mispronunciation
+with the familiar object, although they are slower and show greater
+uncertainty.
 
-One can readily appreciate that children more quickly and more reliably
-look to the familiar image at age 5, while the differences between age 3
-and age 4 are less clear cut.
+Of the growth curve features, the only developmental changes were
+observed for the intercept features. At age 3, the average proportion of
+looks to the familiar image was `r i_ints$b_Intercept_Prop_Age3`. The
+looking proportion increased by `r i_ints$d_Intercept_Prop_Age4` to
+`r i_ints$b_Intercept_Prop_Age4` at age 4. This year-over-year change is
+probably positive, but a change of 0 is still a plausible result.
+Visually, this uncertainty appears in the growth curve plot by how close
+the age-3 and age-4 growth curves appear. The average proportion of
+looks increased by `r i_ints$d_Intercept_Prop_Age5` to
+`r i_ints$b_Intercept_Prop_Age5` at age 5. Here, there is more certainty
+that the year-over-year change was positive. 
+
+None of the other growth curve features showed year-over-year
+developmental changes. Although children looked more quickly on average
+at age 5, this effect cannot be clear tied to a single model feature.
+
+The growth curve peaks
+showed a similar pattern. The growth curve peak for the group averages
+were similar at ages 3 and 4 (`r group_peaks[["Age 3"]]` versus
+`r group_peaks[["Age 4"]]`), but there was a clear gain in looking
+probability at age 5 (`r group_peaks[["Age 5"]]`).
 
 ```{r}
-mp_unfam
-```
-
-
-
-
-
-
-
-
-
-
-
-
-```{r, eval = FALSE}
-
-
-constants
-
-
-
-
-
-
-
-
-
-mcmc_intervals(as.matrix(mp_unfam), regex_pars = "b_")
-zoo::rollmedian(x, 5, fill = NA)
-length(zoo::rollmedian(x, 5))
-
-
-try2 <- fits %>% 
-  tjmisc::sample_n_of(10, .draw) %>% 
-  group_by(.draw, Study, ResearchID) %>% 
+m_fit %>% 
   mutate(
-    med = zoo::rollmedian(.posterior_value, 5, fill = "extend")
-  )
-
+    Study = convert_study_to_age(Study),
+    Peak = plogis(med)) %>% 
+  group_by(Study, ResearchID) %>% 
+  summarise_at(vars(Time, Peak), mean, na.rm = TRUE) %>% 
+    ggplot() + 
+      aes(x = Study, y = Peak) + 
+      geom_hline(yintercept = .5, size = 2, color = "white") + 
+      geom_boxplot(width = .4, fill = NA, outlier.alpha = 0) +
+      geom_point(position = position_jitter(width = .2), alpha = .3, shape = 1) + 
+  labs(
+    x = NULL,
+    y = "Growth curve peaks",
+    caption = "Points: Participant posterior means.")
 ```
 
 
+
+## Familiar-initial trials
+
+Preschoolers associate one-feature onset-mispronunciations with the
+familiar word that matches the rime of the word. 
+
+Figure XX shows the growth curve averages for trials starting on the
+familiar image. Here the looking patterns show a rush into uncertainty.
+At age 3 and age 4, the growth sharply decrease into chance
+level-performance. Behaviorally, they are looking to both images
+equally. One interpretation of this pattern is that the children are
+making brief confirmatory looks to the novel image; they checking out
+the novel image. But this cannot be right because the growth curve never
+dips much below .5 (certainly not below .4). So there is more likely a
+mix of behaviors, with children staying put on some trials and
+considering the novel object on some trials.
+
 ```{r}
-
-# fits <- augment_linpred(mp_fam, d_f, nsamples = 100)
-# 
-# fits %>% 
-#   sample_n_of(4, ResearchID) %>%
-#   # filter(ResearchID == "644L") %>% 
-#   ggplot() + 
-#   aes(x = Time, y = Prop, color = Study) + 
-#   geom_pointrange(aes(ymin = Prop - PropSE, ymax = Prop + PropSE)) + 
-#   geom_line(
-#     aes(
-#       group = interaction(Study, .draw, ResearchID),
-#       y = plogis(.posterior_value)),
-#     alpha = .05) + 
-#   facet_wrap("ResearchID") 
-# 
-# # Population averages vs average of lines in sample
-# fits2 <- augment_linpred(mp_fam, d_f, re_formula = NA, nsamples = 100)
-# fits2 %>% 
-#   ggplot() + 
-#   aes(x = Time, y = Prop, color = Study) + 
-#   stat_summary() +
-#   geom_line(
-#     aes(
-#       group = interaction(Study, .draw),
-#       y = plogis(.posterior_value)),
-#     data = . %>% filter(ResearchID == "036L"),
-#     alpha = .05) + 
-#   labs(
-#     caption = "fixed-effect predictions")
-# 
-# 
-# # Average of posterior fits of lines in sample vs average of lines in sample
-# fits %>% 
-#   ggplot() + 
-#   aes(x = Time, y = Prop, color = Study) + 
-#   stat_summary() +
-#   stat_summary(
-#     aes(group = interaction(Study, .draw), y = plogis(.posterior_value)),
-#     geom = "line",
-#     fun.y = "mean",
-#     alpha = .05) + 
-#   labs(
-#     caption = "averages of posterior fits")
-
 f_newdata <- d_f %>% 
-  distinct(Time, ot1, ot2, ot3, Study) %>% 
-  mutate(ResearchID = "zzz", Target = 0, Trials = 30)
+  distinct(Study, ResearchID, Time, ot1, ot2, ot3) %>% 
+  mutate(Target = 0, Trials = 30)
 
 m_f_new_fits <- augment_linpred(
-  mp_fam, f_newdata, nsamples = 1000, allow_new_levels = TRUE) %>% 
-  mutate(Study = convert_study_to_age(Study))
+  mp_fam, f_newdata, nsamples = 100, allow_new_levels = TRUE) %>% 
+  mutate(Study = convert_study_to_age(Study)) %>% 
+  group_by(Study, .draw, Time) %>% 
+  summarise(Prop = mean(plogis(.posterior_value))) %>% 
+  group_by(Study, .draw)
 
 df_f_label <- tibble::tribble(
   ~Study, ~Time, ~Prop,
@@ -420,23 +465,7 @@ ggplot(df_f_plotting) +
   aes(x = Time, y = Prop, color = Study) + 
   geom_hline(yintercept = .5, size = 2, color = "white") +
   stat_summary(fun.data = mean_se, geom = "pointrange") + 
-  stat_summary(
-    aes(group = Study, fill = Study, y = plogis(.posterior_value)),
-    data = m_f_new_fits,
-    fun.data = mean_cl_normal,
-    geom = "ribbon",
-    alpha = .3,
-    color = NA) + 
-  stat_summary(
-    aes(group = Study, y = plogis(.posterior_value)),
-    data = m_f_new_fits,
-    fun.y = mean,
-    geom = "line") + 
-  geom_text(
-    aes(label = Study),
-    data = df_f_label,
-    size = 5, 
-    family = "Lato Semibold") +
+  geom_line(aes(group = .group), data = m_f_new_fits, alpha = .05) +
   geom_text(
     aes(label = label),
     data = data_frame(
@@ -447,22 +476,46 @@ ggplot(df_f_plotting) +
     hjust = 0,
     color = constants$col_off_black,
     family = "Lato") +
-  scale_fill_study() + 
   scale_color_study() + 
   expand_limits(y = .38) +
-  guides(color = FALSE, fill = FALSE) +
-  theme(plot.caption = element_text(lineheight = 1.2)) +
+  guides(color = FALSE) +
   labs(
     x = constants$x_time,
     y = constants$y_prop_fam,
-    caption = constants$cap_emp_and_sim)
-
-
-
-
-
-
+    caption = constants$cap_emp_and_draws)
 ```
+
+
+
+
+
+```{r}
+m_f_fit <- readr::read_csv("aim2-mp-fam-peaks.csv.gz")
+
+m_f_fit %>% 
+  mutate(
+    Study = convert_study_to_age(Study),
+    Peak = plogis(med)) %>% 
+  group_by(Study, ResearchID) %>% 
+  summarise_at(vars(Time, Peak), mean, na.rm = TRUE) %>% 
+    ggplot() + 
+      aes(x = Study, y = Peak) + 
+      geom_hline(yintercept = .5, size = 2, color = "white") + 
+      geom_boxplot(width = .4, fill = NA, outlier.alpha = 0) +
+      geom_point(position = position_jitter(width = .2), alpha = .3, shape = 1) + 
+  labs(
+    x = NULL,
+    y = "Growth curve valleys",
+    caption = "Points: Participant posterior means.")
+```
+
+
+
+
+
+
+
+
 
 
 
@@ -548,6 +601,70 @@ ggplot(a_f_1) +
   stat_summary(aes(y = plogis(.fitted), color = "fitted"))
 
 
+
+
+```
+
+```{r, eval = FALSE}
+# 
+# newdata <- d_u %>% 
+#   distinct(Time, ot1, ot2, ot3, Study) %>% 
+#   mutate(ResearchID = "zzz", Target = 0, Trials = 30)
+# 
+# m_u_new_fits <- augment_linpred(
+#   mp_unfam, newdata, nsamples = 1000, allow_new_levels = TRUE) %>% 
+#   mutate(Study = convert_study_to_age(Study)) 
+# 
+# df_u_label <- tibble::tribble(
+#   ~Study, ~Time, ~Prop,
+#   "Age 3", 1050, .42,
+#   # "Age 4", 1000, .42,
+#   "Age 5", 1300, .73)
+# 
+# d_u_plotting <- d_u %>% 
+#   mutate(Study = convert_study_to_age(Study)) 
+# 
+# 
+# ggplot(d_u_plotting) + 
+#   aes(x = Time, y = Prop, color = Study) + 
+#   geom_hline(yintercept = .5, size = 2, color = "white") +
+#   stat_summary(fun.data = mean_se, geom = "pointrange") + 
+#   stat_summary(
+#     aes(group = Study, fill = Study, y = plogis(.posterior_value)),
+#     data = m_u_new_fits,
+#     fun.data = mean_cl_normal,
+#     geom = "ribbon",
+#     alpha = .3,
+#     color = NA) + 
+#   stat_summary(
+#     aes(group = Study, y = plogis(.posterior_value)),
+#     data = m_u_new_fits,
+#     fun.y = mean,
+#     geom = "line") + 
+#   geom_text(
+#     aes(label = Study),
+#     data = df_u_label,
+#     size = 5, 
+#     family = "Lato Semibold") +
+#   geom_text(
+#     aes(label = label),
+#     data = data_frame(
+#       Time = 425, 
+#       Prop = .11, 
+#       label = constants$note_mp_unfam),
+#     size = 3, 
+#     hjust = 0,
+#     color = constants$col_off_black,
+#     family = "Lato") +
+#   scale_fill_study() + 
+#   scale_color_study() + 
+#   expand_limits(y = .76) +
+#   guides(color = FALSE, fill = FALSE) +
+#   theme(plot.caption = element_text(lineheight = 1.2)) +
+#   labs(
+#     x = constants$x_time,
+#     y = constants$y_prop_fam,
+#     caption = constants$cap_emp_and_sim)
 
 
 ```

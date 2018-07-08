@@ -22,6 +22,7 @@ rmd_files:
   - 20-part-aim2.Rmd
   - 22-aim2-methods.Rmd
   - 22-referent-selection.Rmd
+  - 23-mispronunciations-notebook.Rmd
   # - 80-scratch.Rmd
   - 90-part-appendices.Rmd
   - 91-app-aim1-items.Rmd
