@@ -184,9 +184,13 @@ download_aim2_real_nonword_models <- function() {
 upload_aim2_mp_models <- function() {
   put_object_to_data("aim2-mp-fam.rds.gz")
   put_object_to_data("aim2-mp-unfam.rds.gz")
+  put_object_to_data("aim2-mp-fam-peaks.csv.gz")
+  put_object_to_data("aim2-mp-unfam-peaks.csv.gz")
 }
 
 download_aim2_mp_models <- function() {
   save_object_to_data("aim2-mp-fam.rds.gz")
   save_object_to_data("aim2-mp-unfam.rds.gz")
+  put_object_to_data("aim2-mp-fam-peaks.csv.gz")
+  put_object_to_data("aim2-mp-unfam-peaks.csv.gz")
 }
