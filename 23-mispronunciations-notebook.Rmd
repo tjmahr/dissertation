@@ -258,9 +258,11 @@ newdata <- d_u %>%
   distinct(Study, ResearchID, Time, ot1, ot2, ot3) %>% 
   mutate(Target = 0, Trials = 30)
 
-m_u_new_fits <- augment_linpred(
+m_u_new_fits_each <- augment_linpred(
   mp_unfam, newdata, nsamples = 100, allow_new_levels = TRUE) %>% 
-  mutate(Study = convert_study_to_age(Study)) %>% 
+  mutate(Study = convert_study_to_age(Study)) 
+
+m_u_new_fits <- m_u_new_fits_each %>% 
   group_by(Study, .draw, Time) %>% 
   summarise(Prop = mean(plogis(.posterior_value))) %>% 
   group_by(Study, .draw)
@@ -412,9 +414,11 @@ f_newdata <- d_f %>%
   distinct(Study, ResearchID, Time, ot1, ot2, ot3) %>% 
   mutate(Target = 0, Trials = 30)
 
-m_f_new_fits <- augment_linpred(
+m_f_new_fits_each <- augment_linpred(
   mp_fam, f_newdata, nsamples = 100, allow_new_levels = TRUE) %>% 
-  mutate(Study = convert_study_to_age(Study)) %>% 
+  mutate(Study = convert_study_to_age(Study)) 
+  
+m_f_new_fits <- m_f_new_fits_each %>% 
   group_by(Study, .draw, Time) %>% 
   summarise(Prop = mean(plogis(.posterior_value))) %>% 
   group_by(Study, .draw)
@@ -443,6 +447,11 @@ ggplot(df_f_plotting) +
     hjust = 0,
     color = constants$col_off_black,
     family = "Lato") +
+  geom_text(
+    aes(label = Study),
+    data = df_f_label,
+    size = 5, 
+    family = "Lato Semibold") +
   scale_color_study() + 
   expand_limits(y = .38) +
   guides(color = FALSE) +
@@ -453,6 +462,138 @@ ggplot(df_f_plotting) +
 ```
 
 
+* Age 3 and age 4 intercepts differ. Age 4 lower.
+* Age 4 and age 5 intercepts differ. Age 5 higher.
+* Captures differences in average value.
+
+* Age 3 and age 4 linear slopes differ. Age 4 less negative.
+* Age 4 and age 5 linear slopes differ. Age 5 less negative.
+* Less of a linear trend downwards with age.
+* 3 ish vs 2.5ish vs. 1.75 ish
+
+* Age 4 and age 5 quadratic slopes differ. 
+* Age 5 10% less than age 4, value moves closer to zero (2-ish vs. 1.75 ish).
+
+* No credible differences for cubic time component.
+
+```{r mp-fam-gca-features, eval = TRUE, fig.width = 7, fig.height = 3, out.width = "100%"}
+test <- posterior_samples(mp_fam, pars = "^b_") %>% 
+  transmute(
+    b_Intercept_Age3 = b_Intercept,
+    b_Intercept_Age4 = b_Intercept + b_StudyTimePoint2,
+    b_Intercept_Age5 = b_Intercept + b_StudyTimePoint3,
+    b_ot1_Age3 = b_ot1,
+    b_ot1_Age4 = b_ot1 + `b_ot1:StudyTimePoint2`,
+    b_ot1_Age5 = b_ot1 + `b_ot1:StudyTimePoint3`,
+    b_ot2_Age3 = b_ot2,
+    b_ot2_Age4 = b_ot2 + `b_ot2:StudyTimePoint2`,
+    b_ot2_Age5 = b_ot2 + `b_ot2:StudyTimePoint3`,
+    b_ot3_Age3 = b_ot3,
+    b_ot3_Age4 = b_ot3 + `b_ot3:StudyTimePoint2`,
+    b_ot3_Age5 = b_ot3 + `b_ot3:StudyTimePoint3`,
+    b_Intercept_Prop_Age3 = plogis(b_Intercept_Age3),
+    b_Intercept_Prop_Age4 = plogis(b_Intercept_Age4),
+    b_Intercept_Prop_Age5 = plogis(b_Intercept_Age5),
+    d_Intercept_Age4 = b_Intercept_Age4 - b_Intercept_Age3,
+    d_Intercept_Age5 = b_Intercept_Age5 - b_Intercept_Age4,
+    d_Intercept_Prop_Age4 = b_Intercept_Prop_Age4 - b_Intercept_Prop_Age3,
+    d_Intercept_Prop_Age5 = b_Intercept_Prop_Age5 - b_Intercept_Prop_Age4,
+    d_Intercept_Prop_Age5_3 = b_Intercept_Prop_Age5 - b_Intercept_Prop_Age3,
+    d_ot1_Age4 = b_ot1_Age4 - b_ot1_Age3,
+    d_ot1_Age5 = b_ot1_Age5 - b_ot1_Age4,
+    d_ot2_Age4 = b_ot2_Age4 - b_ot2_Age3,
+    d_ot2_Age5 = b_ot2_Age5 - b_ot2_Age4,
+    d_ot3_Age4 = b_ot3_Age4 - b_ot3_Age3,
+    d_ot3_Age5 = b_ot3_Age5 - b_ot3_Age4)
+# 
+# mcmc_intervals(test, regex_pars = "Intercept_A")
+# mcmc_intervals(test, regex_pars = "Intercept_Prop")
+# mcmc_intervals(test, regex_pars = "ot1_Age")
+# mcmc_intervals(test, regex_pars = "ot2_Age")
+# mcmc_intervals(test, regex_pars = "ot3_Age")
+# mcmc_intervals(test, regex_pars = "Intercept_Prop")
+# mcmc_intervals(test, regex_pars = "Age")
+
+draws <- test %>% 
+  tibble::rowid_to_column(".draw") %>% 
+  sample_n(100) 
+
+by_study <- df_f_plotting %>% 
+  mutate(Intercept = 1) %>% 
+  distinct(Study, Time, Intercept, ot1, ot2, ot3) %>% 
+  tidyr::crossing(.draw = unique(draws$.draw)) %>% 
+  left_join(draws) %>% 
+  split(.$Study)
+
+by_study$`Age 3`  <- by_study$`Age 3` %>% 
+  mutate(
+    b_Intercept = Intercept * b_Intercept_Age3,
+    b_ot1  = ot1 * b_ot1_Age3,
+    b_ot2  = ot2 * b_ot2_Age3,
+    b_ot3  = ot3 * b_ot3_Age3)
+
+by_study$`Age 4`  <- by_study$`Age 4` %>% 
+  mutate(
+    b_Intercept = Intercept * b_Intercept_Age4,
+    b_ot1  = ot1 * b_ot1_Age4,
+    b_ot2  = ot2 * b_ot2_Age4,
+    b_ot3  = ot3 * b_ot3_Age4)
+
+by_study$`Age 5`  <- by_study$`Age 5` %>% 
+  mutate(
+    b_Intercept = Intercept * b_Intercept_Age5,
+    b_ot1  = ot1 * b_ot1_Age5,
+    b_ot2  = ot2 * b_ot2_Age5,
+    b_ot3  = ot3 * b_ot3_Age5)
+
+feature_draws <- bind_rows(by_study) %>% 
+  mutate(b_sum = b_Intercept + b_ot1 + b_ot2 + b_ot3) %>% 
+  distinct(.draw, Study, Time, b_Intercept, b_ot1, b_ot2, b_ot3, b_sum) %>% 
+  tidyr::gather("Feature", "Value", b_Intercept:b_sum) 
+
+
+feature_draws %>% 
+  # filter(Feature != "b_sum") %>% 
+  mutate(
+    Feature = factor(
+      Feature, 
+      levels = c("b_Intercept", "b_ot1", "b_ot2", "b_ot3", "b_sum"),
+      labels = c("Intercept", "Time^1", "Time^2", "Time^3", "Total"))) %>% 
+  group_by(Study, Feature, .draw) %>% 
+  ggplot() + 
+    aes(x = Time, y = Value, color = Study) + 
+    geom_hline(color = "white", size = 1.5, yintercept = 0) + 
+    geom_line(aes(group = .group), alpha = .05) + 
+    facet_wrap("Feature", nrow = 1, labeller = label_parsed, scales = "free_y") +
+    scale_color_study() + 
+    guides(color = FALSE) +
+    # guides(color = guide_legend(override.aes = list(alpha = 1))) + 
+    geom_text(
+      aes(label = Study, hjust = hjust),
+      data = data_frame(
+        Study = c("Age 3", "Age 4", "Age 5", "Age 5"),
+        Time = c(650, 900, 300, 900),
+        Value = c(1.1, .20, 0, 0),
+        hjust = c(0, .5, 0, .5),
+        Feature = c("Time^1", "Intercept", "Time^1", "Time^2")), 
+      # hjust = 0, 
+      size = 4,
+      family = "Lato Semibold") + 
+    expand_limits(y = range(by_study$`Age 3`$b_ot1)) +
+  labs(
+    x = constants$x_time, 
+    y = "Growth curve feature (logits)",
+    caption = "50 posterior samples of population-average (fixed) effects")
+```
+
+ 
+  - When we plot these features out, we see that they add up to make it
+    so that the Age 4 curve dips down lowest and Age 5 does not dip as
+    far down.
+  - The developmental story, if any, is that children stick with the
+    familiar object slightly more at age 5.
+
+***
 
 I asked whether growth curve "valleys" provided a meaningful feature for
 this data. This value was defined as the median of the five smallest
@@ -491,54 +632,75 @@ fam_peaks %>%
         caption = "Points: Participant posterior means.") + 
     scale_x_discrete(labels = x_levels) +
     theme(plot.subtitle = element_text(size = rel(.9)))
+
 ```
 
+* There is considerable spread at each age. 
+* The middle boxplot almost stretches perfectly from 0 to 1.
+* There is probably a few different behaviors being captured here.
+* That said, the median is closer to .5 at age 5 which matches how the 
+  growth curves looked.
 
-
-```{r explore-intervals2, eval = FALSE}
-test <- posterior_samples(mp_fam, pars = "^b_") %>% 
+```{r diffs, width = 6, height = 6, out.width="80%"}
+peak_groups <- fam_peaks %>% 
   mutate(
-    b_Intercept_Age3 = b_Intercept,
-    b_Intercept_Age4 = b_Intercept + b_StudyTimePoint2,
-    b_Intercept_Age5 = b_Intercept + b_StudyTimePoint3,
-    b_ot1_Age3 = b_ot1,
-    b_ot1_Age4 = b_ot1 + `b_ot1:StudyTimePoint2`,
-    b_ot1_Age5 = b_ot1 + `b_ot1:StudyTimePoint3`,
-    b_ot2_Age3 = b_ot2,
-    b_ot2_Age4 = b_ot2 + `b_ot2:StudyTimePoint2`,
-    b_ot2_Age5 = b_ot2 + `b_ot2:StudyTimePoint3`,
-    b_ot3_Age3 = b_ot3,
-    b_ot3_Age4 = b_ot3 + `b_ot3:StudyTimePoint2`,
-    b_ot3_Age5 = b_ot3 + `b_ot3:StudyTimePoint3`,
-    b_Intercept_Prop_Age3 = plogis(b_Intercept_Age3),
-    b_Intercept_Prop_Age4 = plogis(b_Intercept_Age4),
-    b_Intercept_Prop_Age5 = plogis(b_Intercept_Age5),
-    d_Intercept_Age4 = b_Intercept_Age4 - b_Intercept_Age3,
-    d_Intercept_Age5 = b_Intercept_Age5 - b_Intercept_Age4,
-    d_Intercept_Prop_Age4 = b_Intercept_Prop_Age4 - b_Intercept_Prop_Age3,
-    d_Intercept_Prop_Age5 = b_Intercept_Prop_Age5 - b_Intercept_Prop_Age4,
-    d_Intercept_Prop_Age5_3 = b_Intercept_Prop_Age5 - b_Intercept_Prop_Age3,
-    d_ot1_Age4 = b_ot1_Age4 - b_ot1_Age3,
-    d_ot1_Age5 = b_ot1_Age5 - b_ot1_Age4,
-    d_ot2_Age4 = b_ot2_Age4 - b_ot2_Age3,
-    d_ot2_Age5 = b_ot2_Age5 - b_ot2_Age4,
-    d_ot3_Age4 = b_ot3_Age4 - b_ot3_Age3,
-    d_ot3_Age5 = b_ot3_Age5 - b_ot3_Age4)
+    Study = convert_study_to_age(Study),
+    Peak = plogis(med)) %>% 
+  group_by(Study, ResearchID) %>% 
+  summarise_at(vars(Time, Peak), mean, na.rm = TRUE) %>% 
+  mutate(
+    ntile = factor(ntile(Peak, 6)),
+    num = fct_add_counts(ntile) %>% as.character()) %>% 
+  distinct(Study, ResearchID, Peak, ntile, num)
 
-mcmc_intervals(test, regex_pars = "Intercept_A")
-mcmc_intervals(test, regex_pars = "Intercept_Prop")
-mcmc_intervals(test, regex_pars = "ot1_Age")
-mcmc_intervals(test, regex_pars = "ot2_Age")
-mcmc_intervals(test, regex_pars = "ot3_Age")
-mcmc_intervals(test, regex_pars = "Intercept_Prop")
-mcmc_intervals(test, regex_pars = "Age")
+m_f_new_fits_each %>% 
+  left_join(peak_groups) %>% 
+  sample_n_of(10, .draw) %>% 
+  filter(Study == "Age 3") %>% 
+  group_by(ResearchID, Study, .draw) %>% 
+  ggplot() + 
+    aes(x = Time, y = plogis(.posterior_value), color = ResearchID) + 
+    geom_line(aes(group = .group), alpha = .1) + 
+    facet_wrap("num") + 
+    guides(color = FALSE) + 
+    labs(
+      title = "Age 3 children binned into 6-tiles by valley",
+      caption = "10 posterior samples per child")
 ```
 
 
 ## Discussion
 
-Children
+  - For the first set of analyses, they reliably and more reliably with
+    age look to the familiar image.
+  - There is a definite penalty to the mispronunciation when we compare
+    against real word or nonword peaks.
+  - Unlike those conditions which started to show ceiling effects at
+    age 4, children are much more uncertain here.
+  - In terms of lexical processing, the syllable onset leads them down a
+    garden path. They have to hear more of the word in order to
+    associate the mispronunciation with the target. This is a bit like
+    processing a rime word.
+  - The development story is that they can use the rest of the word more
+    effectively to associate the MP with the familiar image. This would
+    predict that children become more sensitive to rime-based lexical
+    competitors during the preschool years.
+  - So they are sensitive but they become more accommodating of the
+    mispronounced version.
+  
 
+
+  - For second set of analyses, there is no one clear strategy for
+    referent selection. We see a few different patterns among children.
+    Some stay put. Some always switch. Some do both.
+  - The growth curve averages rush to .5, which is equal looks to both
+    images, which is maximum uncertainty.
+  - The age 5 curve doesn't dip as far, so they are slightly more likely
+    to stay put.
+  - These sets of analyses mainly demonstrate that when children start
+    on a familiar image and hear a mispronunciation, they have a few
+    options for howto proceed.
+  - This also shows a possible decoupling between lexical processing and referent selection. It is unlikely that children heard the mispronunciations differently in these trials, but rather the responded differently.
 
 
 
