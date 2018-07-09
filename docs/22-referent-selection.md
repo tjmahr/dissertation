@@ -19,26 +19,27 @@ Development of referent selection
 
 
 
-## Nonwords versus real words
+## Nonwords versus familiar words
 
 I asked whether the recognition of familiar words differed from the
 fast-selecting of referents for nonwords. I fit a Bayesian mixed-effects
-logistic regression growth-curve model, as in Chapter X. For the real word and
-nonword conditions, there is a well-defined target image: the familar
-image for real words, and the novel/unfamiliar image for nonwords.
-Therefore, I modeled the data under these assumptions. The outcome
-measures were the probabilities of fixating to the target image in each
-condition:
+logistic regression growth-curve model, as in
+[Chapter \@ref(fam-rec)](#fam-rec). For the real word and nonword
+conditions, there is a well-defined target image: the familar image for
+real words and the novel/unfamiliar image for nonwords. Under these
+assumptions, the outcome measures were the probabilities of fixating to
+the target image in each condition:
 
-* P(Look to familiar image | Hear a real word)
-* P(Look to unfamiliar image | Hear a nonword)
+  - P(Look to familiar image | Hear a real word)
+  - P(Look to unfamiliar image | Hear a nonword)
 
 Both the real word and nonword conditions measure referent selection as
 the probability of fixating on the appropriate referent when presented
 with a label. The important analytic question is whether and to what
-degree these two probabilities differ. This growth curve model is
-similar to the one in Chapter X with cubic polynomial and a condition
-effect which interacts with time features. Thus, the basic model is:
+degree these two probabilities differ. The growth curve model is similar
+to the one in [Chapter @ref(fam-rec)](#fam-rec) with cubic polynomial
+but it adds a condition effect which interacts with time features. Thus,
+the basic model is:
 
 $$
 \small
@@ -60,17 +61,20 @@ $$
 I fit a separate model for each year of the study.
 [Appendix \@ref(aim2-gca-models)](#aim2-gca-models) contains the R code
 used to fit these models along with a description of the specifications
-represented by the model syntax. 
+represented by the model syntax. The mixed model included by-child and
+by-child-by-condition random effects so that it captured how some of a
+child's growth curve features may be similar between the conditions and
+may differ between conditions.
 
-For these analyses, I limited focus to distractor-initial
-trials, and modeled the data from 300 ms to 1500
-after target onset. I removed any Study x Child levels if a child had fewer than 4
-fixations in a single time bin. In other words, children had to
-have at least 4 looks to one of the images in every 50 ms time bin.
-This screening removed 13 children from age 3,
-15 from age 4, and 6 from age 5.
+For these analyses, I limited focus to distractor-initial trials, and
+modeled the data from 300 to 1500 ms after target
+onset. I removed any Age × Child levels if a child had fewer than 4
+fixations in a single time bin. In other words, children had to have at
+least 4 looks to one of the images in every 50 ms time bin. This
+screening removed 13 children from age 3,
+15 from age 4, and 6 from age 5.
 
-Figure \@ref(fig:aim2-real-nonword-means) shows group averages of growth
+Figure \@ref(fig:aim2-real-nonword-means) shows the group averages of the growth
 curves. For each condition and age, I computed the empirical growth
 curve for each participant, and I averaged the participants' growth
 curves together to obtain group averages. I also applied this process
@@ -85,29 +89,29 @@ the group average.
 <p class="caption">(\#fig:aim2-real-nonword-means)(ref:aim2-real-nonword-means)</p>
 </div>
 
-In chapter XX, I state that for these growth curve models that I
-consider only the intercept and linear time terms to be behaviorally
-meaningful model parameters. The intercept measures overall the average growth
-curve value so it reflects _looking reliability_, and the linear time term
-measures the overall stepness of the growth so it reflects _lexical
-processing efficiency_. I also derive a measure of peak looking
-probability by taking the median of top five points in a growth curve,
-and this peak provides a measure of *word recognition certainty*.
-Higher peaks indicate less uncertainty about a word.
+In [Chapter \@ref(fam-rec)](#fam-rec), I claim that for these growth
+curve models that only the intercept and linear time terms to be
+behaviorally meaningful model parameters. The intercept measures overall
+the average growth curve value so it reflects *looking reliability*, and
+the linear time term measures the overall stepness of the growth so it
+reflects *lexical processing efficiency*. I also derived a measure of
+peak looking probability by taking the median of top five points in a
+growth curve, and this peak provides a measure of *word recognition
+certainty*. Higher peaks indicate less uncertainty about a word.
 
 I evaluated the condition effects by looking at the effect of the real
 word condition on the intercept and linear time terms. The two
-conditions did not reliable differ at age 3. The real-word condition
+conditions did not reliably differ at age 3. The real-word condition
 effect on the intercept was &minus;0.19 [90%&nbsp;UI: &minus;0.43, 0.05] and its interaction with
 the linear time term was 0.45 [&minus;0.05, 0.94]. Both these 90% intervals
 include 0 as a plausible estimate for the condition difference, so there
-is still uncertainty about the sign of the effect. I therefore conclude
+is uncertainty about the sign of the effect. I therefore conclude
 that the conditions did not credibly differ on average at age 3.
 
 There was an advantage for the nonword condition at age 4 and age 5. The
 real-word effect was negative at age 4, &minus;0.82 [&minus;1.01, &minus;0.62], so that on
-average, children looked less to target on the real words than the
-nonword trials. There was a suggestive effect linear time effect at
+average, children looked less to target for the real words than the
+nonwords. There was a suggestive effect linear time effect at
 age 4, &minus;0.52 [&minus;0.96, &minus;0.04]. The curve for real words was probably less
 steep at age 4 but values near 0 remain plausible. At age 5, only the
 intercept difference was credible, &minus;0.48 [&minus;0.70, &minus;0.27]. In general,
@@ -120,23 +124,13 @@ at age 4.
 
 
 
-Figure \@ref(fig:aim2-gca-peaks) shows the the posterior means of the growth
-curves peaks for each participant. Here, descriptive statistics help reveal 
-the developmental trends for this task. At age 3, the median peak
-values are similar around 80%. The peaks increase for the nonword
-condition in the following year, with a median value of .... It is worth
-emphasizing what this median tells us: At age 4, half of the children
-had a peak looking probability of xxx. In other words, children are
-performing at the ceiling on this task by age 4. To quantify the degree
-of ceiling performance, I calculcated the number of children per
-condition with a growth curve peak greater than
-or equal to .99 over the posterior distribution. For the nonword
-condition, there were 23.00 [90%&nbsp;UI: 20.00, 26.00] children who performed at
-ceiling at age 3, 41.00 [36.00, 45.00] at age 4, 40.00 [36.00, 44.00]
-and at age 5. For the real word condition, the number of children
-attaining ceiling performance was more uneven: there were
-20.00 [16.00, 24.00] ceiling performers at age 3,
-13.00 [10.00, 16.00], and 13.00 [10.00, 16.00] at age 5.
+Next, I analyzed the children's model-estimated growth curve peaks. Each
+posterior sample of the model represents a plausible set of growth curve
+parameters for the data, so for each of these samples, I calculated the
+growth curves for each child and the peaks of the growth curves.
+Figure \@ref(fig:aim2-gca-peaks) shows the the posterior averages of the
+growth curves peaks for each participant.
+
 
 (ref:aim2-gca-peaks) Growth curve peaks by child, condition and year of
 the study. The movement of the medians conveys how the nonword peaks
@@ -152,42 +146,52 @@ children reached ceiling performance on this task.
 
 
 
+Descriptive statistics help reveal the developmental trends for this
+task. At age 3, the median peak values are similar for the two
+conditions, both around .83. The peaks increase for the nonword
+condition in the following year with a median value of .92.
+It is worth emphasizing what this statistic tells us: At age 4, half of
+the children had a peak looking probability of .92 *or
+greater*. In other words, children are performing near the ceiling on
+this task by age 4. 
+
+To quantify the degree of ceiling performance, I calculated the number
+of children per condition with a growth curve peak greater than or equal
+to .99 over the posterior distribution. For the nonword condition, there
+were 23 [90%&nbsp;UI: 20, 26] children who performed at ceiling at age 3,
+41 [36, 45] at age 4, 40 [36, 44] and at age 5. For
+the real word condition, the number of children attaining ceiling
+performance was more uneven: there were 20 [16, 24]
+ceiling-performers at age 3, 13 [10, 16] at age 4, and
+13 [10, 16] at age 5.
 
 
 
 
-
-
-
-
-
-
-
-
-To compare peaks looking probabilities between ages, I fit a linear mixed effects
-model with restricted maximum likelihood via the lme4 R package
-[vers. 1.1.17; @lme4]. I regressed the growth
-curve peaks onto experimental condition, age group, and the age x
-condition interaction. The model included randomly varying intercepts for child and
-child-year. This modeling software does not provide *p*-values for its
-effects estimates, so for these comparisons, I decided that an effect
-was significant when the *t* statistic for a model fixed effect
-has an absolute value of 2 or greater. In practical terms, this convention
-interprets an effect as significant when its estimate is at least 2
-standard errors away from 0. (@GelmanHill use this approach with
-mixed models.)
+To compare peaks looking probabilities between ages, I fit a linear
+mixed effects model with restricted maximum likelihood via the lme4 R
+package [vers. 1.1.17; @lme4]. I regressed the
+children's average growth curve peaks onto experimental condition, age
+group, and the age × condition interaction. The model included randomly
+varying intercepts for child and child-year. This modeling software does
+not provide *p*-values for its effects estimates, so for these
+comparisons, I decided that an effect was significant when the *t*
+statistic for a model fixed effect has an absolute value of 2 or
+greater. In practical terms, this convention interprets an effect as
+"significant" when its estimate is at least 2 standard errors away
+from 0. (@GelmanHill use this approach when with mixed models.)
 
 At age 3, the two conditions did not significantly differ,
-B<sub>real-nonword</sub> = .76, *t* = 67.06. At age 4,
-nonword peaks were on average -.77 proportion units greater
-than the real word peaks, *t* = -69.11, and at age 5, the nonword
-peaks were -.83 proportion units greater than the real word
-peaks, *t* = -73.35. For the nonword condition there was a
+B<sub>real-nonword</sub> = .01, *t* = 0.95. At age 4,
+nonword peaks were on average .09 proportion units greater
+than the real word peaks, *t* = 5.79, and at age 5, the nonword
+peaks were .04 proportion units greater than the real word
+peaks, *t* = 2.56. For the nonword condition there was a
 significant increase in the peaks from age 3 to age 4, *B*<sub>4-3</sub>
-= -.01, *t* = -0.69, whereas there was no improvement from
-age 4 to age 5, *t* = -0.18. In the real word condition, there was
+= .10, *t* = 5.99, whereas there was no improvement from
+age 4 to age 5, *t* = 0.37. In the real word condition, there was
 only a significant improvement from age 4 to age 5, *B*<sub>5-4</sub> =
--.00, *t* = -0.28.
+.06, *t* = 3.25.
 
 
 <!-- [pvalues]: The lme4 package does not provide *p*-values because it is -->
@@ -229,7 +233,7 @@ skill for word-learning. Put another way, a child's ability to quickly
 map a novel word to a referent is more closely related to the demands of
 in the moment word-learning than familiar word recognition.
 
-In chapter X, I found that peak looking probability at age 3 positively
+In [Chapter \@ref(fam-rec)](#fam-rec), I found that peak looking probability at age 3 positively
 correlated with age 5 vocabulary. Pairing this finding with my
 hypothesis, I predicted that the growth curve peaks in the nonword
 condition at age 3 would be better predictors of vocabulary at age 5
@@ -340,6 +344,5 @@ Children hit ceiling performanceo on this task.
 <!-- of word recognition differs between these two conditions, and I can use -->
 <!-- 50% and 90% uncertainty intervals to determine during which time points -->
 <!-- the curves credibly differ from each other. -->
-
 
 

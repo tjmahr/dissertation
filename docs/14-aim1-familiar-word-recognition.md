@@ -112,6 +112,11 @@ relate to word recognition performance.
 how they describe lexical processing performance. The three curves used
 are simulations of new participants at Age 4.
 
+
+```
+#> Warning: package 'bindrcpp' was built under R version 3.4.4
+```
+
 <div class="figure" style="text-align: center">
 <img src="14-aim1-familiar-word-recognition_files/figure-html/curve-features-1.png" alt="(ref:curve-features)" width="80%" />
 <p class="caption">(\#fig:curve-features)(ref:curve-features)</p>

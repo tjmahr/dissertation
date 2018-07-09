@@ -32,8 +32,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="aim2-gca-models.html">
-<link rel="next" href="references.html">
+<link rel="prev" href="mp-experiment-items.html">
+<link rel="next" href="related-work.html">
 <style type="text/css">
 p.abstract{
   text-align: center;
@@ -249,65 +249,149 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="related-work" class="section level1">
-<h1><span class="header-section-number">E</span> Related work</h1>
-<p>In this section, I clarify relationships between this project and other
-word recognition research reported from our lab. In short, our lab has
-reported results about the two-image and four-image experiments from
-cross-sectional samples, describing child-level measures that predict
-performance in these tasks. In contrast, my dissertation 1) focuses on
-the longitudinal development of word recognition and 2) engages with the
-fine-grained details of lexical processing.</p>
-<p><span class="citation">Law et al. (<a href="#ref-RWLPaper">2016</a>)</span> analyzed data from the four-image experiment in Specific
-Aim 1. This study featured a diverse cross-sectional sample of 60
-children, half of whom received the experiment in African American
-English and half received it in Mainstream American English. The sample
-ranged in age from 28 to 60 months. The study included data from 23
-participants from year 1 of the longitudinal study (i.e., what I refer
-to as age 3) in order to enrich parts of the sample demographics. For
-this manuscript, we analyzed how vocabulary and maternal education
-predicted looking patterns, including relative looks to the semantic and
-phonological foils, but with conventional polynomial growth curves. The
-use of generalized additive models is an innovation I developed for my
-dissertation.</p>
-<p><span class="citation">Law &amp; Edwards (<a href="#ref-MPPaper">2015</a>)</span> analyzed a different version of the mispronunciation experiment
-on a different sample of children (<em>n</em> = 34, 30–46 months old). This
-earlier version included both real word and the mispronunciation of the
-real word in the same block of trial. For example, a child would hear
-“dog” and “tog” during the same session of the experiment. This design
-might subtly temper the effect of mispronounced stimuli by allowing the
-listener to compare the mispronunciation to its correctly produced
-counterpart. The version of the experiment in Specific Aim 2 separates
-the real words and mispronunciations so that a child never hears a
-familiar word and its mispronunciation during the same block of trials.
-With this design, there is no explicit point of comparison for the
-mispronunciation, and the child has to rely on his or her own lexical
-representations when processing these words.</p>
-<p>Mahr and Edwards (in press) was the manuscript I originally authored for
-my preliminary examinations. The paper analyzes the same kinds of
-relations as <span class="citation">Weisleder &amp; Fernald (<a href="#ref-Weisleder2013">2013</a>)</span> which showed that lexical processing
-efficiency mediated the effect of language input on future vocabulary
-size. Specifically, I asked whether word recognition performance on the
-four-image task of Specific Aim 1, vocabulary size, and home language
-input data from year 1 (age 3) predicted vocabulary size at year 2
-(age 4). The paper only examined looks to the familiar image from one
-year of the study, so it did not analyze any lexical competition effects
-or the development of word recognition within children. In short, we
-found that receptive vocabulary was more sensitive to variability in
-lexical processing and home language input than expressive vocabulary.</p>
+<div id="aim2-gca-models" class="section level1">
+<h1><span class="header-section-number">D</span> Computational details for Specific Aim 2</h1>
+<div id="growth-curve-analyses-1" class="section level2">
+<h2><span class="header-section-number">D.1</span> Growth curve analyses</h2>
+<p>These models were fit in R <span class="citation">(vers. 3.5.0; R Core Team, <a href="#ref-R-base">2018</a>)</span> with the brms package
+<span class="citation">(vers. 2.3.1; Bürkner, <a href="#ref-brms">2017</a>)</span>.</p>
+<p>The orthogonal polynomial features for Time, they were scaled as in
+Specific Aim 1, so that the linear feature ranged from −.5 to .5. Under
+this scaling a unit change in Time<sup>1</sup> was equal to change from the start
+to the end of the analysis window.</p>
+<p>The model formula used to specify the model with brms is printed below.
+The variables <code>ot1</code>, <code>ot2</code>, and <code>ot3</code> are the polynomial time features,
+<code>ResearchID</code> identifies children, and <code>Condition</code> identifies the
+experimental condition (either, the nonword or real word condition).
+<code>Target</code> counts the number of looks to the target image at each time
+bin; <code>trials()</code> is a flag that tells brms the number of trials for the
+binomial process. Here, it is the variable <code>Trials</code>, which is equal to
+the number of looks to target and distractor in each bin.
+The syntax <code>(1 + ot1 + ot2 + ot3) * Condition</code> specifies a Time x
+Condition interaction; it says to estimate an intercept and the three
+time feature effects for each condition.
+The line <code>(ot1 + ot2 + ot3 | ResearchID/Condition)</code> describes the
+random-effect structure of the model with the <code>/</code> indicating that data
+from each <code>Condition</code> is nested within each <code>ResearchID</code>.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">library</span>(brms)</a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="co"># Fit a hierarchical logistic regression model</span></a>
+<a class="sourceLine" id="cb7-4" data-line-number="4">formula &lt;-<span class="st"> </span><span class="kw">bf</span>(</a>
+<a class="sourceLine" id="cb7-5" data-line-number="5">  Target <span class="op">|</span><span class="st"> </span><span class="kw">trials</span>(Trials) <span class="op">~</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb7-6" data-line-number="6"><span class="st">    </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>ot1 <span class="op">+</span><span class="st"> </span>ot2 <span class="op">+</span><span class="st"> </span>ot3) <span class="op">*</span><span class="st"> </span>Condition <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb7-7" data-line-number="7"><span class="st">    </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>ot1 <span class="op">+</span><span class="st"> </span>ot2 <span class="op">+</span><span class="st"> </span>ot3 <span class="op">|</span><span class="st"> </span>ResearchID<span class="op">/</span>Condition), </a>
+<a class="sourceLine" id="cb7-8" data-line-number="8">  <span class="dt">family =</span> binomial)</a></code></pre></div>
+<p>The priors for the model are described below. The regression effects
+(<code>class = &quot;b&quot;</code>) have a moderately informative prior of Normal(0, 1).
+Because most of the action in the growth curves is a sharp rise, the
+linear time effect <code>ot1</code> has a slightly wider prior of Normal(0, 2). A
+weakly informative LKJ(2) prior is put on the random effect
+correlations. I review the role of the LKJ prior in<br />
+<a href="aim1-gca-models.html#aim1-gca-models">Appendix <a href="aim1-gca-models.html#aim1-gca-models">B</a></a>. A weakly informative
+prior is put on the random effect standard deviations
+Student-t([df] 7, [mean] 0, [sd] 3). The Student-t distribution
+with is like the normal distribution but it provides slightly thicker
+tails which allow extreme or outlying values.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">priors &lt;-<span class="st"> </span><span class="kw">c</span>(</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">  <span class="kw">set_prior</span>(<span class="dt">class =</span> <span class="st">&quot;Intercept&quot;</span>, <span class="st">&quot;normal(0, 1)&quot;</span>),</a>
+<a class="sourceLine" id="cb8-3" data-line-number="3">  <span class="kw">set_prior</span>(<span class="dt">class =</span> <span class="st">&quot;b&quot;</span>, <span class="st">&quot;normal(0, 1)&quot;</span>),</a>
+<a class="sourceLine" id="cb8-4" data-line-number="4">  <span class="kw">set_prior</span>(<span class="dt">class =</span> <span class="st">&quot;b&quot;</span>, <span class="dt">coef =</span> <span class="st">&quot;ot1&quot;</span>, <span class="st">&quot;normal(0, 2)&quot;</span>),</a>
+<a class="sourceLine" id="cb8-5" data-line-number="5">  <span class="kw">set_prior</span>(<span class="dt">class =</span> <span class="st">&quot;cor&quot;</span>, <span class="st">&quot;lkj(2)&quot;</span>),</a>
+<a class="sourceLine" id="cb8-6" data-line-number="6">  <span class="kw">set_prior</span>(<span class="dt">class =</span> <span class="st">&quot;sd&quot;</span>, <span class="st">&quot;student_t(7, 0, 3)&quot;</span>))</a></code></pre></div>
+<p>I fit a separate model for each year of the study using syntax like the
+following. This fits the model using four sampling <code>chains</code> in parallel
+over four processing <code>cores</code>. Early attempts at the model produced
+warnings, so I increased the <code>adapt_delta</code> control option to make the
+sampling more robust and eliminate the warnings.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">m_age3 &lt;-<span class="st"> </span><span class="kw">brm</span>(</a>
+<a class="sourceLine" id="cb9-2" data-line-number="2">  <span class="dt">formula =</span> formula,</a>
+<a class="sourceLine" id="cb9-3" data-line-number="3">  <span class="dt">data =</span> d_age3,</a>
+<a class="sourceLine" id="cb9-4" data-line-number="4">  <span class="dt">prior =</span> priors,</a>
+<a class="sourceLine" id="cb9-5" data-line-number="5">  <span class="dt">chains =</span> <span class="dv">4</span>,</a>
+<a class="sourceLine" id="cb9-6" data-line-number="6">  <span class="dt">cores =</span> <span class="dv">4</span>,</a>
+<a class="sourceLine" id="cb9-7" data-line-number="7">  <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">adapt_delta =</span> <span class="fl">.99</span>))</a>
+<a class="sourceLine" id="cb9-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb9-9" data-line-number="9"><span class="co"># Save the output</span></a>
+<a class="sourceLine" id="cb9-10" data-line-number="10">readr<span class="op">::</span><span class="kw">write_rds</span>(m_age3, <span class="st">&quot;age3_mp.rds.gz&quot;</span>)</a></code></pre></div>
+<p>I originally tried a single model containing all three years with
+corresponding year effects, year-by-time interactions, and
+year-by-condition-by-time conditions. But this model had difficulty
+converging, and even when a passable model was obtained, a bug in the
+modeling software prevented me from obtaining posterior predictions. I
+reported the bug in an issue for the package’s source code repository.</p>
+<div id="model-summaries" class="section level3">
+<h3><span class="header-section-number">D.1.1</span> Model summaries</h3>
+</div>
+<div id="real-words-versus-nonwords-at-age-3" class="section level3">
+<h3><span class="header-section-number">D.1.2</span> Real words versus nonwords at age 3</h3>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">m1 &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_rds</span>(<span class="st">&quot;./data/aim2-real-vs-nw-tp1.rds.gz&quot;</span>)</a>
+<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="kw">summary</span>(m1, <span class="dt">priors =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="co">#&gt;  Family: binomial </span></a>
+<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="co">#&gt;   Links: mu = logit </span></a>
+<a class="sourceLine" id="cb10-5" data-line-number="5"><span class="co">#&gt; Formula: Target | trials(Trials) ~ (ot1 + ot2 + ot3) * Condition + (ot1 + ot2 + ot3 | ResearchID/Condition) </span></a>
+<a class="sourceLine" id="cb10-6" data-line-number="6"><span class="co">#&gt;    Data: test_data_1 (Number of observations: 7450) </span></a>
+<a class="sourceLine" id="cb10-7" data-line-number="7"><span class="co">#&gt; Samples: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;</span></a>
+<a class="sourceLine" id="cb10-8" data-line-number="8"><span class="co">#&gt;          total post-warmup samples = 4000</span></a>
+<a class="sourceLine" id="cb10-9" data-line-number="9"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb10-10" data-line-number="10"><span class="co">#&gt; Priors: </span></a>
+<a class="sourceLine" id="cb10-11" data-line-number="11"><span class="co">#&gt; b ~ normal(0, 1)</span></a>
+<a class="sourceLine" id="cb10-12" data-line-number="12"><span class="co">#&gt; b_ot1 ~ normal(0, 2)</span></a>
+<a class="sourceLine" id="cb10-13" data-line-number="13"><span class="co">#&gt; Intercept ~ normal(0, 1)</span></a>
+<a class="sourceLine" id="cb10-14" data-line-number="14"><span class="co">#&gt; L ~ lkj_corr_cholesky(2)</span></a>
+<a class="sourceLine" id="cb10-15" data-line-number="15"><span class="co">#&gt; sd ~ student_t(7, 0, 3)</span></a>
+<a class="sourceLine" id="cb10-16" data-line-number="16"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb10-17" data-line-number="17"><span class="co">#&gt; Group-Level Effects: </span></a>
+<a class="sourceLine" id="cb10-18" data-line-number="18"><span class="co">#&gt; ~ResearchID (Number of levels: 149) </span></a>
+<a class="sourceLine" id="cb10-19" data-line-number="19"><span class="co">#&gt;                    Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat</span></a>
+<a class="sourceLine" id="cb10-20" data-line-number="20"><span class="co">#&gt; sd(Intercept)          0.73      0.13     0.45     0.96        290 1.00</span></a>
+<a class="sourceLine" id="cb10-21" data-line-number="21"><span class="co">#&gt; sd(ot1)                0.64      0.40     0.03     1.42         68 1.03</span></a>
+<a class="sourceLine" id="cb10-22" data-line-number="22"><span class="co">#&gt; sd(ot2)                0.34      0.19     0.02     0.71        130 1.02</span></a>
+<a class="sourceLine" id="cb10-23" data-line-number="23"><span class="co">#&gt; sd(ot3)                0.14      0.10     0.01     0.36        233 1.01</span></a>
+<a class="sourceLine" id="cb10-24" data-line-number="24"><span class="co">#&gt; cor(Intercept,ot1)     0.25      0.33    -0.50     0.78        176 1.02</span></a>
+<a class="sourceLine" id="cb10-25" data-line-number="25"><span class="co">#&gt; cor(Intercept,ot2)    -0.26      0.32    -0.79     0.44        838 1.00</span></a>
+<a class="sourceLine" id="cb10-26" data-line-number="26"><span class="co">#&gt; cor(ot1,ot2)          -0.08      0.37    -0.72     0.66        380 1.01</span></a>
+<a class="sourceLine" id="cb10-27" data-line-number="27"><span class="co">#&gt; cor(Intercept,ot3)     0.12      0.34    -0.58     0.74       1338 1.00</span></a>
+<a class="sourceLine" id="cb10-28" data-line-number="28"><span class="co">#&gt; cor(ot1,ot3)           0.06      0.38    -0.67     0.74        740 1.00</span></a>
+<a class="sourceLine" id="cb10-29" data-line-number="29"><span class="co">#&gt; cor(ot2,ot3)          -0.01      0.37    -0.68     0.70       1226 1.00</span></a>
+<a class="sourceLine" id="cb10-30" data-line-number="30"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb10-31" data-line-number="31"><span class="co">#&gt; ~ResearchID:Condition (Number of levels: 298) </span></a>
+<a class="sourceLine" id="cb10-32" data-line-number="32"><span class="co">#&gt;                    Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat</span></a>
+<a class="sourceLine" id="cb10-33" data-line-number="33"><span class="co">#&gt; sd(Intercept)          1.24      0.08     1.10     1.40        611 1.00</span></a>
+<a class="sourceLine" id="cb10-34" data-line-number="34"><span class="co">#&gt; sd(ot1)                2.66      0.16     2.35     2.98        320 1.01</span></a>
+<a class="sourceLine" id="cb10-35" data-line-number="35"><span class="co">#&gt; sd(ot2)                1.40      0.09     1.23     1.57        572 1.00</span></a>
+<a class="sourceLine" id="cb10-36" data-line-number="36"><span class="co">#&gt; sd(ot3)                0.83      0.05     0.72     0.94        923 1.00</span></a>
+<a class="sourceLine" id="cb10-37" data-line-number="37"><span class="co">#&gt; cor(Intercept,ot1)     0.29      0.08     0.12     0.44        407 1.01</span></a>
+<a class="sourceLine" id="cb10-38" data-line-number="38"><span class="co">#&gt; cor(Intercept,ot2)     0.06      0.10    -0.13     0.24        694 1.00</span></a>
+<a class="sourceLine" id="cb10-39" data-line-number="39"><span class="co">#&gt; cor(ot1,ot2)           0.01      0.09    -0.16     0.18        631 1.00</span></a>
+<a class="sourceLine" id="cb10-40" data-line-number="40"><span class="co">#&gt; cor(Intercept,ot3)    -0.10      0.09    -0.28     0.09        945 1.00</span></a>
+<a class="sourceLine" id="cb10-41" data-line-number="41"><span class="co">#&gt; cor(ot1,ot3)          -0.06      0.09    -0.24     0.12       1202 1.00</span></a>
+<a class="sourceLine" id="cb10-42" data-line-number="42"><span class="co">#&gt; cor(ot2,ot3)          -0.06      0.08    -0.23     0.10       1128 1.00</span></a>
+<a class="sourceLine" id="cb10-43" data-line-number="43"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb10-44" data-line-number="44"><span class="co">#&gt; Population-Level Effects: </span></a>
+<a class="sourceLine" id="cb10-45" data-line-number="45"><span class="co">#&gt;                   Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat</span></a>
+<a class="sourceLine" id="cb10-46" data-line-number="46"><span class="co">#&gt; Intercept             0.41      0.12     0.18     0.66       1392 1.00</span></a>
+<a class="sourceLine" id="cb10-47" data-line-number="47"><span class="co">#&gt; ot1                   4.59      0.24     4.13     5.06        744 1.01</span></a>
+<a class="sourceLine" id="cb10-48" data-line-number="48"><span class="co">#&gt; ot2                  -1.36      0.13    -1.61    -1.11       1167 1.00</span></a>
+<a class="sourceLine" id="cb10-49" data-line-number="49"><span class="co">#&gt; ot3                   0.39      0.08     0.23     0.55       1828 1.00</span></a>
+<a class="sourceLine" id="cb10-50" data-line-number="50"><span class="co">#&gt; Conditionreal        -0.19      0.15    -0.48     0.10       1550 1.00</span></a>
+<a class="sourceLine" id="cb10-51" data-line-number="51"><span class="co">#&gt; ot1:Conditionreal     0.45      0.31    -0.16     1.03        673 1.01</span></a>
+<a class="sourceLine" id="cb10-52" data-line-number="52"><span class="co">#&gt; ot2:Conditionreal    -0.02      0.17    -0.37     0.31       1077 1.00</span></a>
+<a class="sourceLine" id="cb10-53" data-line-number="53"><span class="co">#&gt; ot3:Conditionreal    -0.07      0.11    -0.29     0.15       1674 1.00</span></a>
+<a class="sourceLine" id="cb10-54" data-line-number="54"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb10-55" data-line-number="55"><span class="co">#&gt; Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample </span></a>
+<a class="sourceLine" id="cb10-56" data-line-number="56"><span class="co">#&gt; is a crude measure of effective sample size, and Rhat is the potential </span></a>
+<a class="sourceLine" id="cb10-57" data-line-number="57"><span class="co">#&gt; scale reduction factor on split chains (at convergence, Rhat = 1).</span></a></code></pre></div>
 
-
+</div>
+</div>
 </div>
 <h3>References</h3>
 <div id="refs" class="references">
-<div id="ref-RWLPaper">
-<p>Law, F., II, Mahr, T., Schneeberg, A., &amp; Edwards, J. R. (2016). Vocabulary size and auditory word recognition in preschool children. <em>Applied Psycholinguistics</em>. doi:<a href="https://doi.org/10.1017/S0142716416000126">10.1017/S0142716416000126</a></p>
+<div id="ref-R-base">
+<p>R Core Team. (2018). <em>R: A language and environment for statistical computing</em>. Vienna, Austria: R Foundation for Statistical Computing. Retrieved from <a href="https://www.R-project.org/" class="uri">https://www.R-project.org/</a></p>
 </div>
-<div id="ref-MPPaper">
-<p>Law, F., II, &amp; Edwards, J. R. (2015). Effects of vocabulary size on online lexical processing by preschoolers. <em>Language Learning and Development</em>, <em>11</em>(4), 331–355. doi:<a href="https://doi.org/10.1080/15475441.2014.961066">10.1080/15475441.2014.961066</a></p>
-</div>
-<div id="ref-Weisleder2013">
-<p>Weisleder, A., &amp; Fernald, A. (2013). Talking to children matters: Early language experience strengthens processing and builds vocabulary. <em>Psychological Science</em>, <em>24</em>(11), 2143–52. doi:<a href="https://doi.org/10.1177/0956797613488145">10.1177/0956797613488145</a></p>
+<div id="ref-brms">
+<p>Bürkner, P.-C. (2017). brms: An R package for Bayesian multilevel models using Stan. <em>Journal of Statistical Software</em>, <em>80</em>(1), 1–28. doi:<a href="https://doi.org/10.18637/jss.v080.i01">10.18637/jss.v080.i01</a></p>
 </div>
 </div>
 <script type="text/javascript">
@@ -323,8 +407,8 @@ lexical processing and home language input than expressive vocabulary.</p>
           </div>
         </div>
       </div>
-<a href="aim2-gca-models.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="mp-experiment-items.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="related-work.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

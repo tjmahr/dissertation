@@ -193,7 +193,7 @@ i_ints <- mcmc_intervals_data(test, regex_pars = "Prop_Age") %>%
 ```
 
 
-```{r explore-intervals2, eval = FALSE}
+```{r explore-intervals, eval = FALSE}
 test <- posterior_samples(mp_unfam, pars = "^b_") %>% 
   mutate(
     b_Intercept_Age3 = b_Intercept,

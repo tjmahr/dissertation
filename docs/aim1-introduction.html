@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Development of word recognition in preschoolers</title>
   <meta name="description" content="Development of word recognition in preschoolers">
-  <meta name="generator" content="bookdown 0.7.12 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
 
   <meta property="og:title" content="Development of word recognition in preschoolers" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,7 @@
 <meta name="author" content="Tristan Mahr">
 
 
-<meta name="date" content="2018-06-30">
+<meta name="date" content="2018-07-09">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -60,41 +60,69 @@ div.abstract{
 
 
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 <link rel="stylesheet" href="assets\style.css" type="text/css" />
@@ -110,7 +138,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <nav role="navigation">
 
 <ul class="summary">
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a></li>
 <li class="part"><span><b>Prospectus</b></span></li>
 <li class="chapter" data-level="1" data-path="dissertation-information.html"><a href="dissertation-information.html"><i class="fa fa-check"></i><b>1</b> Dissertation information</a><ul>
 <li class="chapter" data-level="" data-path="dissertation-information.html"><a href="dissertation-information.html#committee-members"><i class="fa fa-check"></i>Committee Members</a></li>
@@ -176,10 +203,15 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="9.4" data-path="aim2-method.html"><a href="aim2-method.html#model-prepation"><i class="fa fa-check"></i><b>9.4</b> Model prepation</a></li>
 </ul></li>
 <li class="chapter" data-level="10" data-path="development-of-referent-selection.html"><a href="development-of-referent-selection.html"><i class="fa fa-check"></i><b>10</b> Development of referent selection</a><ul>
-<li class="chapter" data-level="10.1" data-path="development-of-referent-selection.html"><a href="development-of-referent-selection.html#nonwords-versus-real-words"><i class="fa fa-check"></i><b>10.1</b> Nonwords versus real words</a></li>
+<li class="chapter" data-level="10.1" data-path="development-of-referent-selection.html"><a href="development-of-referent-selection.html#nonwords-versus-familiar-words"><i class="fa fa-check"></i><b>10.1</b> Nonwords versus familiar words</a></li>
 <li class="chapter" data-level="10.2" data-path="development-of-referent-selection.html"><a href="development-of-referent-selection.html#does-age-3-referent-selection-better-predicts-age-5-vocabulary"><i class="fa fa-check"></i><b>10.2</b> Does age 3 referent selection better predicts age 5 vocabulary?</a><ul>
 <li class="chapter" data-level="10.2.1" data-path="development-of-referent-selection.html"><a href="development-of-referent-selection.html#points-for-discussion"><i class="fa fa-check"></i><b>10.2.1</b> Points for discussion</a></li>
 </ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="sensitivity-to-mispronunciations.html"><a href="sensitivity-to-mispronunciations.html"><i class="fa fa-check"></i><b>11</b> Sensitivity to mispronunciations</a><ul>
+<li class="chapter" data-level="11.1" data-path="sensitivity-to-mispronunciations.html"><a href="sensitivity-to-mispronunciations.html#unfamiliar-initial-trials"><i class="fa fa-check"></i><b>11.1</b> Unfamiliar-initial trials</a></li>
+<li class="chapter" data-level="11.2" data-path="sensitivity-to-mispronunciations.html"><a href="sensitivity-to-mispronunciations.html#familiar-initial-trials"><i class="fa fa-check"></i><b>11.2</b> Familiar-initial trials</a></li>
+<li class="chapter" data-level="11.3" data-path="sensitivity-to-mispronunciations.html"><a href="sensitivity-to-mispronunciations.html#discussion-2"><i class="fa fa-check"></i><b>11.3</b> Discussion</a></li>
 </ul></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
 <li class="chapter" data-level="A" data-path="vw-experiment-items.html"><a href="vw-experiment-items.html"><i class="fa fa-check"></i><b>A</b> Items used in the visual world experiment</a></li>
@@ -187,7 +219,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="B.1" data-path="aim1-gca-models.html"><a href="aim1-gca-models.html#growth-curve-analyses"><i class="fa fa-check"></i><b>B.1</b> Growth curve analyses</a></li>
 <li class="chapter" data-level="B.2" data-path="aim1-gca-models.html"><a href="aim1-gca-models.html#generalized-additive-models"><i class="fa fa-check"></i><b>B.2</b> Generalized additive models</a></li>
 </ul></li>
-<li class="chapter" data-level="C" data-path="related-work.html"><a href="related-work.html"><i class="fa fa-check"></i><b>C</b> Related work</a></li>
+<li class="chapter" data-level="C" data-path="mp-experiment-items.html"><a href="mp-experiment-items.html"><i class="fa fa-check"></i><b>C</b> Items used in the mispronunciation experiment</a></li>
+<li class="chapter" data-level="D" data-path="aim2-gca-models.html"><a href="aim2-gca-models.html"><i class="fa fa-check"></i><b>D</b> Computational details for Specific Aim 2</a><ul>
+<li class="chapter" data-level="D.1" data-path="aim2-gca-models.html"><a href="aim2-gca-models.html#growth-curve-analyses-1"><i class="fa fa-check"></i><b>D.1</b> Growth curve analyses</a><ul>
+<li class="chapter" data-level="D.1.1" data-path="aim2-gca-models.html"><a href="aim2-gca-models.html#model-summaries"><i class="fa fa-check"></i><b>D.1.1</b> Model summaries</a></li>
+<li class="chapter" data-level="D.1.2" data-path="aim2-gca-models.html"><a href="aim2-gca-models.html#real-words-versus-nonwords-at-age-3"><i class="fa fa-check"></i><b>D.1.2</b> Real words versus nonwords at age 3</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="E" data-path="related-work.html"><a href="related-work.html"><i class="fa fa-check"></i><b>E</b> Related work</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Created with bookdown</a></li>
@@ -214,23 +253,144 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h1><span class="header-section-number">Chapter 4</span> Familiar word recognition</h1>
 <div id="lexical-processing-dynamics" class="section level2">
 <h2><span class="header-section-number">4.1</span> Lexical processing dynamics</h2>
-<p>Mature listeners recognize spoken words by continuously evaluating incoming speech for possible word matches. The first part of a word activates multiple candidate words in parallel. These candidates compete as more of the speech signal enters the system, and the best-fitting word is the favored interpretation. For example, the onset “bee” might activate phonologically compatible candidates like <em>bee</em>, <em>beam</em>, <em>beetle</em>, <em>beak</em>, <em>beaker</em>, <em>beginning</em>, and so on, but an additional “m” would narrow the candidates to just <em>beam</em>. Semantic relationships also influence lexical processing, and cascading phonological-semantic effects—for instance, where <em>castle</em> activates the phonologically similar <em>candy</em> which in turn activates the semantically related <em>sweet</em>—have been demonstrated <span class="citation">(Marslen-Wilson &amp; Zwitserlood, <a href="#ref-Marslen-Wilson1989">1989</a>)</span>. Both low-level phonetic cues and high-level grammatical, semantic and pragmatic information can influence this process, but this <em>continuous processing of multiple competing candidates</em> is the essential dynamic underlying word recognition in adults <span class="citation">(Magnuson, Mirman, &amp; Myers, <a href="#ref-Magnuson2013">2013</a>)</span>.</p>
-<p>What about young children who know considerably fewer words? Eyetracking studies with toddlers have suggested a developmental continuity between toddlers and adult listeners. Children recognize words incrementally <span class="citation">(Swingley, Pinto, &amp; Fernald, <a href="#ref-Swingley1999">1999</a>)</span>, match truncated words to their intended referents <span class="citation">(Fernald, Swingley, &amp; Pinto, <a href="#ref-Fernald2001">2001</a>)</span>, and use information from neighboring words in a sentence to facilitate word recognition. This information can be high-level grammatical or semantic cues. <span class="citation">Lew-Williams &amp; Fernald (<a href="#ref-Lew-Williams2007">2007</a>)</span> found that Spanish-acquiring preschoolers can use grammatical gender on determiners (<em>el</em> or <em>la</em>) to anticipate the word named in a two-object word recognition task. <span class="citation">Borovsky, Elman, &amp; Fernald (<a href="#ref-Borovsky2012">2012</a>)</span> showed that children can use semantic information from an agent and a verb (e.g., <em>the dog chased</em>) to anticipate a plausible noun (<em>the cat</em>). The information can also be low-level phonetic variation: We found that toddlers look earlier to a named image when the coarticulatory formant cues on word <em>the</em> predicted the noun of the sentence, compared to tokens with neutral coarticulation <span class="citation">(Mahr, McMillan, Saffran, Ellis Weismer, &amp; Edwards, <a href="#ref-Mahr2015">2015</a>)</span>.</p>
-<p>There is some evidence for lexical competition where children are sensitive to phonological and semantic similarities among words. <span class="citation">Ellis Weismer, Haebig, Edwards, Saffran, &amp; Venker (<a href="#ref-EllisWeismer2016">2016</a>)</span> showed that toddlers (14–29 months old) look less reliably to a named image when the onscreen competitor was a semantically related word or perceptually similar image. <span class="citation">Huang &amp; Snedeker (<a href="#ref-Huang2011">2011</a>)</span> presented evidence of cascading semantic-phonological activation in five-year-olds such that for a target word like <em>log</em>, the children looked more to an indirect phonological competitor like <em>key</em> (competing through its activation of <em>lock</em>) than they looked to an unrelated image like <em>carrot</em>.</p>
-<p>Priming studies also reveal that children are sensitive to phonological similarities among words. <span class="citation">Mani &amp; Plunkett (<a href="#ref-Mani2010">2010</a>)</span> demonstrated cross-modal phonological priming effects in 18-month-olds. In this study, a picture of prime word (e.g., cat or teeth) was presented in silence; then two images (cup and shoe) were presented, one of which was named (<em>cup</em>). Children on average looked more to the target word (<em>cup</em>) when it was primed by an image of a phonological neighbor (<em>cat</em>), and the children performed at chance when the prime was not related to the named word. <span class="citation">Mani, Durrant, &amp; Floccia (<a href="#ref-Mani2012">2012</a>)</span> found a similar result for cascading phonological-semantic priming with 24-month-olds: Children looked more to a target (e.g., <em>shoe</em>) compared to a distractor (<em>door</em>) when primed by an image (<em>clock</em>, assumed to activate <em>sock</em> which primed <em>shoe</em>).<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
-<p>The above studies involved young children of different ages tested under different procedures, sometimes in different dialects and languages. Averaging these results together, so to speak, the studies suggest that early word recognition demonstrates some hallmarks of adult behavior: Continuous processing of words, integration of information from different levels of representation, and the influence of similar, unspoken words on recognition of a word. Nevertheless, we only have a fragmented view of how familiar word recognition develops within children.</p>
-<p>One open question is how lexical competition develops in young listeners. For example, how and when do phonological or semantically similar words exert their influence on word recognition? As a guiding hypothesis, we can think of word learning as a gradual process where familiarity with a word moves from shallow receptive knowledge to deeper expressive knowledge. In adult listeners, words compete and they inhibit one another, so that a word is truly “learned” (integrated into the lexicon) when it can influence the processing of other words <span class="citation">(a line of reasoning reviewed by Kapnoula, Packard, Gupta, &amp; McMurray, <a href="#ref-Kapnoula2015">2015</a>)</span>. Increasing sensitivity to similar sounding or similar meaning words over time would reveal that children more thoroughly learn familiar words with age.</p>
+<p>Mature listeners recognize spoken words by continuously evaluating
+incoming speech for possible word matches. The first part of a word
+activates multiple candidate words in parallel. These candidates compete
+as more of the speech signal enters the system, and the best-fitting
+word is the favored interpretation. For example, the onset “bee” might
+activate phonologically compatible candidates like <em>bee</em>, <em>beam</em>,
+<em>beetle</em>, <em>beak</em>, <em>beaker</em>, <em>beginning</em>, and so on, but an additional
+“m” would narrow the candidates to just <em>beam</em>. Semantic relationships
+also influence lexical processing, and cascading phonological-semantic
+effects—for instance, where <em>castle</em> activates the phonologically
+similar <em>candy</em> which in turn activates the semantically related
+<em>sweet</em>—have been demonstrated <span class="citation">(Marslen-Wilson &amp; Zwitserlood, <a href="#ref-Marslen-Wilson1989">1989</a>)</span>. Both low-level
+phonetic cues and high-level grammatical, semantic and pragmatic
+information can influence this process, but this <em>continuous processing
+of multiple competing candidates</em> is the essential dynamic underlying
+word recognition in adults <span class="citation">(Magnuson, Mirman, &amp; Myers, <a href="#ref-Magnuson2013">2013</a>)</span>.</p>
+<p>What about young children who know considerably fewer words? Eyetracking
+studies with toddlers have suggested a developmental continuity between
+toddlers and adult listeners. Children recognize words incrementally
+<span class="citation">(Swingley, Pinto, &amp; Fernald, <a href="#ref-Swingley1999">1999</a>)</span>, match truncated words to their intended referents
+<span class="citation">(Fernald, Swingley, &amp; Pinto, <a href="#ref-Fernald2001">2001</a>)</span>, and use information from neighboring words in a
+sentence to facilitate word recognition. This information can be
+high-level grammatical or semantic cues. <span class="citation">Lew-Williams &amp; Fernald (<a href="#ref-Lew-Williams2007">2007</a>)</span> found that
+Spanish-acquiring preschoolers can use grammatical gender on determiners
+(<em>el</em> or <em>la</em>) to anticipate the word named in a two-object word
+recognition task. <span class="citation">Borovsky, Elman, &amp; Fernald (<a href="#ref-Borovsky2012">2012</a>)</span> showed that children can use semantic
+information from an agent and a verb (e.g., <em>the dog chased</em>) to
+anticipate a plausible noun (<em>the cat</em>). The information can also be
+low-level phonetic variation: We found that toddlers look earlier to a
+named image when the coarticulatory formant cues on word <em>the</em> predicted
+the noun of the sentence, compared to tokens with neutral coarticulation
+<span class="citation">(Mahr, McMillan, Saffran, Ellis Weismer, &amp; Edwards, <a href="#ref-Mahr2015">2015</a>)</span>.</p>
+<p>There is some evidence for lexical competition where children are
+sensitive to phonological and semantic similarities among words.
+<span class="citation">Ellis Weismer, Haebig, Edwards, Saffran, &amp; Venker (<a href="#ref-EllisWeismer2016">2016</a>)</span> showed that toddlers (14–29 months old) look less
+reliably to a named image when the onscreen competitor was a
+semantically related word or perceptually similar image. <span class="citation">Huang &amp; Snedeker (<a href="#ref-Huang2011">2011</a>)</span>
+presented evidence of cascading semantic-phonological activation in
+five-year-olds such that for a target word like <em>log</em>, the children
+looked more to an indirect phonological competitor like <em>key</em> (competing
+through its activation of <em>lock</em>) than they looked to an unrelated image
+like <em>carrot</em>.</p>
+<p>Priming studies also reveal that children are sensitive to phonological
+similarities among words. <span class="citation">Mani &amp; Plunkett (<a href="#ref-Mani2010">2010</a>)</span> demonstrated
+cross-modal phonological priming effects in 18-month-olds. In this
+study, a picture of prime word (e.g., cat or teeth) was presented in
+silence; then two images (cup and shoe) were presented, one of which was
+named (<em>cup</em>). Children on average looked more to the target word
+(<em>cup</em>) when it was primed by an image of a phonological neighbor
+(<em>cat</em>), and the children performed at chance when the prime was not
+related to the named word. <span class="citation">Mani, Durrant, &amp; Floccia (<a href="#ref-Mani2012">2012</a>)</span> found a similar result for
+cascading phonological-semantic priming with 24-month-olds: Children
+looked more to a target (e.g., <em>shoe</em>) compared to a distractor (<em>door</em>)
+when primed by an image (<em>clock</em>, assumed to activate <em>sock</em> which
+primed <em>shoe</em>).<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
+<p>The above studies involved young children of different ages tested under
+different procedures, sometimes in different dialects and languages.
+Averaging these results together, so to speak, the studies suggest that
+early word recognition demonstrates some hallmarks of adult behavior:
+Continuous processing of words, integration of information from
+different levels of representation, and the influence of similar,
+unspoken words on recognition of a word. Nevertheless, we only have a
+fragmented view of how familiar word recognition develops within children.</p>
+<p>One open question is how lexical competition develops in young
+listeners. For example, how and when do phonological or semantically
+similar words exert their influence on word recognition? As a guiding
+hypothesis, we can think of word learning as a gradual process where
+familiarity with a word moves from shallow receptive knowledge to deeper
+expressive knowledge. In adult listeners, words compete and they inhibit
+one another, so that a word is truly “learned” (integrated into the
+lexicon) when it can influence the processing of other words <span class="citation">(a line of
+reasoning reviewed by Kapnoula, Packard, Gupta, &amp; McMurray, <a href="#ref-Kapnoula2015">2015</a>)</span>. Increasing sensitivity to similar
+sounding or similar meaning words over time would reveal that children
+more thoroughly learn familiar words with age.</p>
 </div>
 <div id="individual-differences-in-word-recognition" class="section level2">
 <h2><span class="header-section-number">4.2</span> Individual differences in word recognition</h2>
-<p>We have a rough understanding of the development of word recognition, and these gaps in knowledge matter because young children differ in their word recognition abilities. These differences are usually measured using <em>accuracy</em> (a probability of recognizing to a word) or <em>efficiency</em> (a reaction time or some measure of how quickly accuracy changes over time). These differences are consequential too, as word recognition differences correlate with other language measures concurrently and prospectively.</p>
-<p>Many studies highlight the predictive power of word recognition ability. <span class="citation">Marchman &amp; Fernald (<a href="#ref-MarchmanFernald2008">2008</a>)</span> found that vocabulary size and lexical processing efficiency at age 2 jointly predicted working memory scores and expressive language scores at age 8. <span class="citation">Fernald &amp; Marchman (<a href="#ref-Fernald2012">2012</a>)</span> found that late talkers who looked more quickly to a named word at 18 months showed larger gains in vocabulary by 30 months compared to late-talkers who looked more slowly at 18 months. <span class="citation">Weisleder &amp; Fernald (<a href="#ref-Weisleder2013">2013</a>)</span> found that lexical processing and language input at 19 months predicted vocabulary size at 25 months and that lexical processing mediated the effect of language input—the basic idea being that rich language input builds up word recognition ability which in turn supports word learning. <span class="citation">Lany (<a href="#ref-Lany2017">2017</a>)</span> found a direct link between lexical processing and word learning: 18-month-olds and 30-month-olds who were faster at recognizing familiar words were also more accurate at recognizing novel words in a word-learning task. Thus, children who are better at recognizing words learn more words over time and perform better at word-learning tasks.</p>
-<p>Word recognition performance predicts future language outcomes, so we conclude that individual differences in word recognition are important. But we do not know how word recognition develops within children, so we have no context for evaluating these individual differences. Are these differences in lexical processing persistent over development? Is word recognition a skill where most children catch up and converge on a mature range of performance by a certain age?</p>
+<p>We have a rough understanding of the development of word recognition,
+and these gaps in knowledge matter because young children differ in
+their word recognition abilities. These differences are usually measured
+using <em>accuracy</em> (a probability of recognizing to a word) or
+<em>efficiency</em> (a reaction time or some measure of how quickly accuracy
+changes over time). These differences are consequential too, as word
+recognition differences correlate with other language measures
+concurrently and prospectively.</p>
+<p>Many studies highlight the predictive power of word recognition ability.
+<span class="citation">Marchman &amp; Fernald (<a href="#ref-MarchmanFernald2008">2008</a>)</span> found that vocabulary size and lexical processing
+efficiency at age 2 jointly predicted working memory scores and
+expressive language scores at age 8. <span class="citation">Fernald &amp; Marchman (<a href="#ref-Fernald2012">2012</a>)</span> found that late
+talkers who looked more quickly to a named word at 18 months showed
+larger gains in vocabulary by 30 months compared to late-talkers who
+looked more slowly at 18 months. <span class="citation">Weisleder &amp; Fernald (<a href="#ref-Weisleder2013">2013</a>)</span> found that lexical
+processing and language input at 19 months predicted vocabulary size
+at 25 months and that lexical processing mediated the effect of
+language input—the basic idea being that rich language input builds up
+word recognition ability which in turn supports word learning. <span class="citation">Lany (<a href="#ref-Lany2017">2017</a>)</span>
+found a direct link between lexical processing and word
+learning: 18-month-olds and 30-month-olds who were faster at recognizing
+familiar words were also more accurate at recognizing novel words in a
+word-learning task. Thus, children who are better at recognizing words
+learn more words over time and perform better at word-learning tasks.</p>
+<p>Word recognition performance predicts future language outcomes, so we
+conclude that individual differences in word recognition are important.
+But we do not know how word recognition develops within children, so we
+have no context for evaluating these individual differences. Are these
+differences in lexical processing persistent over development? Is word
+recognition a skill where most children catch up and converge on a
+mature range of performance by a certain age?</p>
 </div>
 <div id="the-current-study" class="section level2">
 <h2><span class="header-section-number">4.3</span> The current study</h2>
-<p>In the previous two sections, I outlined two gaps in knowledge. The first is that we do not have a clear understanding of how the mechanisms underlying word recognition change in early childhood. We know that children show plenty of adult-like features of word recognition, but each of these findings is an isolated fact. What we need is a coherent set of facts that show how specific features of word recognition change with age. The second gap is that although we know that individual differences in word recognition are predictive of later outcomes, we do not have a developmental picture of these individual differences.</p>
-<p>In this study, I tackle these two lines of research: The development of lexical competition effects and individual differences in familiar word recognition. I report the results of a longitudinal study of word recognition in preschoolers at age 3, age 4, and age 5. The study is described in detail in <a href="aim1-method.html#aim1-method">Chapter <a href="aim1-method.html#aim1-method">5</a></a>. Briefly stated, this experiment tested word recognition by presenting prompts like “find the horse” and recording children’s looks to an array of four images. The array of images included the target, a phonological competitor, a semantic competitor, and an unrelated image. In <a href="fam-rec.html#fam-rec">Chapter <a href="fam-rec.html#fam-rec">6</a></a>, I analyze the development patterns of familiar word recognition (looks to the target) and how individual differences change over time. In <a href="lex-competitors.html#lex-competitors">Chapter <a href="lex-competitors.html#lex-competitors">7</a></a>, I study how the phonological and semantic competitors influence word recognition and how the influence of the competitors changes over time. Finally, in <a href="aim1-discussion.html#aim1-discussion">Chapter <a href="aim1-discussion.html#aim1-discussion">8</a></a>, I link these two lines of research together and describe both sets of results in terms of lexical processing dynamics.</p>
+<p>In the previous two sections, I outlined two gaps in knowledge. The
+first is that we do not have a clear understanding of how the mechanisms
+underlying word recognition change in early childhood. We know that children
+show plenty of adult-like features of word recognition, but each of
+these findings is an isolated fact. What we need is a coherent set of
+facts that show how specific features of word recognition change with age.
+The second gap is that although we know that individual differences in
+word recognition are predictive of later outcomes, we do not have a
+developmental picture of these individual differences.</p>
+<p>In this study, I tackle these two lines of research: The development of
+lexical competition effects and individual differences in familiar word
+recognition. I report the results of a longitudinal study of word
+recognition in preschoolers at age 3, age 4, and age 5. The study is
+described in detail in <a href="aim1-method.html#aim1-method">Chapter <a href="aim1-method.html#aim1-method">5</a></a>.
+Briefly stated, this experiment tested word recognition by presenting
+prompts like “find the horse” and recording children’s looks to an array
+of four images. The array of images included the target, a phonological
+competitor, a semantic competitor, and an unrelated image. In
+<a href="fam-rec.html#fam-rec">Chapter <a href="fam-rec.html#fam-rec">6</a></a>, I analyze the development patterns of
+familiar word recognition (looks to the target) and how individual
+differences change over time. In
+<a href="lex-competitors.html#lex-competitors">Chapter <a href="lex-competitors.html#lex-competitors">7</a></a>, I study how the
+phonological and semantic competitors influence word recognition and how
+the influence of the competitors changes over time. Finally, in
+<a href="aim1-discussion.html#aim1-discussion">Chapter <a href="aim1-discussion.html#aim1-discussion">8</a></a>, I link these two
+lines of research together and describe both sets of results in terms of
+lexical processing dynamics.</p>
 <!-- One first step towards understanding differences in word recognition is -->
 <!-- the following observation: The best predictor of lexical processing -->
 <!-- efficiency in children is concurrent vocabulary size. That is, children -->
@@ -335,7 +495,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div class="footnotes">
 <hr />
 <ol start="1">
-<li id="fn1"><p><span class="citation">Arias-Trejo &amp; Plunkett (<a href="#ref-Arias-Trejo2009">2009</a>)</span> is commonly cited as evidence of semantic priming effects. Toddlers heard sentences like “I saw a cat… dog”. During the word <em>dog</em>, two images (dog and door) are presented. The idea is that <em>cat</em> should prime looks to its semantic neighbor <em>dog</em>. The unnatural stimulus order (a sentence followed by an isolated single word) and a condition effect where 18 month-olds children outperformed 21 month-olds make me skeptical that semantic priming is the most plausible explanation of those results.<a href="aim1-introduction.html#fnref1">↩</a></p></li>
+<li id="fn1"><p><span class="citation">Arias-Trejo &amp; Plunkett (<a href="#ref-Arias-Trejo2009">2009</a>)</span> is commonly cited as evidence of
+semantic priming effects. Toddlers heard sentences like “I saw a cat…
+dog”. During the word <em>dog</em>, two images (dog and door) are presented.
+The idea is that <em>cat</em> should prime looks to its semantic neighbor
+<em>dog</em>. The unnatural stimulus order (a sentence followed by an isolated
+single word) and a condition effect where 18 month-olds children
+outperformed 21 month-olds make me skeptical that semantic priming is
+the most plausible explanation of those results.<a href="aim1-introduction.html#fnref1" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
 <script type="text/javascript">
@@ -385,7 +552,7 @@ gitbook.start({
 "link": null,
 "text": null
 },
-"download": null,
+"download": ["dissertation.epub"],
 "toc": {
 "collapse": "subsection"
 },
@@ -399,7 +566,7 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    var src = "";
+    var src = "true";
     if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');
