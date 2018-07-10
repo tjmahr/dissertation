@@ -1,3 +1,6 @@
+library(dplyr)
+library(littlelisteners)
+library(ggplot2)
 d_raw <- readr::read_csv("./data/aim2-model-ready.csv.gz") %>%
   select(-starts_with("ot"))
 # filter(!is.na(Bias_Fam)) %>%
@@ -31,6 +34,8 @@ d_raw_mp <- d_raw %>%
 
 d <- readr::read_csv("./data/aim2-screened.csv.gz")
 
+
+
 # Aggregate looks to target
 resp_def <- create_response_def(
   primary = "Target",
@@ -42,7 +47,23 @@ raw_data <- d %>%
   aggregate_looks(
     resp_def, Study + Age + Bias_Fam + WordGroup + Condition + Time ~ GazeByImageAOI)
 
-pairs <- items %>% tidyr::spread(Condition, Form) %>% mutate(pair = sprintf("%s vs %s", real, MP))
+d_trim <- d %>%
+  distinct(Time) %>%
+  littlelisteners::trim_to_bin_width(3, time_var = Time, 0, 1) %>%
+  littlelisteners::assign_bins(3, Time) %>%
+  group_by(.bin) %>%
+  mutate(BinTime = round(min(Time), -1)) %>%
+  ungroup() %>%
+  inner_join(d, .) %>%
+  aggregate_looks(
+    resp_def, Study + Age + Bias_Fam + WordGroup + Condition + BinTime ~ GazeByImageAOI)
+
+d_trim <- d_trim %>%
+  rename(Time = BinTime)
+
+pairs <- items %>%
+  tidyr::spread(Condition, Form) %>%
+  mutate(pair = sprintf("%s vs %s", real, MP))
 
 raw_data %>%
   left_join(pairs) %>%
@@ -50,6 +71,7 @@ raw_data %>%
   filter(Time >= 0) %>%
   ggplot() +
     aes(x = Time, y = Prop, color = Condition) +
+    geom_hline(yintercept = .5, color = "white", size = 2) +
     geom_pointrange(aes(ymin = Prop - PropSE, ymax = Prop + PropSE)) +
     facet_wrap("pair") +
     labs(title = "Age 5 mispronunciation effects")
@@ -60,14 +82,74 @@ raw_data %>%
   filter(Time >= 0) %>%
   ggplot() +
     aes(x = Time, y = Prop, color = Condition) +
+    geom_hline(yintercept = .5, color = "white", size = 2) +
     geom_pointrange(aes(ymin = Prop - PropSE, ymax = Prop + PropSE)) +
     facet_wrap("pair") +
     labs(title = "Age 4 mispronunciation effects")
 
 
 raw_data %>%
-  filter(Condition != "nonsense", Bias_Fam != "Unfamiliar", Age == "Age 5") %>%
+  left_join(pairs) %>%
+  filter(Condition != "nonsense", Bias_Fam == "Unfamiliar", Age == "Age 3") %>%
+  filter(Time >= 0) %>%
   ggplot() +
     aes(x = Time, y = Prop, color = Condition) +
+    geom_hline(yintercept = .5, color = "white", size = 2) +
     geom_pointrange(aes(ymin = Prop - PropSE, ymax = Prop + PropSE)) +
-    facet_wrap("WordGroup")
+    facet_wrap("pair") +
+    labs(title = "Age 3 mispronunciation effects")
+
+d_trim %>%
+  left_join(pairs) %>%
+  filter(Condition != "nonsense", Bias_Fam == "Unfamiliar") %>%
+  filter(Time >= 0) %>%
+  mutate(AgeNum = stringr::str_extract(Age, "\\d")) %>%
+  group_by(Condition, Age) %>%
+  ggplot() +
+    aes(x = Time, y = Prop, color = Condition) +
+    geom_hline(yintercept = .5, color = "white", size = 2) +
+    # geom_text(aes(group = .group, label = AgeNum)) +
+    geom_point(aes(group = .group, shape = Age)) +
+    facet_wrap("pair") +
+    labs(title = "Mispronunciation effects")
+
+d_trim %>%
+  left_join(pairs) %>%
+  filter(Condition != "nonsense", Bias_Fam == "Unfamiliar") %>%
+  filter(Time >= 300) %>%
+  mutate(AgeNum = stringr::str_extract(Age, "\\d")) %>%
+  group_by(Condition, Age, WordGroup) %>%
+  ggplot() +
+    aes(x = Time, y = Prop, color = Condition) +
+    geom_hline(yintercept = .5, color = "white", size = 2) +
+    # geom_text(aes(group = .group, label = AgeNum)) +
+    geom_line(aes(group = .group)) +
+    facet_grid(~ Age)
+
+
+# raw_data %>%
+#   left_join(pairs) %>%
+#   filter(Condition != "nonsense", Bias_Fam == "Unfamiliar") %>%
+#   filter(Time >= 0) %>%
+#   ggplot() +
+#     aes(x = Time, y = Prop, color = Condition) +
+#     geom_pointrange(aes(ymin = Prop - PropSE, ymax = Prop + PropSE)) +
+#     facet_grid(pair ~ Age) +
+#     labs(title = "Mispronunciation effects")
+
+raw_data %>%
+  left_join(pairs) %>%
+  select(-(Distractor:Looks), -(PropSE:real)) %>%
+  tidyr::spread(Condition, Prop) %>%
+  mutate(diff = real - MP) %>%
+  filter(Time >= 0, Time <= 1505, Bias_Fam == "Unfamiliar") %>%
+  ggplot() +
+    aes(x = Time, y = diff, color = Age) +
+    geom_hline(yintercept = 0, color = "white", size = 2) +
+    geom_line() +
+    facet_wrap("pair") +
+    labs(
+      title = "Mispronunciation effects",
+      y = "Real word - mispronunciation")
+
+
