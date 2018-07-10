@@ -130,8 +130,7 @@ center. The motivation for this kind of prior was *regularization*: I
 give the model a small amount of information to nudge it away from
 extreme, degenerate values.
 
-(ref:lkj-prior) Samples of correlation effects drawn from LKJ(1) and
-LKJ(2) priors. 
+(ref:lkj-prior) Samples of correlation effects drawn from *LKJ*(1) and *LKJ*(2) priors. 
 
 ```{r lkj-prior, fig.cap = "(ref:lkj-prior)", echo = FALSE, out.width = "50%", fig.height = 3, fig.width = 4, message = FALSE}
 correlations <- readr::read_csv("./data/aim1-lkj-prior-demo.csv.gz")

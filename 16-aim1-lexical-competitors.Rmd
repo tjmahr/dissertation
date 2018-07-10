@@ -219,10 +219,7 @@ phonological competitor affected word recognition most significantly.
 
 
 
-(ref:declining-phon-props) Because children looked more to the target as
-they grew older, they numerically looked less the foils too. This effect
-is why I evaluated the phonological and semantic foils by comparing them
-against the unrelated image.
+(ref:declining-phon-props) Because children looked more to the target as they grew older, they numerically looked less the foils too. This effect is why I evaluated the phonological and semantic foils by comparing them against the unrelated image.
 
 ```{r declining-phon-props, fig.cap = "(ref:declining-phon-props)", echo = FALSE, message = FALSE, out.width = "60%", fig.width = 5, fig.height = 3.5}
 data_labs <- tibble::tribble(
@@ -616,12 +613,7 @@ phonological competitor versus the unrelated word were
 `r peaks$TimePoint2$prop` at `r peaks$TimePoint2$Time` ms for age 4, and
 `r peaks$TimePoint3$prop` at `r peaks$TimePoint3$Time` ms for age 5.
 
-(ref:phon-vs-unre-fits) With each year of the study, children looked
-more to the phonological competitor (relative to the unrelated image)
-during and after the target noun. Both figures show means for each year
-estimated by the generalized additive model. The left panel compares
-model estimates to observed means and standard errors, and the right
-panel visualizes estimated means and their 95% confidence intervals.
+(ref:phon-vs-unre-fits) With each year of the study, children looked more to the phonological competitor (relative to the unrelated image) during and after the target noun. Both figures show means for each year estimated by the generalized additive model. The left panel compares model estimates to observed means and standard errors, and the right panel visualizes estimated means and their 95% confidence intervals.
 
 ```{r phon-vs-unre-fits, fig.cap = "(ref:phon-vs-unre-fits)", warning = FALSE, message = FALSE, out.width = "80%", fig.width = 6, fig.height = 4, results = "hide"}
 labs_fit_obs <- labs(
@@ -782,15 +774,7 @@ of freedom (EDF) = `r s_tp2_edf`, `r s_tp2_p`.
 Figure \@ref(fig:phon-diff-curves) visualizes how and when the smooths
 from other studies differed from the age-4 smooth.
 
-(ref:phon-diff-curves) Differences in the average looks to the
-phonological competitor versus the unrelated image between age 4 and the
-other ages. Plotted line is estimated difference and the shaded region
-is the 95% confidence interval around that difference. Boxes highlight
-regions where the 95% interval excludes zero. From age 3 to age 4,
-children become more sensitive to the phonological foil during and after
-the target noun. The linear difference curve for age 4 versus age 5
-indicates that the two years largely have the same curvature, but they
-steadily diverge over the course of the trial.
+(ref:phon-diff-curves) Differences in the average looks to the phonological competitor versus the unrelated image between age 4 and the other ages. Plotted line is estimated difference and the shaded region is the 95% confidence interval around that difference. Boxes highlight regions where the 95% interval excludes zero. From age 3 to age 4, children become more sensitive to the phonological foil during and after the target noun. The linear difference curve for age 4 versus age 5 indicates that the two years largely have the same curvature, but they steadily diverge over the course of the trial.
 
 ```{r phon-diff-curves, fig.cap = "(ref:phon-diff-curves)", message = FALSE, out.width = "80%", fig.width = 5, fig.height = 3, results = "hide"}
 age5_age4 <- b2r %>%
@@ -1022,13 +1006,7 @@ older: The peaks were `r peaks$TimePoint1$prop` at
 shows a decisive advantage over the unrelated image at age 3, in contrast
 to the limited advantage of the phonological competitor at age 3.
 
-(ref:semy-vs-unre-fits) With each year of the study, children looked
-more to the semantic foil (relative to the unrelated image) with peak
-looking occurring after the target noun. Both figures show means for
-each year estimated by the generalized additive model. The left panel
-compares model estimates to observed means and standard errors, and the
-right panel visualizes estimated means and their 95% confidence
-intervals.
+(ref:semy-vs-unre-fits) With each year of the study, children looked more to the semantic foil (relative to the unrelated image) with peak looking occurring after the target noun. Both figures show means for each year estimated by the generalized additive model. The left panel compares model estimates to observed means and standard errors, and the right panel visualizes estimated means and their 95% confidence intervals.
 
 ```{r semy-vs-unre-fits, fig.cap = "(ref:semy-vs-unre-fits)", warning = FALSE, message = FALSE, out.width = "80%", fig.width = 6, fig.height = 4, results = "hide"}
 # Data for direct labeling of lines
@@ -1183,14 +1161,7 @@ of freedom (EDF) = `r sem_s_tp2_edf`, `r sem_s_tp2_p`.
 Figure \@ref(fig:semy-diff-curves) visualizes the time course of the
 differences between the smooths from each study.
 
-(ref:semy-diff-curves) Differences in the average looks to the semantic
-competitor versus the unrelated word between age 4 and the other ages.
-Plotted line is estimated difference and the shaded region is the 95%
-confidence interval around that difference. Boxes highlight regions
-where the 95% interval excludes zero. The flat line on the left reflects
-how the shape of the growth curves remained the same from age 3 to age 4
-and only differed in average height. From age 4 to age 5, the lines
-quickly diverge and the age-5 curve reaches a higher peak value.
+(ref:semy-diff-curves) Differences in the average looks to the semantic competitor versus the unrelated word between age 4 and the other ages. Plotted line is estimated difference and the shaded region is the 95% confidence interval around that difference. Boxes highlight regions where the 95% interval excludes zero. The flat line on the left reflects how the shape of the growth curves remained the same from age 3 to age 4 and only differed in average height. From age 4 to age 5, the lines quickly diverge and the age-5 curve reaches a higher peak value.
 
 ```{r semy-diff-curves, fig.cap = "(ref:semy-diff-curves)", out.width = "80%", fig.width = 5, fig.height = 3}
 age5_age4 <- s2r %>%

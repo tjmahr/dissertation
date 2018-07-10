@@ -87,7 +87,7 @@ these models, I fit a growth curve model that included indicators for
 Age and interations Time × Age interactions, like the one from
 [Chapter \@ref(fam-rec)](#fam-rec). The basic model was therefore:
 
-$$
+`r insert_html_math()`
 \small
 \begin{align*}
    \text{log-odds}(\mathit{looking\,}) =\
@@ -107,7 +107,7 @@ $$
       \delta_{3}\text{Time}^3)*\text{Age}\,\text{5} \
       &\text{[adjustments for age 5]} \\
 \end{align*}
-$$
+`r insert_html_math()`
 
 [Appendix \@ref(aim2-gca-models)](#aim2-gca-models) contains the R code
 used to fit these models along with a description of the specifications
@@ -249,9 +249,7 @@ target onset whereas in the mispronunciation condition, this threshold
 is crossed at 1000 ms. Children associate the mispronunciation with the
 familiar object, although they are slower and show greater uncertainty.
 
-(ref:unfam-initial-mp-trials) Averages of participants' growth curves in
-each age. The lines represent 100 posterior predictions of
-the group average. 
+(ref:unfam-initial-mp-trials) Averages of participants' growth curves in each age. The lines represent 100 posterior predictions of the group average. 
 
 ```{r unfam-initial-mp-trials, fig.cap = "(ref:unfam-initial-mp-trials)", fig.width = 5, fig.height = 4, out.width = "80%"}
 newdata <- d_u %>% 
@@ -337,6 +335,8 @@ features. After about 600 ms, the age 5 curve is almost parallel to
 other curves. This is consistent with the intercept effect: The
 curve is higher than the others on average, but it doesn't show any
 differences in shape.
+
+(ref:unfam-peaks-by-age) Growth curve peaks by age for mispronunciation trials starting on the unfamiliar image.
 
 ```{r unfam-peaks-by-age, fig.cap = "(ref:unfam-peaks-by-age)", fig.width=4, fig.height=3, out.width="50%"}
 study_peak_counts <- unfam_peaks %>%
