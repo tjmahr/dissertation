@@ -91,9 +91,7 @@ target onset whereas in the mispronunciation condition, this threshold
 is crossed at 1000 ms. Children associate the mispronunciation with the
 familiar object, although they are slower and show greater uncertainty.
 
-(ref:unfam-initial-mp-trials) Averages of participants' growth curves in
-each age. The lines represent 100 posterior predictions of
-the group average. 
+(ref:unfam-initial-mp-trials) Averages of participants' growth curves in each age. The lines represent 100 posterior predictions of the group average. 
 
 <div class="figure" style="text-align: center">
 <img src="23-mispronunciations-notebook_files/figure-html/unfam-initial-mp-trials-1.png" alt="(ref:unfam-initial-mp-trials)" width="80%" />
@@ -132,6 +130,8 @@ features. After about 600 ms, the age 5 curve is almost parallel to
 other curves. This is consistent with the intercept effect: The
 curve is higher than the others on average, but it doesn't show any
 differences in shape.
+
+(ref:unfam-peaks-by-age) Growth curve peaks by age for mispronunciation trials starting on the unfamiliar image.
 
 <div class="figure" style="text-align: center">
 <img src="23-mispronunciations-notebook_files/figure-html/unfam-peaks-by-age-1.png" alt="(ref:unfam-peaks-by-age)" width="50%" />

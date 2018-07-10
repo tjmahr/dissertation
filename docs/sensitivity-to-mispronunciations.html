@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Development of word recognition in preschoolers</title>
   <meta name="description" content="Development of word recognition in preschoolers">
-  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.7.13 and GitBook 2.6.7">
 
   <meta property="og:title" content="Development of word recognition in preschoolers" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,7 @@
 <meta name="author" content="Tristan Mahr">
 
 
-<meta name="date" content="2018-07-09">
+<meta name="date" content="2018-07-10">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -60,69 +60,41 @@ div.abstract{
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; position: absolute; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
-}
-pre.numberSource a.sourceLine
-  { position: relative; }
-pre.numberSource a.sourceLine:empty
-  { position: absolute; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
-    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-div.sourceCode
-  {  }
-@media screen {
-a.sourceLine::before { text-decoration: underline; }
-}
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 </style>
 
 <link rel="stylesheet" href="assets\style.css" type="text/css" />
@@ -138,6 +110,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <nav role="navigation">
 
 <ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a></li>
 <li class="part"><span><b>Prospectus</b></span></li>
 <li class="chapter" data-level="1" data-path="dissertation-information.html"><a href="dissertation-information.html"><i class="fa fa-check"></i><b>1</b> Dissertation information</a><ul>
 <li class="chapter" data-level="" data-path="dissertation-information.html"><a href="dissertation-information.html#committee-members"><i class="fa fa-check"></i>Committee Members</a></li>
@@ -251,17 +224,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="sensitivity-to-mispronunciations" class="section level1">
 <h1><span class="header-section-number">Chapter 11</span> Sensitivity to mispronunciations</h1>
-<p>For the mispronunciation trials, there is no correct “target”, as there
-is for the nonword or real word trials. The design of the task allows
-the child to associate the mispronunciation with a unfamilar object or
-with a familiar object with phonologicallly similar name. As a result,
-there are not any “distractor-initial” trials. Therefore, I analyzed the
-mispronunciation trials separately for both initial fixation locations.
-One model handled trials a child’s gaze started on the familiar object
-and another model handled trials starting on the unfamiliar object. For
-these models, I fit a growth curve model that included indicators for
-Age and interations Time × Age interactions, like the one from
-<a href="fam-rec.html#fam-rec">Chapter <a href="fam-rec.html#fam-rec">6</a></a>. The basic model was therefore:</p>
+<p>For the mispronunciation trials, there is no correct “target”, as there is for the nonword or real word trials. The design of the task allows the child to associate the mispronunciation with a unfamilar object or with a familiar object with phonologicallly similar name. As a result, there are not any “distractor-initial” trials. Therefore, I analyzed the mispronunciation trials separately for both initial fixation locations. One model handled trials a child’s gaze started on the familiar object and another model handled trials starting on the unfamiliar object. For these models, I fit a growth curve model that included indicators for Age and interations Time × Age interactions, like the one from <a href="fam-rec.html#fam-rec">Chapter <a href="fam-rec.html#fam-rec">6</a></a>. The basic model was therefore:</p>
 <p><span class="math display">\[
 \small
 \begin{align*}
@@ -283,105 +246,34 @@ Age and interations Time × Age interactions, like the one from
       &amp;\text{[adjustments for age 5]} \\
 \end{align*}
 \]</span></p>
-<p><a href="aim2-gca-models.html#aim2-gca-models">Appendix <a href="aim2-gca-models.html#aim2-gca-models">D</a></a> contains the R code
-used to fit these models along with a description of the specifications
-represented by the model syntax. The mixed model included by-child and
-by-child-by-age random effects so that it captured how some of a child’s
-growth curve features may be similar over developmental time
-and may differ at each age.</p>
-<p>For these analyses, I modeled the data from 300
-to 1500 ms after target onset. As in the real-word
-vs. nonword analyses, I removed any Age × Child levels if a child had fewer
-than 4 fixations in a single time bin. Children had to have at least 4
-looks to one of the two images in every 50 ms time bin. For the
-familiar-initial trials, this screening removed 1
-child at age 3, 4 at age 4, and
-0 tage 5, and for the unfamiliar-initial trials,
-this screening removed 6, 6, and
-2 children at ages 3, 4, and 5, respectively.</p>
+<p><a href="aim2-gca-models.html#aim2-gca-models">Appendix <a href="aim2-gca-models.html#aim2-gca-models">D</a></a> contains the R code used to fit these models along with a description of the specifications represented by the model syntax. The mixed model included by-child and by-child-by-age random effects so that it captured how some of a child’s growth curve features may be similar over developmental time and may differ at each age.</p>
+<p>For these analyses, I modeled the data from 300 to 1500 ms after target onset. As in the real-word vs. nonword analyses, I removed any Age × Child levels if a child had fewer than 4 fixations in a single time bin. Children had to have at least 4 looks to one of the two images in every 50 ms time bin. For the familiar-initial trials, this screening removed 1 child at age 3, 4 at age 4, and 0 tage 5, and for the unfamiliar-initial trials, this screening removed 6, 6, and 2 children at ages 3, 4, and 5, respectively.</p>
 <div id="unfamiliar-initial-trials" class="section level2">
 <h2><span class="header-section-number">11.1</span> Unfamiliar-initial trials</h2>
-<p>When children start on the image of a novel object and hear a
-mispronunciation, they tend to look to the familiar image.
-Figure <a href="sensitivity-to-mispronunciations.html#fig:unfam-initial-mp-trials">11.1</a> shows the average of
-children’s growth curves along with the 100 model-estimated group
-averages. The growth curves all cross the .5 threshold, so that the
-children on average looked more to the familiar image than the unfamilar
-image. Granted, the degree of referent selection here is not as great as
-that observed for the nonwords or real words. For those conditions, the
-average growth curves reached a peak of around .77 at age 3 whereas for
-the mispronunciations the age-3 peak is around .62. Children were slower
-to process mispronunciations. For the real-word condition, the average
-age 3 growth curve crosses .5 looking probability around 775 ms after
-target onset whereas in the mispronunciation condition, this threshold
-is crossed at 1000 ms. Children associate the mispronunciation with the
-familiar object, although they are slower and show greater uncertainty.</p>
-<p>(ref:unfam-initial-mp-trials) Averages of participants’ growth curves in
-each age. The lines represent 100 posterior predictions of
-the group average.</p>
+<p>When children start on the image of a novel object and hear a mispronunciation, they tend to look to the familiar image. Figure <a href="sensitivity-to-mispronunciations.html#fig:unfam-initial-mp-trials">11.1</a> shows the average of children’s growth curves along with the 100 model-estimated group averages. The growth curves all cross the .5 threshold, so that the children on average looked more to the familiar image than the unfamilar image. Granted, the degree of referent selection here is not as great as that observed for the nonwords or real words. For those conditions, the average growth curves reached a peak of around .77 at age 3 whereas for the mispronunciations the age-3 peak is around .62. Children were slower to process mispronunciations. For the real-word condition, the average age 3 growth curve crosses .5 looking probability around 775 ms after target onset whereas in the mispronunciation condition, this threshold is crossed at 1000 ms. Children associate the mispronunciation with the familiar object, although they are slower and show greater uncertainty.</p>
+
 <div class="figure" style="text-align: center"><span id="fig:unfam-initial-mp-trials"></span>
-<img src="23-mispronunciations-notebook_files/figure-html/unfam-initial-mp-trials-1.png" alt="(ref:unfam-initial-mp-trials)" width="80%" />
+<img src="23-mispronunciations-notebook_files/figure-html/unfam-initial-mp-trials-1.png" alt="Averages of participants’ growth curves in each age. The lines represent 100 posterior predictions of the group average." width="80%" />
 <p class="caption">
-Figure 11.1: (ref:unfam-initial-mp-trials)
+Figure 11.1: Averages of participants’ growth curves in each age. The lines represent 100 posterior predictions of the group average.
 </p>
 </div>
-<p>Of the growth curve features, developmental changes were only observed
-for the intercept and peak probability features. At age 3, the average
-proportion of looks to the familiar image was
-.37 [90% UI: .34, .40]. The looking proportion increased by
-.04 [−.01, .08] to .40 [.37, .44] at
-age 4. This year-over-year change is probably positive, but a change
-of 0 is still a plausible result. Visually, this uncertainty appears in
-the growth curve plot by how close together the age-3 and age-4 growth
-curves appear. The average proportion of looks increased by
-.07 [.03, .12] to .48 [.45, .51] at
-age 5. Here, there is more certainty that the year-over-year change was
-positive. In short, performance was similar for age 3 and age 4 but
-there was a marked improvement at age 5.</p>
-<p>Figure <a href="sensitivity-to-mispronunciations.html#fig:unfam-peaks-by-age">11.2</a> shows participant’s growth curve
-peaks for each year of the study. The average of the participant’s
-growth curve peaks followed the same pattern as the intercept: similar
-levels at age 3 and age 4 (.63 versus
-.64) but a clear gain in looking peak probability
-at age 5 (.69). Unlike the nonword conditions,
-very few listeners achieve a peak of looking probability of .1.</p>
-<p>None of the other growth curve features showed developmental changes.
-That is, There were no credible year-over-year changes for the linear,
-quadratic or cubic time components of the growth curve. Although
-Figure <a href="sensitivity-to-mispronunciations.html#fig:unfam-initial-mp-trials">11.1</a> shows children’s probability
-of looking to the familiar image increasing sharply at age 5, this
-effect cannot be clear tied to any of the model’s polynomial time
-features. After about 600 ms, the age 5 curve is almost parallel to
-other curves. This is consistent with the intercept effect: The
-curve is higher than the others on average, but it doesn’t show any
-differences in shape.</p>
+<p>Of the growth curve features, developmental changes were only observed for the intercept and peak probability features. At age 3, the average proportion of looks to the familiar image was .37 [90% UI: .34, .40]. The looking proportion increased by .04 [−.01, .08] to .40 [.37, .44] at age 4. This year-over-year change is probably positive, but a change of 0 is still a plausible result. Visually, this uncertainty appears in the growth curve plot by how close together the age-3 and age-4 growth curves appear. The average proportion of looks increased by .07 [.03, .12] to .48 [.45, .51] at age 5. Here, there is more certainty that the year-over-year change was positive. In short, performance was similar for age 3 and age 4 but there was a marked improvement at age 5.</p>
+<p>Figure <a href="sensitivity-to-mispronunciations.html#fig:unfam-peaks-by-age">11.2</a> shows participant’s growth curve peaks for each year of the study. The average of the participant’s growth curve peaks followed the same pattern as the intercept: similar levels at age 3 and age 4 (.63 versus .64) but a clear gain in looking peak probability at age 5 (.69). Unlike the nonword conditions, very few listeners achieve a peak of looking probability of .1.</p>
+<p>None of the other growth curve features showed developmental changes. That is, There were no credible year-over-year changes for the linear, quadratic or cubic time components of the growth curve. Although Figure <a href="sensitivity-to-mispronunciations.html#fig:unfam-initial-mp-trials">11.1</a> shows children’s probability of looking to the familiar image increasing sharply at age 5, this effect cannot be clear tied to any of the model’s polynomial time features. After about 600 ms, the age 5 curve is almost parallel to other curves. This is consistent with the intercept effect: The curve is higher than the others on average, but it doesn’t show any differences in shape.</p>
+
 <div class="figure" style="text-align: center"><span id="fig:unfam-peaks-by-age"></span>
-<img src="23-mispronunciations-notebook_files/figure-html/unfam-peaks-by-age-1.png" alt="(ref:unfam-peaks-by-age)" width="50%" />
+<img src="23-mispronunciations-notebook_files/figure-html/unfam-peaks-by-age-1.png" alt="Growth curve peaks by age for mispronunciation trials starting on the unfamiliar image." width="50%" />
 <p class="caption">
-Figure 11.2: (ref:unfam-peaks-by-age)
+Figure 11.2: Growth curve peaks by age for mispronunciation trials starting on the unfamiliar image.
 </p>
 </div>
-<p><strong>Summary</strong>. When children look at the unfamilar object and hear a
-mispronunciation, they on average look to the familiar image that sounds
-like the mispronunciation. Children are much more uncertain in this
-condition, compared to the conditions whether appropriate referent is
-more obvious. The only development changes observed were the increases
-in looking reliability and peak looking probability at age 5.</p>
+<p><strong>Summary</strong>. When children look at the unfamilar object and hear a mispronunciation, they on average look to the familiar image that sounds like the mispronunciation. Children are much more uncertain in this condition, compared to the conditions whether appropriate referent is more obvious. The only development changes observed were the increases in looking reliability and peak looking probability at age 5.</p>
 </div>
 <div id="familiar-initial-trials" class="section level2">
 <h2><span class="header-section-number">11.2</span> Familiar-initial trials</h2>
-<p>Preschoolers associate one-feature onset-mispronunciations with the
-familiar word that matches the rime of the word.</p>
-<p>Figure XX shows the growth curve averages for trials starting on the
-familiar image. Here the looking patterns show a rush into uncertainty.
-At age 3 and age 4, the growth sharply decrease into chance
-level-performance. Behaviorally, they are looking to both images
-equally. One interpretation of this pattern is that the children are
-making brief confirmatory looks to the novel image; they checking out
-the novel image. But this cannot be right because the growth curve never
-dips much below .5 (certainly not below .4). So there is more likely a
-mix of behaviors, with children staying put on some trials and
-considering the novel object on some trials.</p>
+<p>Preschoolers associate one-feature onset-mispronunciations with the familiar word that matches the rime of the word.</p>
+<p>Figure XX shows the growth curve averages for trials starting on the familiar image. Here the looking patterns show a rush into uncertainty. At age 3 and age 4, the growth sharply decrease into chance level-performance. Behaviorally, they are looking to both images equally. One interpretation of this pattern is that the children are making brief confirmatory looks to the novel image; they checking out the novel image. But this cannot be right because the growth curve never dips much below .5 (certainly not below .4). So there is more likely a mix of behaviors, with children staying put on some trials and considering the novel object on some trials.</p>
 <p><img src="23-mispronunciations-notebook_files/figure-html/fam-initial-mp-trials-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <ul>
 <li>Age 3 and age 4 intercepts differ. Age 4 lower.</li>
@@ -397,56 +289,33 @@ considering the novel object on some trials.</p>
 </ul>
 <p><img src="23-mispronunciations-notebook_files/figure-html/mp-fam-gca-features-1.png" width="100%" style="display: block; margin: auto;" /></p>
 <ul>
-<li>When we plot these features out, we see that they add up to make it
-so that the Age 4 curve dips down lowest and Age 5 does not dip as
-far down.</li>
-<li>The developmental story, if any, is that children stick with the
-familiar object slightly more at age 5.</li>
+<li>When we plot these features out, we see that they add up to make it so that the Age 4 curve dips down lowest and Age 5 does not dip as far down.</li>
+<li>The developmental story, if any, is that children stick with the familiar object slightly more at age 5.</li>
 </ul>
 <hr />
-<p>I asked whether growth curve “valleys” provided a meaningful feature for
-this data. This value was defined as the median of the five smallest
-proportions of a growth curve. It reflects the maximum degree to which
-the novel image is considered as a referent for the mispronunciation.</p>
+<p>I asked whether growth curve “valleys” provided a meaningful feature for this data. This value was defined as the median of the five smallest proportions of a growth curve. It reflects the maximum degree to which the novel image is considered as a referent for the mispronunciation.</p>
 <p><img src="23-mispronunciations-notebook_files/figure-html/fam-peaks-by-age-1.png" width="50%" style="display: block; margin: auto;" /></p>
 <ul>
 <li>There is considerable spread at each age.</li>
 <li>The middle boxplot almost stretches perfectly from 0 to 1.</li>
 <li>There is probably a few different behaviors being captured here.</li>
-<li>That said, the median is closer to .5 at age 5 which matches how the
-growth curves looked.</li>
+<li>That said, the median is closer to .5 at age 5 which matches how the growth curves looked.</li>
 </ul>
 <p><img src="23-mispronunciations-notebook_files/figure-html/diffs-1.png" width="80%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="discussion-2" class="section level2">
 <h2><span class="header-section-number">11.3</span> Discussion</h2>
 <ul>
-<li>For the first set of analyses, they reliably and more reliably with
-age look to the familiar image.</li>
-<li>There is a definite penalty to the mispronunciation when we compare
-against real word or nonword peaks.</li>
-<li>Unlike those conditions which started to show ceiling effects at
-age 4, children are much more uncertain here.</li>
-<li>In terms of lexical processing, the syllable onset leads them down a
-garden path. They have to hear more of the word in order to
-associate the mispronunciation with the target. This is a bit like
-processing a rime word.</li>
-<li>The development story is that they can use the rest of the word more
-effectively to associate the MP with the familiar image. This would
-predict that children become more sensitive to rime-based lexical
-competitors during the preschool years.</li>
-<li><p>So they are sensitive but they become more accommodating of the
-mispronounced version.</p></li>
-<li>For second set of analyses, there is no one clear strategy for
-referent selection. We see a few different patterns among children.
-Some stay put. Some always switch. Some do both.</li>
-<li>The growth curve averages rush to .5, which is equal looks to both
-images, which is maximum uncertainty.</li>
-<li>The age 5 curve doesn’t dip as far, so they are slightly more likely
-to stay put.</li>
-<li>These sets of analyses mainly demonstrate that when children start
-on a familiar image and hear a mispronunciation, they have a few
-options for howto proceed.</li>
+<li>For the first set of analyses, they reliably and more reliably with age look to the familiar image.</li>
+<li>There is a definite penalty to the mispronunciation when we compare against real word or nonword peaks.</li>
+<li>Unlike those conditions which started to show ceiling effects at age 4, children are much more uncertain here.</li>
+<li>In terms of lexical processing, the syllable onset leads them down a garden path. They have to hear more of the word in order to associate the mispronunciation with the target. This is a bit like processing a rime word.</li>
+<li>The development story is that they can use the rest of the word more effectively to associate the MP with the familiar image. This would predict that children become more sensitive to rime-based lexical competitors during the preschool years.</li>
+<li><p>So they are sensitive but they become more accommodating of the mispronounced version.</p></li>
+<li>For second set of analyses, there is no one clear strategy for referent selection. We see a few different patterns among children. Some stay put. Some always switch. Some do both.</li>
+<li>The growth curve averages rush to .5, which is equal looks to both images, which is maximum uncertainty.</li>
+<li>The age 5 curve doesn’t dip as far, so they are slightly more likely to stay put.</li>
+<li>These sets of analyses mainly demonstrate that when children start on a familiar image and hear a mispronunciation, they have a few options for howto proceed.</li>
 <li><p>This also shows a possible decoupling between lexical processing and referent selection. It is unlikely that children heard the mispronunciations differently in these trials, but rather the responded differently.</p></li>
 </ul>
 
@@ -503,7 +372,7 @@ gitbook.start({
 "link": null,
 "text": null
 },
-"download": ["dissertation.epub"],
+"download": null,
 "toc": {
 "collapse": "subsection"
 },
@@ -517,7 +386,7 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    var src = "true";
+    var src = "";
     if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');

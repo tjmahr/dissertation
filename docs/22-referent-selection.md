@@ -80,9 +80,7 @@ curve for each participant, and I averaged the participants' growth
 curves together to obtain group averages. I also applied this process
 to 100 model-estimated growth curves.
 
-(ref:aim2-real-nonword-means) Averages of participants' growth curves in
-each condition and age. The lines represent 100 posterior predictions of
-the group average. 
+(ref:aim2-real-nonword-means) Averages of participants' growth curves in each condition and age. The lines represent 100 posterior predictions of the group average. 
 
 <div class="figure" style="text-align: center">
 <img src="22-referent-selection_files/figure-html/aim2-real-nonword-means-1.png" alt="(ref:aim2-real-nonword-means)" width="80%" />
@@ -132,11 +130,7 @@ Figure \@ref(fig:aim2-gca-peaks) shows the the posterior averages of the
 growth curves peaks for each participant.
 
 
-(ref:aim2-gca-peaks) Growth curve peaks by child, condition and year of
-the study. The movement of the medians conveys how the nonword peaks
-effect increased from age 3 to age 4 and the real word peaks increased
-from age 4 to age 5. The piling of points near the 1.0 line depicts how
-children reached ceiling performance on this task.
+(ref:aim2-gca-peaks) Growth curve peaks by child, condition and year of the study. The movement of the medians conveys how the nonword peaks effect increased from age 3 to age 4 and the real word peaks increased from age 4 to age 5. The piling of points near the 1.0 line depicts how children reached ceiling performance on this task.
 
 <div class="figure" style="text-align: center">
 <img src="22-referent-selection_files/figure-html/aim2-gca-peaks-1.png" alt="(ref:aim2-gca-peaks)" width="66%" />
@@ -258,11 +252,7 @@ vocabulary. Figure \@ref(fig:age-5-from-peaks) depicts the difference
 between the two conditions with a flat line for the real condition and
 small slope for the nonword condition.
 
-(ref:age-5-from-peaks) Marginal effects of age-3 referent selection
-measures on age-5 expressive vocabulary standard scores. The vocabulary
-scores were adjusted (residualized) to control for age-3 vocabulary, so
-these regression lines show the effects of the predictors over and above
-age-3 vocabulary.
+(ref:age-5-from-peaks) Marginal effects of age-3 referent selection measures on age-5 expressive vocabulary standard scores. The vocabulary scores were adjusted (residualized) to control for age-3 vocabulary, so these regression lines show the effects of the predictors over and above age-3 vocabulary.
 
 <div class="figure" style="text-align: center">
 <img src="22-referent-selection_files/figure-html/age-5-from-peaks-1.png" alt="(ref:age-5-from-peaks)" width="100%" />

@@ -52,10 +52,7 @@ phonological competitor affected word recognition most significantly.
 
 
 
-(ref:declining-phon-props) Because children looked more to the target as
-they grew older, they numerically looked less the foils too. This effect
-is why I evaluated the phonological and semantic foils by comparing them
-against the unrelated image.
+(ref:declining-phon-props) Because children looked more to the target as they grew older, they numerically looked less the foils too. This effect is why I evaluated the phonological and semantic foils by comparing them against the unrelated image.
 
 <div class="figure" style="text-align: center">
 <img src="16-aim1-lexical-competitors_files/figure-html/declining-phon-props-1.png" alt="(ref:declining-phon-props)" width="60%" />
@@ -211,12 +208,7 @@ phonological competitor versus the unrelated word were
 .61 at 750 ms for age 4, and
 .65 at 750 ms for age 5.
 
-(ref:phon-vs-unre-fits) With each year of the study, children looked
-more to the phonological competitor (relative to the unrelated image)
-during and after the target noun. Both figures show means for each year
-estimated by the generalized additive model. The left panel compares
-model estimates to observed means and standard errors, and the right
-panel visualizes estimated means and their 95% confidence intervals.
+(ref:phon-vs-unre-fits) With each year of the study, children looked more to the phonological competitor (relative to the unrelated image) during and after the target noun. Both figures show means for each year estimated by the generalized additive model. The left panel compares model estimates to observed means and standard errors, and the right panel visualizes estimated means and their 95% confidence intervals.
 
 <div class="figure" style="text-align: center">
 <img src="16-aim1-lexical-competitors_files/figure-html/phon-vs-unre-fits-1.png" alt="(ref:phon-vs-unre-fits)" width="80%" />
@@ -249,15 +241,7 @@ of freedom (EDF) = 6.78, *p*&nbsp;< .001.
 Figure \@ref(fig:phon-diff-curves) visualizes how and when the smooths
 from other studies differed from the age-4 smooth.
 
-(ref:phon-diff-curves) Differences in the average looks to the
-phonological competitor versus the unrelated image between age 4 and the
-other ages. Plotted line is estimated difference and the shaded region
-is the 95% confidence interval around that difference. Boxes highlight
-regions where the 95% interval excludes zero. From age 3 to age 4,
-children become more sensitive to the phonological foil during and after
-the target noun. The linear difference curve for age 4 versus age 5
-indicates that the two years largely have the same curvature, but they
-steadily diverge over the course of the trial.
+(ref:phon-diff-curves) Differences in the average looks to the phonological competitor versus the unrelated image between age 4 and the other ages. Plotted line is estimated difference and the shaded region is the 95% confidence interval around that difference. Boxes highlight regions where the 95% interval excludes zero. From age 3 to age 4, children become more sensitive to the phonological foil during and after the target noun. The linear difference curve for age 4 versus age 5 indicates that the two years largely have the same curvature, but they steadily diverge over the course of the trial.
 
 <div class="figure" style="text-align: center">
 <img src="16-aim1-lexical-competitors_files/figure-html/phon-diff-curves-1.png" alt="(ref:phon-diff-curves)" width="80%" />
@@ -350,13 +334,7 @@ older: The peaks were .65 at
 shows a decisive advantage over the unrelated image at age 3, in contrast
 to the limited advantage of the phonological competitor at age 3.
 
-(ref:semy-vs-unre-fits) With each year of the study, children looked
-more to the semantic foil (relative to the unrelated image) with peak
-looking occurring after the target noun. Both figures show means for
-each year estimated by the generalized additive model. The left panel
-compares model estimates to observed means and standard errors, and the
-right panel visualizes estimated means and their 95% confidence
-intervals.
+(ref:semy-vs-unre-fits) With each year of the study, children looked more to the semantic foil (relative to the unrelated image) with peak looking occurring after the target noun. Both figures show means for each year estimated by the generalized additive model. The left panel compares model estimates to observed means and standard errors, and the right panel visualizes estimated means and their 95% confidence intervals.
 
 <div class="figure" style="text-align: center">
 <img src="16-aim1-lexical-competitors_files/figure-html/semy-vs-unre-fits-1.png" alt="(ref:semy-vs-unre-fits)" width="80%" />
@@ -380,14 +358,7 @@ of freedom (EDF) = 7.00, *p*&nbsp;< .001.
 Figure \@ref(fig:semy-diff-curves) visualizes the time course of the
 differences between the smooths from each study.
 
-(ref:semy-diff-curves) Differences in the average looks to the semantic
-competitor versus the unrelated word between age 4 and the other ages.
-Plotted line is estimated difference and the shaded region is the 95%
-confidence interval around that difference. Boxes highlight regions
-where the 95% interval excludes zero. The flat line on the left reflects
-how the shape of the growth curves remained the same from age 3 to age 4
-and only differed in average height. From age 4 to age 5, the lines
-quickly diverge and the age-5 curve reaches a higher peak value.
+(ref:semy-diff-curves) Differences in the average looks to the semantic competitor versus the unrelated word between age 4 and the other ages. Plotted line is estimated difference and the shaded region is the 95% confidence interval around that difference. Boxes highlight regions where the 95% interval excludes zero. The flat line on the left reflects how the shape of the growth curves remained the same from age 3 to age 4 and only differed in average height. From age 4 to age 5, the lines quickly diverge and the age-5 curve reaches a higher peak value.
 
 <div class="figure" style="text-align: center">
 <img src="16-aim1-lexical-competitors_files/figure-html/semy-diff-curves-1.png" alt="(ref:semy-diff-curves)" width="80%" />

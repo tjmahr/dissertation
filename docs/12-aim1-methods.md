@@ -1,5 +1,4 @@
 
-
 Method {#aim1-method}
 =======================================================================
 
@@ -14,10 +13,10 @@ Method {#aim1-method}
 Participants {#aim1-participants}
 -----------------------------------------------------------------------
 
-The data were collected as part of a three-year longitudinal study. For
-convenience, I refer to the three years as Age 3, Age 4, and Age 5,
-although the participants on average were three months younger than
-those nominal ages. In particular, the participants
+The data were collected as part of a three-year longitudinal
+study.[^1] For convenience, I refer to the three years as Age 3,
+Age 4, and Age 5, although the participants on average were three
+months younger than those nominal ages. In particular, the participants
 were 28–39 months-old at Age 3, 39–52 at Age 4, and 51–65 at Age 5.
 Approximately, 180 children participated at Age 3, 170 at Age 4, and 160
 at Age 5. Of these children, approximately 20 were identified by their
@@ -29,7 +28,7 @@ child. Recruitment and data collection occurred at two Learning to Talk
 lab sites—one at the University of Wisconsin–Madison and the other at
 the University of Minnesota.
 
-[^1]: [Appendix \@ref(related-work)](#related-work) describes how this 
+[^1]: [Appendix \@ref(related-work)](#related-work) describes how this
       dissertation relates to other work from our lab.
 
 Table \@ref(tab:participant-info) summarizes the cohort of children in
@@ -86,9 +85,7 @@ This procedure measures a child’s real-time comprehension of words by
 capturing how the child’s gaze location changes over time in response to
 speech.
 
-(ref:sample-vw-screen-cap2) Example display for the target *bell* with
-the semantic foil *drum*, the phonological foil *bee*, and the unrelated
-*swing*.
+(ref:sample-vw-screen-cap2) Example display for the target *bell* with the semantic foil *drum*, the phonological foil *bee*, and the unrelated *swing*.
 
 <div class="figure" style="text-align: center">
 <img src="./misc/rwl-screens/TimePoint1/actual/Block2_17_swing2_bell2_bee2_drum2_UpperRightImage_bell.png" alt="(ref:sample-vw-screen-cap2)" width="100%" />
@@ -273,10 +270,7 @@ screening and model preparation steps. The lines start around .25 which is
 chance performance on four-alternative forced choice task. The lines
 rise as the word unfolds, and they peak and plateau around 1400 ms.
 
-(ref:aim1-spaghetti) Empirical word recognition growth curves from each
-year of the study. Each line represents an individual child's proportion
-of looks to the target image over time. The heavy lines are the averages
-of the lines for each year.
+(ref:aim1-spaghetti) Empirical word recognition growth curves from each year of the study. Each line represents an individual child's proportion of looks to the target image over time. The heavy lines are the averages of the lines for each year.
 
 <div class="figure" style="text-align: center">
 <img src="12-aim1-methods_files/figure-html/aim1-spaghetti-1.png" alt="(ref:aim1-spaghetti)" width="100%" />

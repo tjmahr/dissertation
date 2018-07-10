@@ -42,9 +42,7 @@ hearing "duck" then a few trials later hearing "guck" would provide a
 basis of comparison so that the child can decide that "guck" is probably
 not "duck"---the design used here avoided this situation.
 
-(ref:sample-mp-screen-cap) Example displays for a trial in which *duck*
-is mispronounced as "guck" (*left*) and a trial in which the nonword
-"cheem" is presented (*right*).
+(ref:sample-mp-screen-cap) Example displays for a trial in which *duck* is mispronounced as "guck" (*left*) and a trial in which the nonword "cheem" is presented (*right*).
 
 <div class="figure" style="text-align: center">
 <img src="22-aim2-methods_files/figure-html/sample-mp-screen-1.png" alt="(ref:sample-mp-screen-cap)" width="100%" />
@@ -196,16 +194,16 @@ features for the model.
 
 
 
-Figure \@ref(fig:aim2-spaghetti) depicts the results from the real word
+Figure ZZZ depicts the results from the real word
 and nonword conditions following these data screening and preparation
 steps. The lines start around .5 which is chance performance on this
 two-image task. The lines rise as the word unfolds and peak and plateau
 around 1400 ms.
 
-(ref:aim2-spaghetti) Empirical word recognition growth curves from each
-year of the study. Each line represents an individual child's proportion
-of looks to the target image over time. The heavy lines are the averages
-of the lines for each year.
+<!-- (ref:aim2-spaghetti) Empirical word recognition growth curves from each -->
+<!-- year of the study. Each line represents an individual child's proportion -->
+<!-- of looks to the target image over time. The heavy lines are the averages -->
+<!-- of the lines for each year. -->
 
 
 

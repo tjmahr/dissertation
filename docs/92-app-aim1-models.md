@@ -136,8 +136,7 @@ center. The motivation for this kind of prior was *regularization*: I
 give the model a small amount of information to nudge it away from
 extreme, degenerate values.
 
-(ref:lkj-prior) Samples of correlation effects drawn from LKJ(1) and
-LKJ(2) priors. 
+(ref:lkj-prior) Samples of correlation effects drawn from *LKJ*(1) and *LKJ*(2) priors. 
 
 <div class="figure" style="text-align: center">
 <img src="92-app-aim1-models_files/figure-html/lkj-prior-1.png" alt="(ref:lkj-prior)" width="50%" />

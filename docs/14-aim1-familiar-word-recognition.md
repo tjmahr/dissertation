@@ -108,14 +108,7 @@ points on the curve. Figure \@ref(fig:curve-features) shows three
 simulated growth curves and how each of these growth curve features
 relate to word recognition performance.
 
-(ref:curve-features) Illustration of the three growth curve features and
-how they describe lexical processing performance. The three curves used
-are simulations of new participants at Age 4.
-
-
-```
-#> Warning: package 'bindrcpp' was built under R version 3.4.4
-```
+(ref:curve-features) Illustration of the three growth curve features and how they describe lexical processing performance. The three curves used are simulations of new participants at Age 4.
 
 <div class="figure" style="text-align: center">
 <img src="14-aim1-familiar-word-recognition_files/figure-html/curve-features-1.png" alt="(ref:curve-features)" width="80%" />
@@ -136,10 +129,7 @@ posterior samples of the average growth curves for each study. On
 average, the growth curves become steeper and achieve higher looking
 probabilities with each year of the study.
 
-(ref:average-growth-curves) The model estimated an average word
-recognition growth for each study, and the colored lines represent 200
-posterior samples of these growth curves. The thick dark lines represent
-the observed average growth curve in each study.
+(ref:average-growth-curves) The model estimated an average word recognition growth for each study, and the colored lines represent 200 posterior samples of these growth curves. The thick dark lines represent the observed average growth curve in each study.
 
 <div class="figure" style="text-align: center">
 <img src="14-aim1-familiar-word-recognition_files/figure-html/average-growth-curves-1.png" alt="(ref:average-growth-curves)" width="50%" />
@@ -158,18 +148,14 @@ For each effect, the change from age 3 to age 4 is approximately the
 same as the change from age 4 to age 5, as illustrated in
 Figure \@ref(fig:pairwise-effects).
 
-(ref:effects2) Uncertainty intervals for the effects of study years on
-growth curve features. The intercept and peak features were converted from
-log-odds to proportions to ease interpretation.
+(ref:effects2) Uncertainty intervals for the effects of study years on growth curve features. The intercept and peak features were converted from log-odds to proportions to ease interpretation.
 
 <div class="figure" style="text-align: center">
 <img src="14-aim1-familiar-word-recognition_files/figure-html/effects2-1.png" alt="(ref:effects2)" width="100%" />
 <p class="caption">(\#fig:effects2)(ref:effects2)</p>
 </div>
 
-(ref:pairwise-effects) Uncertainty intervals for the differences between
-study timepoints. Again, the intercept and peak features were converted
-to proportions.
+(ref:pairwise-effects) Uncertainty intervals for the differences between study timepoints. Again, the intercept and peak features were converted to proportions.
 
 <div class="figure" style="text-align: center">
 <img src="14-aim1-familiar-word-recognition_files/figure-html/pairwise-effects-1.png" alt="(ref:pairwise-effects)" width="100%" />
@@ -231,14 +217,7 @@ for these simulations. The model learned to predict less accurate and
 more variable performance at age 3 with improving accuracy and narrowing
 variability at age 4 and age 5.
 
-(ref:new-participants) Posterior predictions for hypothetical
-*unobserved* participants. Each line represents the predicted
-performance for a new participant. The three dark lines highlight
-predictions from one single simulated participant. The simulated
-participant shows both longitudinal improvement in word recognition and
-similar relative performance compared to other simulations each year,
-indicating that the model would predict new children to improve year
-over year and show stable individual differences over time.
+(ref:new-participants) Posterior predictions for hypothetical *unobserved* participants. Each line represents the predicted performance for a new participant. The three dark lines highlight predictions from one single simulated participant. The simulated participant shows both longitudinal improvement in word recognition and similar relative performance compared to other simulations each year, indicating that the model would predict new children to improve year over year and show stable individual differences over time.
 
 
 <div class="figure" style="text-align: center">
@@ -246,10 +225,7 @@ over year and show stable individual differences over time.
 <p class="caption">(\#fig:new-participants)(ref:new-participants)</p>
 </div>
 
-(ref:new-participants-intervals) Uncertainty intervals for the simulated
-participants. Variability is widest at age 3 and narrowest at age 5,
-consistent with the prediction that children become less variable as
-they grow older.
+(ref:new-participants-intervals) Uncertainty intervals for the simulated participants. Variability is widest at age 3 and narrowest at age 5, consistent with the prediction that children become less variable as they grow older.
 
 <div class="figure" style="text-align: center">
 <img src="14-aim1-familiar-word-recognition_files/figure-html/new-participants-intervals-1.png" alt="(ref:new-participants-intervals)" width="80%" />
@@ -268,12 +244,7 @@ the 50 percentile (interquartile) range. The ranges of performance
 decrease from age 3 to age 4 to age 5, consistent with the hypothesized
 reduction in variability.
 
-(ref:new-ranges) Ranges of predictions for simulated participants over
-the course of a trial. The ranges are most similar during the first half
-of the trial when participants are at chance performance, and the ranges
-are most different at the end of the trial as children reliably fixate
-on the target image. The ranges of performance decreases with each year
-of the study as children show less variability.
+(ref:new-ranges) Ranges of predictions for simulated participants over the course of a trial. The ranges are most similar during the first half of the trial when participants are at chance performance, and the ranges are most different at the end of the trial as children reliably fixate on the target image. The ranges of performance decreases with each year of the study as children show less variability.
 
 <div class="figure" style="text-align: center">
 <img src="14-aim1-familiar-word-recognition_files/figure-html/new-ranges-1.png" alt="(ref:new-ranges)" width="80%" />
@@ -342,12 +313,7 @@ use the distribution of *W*'s generated by randomly rating children as a
 benchmark for assessing whether the other concordance statistics differ
 meaningfully from chance.
 
-(ref:kendall-stats) Uncertainty intervals for the Kendall's coefficient
-of concordance. Random ratings provide a baseline of null *W*
-statistics. The peak, intercept and linear time features are decisively
-non-null, indicating a significant degree of correspondence in
-children's relative word recognition reliability and efficiency over
-the three years of the study.
+(ref:kendall-stats) Uncertainty intervals for the Kendall's coefficient of concordance. Random ratings provide a baseline of null *W* statistics. The peak, intercept and linear time features are decisively non-null, indicating a significant degree of correspondence in children's relative word recognition reliability and efficiency over the three years of the study.
 
 <div class="figure" style="text-align: center">
 <img src="14-aim1-familiar-word-recognition_files/figure-html/kendall-stats-1.png" alt="(ref:kendall-stats)" width="80%" />
@@ -445,12 +411,7 @@ concurrent correlation at age 5, *r*<sub>3−5</sub> =
 .08
 [.05, .10].
 
-(ref:evt2-gca-cors) Uncertainty intervals for the correlations of growth
-curve features at each timepoint with age-5 expressive vocabulary (EVT-2
-standard scores). The bottom rows provide intervals for the pairwise
-differences in correlations between timepoints. For example, the top row
-of the left panel is the correlation between age-3 peak probability and
-age-5 expressive vocabulary.
+(ref:evt2-gca-cors) Uncertainty intervals for the correlations of growth curve features at each timepoint with age-5 expressive vocabulary (EVT-2 standard scores). The bottom rows provide intervals for the pairwise differences in correlations between timepoints. For example, the top row of the left panel is the correlation between age-3 peak probability and age-5 expressive vocabulary.
 
 <div class="figure" style="text-align: center">
 <img src="14-aim1-familiar-word-recognition_files/figure-html/evt2-gca-cors-1.png" alt="(ref:evt2-gca-cors)" width="80%" />
@@ -473,10 +434,7 @@ linear time features, *r* = .51
 *r*<sub>3−4</sub> = .22
 [.19, .26].
 
-(ref:ppvt4-gca-cors) Uncertainty intervals for the correlations of
-growth curve features from age 43 and age 44 with age-4 receptive vocabulary
-(PPVT-4 standard scores). The bottom row shows pairwise
-differences between the age-3 and age-4 correlations.
+(ref:ppvt4-gca-cors) Uncertainty intervals for the correlations of growth curve features from age 43 and age 44 with age-4 receptive vocabulary (PPVT-4 standard scores). The bottom row shows pairwise differences between the age-3 and age-4 correlations.
 
 <div class="figure" style="text-align: center">
 <img src="14-aim1-familiar-word-recognition_files/figure-html/ppvt4-gca-cors-1.png" alt="(ref:ppvt4-gca-cors)" width="80%" />
