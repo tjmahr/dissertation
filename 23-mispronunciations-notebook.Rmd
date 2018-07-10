@@ -641,6 +641,8 @@ fam_peaks %>%
 * That said, the median is closer to .5 at age 5 which matches how the 
   growth curves looked.
 
+What curve features capture different looking behaviors?
+
 ```{r diffs, width = 6, height = 6, out.width="80%"}
 peak_groups <- fam_peaks %>% 
   mutate(
@@ -654,8 +656,8 @@ peak_groups <- fam_peaks %>%
   distinct(Study, ResearchID, Peak, ntile, num)
 
 m_f_new_fits_each %>% 
-  left_join(peak_groups) %>% 
   sample_n_of(10, .draw) %>% 
+  left_join(peak_groups) %>% 
   filter(Study == "Age 3") %>% 
   group_by(ResearchID, Study, .draw) %>% 
   ggplot() + 
@@ -664,8 +666,222 @@ m_f_new_fits_each %>%
     facet_wrap("num") + 
     guides(color = FALSE) + 
     labs(
-      title = "Age 3 children binned into 6-tiles by valley",
+      title = "Age 3 children binned into 6-tiles by min value",
       caption = "10 posterior samples per child")
+
+with_peaks <- fam_peaks %>% 
+  mutate(
+    Study = convert_study_to_age(Study),
+    Peak = plogis(med)) %>% 
+  group_by(Study, ResearchID) %>% 
+  summarise_at(vars(Time, Peak), mean, na.rm = TRUE) %>% 
+  rename(PeakTime = Time) %>% 
+  ungroup() %>% 
+  left_join(m_f_new_fits_each) %>% 
+  group_by(Study, ResearchID, .draw) %>% 
+  filter(Time >= PeakTime) %>% 
+  top_n(5, .posterior_value) %>% 
+  summarise(
+    Peak = mean(Peak),
+    EndPeak = plogis(median(.posterior_value)),
+    Diff = EndPeak - Peak) %>% 
+  group_by(Study, ResearchID) %>% 
+  summarise_at(vars(Peak, EndPeak, Diff), mean, na.rm = TRUE) %>% 
+   mutate(
+    ntile = factor(ntile(Diff, 6)),
+    num = fct_add_counts(ntile) %>% as.character())
+
+m_f_new_fits_each %>% 
+  sample_n_of(10, .draw) %>% 
+  left_join(with_peaks) %>% 
+  filter(Study == "Age 3") %>% 
+  group_by(ResearchID, Study, .draw) %>% 
+  ggplot() + 
+    aes(x = Time, y = plogis(.posterior_value), color = ResearchID) + 
+    geom_line(aes(group = .group), alpha = .1) + 
+    facet_wrap("num") + 
+    guides(color = FALSE) + 
+    labs(
+      title = "Age 3 children binned into 6-tiles by rise after min value",
+      caption = "10 posterior samples per child")
+
+deltas <- m_f_new_fits_each %>% 
+  sample_n_of(10, .draw) %>% 
+  mutate(Half = Time <= median(Time)) %>% 
+  group_by(.draw, Study, ResearchID) %>% 
+  summarise(
+    # Halfy = ifelse(Half, min(.posterior_value), max(.posterior_value)),
+    HalfMin = min(ifelse(Half, plogis(.posterior_value), 1000)),
+    HalfMax = max(ifelse(!Half, plogis(.posterior_value), -1000)),
+    Delta = HalfMax - HalfMin) %>% 
+  group_by(Study, ResearchID) %>% 
+  summarise_at(vars(HalfMin, HalfMax, Delta), mean, na.rm = TRUE) %>% 
+   mutate(
+    ntile = factor(ntile(Delta, 6)),
+    num = fct_add_counts(ntile) %>% as.character())
+  
+m_f_new_fits_each %>% 
+  sample_n_of(10, .draw) %>% 
+  left_join(deltas) %>% 
+  filter(Study == "Age 3") %>% 
+  group_by(ResearchID, Study, .draw) %>% 
+  ggplot() + 
+    aes(x = Time, y = plogis(.posterior_value), color = ResearchID) + 
+    geom_line(aes(group = .group), alpha = .1) + 
+    facet_wrap("num") + 
+    guides(color = FALSE) + 
+    labs(
+      title = "Age 3 children binned into 6-tiles by differences",
+      subtitle = "Difference = second half max - first half min",
+      caption = "10 posterior samples per child")
+
+# broomed <- m_f_new_fits_each %>% 
+#   sample_n_of(10, .draw) %>% 
+#   tidyr::nest(-Study, -ResearchID, -.draw) %>% 
+#   mutate(
+#     model = data %>% 
+#       purrr::map(~ lm(.posterior_value ~ ot1 + ot2 + ot3, .x)),
+#     results = purrr::map(model, broom::tidy))
+
+broomed2 <- m_f_new_fits_each %>% 
+  tidyr::nest(-Study, -ResearchID) %>% 
+  mutate(
+    model = data %>% 
+      purrr::map(~ lm(plogis(.posterior_value) ~ ot1 + ot2 + ot3, .x)),
+    results = purrr::map(model, broom::tidy))
+
+# bowls <- broomed %>% 
+bowls <- broomed2 %>% 
+  select(-model, -data) %>% 
+  tidyr::unnest(results) %>% 
+  # select(.draw:estimate) %>% 
+  select(Study:estimate) %>% 
+  group_by(Study, ResearchID, term) %>% 
+  summarise(estimate = mean(estimate)) %>% 
+  group_by(Study, term) %>% 
+   mutate(
+    ntile = factor(ntile(estimate, 6)),
+    num = fct_add_counts(ntile) %>% as.character()) 
+
+
+m_f_new_fits_each %>% 
+  sample_n_of(10, .draw) %>% 
+  left_join(bowls %>% filter(term == "ot2")) %>% 
+  filter(Study == "Age 3") %>% 
+  group_by(ResearchID, Study, .draw) %>% 
+  ggplot() + 
+    aes(x = Time, y = plogis(.posterior_value), color = ResearchID) + 
+    geom_line(aes(group = .group), alpha = .1) + 
+    facet_wrap("num") + 
+    guides(color = FALSE) + 
+    labs(
+      title = "Age 3 children binned into 6-tiles by quadratic trend",
+      caption = "10 posterior samples per child")
+```
+
+
+```{r}
+scores <- readr::read_csv("./data-raw/test_scores.csv") %>% 
+  mutate(
+    MinPair_ProportionCorrect = ifelse(
+      MinPair_ProportionCorrect < .2, NA, MinPair_ProportionCorrect))
+tp1 <- scores %>% filter(Study == "TimePoint1")
+tp2 <- scores %>% filter(Study == "TimePoint2")
+tp3 <- scores %>% filter(Study == "TimePoint3")
+
+bowls %>%
+  ungroup() %>% 
+  filter(Study == "Age 3") %>% 
+  left_join(scores %>% mutate(Study = convert_study_to_age(Study))) %>% 
+  ggplot() + 
+    aes(x = MinPair_ProportionCorrect, y = estimate, color = term) + 
+    geom_point() + 
+    geom_smooth(method = "lm") + 
+    labs(y = "Growth curve feature", caption = "Age 3")
+
+
+with_peaks %>%
+  ungroup() %>% 
+  filter(Study == "Age 3") %>% 
+  left_join(scores %>% mutate(Study = convert_study_to_age(Study))) %>% 
+  ggplot() + 
+    aes(x = MinPair_ProportionCorrect, y = Peak) + 
+    geom_point() + 
+    geom_smooth(method = "lm") + 
+    labs(y = "Growth curve valley", caption = "Age 3")
+
+deltas %>%
+  ungroup() %>% 
+  filter(Study == "Age 3") %>% 
+  left_join(scores %>% mutate(Study = convert_study_to_age(Study))) %>% 
+  ggplot() + 
+    aes(x = MinPair_ProportionCorrect, y = Delta) + 
+    geom_point() + 
+    geom_smooth(method = "lm") + 
+    labs(y = "second half max - first half min", caption = "Age 3")
+
+with_peaks %>%
+  ungroup() %>% 
+  filter(Study == "Age 3") %>% 
+  left_join(scores %>% mutate(Study = convert_study_to_age(Study))) %>% 
+  ggplot() + 
+    aes(x = MinPair_ProportionCorrect, y = Peak) + 
+    geom_point() + 
+    geom_smooth(method = "lm") + 
+   labs(y = "Growth curve valley", caption = "Age 3")
+
+  
+
+
+with_peaks %>%
+  ungroup() %>% 
+  # filter(Study == "Age 3") %>% 
+  left_join(scores %>% mutate(Study = convert_study_to_age(Study))) %>% 
+  ggplot() + 
+    aes(x = EVT_Standard, y = Peak, color = Study) + 
+    geom_point() + 
+    geom_smooth(method = "lm") + 
+    labs(y = "Growth curve valley")
+
+with_peaks %>%
+  ungroup() %>% 
+  # filter(Study == "Age 3") %>% 
+  left_join(scores %>% mutate(Study = convert_study_to_age(Study))) %>% 
+  ggplot() + 
+    aes(x = EVT_GSV, y = Peak, color = Study) + 
+    geom_point() + 
+    geom_smooth(method = "lm") + 
+    labs(y = "Growth curve valley")
+
+with_peaks %>%
+  ungroup() %>% 
+  # filter(Study == "Age 3") %>% 
+  left_join(scores %>% mutate(Study = convert_study_to_age(Study))) %>% 
+  ggplot() + 
+    aes(x = PPVT_GSV, y = Peak, color = Study) + 
+    geom_point() + 
+    geom_smooth(method = "lm") + 
+    labs(y = "Growth curve valley")
+
+  
+
+
+
+
+# w_evt <- scores %>% 
+#   filter(Study != "TimePoint2") %>% 
+#   select(ResearchID, Study, EVT_Standard) %>% 
+#   tidyr::spread(Study, EVT_Standard) %>% 
+#   inner_join(do_it_1 %>% filter(Study == "TimePoint1")) %>% 
+#   modelr::add_residuals(
+#     lm(TimePoint3 ~ TimePoint1, .), 
+#     "EVT_Residualized")
+```
+
+
+
+```{r, eval}
+
 ```
 
 
