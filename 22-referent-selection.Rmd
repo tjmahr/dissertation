@@ -132,7 +132,7 @@ Both the real word and nonword conditions measure referent selection as
 the probability of fixating on the appropriate referent when presented
 with a label. The important analytic question is whether and to what
 degree these two probabilities differ. The growth curve model is similar
-to the one in [Chapter @ref(fam-rec)](#fam-rec) with cubic polynomial
+to the one in [Chapter \@ref(fam-rec)](#fam-rec) with cubic polynomial
 but it adds a condition effect which interacts with time features. Thus,
 the basic model is:
 
