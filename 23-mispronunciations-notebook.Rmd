@@ -274,7 +274,7 @@ compared to real word trials.
 
 (ref:unfam-initial-mp-trials) Averages of participants' growth curves in each age. The lines represent 100 posterior predictions of the group average. 
 
-```{r unfam-initial-mp-trials, fig.cap = "(ref:unfam-initial-mp-trials)", fig.width = 4.5, fig.height = 3.5, out.width = "50%"}
+```{r unfam-initial-mp-trials, fig.cap = "(ref:unfam-initial-mp-trials)", fig.width = 4.5, fig.height = 3.5, out.width = "66%"}
 newdata <- d_u %>% 
   distinct(Study, ResearchID, Time, ot1, ot2, ot3) %>% 
   mutate(Target = 0, Trials = 30)
@@ -644,7 +644,7 @@ p_evt_peaks <- to_model %>%
 #   lapply(summary)
 ```
 
-I additionally asked whether any child-level factors predictors looking
+I additionally asked whether any child-level factors predicted looking
 behavior under these conditions. First, I asked whether performance on a
 minimal pair discrimination task at age 3 predicted looking behavior at
 age 3. The rationale here is the hypothesis that children with better
@@ -686,16 +686,17 @@ familiar word that matches the rime of the word.
 
 Figure XX shows the growth curve averages for trials starting on the
 familiar image. Here the looking patterns show a rush into uncertainty.
-At age 3 and age 4, the growth sharply decrease into chance
-level-performance. Behaviorally, they are looking to both images
-equally. One interpretation of this pattern is that the children are
-making brief confirmatory looks to the novel image; they checking out
-the novel image. But this cannot be right because the growth curve never
-dips much below .5 (certainly not below .4). So there is more likely a
-mix of behaviors, with children staying put on some trials and
-considering the novel object on some trials.
+At age 3 and age 4, the growth curves sharply fall into chance-level
+performance. Behaviorally, they are looking to both images equally. 
 
-```{r fam-initial-mp-trials, fig.width=5, fig.height=4, out.width="50%"}
+<!-- One possible interpretation of this pattern is that the children making  -->
+<!-- brief confirmatory looks to the novel image; they checking out -->
+<!-- the novel image. But this cannot be right because the growth curve never -->
+<!-- dips much below .5 (certainly not below .4). So there is more likely a -->
+<!-- mix of behaviors, with children staying put on some trials and -->
+<!-- considering the novel object on some trials. -->
+
+```{r fam-initial-mp-trials, fig.width=5, fig.height=4, out.width="66%"}
 f_newdata <- d_f %>% 
   distinct(Study, ResearchID, Time, ot1, ot2, ot3) %>% 
   mutate(Target = 0, Trials = 30)
@@ -762,6 +763,28 @@ ggplot(df_f_plotting) +
 
 * No credible differences for cubic time component.
 
+In terms of models parameters, there are a few different credible
+effects. However, these are not easy to interpret individually. They
+make combine in subtle ways. Figure XX shows how the growth curve
+features are weighted at each year. For the intercept (average
+probability), age 4 was lower than age 3, XXX vs XXX, and age 5 was
+higher than age 4, increase by XXX. For the linear time term, the slope
+becomes flatter from age 3 to age 4, an X% decrease, and from age 4 to
+age 5, an X% decrease. I think of a positive quadratic trend like a
+weight hanging on a string: It pulls and bends the whole curve
+downwards. At age 5, the quadratic is X% smaller than at age 4, meaning
+that the age-5 curve has slightly less bend downwards. There were no
+credible differences in the cubic time component. The combination of
+these effect shows in the final panel of the plot. The Age 4 curve dips
+down furthest beneath .5---this is driven by in the intercept effect.
+The Age 5 curve stays above .5 and starts to rise away from its minimum
+value.
+
+The developmental story, if any, is that children stick with the
+familiar object slightly more at age 5. The growth curves hit maximum
+uncertainty, but not at age 5.
+
+
 ```{r mp-fam-gca-features, eval = TRUE, fig.width = 7, fig.height = 3, out.width = "100%"}
 test <- posterior_samples(mp_fam, pars = "^b_") %>% 
   transmute(
@@ -787,10 +810,14 @@ test <- posterior_samples(mp_fam, pars = "^b_") %>%
     d_Intercept_Prop_Age5_3 = b_Intercept_Prop_Age5 - b_Intercept_Prop_Age3,
     d_ot1_Age4 = b_ot1_Age4 - b_ot1_Age3,
     d_ot1_Age5 = b_ot1_Age5 - b_ot1_Age4,
+    per_d_ot1_Age4 = (b_ot1_Age4 - b_ot1_Age3) / b_ot1_Age3,
+    per_d_ot1_Age5 = (b_ot1_Age5 - b_ot1_Age4) / b_ot1_Age4,
     d_ot2_Age4 = b_ot2_Age4 - b_ot2_Age3,
     d_ot2_Age5 = b_ot2_Age5 - b_ot2_Age4,
     d_ot3_Age4 = b_ot3_Age4 - b_ot3_Age3,
     d_ot3_Age5 = b_ot3_Age5 - b_ot3_Age4)
+
+mcmc_intervals(data.frame(x = test$per_d_ot1_Age4))
 # 
 # mcmc_intervals(test, regex_pars = "Intercept_A")
 # mcmc_intervals(test, regex_pars = "Intercept_Prop")
@@ -802,7 +829,7 @@ test <- posterior_samples(mp_fam, pars = "^b_") %>%
 
 draws <- test %>% 
   tibble::rowid_to_column(".draw") %>% 
-  sample_n(100) 
+  sample_n(200) 
 
 by_study <- df_f_plotting %>% 
   mutate(Intercept = 1) %>% 
@@ -850,7 +877,11 @@ feature_draws %>%
     aes(x = Time, y = Value, color = Study) + 
     geom_hline(color = "white", size = 1.5, yintercept = 0) + 
     geom_line(aes(group = .group), alpha = .05) + 
-    facet_wrap("Feature", nrow = 1, labeller = label_parsed, scales = "free_y") +
+    facet_wrap(
+      facets = "Feature", 
+      nrow = 1, 
+      labeller = label_parsed, 
+      scales = "free_y") +
     scale_color_study() + 
     guides(color = FALSE) +
     # guides(color = guide_legend(override.aes = list(alpha = 1))) + 
@@ -869,15 +900,11 @@ feature_draws %>%
   labs(
     x = constants$x_time, 
     y = "Growth curve feature (logits)",
-    caption = "50 posterior samples of population-average (fixed) effects")
+    caption = "200 posterior samples of population-average (fixed) effects")
 ```
 
  
-  - When we plot these features out, we see that they add up to make it
-    so that the Age 4 curve dips down lowest and Age 5 does not dip as
-    far down.
-  - The developmental story, if any, is that children stick with the
-    familiar object slightly more at age 5.
+
 
 ***
 
