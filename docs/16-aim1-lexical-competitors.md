@@ -79,7 +79,7 @@ To model these data, I fit a generalized additive model with fast
 restricted maximum likelihood estimation [@Wood2017; @Winter2016;
 see @Soskuthy2017 for a tutorial for linguists]. Box 1 provides a brief
 overview of these models. I used the mgcv R package
-[vers. 1.8.22; @Wood2017] with support from the
+[vers. 1.8.24; @Wood2017] with support from the
 tools in the itsadug R package [vers. 2.3;
 @itsadug].[^gca-fail] [Appendix \@ref(aim1-gca-models)](#aim1-gca-models)
 contains the R code used to fit these models along with a description of 
@@ -204,9 +204,9 @@ curves slope downwards and eventually fall beneath the initial baseline.
 The shape at age 3 does not have a steady rise from baseline and shows a
 small peak around 800 ms. The peak proportions of looks to the
 phonological competitor versus the unrelated word were
-.57 at 750 ms for age 3,
+.57 at 800 ms for age 3,
 .61 at 750 ms for age 4, and
-.65 at 750 ms for age 5.
+.64 at 750 ms for age 5.
 
 (ref:phon-vs-unre-fits) With each year of the study, children looked more to the phonological competitor (relative to the unrelated image) during and after the target noun. Both figures show means for each year estimated by the generalized additive model. The left panel compares model estimates to observed means and standard errors, and the right panel visualizes estimated means and their 95% confidence intervals.
 
@@ -229,15 +229,15 @@ at 750--800 ms, but the age 4 and age 5 curves both are on the rise away
 from baseline during this window. 
 
 The average looks to the phonological foil over the unrelated image for
-age 4 was 0.17 emp. log-odds, .54 proportion units. The
-averages for age 3 and age 4 did not significantly differ, *p*&nbsp;= .43,
-but the average value was significantly greater at age 5, 0.33 emp.
+age 4 was 0.16 emp. log-odds, .54 proportion units. The
+averages for age 3 and age 4 did not significantly differ, *p*&nbsp;= .85,
+but the average value was significantly greater at age 5, 0.31 emp.
 log-odds, .58 proportion units, *p*&nbsp;< .001. Visually, this
 effect shows up in the almost constant height difference between the
 age-4 and the age-5 curves.
 
 There was a significant smooth term for time at age 4, estimated degrees
-of freedom (EDF) = 6.78, *p*&nbsp;< .001.
+of freedom (EDF) = 7.28, *p*&nbsp;< .001.
 Figure \@ref(fig:phon-diff-curves) visualizes how and when the smooths
 from other studies differed from the age-4 smooth.
 
@@ -248,7 +248,7 @@ from other studies differed from the age-4 smooth.
 <p class="caption">(\#fig:phon-diff-curves)(ref:phon-diff-curves)</p>
 </div>
 
-The age-3 and age-4 curves significantly differed, EDF = 5.39,
+The age-3 and age-4 curves significantly differed, EDF = 5.48,
 *p*&nbsp;< .001. In particular, the curves are significantly different
 from 500 to 1050 ms. This result confirms that the looks to the
 phonological foil increased from age 3 and age 4 during the time window
@@ -329,7 +329,7 @@ and peak around 1300 ms. The peak proportions of looks to the
 semantic competitor versus the unrelated word increased as children grew
 older: The peaks were .65 at
 1400 ms for age 3, .68 at
-1400 ms for age 4, and .70 at
+1400 ms for age 4, and .71 at
 1350 ms for age 5. Moreover, the semantic competitor
 shows a decisive advantage over the unrelated image at age 3, in contrast
 to the limited advantage of the phonological competitor at age 3.
@@ -348,13 +348,13 @@ to the limited advantage of the phonological competitor at age 3.
 The average looks to the semantic foil over the unrelated image for
 age 4 was 0.44 emp. log-odds, .61 proportion units.
 Children looked significantly less to the semantic foil on average at
-age 3, 0.29 emp. log-odds, .57 proportion
+age 3, 0.30 emp. log-odds, .57 proportion
 units, *p*&nbsp;< .001, and they looked significantly more to the semantic
 foil at age 5, 0.50 emp. log-odds, .62
 proportion units, *p*&nbsp;< .001. 
 
 There was a significant smooth term for time at age 4, estimated degrees
-of freedom (EDF) = 7.00, *p*&nbsp;< .001.
+of freedom (EDF) = 7.04, *p*&nbsp;< .001.
 Figure \@ref(fig:semy-diff-curves) visualizes the time course of the
 differences between the smooths from each study.
 
@@ -366,13 +366,13 @@ differences between the smooths from each study.
 </div>
 
 The shapes of the age-3 and age-4 curves did not significantly differ,
-EDF = 1.00, *p*&nbsp;= .824. The age-3 curve begins to rise
+EDF = 1.00, *p*&nbsp;= .535. The age-3 curve begins to rise
 about 100 ms later, and it reaches a shallower peak value than the age-4
 curve. These two features create a nearly constant height difference
 between the two curves, and thus the two curves show the same overall
 shape.
 
-The age-4 and age-5 smooths significantly differed, EDF = 3.77,
+The age-4 and age-5 smooths significantly differed, EDF = 3.74,
 *p*&nbsp;< .001. The differences are greatest after the end of the target
 noun, in the window from 750 to 1500 ms. The two curves start from a
 similar baseline but quickly diverge as the age-5 curve reaches a higher

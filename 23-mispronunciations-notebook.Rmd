@@ -72,19 +72,18 @@ mp_fam
 
 unfam_peaks <- readr::read_csv("./data/aim2-mp-unfam-peaks.csv.gz")
 fam_peaks <- readr::read_csv("./data/aim2-mp-fam-peaks.csv.gz")
-
 ```
 
 For the mispronunciation trials, there is no correct "target", as there
-is for the nonword or real word trials. The design of the task allows
+is for real word or nonword trials. The design of the task allows
 the child to associate the mispronunciation with a unfamiliar object or
 with a familiar object with phonologically similar name. As a result,
-there are not any "distractor-initial" trials. Therefore, I analyzed the
-mispronunciation trials separately for both initial fixation locations.
-One model handled trials a child's gaze started on the familiar object
+there are not any "distractor-initial" trials, so I analyzed the
+mispronunciation trials separately for both initial-fixation locations.
+One model handled trials where a child's gaze started on the familiar object
 and another model handled trials starting on the unfamiliar object. For
 these models, I fit a growth curve model that included indicators for
-Age and interactions Time × Age interactions, like the one from
+Age and Time × Age interactions, as in the model from
 [Chapter \@ref(fam-rec)](#fam-rec). The basic model was therefore:
 
 `r insert_html_math()`
@@ -111,21 +110,23 @@ Age and interactions Time × Age interactions, like the one from
 
 [Appendix \@ref(aim2-gca-models)](#aim2-gca-models) contains the R code
 used to fit these models along with a description of the specifications
-represented by the model syntax. The mixed model included by-child and
-by-child-by-age random effects so that it captured how some of a child's
-growth curve features may be similar over developmental time
-and may differ at each age.
+represented by the model syntax. The mixed effects model included
+by-child and by-child-by-age random effects so that it could capture how
+a child's growth curve features may be similar over developmental time
+(by-child effects) and may differ at each age (by-child-by-age effects).
 
 For these analyses, I modeled the data from `r min(d$Time)`
-to `r max(d$Time)` ms after target onset. As in the real-word vs.
-nonword analyses, I removed any Age × Child levels if a child had fewer
-than 4 fixations in a single time bin. Children had to have at least 4
-looks to one of the two images in every 50 ms time bin. For the
-familiar-initial trials, this screening removed `r study_counts_f$T1`
-`r noun_f_t1` at age 3, `r study_counts_f$T2` at age 4, and
-`r study_counts_f$T3` at age 5, and for the unfamiliar-initial trials,
-this screening removed `r study_counts_u$T1`, `r study_counts_u$T2`, and
-`r study_counts_u$T3` children at ages 3, 4, and 5, respectively.
+to `r max(d$Time)` ms after target onset. As in the real word vs.
+nonword analyses, I removed any Age × Child levels if the child's data
+had fewer than 4 fixations in a single time bin. As a result, children
+had to have at least 4 looks to one of the two images in every 50 ms
+time bin. For the familiar-initial trials, this screening removed
+`r study_counts_f$T1` `r noun_f_t1` at age 3, `r study_counts_f$T2` at
+age 4, and `r study_counts_f$T3` at age 5, and for the
+unfamiliar-initial trials, this screening removed `r study_counts_u$T1`,
+`r study_counts_u$T2`, and `r study_counts_u$T3` children at ages 3, 4,
+and 5, respectively.
+
 
 
 ## Unfamiliar-initial trials
@@ -184,12 +185,33 @@ group_peaks <- group_average_peaks %>%
   lapply(printy::fmt_fix_digits, 2) %>% 
   lapply(printy::fmt_leading_zero)
 
+unfam_ceilings <- unfam_peaks %>%
+  mutate(
+    Study = convert_study_to_age(Study),
+    Peak = plogis(med)) %>%
+  group_by(Study, .draw) %>% 
+  summarise(Ceiling = sum(Peak >= .99)) %>% 
+  ungroup() %>% 
+  select(Study, Ceiling) %>%
+  tidyr::nest(-Study) %>% 
+  mutate(intervals = data %>% purrr::map(bayesplot::mcmc_intervals_data)) %>% 
+  select(-data) %>% 
+  tidyr::unnest(intervals) %>% 
+  mutate(
+    Study = stringr::str_replace(Study, "TimePoint", "TP"),
+    parameter = stringr::str_replace(parameter, "nonsense", "nons"))
+
+ceilings <- unfam_ceilings  %>% 
+  split(.$Study) %>% 
+  fmt_inline_median_interval(0) %>% 
+  add_ui_slug_to_first(slug = "90%&nbsp;UI: ")
+
+
 i_ints <- mcmc_intervals_data(test, regex_pars = "Prop_Age") %>% 
   split(.$parameter) %>% 
   fmt_inline_median_interval() %>% 
   add_ui_slug_to_first("90% UI: ") %>% 
   lapply(stringr::str_replace_all, "0[.]", ".")
-
 ```
 
 
@@ -234,24 +256,25 @@ mcmc_intervals(test, regex_pars = "Age")
 
 
 When children start on the image of a novel object and hear a
-mispronunciation, they tend to look to the familiar image.
+mispronunciation, they look to the familiar image.
 Figure \@ref(fig:unfam-initial-mp-trials) shows the average of
 children's growth curves along with the 100 model-estimated group
 averages. The growth curves all cross the .5 threshold, so that the
-children on average looked more to the familiar image than the unfamiliar
-image. Granted, the degree of referent selection here is not as great as
-that observed for the nonwords or real words. For those conditions, the
+children on average looked more to the familiar than the unfamiliar
+image. Granted, the degree of referent selection is not as great as
+that observed for the real words or nonwords. For those conditions, the
 average growth curves reached a peak of around .77 at age 3 whereas for
 the mispronunciations the age-3 peak is around .62. Children were slower
 to process mispronunciations. For the real-word condition, the average
 age 3 growth curve crosses .5 looking probability around 775 ms after
 target onset whereas in the mispronunciation condition, this threshold
 is crossed at 1000 ms. Children associate the mispronunciation with the
-familiar object, although they are slower and show greater uncertainty.
+familiar object, although they are slower and show greater uncertainty
+compared to real word trials.
 
 (ref:unfam-initial-mp-trials) Averages of participants' growth curves in each age. The lines represent 100 posterior predictions of the group average. 
 
-```{r unfam-initial-mp-trials, fig.cap = "(ref:unfam-initial-mp-trials)", fig.width = 5, fig.height = 4, out.width = "80%"}
+```{r unfam-initial-mp-trials, fig.cap = "(ref:unfam-initial-mp-trials)", fig.width = 4.5, fig.height = 3.5, out.width = "50%"}
 newdata <- d_u %>% 
   distinct(Study, ResearchID, Time, ot1, ot2, ot3) %>% 
   mutate(Target = 0, Trials = 30)
@@ -304,7 +327,7 @@ ggplot(d_u_plotting) +
 ```
 
 Of the growth curve features, developmental changes were only observed
-for the intercept and peak probability features. At age 3, the average
+for the average probability (intercept) and peak probability features. At age 3, the average
 proportion of looks to the familiar image was
 `r i_ints$b_Intercept_Prop_Age3`. The looking proportion increased by
 `r i_ints$d_Intercept_Prop_Age4` to `r i_ints$b_Intercept_Prop_Age4` at
@@ -318,23 +341,18 @@ positive. In short, performance was similar for age 3 and age 4 but
 there was a marked improvement at age 5.
 
 Figure \@ref(fig:unfam-peaks-by-age) shows participant's growth curve
-peaks for each year of the study. The average of the participant's
-growth curve peaks followed the same pattern as the intercept: similar
-levels at age 3 and age 4 (`r group_peaks[["Age 3"]]` versus
-`r group_peaks[["Age 4"]]`) but a clear gain in looking peak probability
-at age 5 (`r group_peaks[["Age 5"]]`). Unlike the nonword conditions,
-very few listeners achieve a peak of looking probability of .1.
-
-None of the other growth curve features showed developmental changes.
-That is, There were no credible year-over-year changes for the linear,
-quadratic or cubic time components of the growth curve. Although
-Figure \@ref(fig:unfam-initial-mp-trials) shows children's probability
-of looking to the familiar image increasing sharply at age 5, this
-effect cannot be clear tied to any of the model's polynomial time
-features. After about 600 ms, the age 5 curve is almost parallel to
-other curves. This is consistent with the intercept effect: The
-curve is higher than the others on average, but it doesn't show any
-differences in shape.
+peaks for each year of the study. There were computed as in other
+chapters by taking the median of the five highest values on a growth
+curve. The average of the participants' growth curve peaks followed the
+same pattern as the intercept: similar levels at age 3 and age 4
+(`r group_peaks[["Age 3"]]` versus `r group_peaks[["Age 4"]]`) but a
+clear gain in looking peak probability at age 5
+(`r group_peaks[["Age 5"]]`). The bottom hinge of the boxplots in
+Figure \@ref(fig:unfam-peaks-by-age) mark the location of the 25th
+percentile. Thus, at age 3, approximately 75% of children were at or
+above the .5 threshold. Unlike the nonword conditions, very few
+listeners achieve a peak of looking probability of .99: At age 5, only
+`r ceilings[["Age 5"]]` children reached ceiling performance.
 
 (ref:unfam-peaks-by-age) Growth curve peaks by age for mispronunciation trials starting on the unfamiliar image.
 
@@ -385,12 +403,280 @@ unfam_peaks %>%
     theme(plot.subtitle = element_text(size = rel(.9)))
 ```
 
+None of the other growth curve features showed developmental changes.
+That is, there were no credible year-over-year changes for the linear,
+quadratic or cubic time components of the growth curve. Although
+Figure \@ref(fig:unfam-initial-mp-trials) shows children's probability
+of looking to the familiar image increasing more quickly at age 5, this
+effect cannot be clear tied to any of the model's polynomial time
+features. After about 600 ms, the age 5 curve is almost parallel to
+other curves. This visual feature is consistent with the intercept
+effect: The curve is higher than the others on average, but it does not
+show any differences in shape.
+
+
+```{r, include = FALSE}
+scores <- readr::read_csv("./data-raw/test_scores.csv") %>% 
+  mutate(
+    MinPair_ProportionCorrect = ifelse(
+      MinPair_ProportionCorrect < .2, NA, MinPair_ProportionCorrect),
+    Study = convert_study_to_age(Study))
+
+tp1 <- scores %>% filter(Study == "Age 3")
+tp2 <- scores %>% filter(Study == "Age 4")
+tp3 <- scores %>% filter(Study == "Age 5")
+
+# ppvt <- readr::read_csv(file = "./data-raw/test_scores.csv") %>%
+#   # filter(Study == "TimePoint1") %>%
+#   select(Study, ResearchID, PPVT_Age, PPVT_GSV, EVT_Age, PPVT_GSV)
+# 
+# minp <- readr::read_csv(file = "./data-raw/age3-minpair-fits.csv") %>%
+#   filter(Model == "base + age + ppvt") %>%
+#   mutate(Study = "TimePoint1") 
+
+unfam_peaks_avgs <- unfam_peaks %>% 
+  mutate(
+    Study = convert_study_to_age(Study),
+    Peak = plogis(med)) %>% 
+  group_by(Study, ResearchID) %>% 
+  summarise_at(vars(Time, Peak), mean, na.rm = TRUE) %>% 
+  ungroup() 
+
+minp_cors <- unfam_peaks %>% 
+  mutate(
+    Study = convert_study_to_age(Study),
+    Peak = plogis(med)) %>% 
+  filter(Study == "Age 3") %>% 
+  left_join(tp1) %>% 
+  group_by(.draw) %>%  
+  tidy_correlation(Peak, MinPair_ProportionCorrect) 
+
+min_p_cor <- minp_cors %>% 
+  filter(column1 == "Peak", column2 == "MinPair_ProportionCorrect") %>% 
+  select(MinP = estimate) %>% 
+  mcmc_intervals_data() %>% 
+    split(.$parameter) %>% 
+  fmt_inline_median_interval() %>% 
+  add_ui_slug_to_first("90% UI: ") %>% 
+  lapply(stringr::str_replace_all, "0[.]", ".")
+
+min_p_n <- minp_cors %>% 
+  filter(column1 == "Peak", column2 == "MinPair_ProportionCorrect") %>% 
+  pull(n) %>% 
+  unique()
+
+# unfam_peaks_avgs %>%  
+#   filter(Study == "Age 3") %>% 
+#   left_join(tp1) %>% 
+#   ggplot() + 
+#     aes(x = MinPair_ProportionCorrect, y = Peak) + 
+#     geom_point(shape = 1) + 
+#     geom_smooth(method = "lm") + 
+#     labs(y = "Growth curve peak", caption = "Age 3")
+
+# unfam_peaks_avgs %>%  
+#   left_join(scores) %>% 
+#   ggplot() + 
+#     aes(x = EVT_Standard, y = Peak, color = Study) + 
+#     geom_point(shape = 1) + 
+#     geom_smooth(method = "lm") + 
+#     labs(y = "Growth curve peak", caption = "Age 3")
+# 
+
+broomed_u <- m_u_new_fits_each %>% 
+  tidyr::nest(-Study, -ResearchID) %>% 
+  mutate(
+    model = data %>% 
+      purrr::map(~ lm(.posterior_value ~ ot1 + ot2 + ot3, .x)),
+    results = purrr::map(model, broom::tidy))
+
+features_u <- broomed_u %>% 
+  select(-model, -data) %>% 
+  tidyr::unnest(results) %>% 
+  # select(.draw:estimate) %>% 
+  select(Study:estimate) %>% 
+  group_by(Study, ResearchID, term) %>% 
+  summarise(estimate = mean(estimate)) %>% 
+  group_by(Study, term) %>% 
+   mutate(
+    ntile = factor(ntile(estimate, 6)),
+    num = fct_add_counts(ntile) %>% as.character()) 
+
+# features_u %>%
+#   ungroup() %>% 
+#   filter(Study == "Age 3") %>% 
+#   left_join(scores) %>% 
+#   ggplot() + 
+#     aes(x = MinPair_ProportionCorrect, y = estimate, color = term) + 
+#     geom_point() + 
+#     geom_smooth(method = "lm") + 
+#     labs(y = "Growth curve feature", caption = "Age 3")
+# 
+# features_u %>%
+#   ungroup() %>% 
+#   filter(Study == "Age 3") %>%
+#   left_join(scores) %>% 
+#   filter(term == "(Intercept)") %>% 
+#   lm(estimate ~ scale(EVT_Standard), .) %>% 
+#   summary()
+
+# unfam_peaks_avgs %>% 
+#   left_join(scores) %>% 
+#   filter(Study == "Age 3") %>% 
+#   lm(Peak ~ scale(EVT_Standard), .) %>% 
+#   summary()
+
+# unfam_peaks_avgs %>% 
+#   left_join(scores) %>% 
+#   filter(Study == "Age 3") %>% 
+#   lm(Peak ~ scale(MinPair_ProportionCorrect), .) %>% 
+#   summary()
+
+# Get 100 samples of peaks to model
+to_model <- unfam_peaks %>% 
+  sample_n_of(100, .draw) %>% 
+  mutate(
+    Study = convert_study_to_age(Study), 
+    Peak = plogis(med)) %>% 
+  left_join(scores) 
+
+# Given a df with a EVT_Standard column, make a grid for ploting based on that
+# df.
+make_grid <- function(df) {
+  modelr::data_grid(df, EVT_Standard = modelr::seq_range(EVT_Standard, 80))
+}
+
+# Fit 100 regressions
+lines <- to_model %>% 
+  tidyr::nest(-Study, -.draw) %>% 
+  mutate(
+    model = data %>% 
+      purrr::map(~ lm(Peak ~ EVT_Standard, .x)),
+    grid = data %>% purrr::map(make_grid),
+    grid = purrr:::map2(grid, model, modelr::add_predictions)) %>% 
+  select(Study, .draw, grid) %>% 
+  tidyr::unnest()
+
+# models <- to_model %>% 
+#   tidyr::nest(-Study, -.draw) %>% 
+#   mutate(
+#     model = data %>% 
+#       purrr::map(~ lm(Peak ~ EVT_Standard, .x)),
+#     glance = model %>% purrr::map(broom::glance)) %>% 
+#   select(Study, .draw, glance) %>% 
+#   tidyr::unnest()
+
+m_evt_age3 <- unfam_peaks_avgs %>% 
+  left_join(scores) %>% 
+  filter(Study == "Age 3") %>% 
+  lm(Peak ~ scale(EVT_Standard, scale = FALSE), .)
+summary(m_evt_age3)
+
+# Small effect
+delta_by_15 <- (coef(m_evt_age3)[2] * 15) %>% 
+  printy::fmt_fix_digits(2) %>% 
+  printy::fmt_leading_zero()
+
+peak_evt_r_squared <- m_evt_age3 %>% 
+  broom::glance() %>% 
+  pull(r.squared) %>%
+  printy::fmt_fix_digits(2) %>% 
+  printy::fmt_leading_zero()
+
+p_evt_peaks <- to_model %>% 
+  filter(!is.na(EVT_Standard)) %>% 
+  ggplot() + 
+    aes(x = EVT_Standard, y = Peak, color = Study) + 
+    stat_summary(fun.y = mean, geom = "point") + 
+    stat_summary(fun.data = mean_se, geom = "linerange") + 
+    geom_line(
+      aes(y = pred, group = interaction(.draw, Study)), 
+      data = lines, 
+      alpha = .1)  +
+    geom_text(
+      aes(label = Study),
+      data = data_frame(
+        EVT_Standard = c(55, 156),
+        Study = c("Age 3", "Age 4"),
+        Peak = c(.44, .59)),
+        size = 5, 
+       family = "Lato Semibold") +
+    scale_color_study() +
+    guides(color = FALSE) +
+    labs(
+      x = "EVT-2 standard score",
+      y = "Growth curve peak",
+      title = "Vocabulary weakly predicts peaks at age 3",
+      caption = "Lines: Regressions on 100 posterior samples of peaks")
+
+# unfam_peaks_avgs %>% 
+#   left_join(scores) %>% 
+#   filter(Study == "Age 3") %>% 
+#   lm(Peak ~ scale(EVT_Standard), .) %>% 
+#   summary()
+
+# 
+# features_u %>%
+#   ungroup() %>% 
+#   filter(Study == "Age 5") %>%
+#   left_join(scores) %>% 
+#   filter(term == "ot3") %>% 
+#   lm(estimate ~ scale(EVT_Standard), .) %>% 
+#   summary()
+#   
+# gca_means <- broomed_u %>% 
+#   select(-data, -model) %>% 
+#   tidyr::unnest(results) %>% 
+#   select(Study:estimate) 
+# 
+# gca_means %>% 
+#   left_join(scores) %>% 
+#   filter(Study == "Age 5") %>% 
+#   split(.$term) %>% 
+#   lapply(function(df) lm(estimate ~ EVT_Standard, df)) %>% 
+#   lapply(summary)
+# 
+# gca_means %>% 
+#   left_join(scores) %>% 
+#   filter(Study == "Age 3") %>% 
+#   split(.$term) %>% 
+#   lapply(function(df) lm(estimate ~ MinPair_ProportionCorrect, df)) %>% 
+#   lapply(summary)
+```
+
+I additionally asked whether any child-level factors predictors looking
+behavior under these conditions. First, I asked whether performance on a
+minimal pair discrimination task at age 3 predicted looking behavior at
+age 3. The rationale here is the hypothesis that children with better
+minimal pair discrimination may be especially sensitive to
+mispronunciations. Proportion of items correct on the task did not
+correlate with growth curve peaks, *r* = `r min_p_cor` with *n* =
+`r min_p_n`, or with any other growth curve measures.
+
+
+```{r plot-evt-peaks, out.width="50%", fig.width=4.25, fig.height=4}
+p_evt_peaks
+```
+
+I also tested whether expressive vocabulary (EVT-2 standard score)
+predicted performance in this condition. In this case, there were
+significant effects at age 3 where a higher expressive vocabulary
+predicted a higher growth curve peak and a higher average probability.
+These effects, however, were very small. For example,
+a 15-point increase in expressive vocabulary predicted an increase of
+growth curve peak of `r delta_by_15`, *R*^2^ =
+`r peak_evt_r_squared`---see Figure XX. Expressive vocabulary did not
+predict any of the growth curve features at age 4 or at age 5.
+
+
 **Summary**. When children look at the unfamiliar object and hear a
 mispronunciation, they on average look to the familiar image that sounds
 like the mispronunciation. Children are much more uncertain in this
 condition, compared to the conditions whether appropriate referent is
 more obvious. The only development changes observed were the increases
-in looking reliability and peak looking probability at age 5.
+in average looking probability and peak looking probability at age 5.
+There was a small effect of expressive vocabulary on looking probability
+at age 3, but no other effects of vocabulary were observed.
 
 
 ## Familiar-initial trials
@@ -409,7 +695,7 @@ dips much below .5 (certainly not below .4). So there is more likely a
 mix of behaviors, with children staying put on some trials and
 considering the novel object on some trials.
 
-```{r fam-initial-mp-trials, fig.width=5, fig.height=4, out.width="80%"}
+```{r fam-initial-mp-trials, fig.width=5, fig.height=4, out.width="50%"}
 f_newdata <- d_f %>% 
   distinct(Study, ResearchID, Time, ot1, ot2, ot3) %>% 
   mutate(Target = 0, Trials = 30)
@@ -911,6 +1197,7 @@ with_peaks %>%
     effectively to associate the MP with the familiar image. This would
     predict that children become more sensitive to rime-based lexical
     competitors during the preschool years.
+  - But there is no effect of expressive vocabulary here, especially at older ages.
   - So they are sensitive but they become more accommodating of the
     mispronounced version.
   

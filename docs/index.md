@@ -2,13 +2,11 @@
 --- 
 title: "Development of word recognition in preschoolers"
 author: "Tristan Mahr"
-date: "2018-07-10"
+date: "2018-07-11"
 documentclass: "book"
 site: "bookdown::bookdown_site"
 github-repo: "tjmahr/dissertation"
 panflute-filters: "fix-apa-ampersands"
-bibliography: ["assets/refs.bib", "assets/packages.bib"]
-csl: "assets/apa.csl"
 link-citations: yes
 cover-image: "assets/cover.png"
 abstract: |
@@ -58,4 +56,4 @@ Welcome {-}
 
 This book, when finished, will contain my dissertation research. 
 
-- Last compiled: 2018-07-10 08:22:44
+- Last compiled: 2018-07-11 14:26:17

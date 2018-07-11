@@ -53,7 +53,7 @@ not "duck"---the design used here avoided this situation.
 <!-- interpret a mispronunciation as a nonword.) -->
 <!-- So, children sometimes heard correct productions that can be mapped to familiar -->
 <!-- objects and sometimes heard flagrant nonwords that could be quickly associated -->
-<!-- to unfamilar objects. Both of these behaviors are encouraged by the experiment. -->
+<!-- to unfamiliar objects. Both of these behaviors are encouraged by the experiment. -->
 
 In a block of the experiment, there were 12 trials each from the correct
 production, mispronunciation, and nonword conditions, and children
@@ -142,7 +142,7 @@ trial. An analogous rule labeled trials as unfamiliar-initial trials.
 Ties were broken by favoring the earlier fixated image. For example, a
 tie might be a trial with 7 frames of looking to the unfamiliar image,
 followed by 1 frame between the two images, followed by 7 frames to the
-familiar image. In this case, the unfamilar image was viewed first, so
+familiar image. In this case, the unfamiliar image was viewed first, so
 the trial is classified as unfamiliar-initial. If there were no looks to
 either image during that window, the trial was not classified for either
 image and it was excluded.
@@ -180,7 +180,7 @@ Age 5   Real word               1718 (50.5%)         1558 (45.8%)         125 (3
 
 
 
-## Model prepation
+## Model preparation
 
 To prepare the data for modeling, I downsampled the data
 into 50-ms (3-frame) bins.
