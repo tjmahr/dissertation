@@ -77,14 +77,14 @@ fam_peaks <- readr::read_csv("./data/aim2-mp-fam-peaks.csv.gz")
 
 For the mispronunciation trials, there is no correct "target", as there
 is for the nonword or real word trials. The design of the task allows
-the child to associate the mispronunciation with a unfamilar object or
-with a familiar object with phonologicallly similar name. As a result,
+the child to associate the mispronunciation with a unfamiliar object or
+with a familiar object with phonologically similar name. As a result,
 there are not any "distractor-initial" trials. Therefore, I analyzed the
 mispronunciation trials separately for both initial fixation locations.
 One model handled trials a child's gaze started on the familiar object
 and another model handled trials starting on the unfamiliar object. For
 these models, I fit a growth curve model that included indicators for
-Age and interations Time × Age interactions, like the one from
+Age and interactions Time × Age interactions, like the one from
 [Chapter \@ref(fam-rec)](#fam-rec). The basic model was therefore:
 
 `r insert_html_math()`
@@ -123,7 +123,7 @@ than 4 fixations in a single time bin. Children had to have at least 4
 looks to one of the two images in every 50 ms time bin. For the
 familiar-initial trials, this screening removed `r study_counts_f$T1`
 `r noun_f_t1` at age 3, `r study_counts_f$T2` at age 4, and
-`r study_counts_f$T3` tage 5, and for the unfamiliar-initial trials,
+`r study_counts_f$T3` at age 5, and for the unfamiliar-initial trials,
 this screening removed `r study_counts_u$T1`, `r study_counts_u$T2`, and
 `r study_counts_u$T3` children at ages 3, 4, and 5, respectively.
 
@@ -238,7 +238,7 @@ mispronunciation, they tend to look to the familiar image.
 Figure \@ref(fig:unfam-initial-mp-trials) shows the average of
 children's growth curves along with the 100 model-estimated group
 averages. The growth curves all cross the .5 threshold, so that the
-children on average looked more to the familiar image than the unfamilar
+children on average looked more to the familiar image than the unfamiliar
 image. Granted, the degree of referent selection here is not as great as
 that observed for the nonwords or real words. For those conditions, the
 average growth curves reached a peak of around .77 at age 3 whereas for
@@ -385,7 +385,7 @@ unfam_peaks %>%
     theme(plot.subtitle = element_text(size = rel(.9)))
 ```
 
-**Summary**. When children look at the unfamilar object and hear a
+**Summary**. When children look at the unfamiliar object and hear a
 mispronunciation, they on average look to the familiar image that sounds
 like the mispronunciation. Children are much more uncertain in this
 condition, compared to the conditions whether appropriate referent is
@@ -925,7 +925,7 @@ with_peaks %>%
     to stay put.
   - These sets of analyses mainly demonstrate that when children start
     on a familiar image and hear a mispronunciation, they have a few
-    options for howto proceed.
+    options for how to proceed.
   - This also shows a possible decoupling between lexical processing and referent selection. It is unlikely that children heard the mispronunciations differently in these trials, but rather the responded differently.
 
 

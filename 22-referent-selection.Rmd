@@ -120,7 +120,7 @@ I asked whether the recognition of familiar words differed from the
 fast-selecting of referents for nonwords. I fit a Bayesian mixed-effects
 logistic regression growth-curve model, as in
 [Chapter \@ref(fam-rec)](#fam-rec). For the real word and nonword
-conditions, there is a well-defined target image: the familar image for
+conditions, there is a well-defined target image: the familiar image for
 real words and the novel/unfamiliar image for nonwords. Under these
 assumptions, the outcome measures were the probabilities of fixating to
 the target image in each condition:
@@ -297,7 +297,7 @@ In [Chapter \@ref(fam-rec)](#fam-rec), I claim that for these growth
 curve models that only the intercept and linear time terms to be
 behaviorally meaningful model parameters. The intercept measures overall
 the average growth curve value so it reflects *looking reliability*, and
-the linear time term measures the overall stepness of the growth so it
+the linear time term measures the overall steepness of the growth so it
 reflects *lexical processing efficiency*. I also derived a measure of
 peak looking probability by taking the median of top five points in a
 growth curve, and this peak provides a measure of *word recognition
@@ -814,7 +814,7 @@ advantage of the nonword condition over the real word condition.
 Although the effects were significant, the effect size were small. The
 EVT-2 is normed to have an IQ-like scale with a mean of 100 and standard
 deviation of 15. An increase of .1 in age-3 growth curve peak predicted
-an increase in age-5 vocabulary of `r nonsense_change`, appromately one
+an increase in age-5 vocabulary of `r nonsense_change`, approximately one
 tenth of the test norm's standard deviations.
 
 
@@ -832,7 +832,7 @@ possibility of an overall advantage for nonwords over real words.
 The results are consistent however with a novelty bias in reference selection
 [@Horst2011].
 
-Children hit ceiling performanceo on this task.
+Children hit ceiling performance on this task.
 
 <!-- For this task, I will model how the looks to the familiar image differ -->
 <!-- in each condition (real words, mispronunciations, nonwords) and how the -->
