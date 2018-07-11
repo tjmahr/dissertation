@@ -6,8 +6,6 @@ documentclass: "book"
 site: "bookdown::bookdown_site"
 github-repo: "tjmahr/dissertation"
 panflute-filters: "fix-apa-ampersands"
-bibliography: ["assets/refs.bib", "assets/packages.bib"]
-csl: "assets/apa.csl"
 link-citations: yes
 cover-image: "assets/cover.png"
 abstract: |
