@@ -786,6 +786,11 @@ uncertainty, but not at age 5.
 
 
 ```{r mp-fam-gca-features, eval = TRUE, fig.width = 7, fig.height = 3, out.width = "100%"}
+
+percent_diff <- function(x, y) {
+  (x - y) / y
+}
+
 test <- posterior_samples(mp_fam, pars = "^b_") %>% 
   transmute(
     b_Intercept_Age3 = b_Intercept,
@@ -808,14 +813,24 @@ test <- posterior_samples(mp_fam, pars = "^b_") %>%
     d_Intercept_Prop_Age4 = b_Intercept_Prop_Age4 - b_Intercept_Prop_Age3,
     d_Intercept_Prop_Age5 = b_Intercept_Prop_Age5 - b_Intercept_Prop_Age4,
     d_Intercept_Prop_Age5_3 = b_Intercept_Prop_Age5 - b_Intercept_Prop_Age3,
+    per_d_Intercept_Prop_Age4 = percent_diff(
+      b_Intercept_Prop_Age4, 
+      b_Intercept_Prop_Age3),
+    per_d_Intercept_Prop_Age5 = percent_diff(
+      b_Intercept_Prop_Age5, 
+      b_Intercept_Prop_Age4),
     d_ot1_Age4 = b_ot1_Age4 - b_ot1_Age3,
     d_ot1_Age5 = b_ot1_Age5 - b_ot1_Age4,
-    per_d_ot1_Age4 = (b_ot1_Age4 - b_ot1_Age3) / b_ot1_Age3,
-    per_d_ot1_Age5 = (b_ot1_Age5 - b_ot1_Age4) / b_ot1_Age4,
+    per_d_ot1_Age4 = percent_diff(b_ot1_Age4, b_ot1_Age3),
+    per_d_ot1_Age5 = percent_diff(b_ot1_Age5, b_ot1_Age4),
     d_ot2_Age4 = b_ot2_Age4 - b_ot2_Age3,
     d_ot2_Age5 = b_ot2_Age5 - b_ot2_Age4,
+    per_d_ot2_Age4 = percent_diff(b_ot2_Age4, b_ot2_Age3),
+    per_d_ot2_Age5 = percent_diff(b_ot2_Age5, b_ot2_Age4),
     d_ot3_Age4 = b_ot3_Age4 - b_ot3_Age3,
-    d_ot3_Age5 = b_ot3_Age5 - b_ot3_Age4)
+    d_ot3_Age5 = b_ot3_Age5 - b_ot3_Age4,
+    per_d_ot3_Age4 = percent_diff(b_ot3_Age4, b_ot3_Age3),
+    per_d_ot3_Age5 = percent_diff(b_ot3_Age5, b_ot3_Age4))
 
 mcmc_intervals(data.frame(x = test$per_d_ot1_Age4))
 # 
