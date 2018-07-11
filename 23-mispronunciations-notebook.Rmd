@@ -855,6 +855,16 @@ with_peaks %>%
 
 with_peaks %>%
   ungroup() %>% 
+  filter(Study != "Age 5") %>%
+  left_join(scores %>% mutate(Study = convert_study_to_age(Study))) %>% 
+  ggplot() + 
+    aes(x = PPVT_GSV, y = Peak, color = Study) + 
+    geom_point() + 
+    geom_smooth(method = "lm") + 
+    labs(y = "Growth curve valley")
+
+with_peaks %>%
+  ungroup() %>% 
   # filter(Study == "Age 3") %>% 
   left_join(scores %>% mutate(Study = convert_study_to_age(Study))) %>% 
   ggplot() + 
