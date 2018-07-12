@@ -679,15 +679,25 @@ There was a small effect of expressive vocabulary on looking probability
 at age 3, but no other effects of vocabulary were observed.
 
 
-## Familiar-initial trials
+## Familiar-initial trials: Should I stay or should I go?
 
-Preschoolers associate one-feature onset-mispronunciations with the
-familiar word that matches the rime of the word. 
+The above analyses showed that preschoolers associate one-feature
+onset-mispronunciations with the familiar word that matches the rime of
+the word. But that was only for trials that started on the unfamilar
+object. I now consider the other situation, where children are fixating
+on a familiar object and hear a word that immediately mismatches with
+the name of that familiar object. On the basis of the first segment,
+children have information that supports switching to another image. But
+as the rest of the word unfolds, they hear a syllable rime that supports
+staying.
 
 Figure XX shows the growth curve averages for trials starting on the
-familiar image. Here the looking patterns show a rush into uncertainty.
-At age 3 and age 4, the growth curves sharply fall into chance-level
-performance. Behaviorally, they are looking to both images equally. 
+familiar image. The looking patterns show a sharp fall towards .5 which
+is chance-level performance. Behaviorally, children on average move
+quickly to look at both images equally; they rush into maximum
+uncertainty. At age 5, the average of the growth curves never dips below
+.5, and in fact, it shows a late rise to .6 looking probability. At this
+age, children are overall more likely to stay on the familiar object. 
 
 <!-- One possible interpretation of this pattern is that the children making  -->
 <!-- brief confirmatory looks to the novel image; they checking out -->
@@ -763,30 +773,18 @@ ggplot(df_f_plotting) +
 
 * No credible differences for cubic time component.
 
-In terms of models parameters, there are a few different credible
-effects. However, these are not easy to interpret individually. They
-make combine in subtle ways. Figure XX shows how the growth curve
-features are weighted at each year. For the intercept (average
-probability), age 4 was lower than age 3, XXX vs XXX, and age 5 was
-higher than age 4, increase by XXX. For the linear time term, the slope
-becomes flatter from age 3 to age 4, an X% decrease, and from age 4 to
-age 5, an X% decrease. I think of a positive quadratic trend like a
-weight hanging on a string: It pulls and bends the whole curve
-downwards. At age 5, the quadratic is X% smaller than at age 4, meaning
-that the age-5 curve has slightly less bend downwards. There were no
-credible differences in the cubic time component. The combination of
-these effect shows in the final panel of the plot. The Age 4 curve dips
-down furthest beneath .5---this is driven by in the intercept effect.
-The Age 5 curve stays above .5 and starts to rise away from its minimum
-value.
+In the other analyses, the growth curves become steeper and attain
+higher average values and higher peak values. As a result, it is
+straightforward to interpret how the intercept and linear time effects
+contribute to the growth curve's shape. For this model, some more work is
+required to interpret the model parameters and how they combine
+to form the growth curve shape.
 
-The developmental story, if any, is that children stick with the
-familiar object slightly more at age 5. The growth curves hit maximum
-uncertainty, but not at age 5.
+<!-- In terms of models parameters, there are a few different credible -->
+<!-- effects. However, these are not easy to interpret individually. They -->
+<!-- make combine in subtle ways.  -->
 
-
-```{r mp-fam-gca-features, eval = TRUE, fig.width = 7, fig.height = 3, out.width = "100%"}
-
+```{r mp-fam-effects}
 percent_diff <- function(x, y) {
   (x - y) / y
 }
@@ -811,6 +809,7 @@ test <- posterior_samples(mp_fam, pars = "^b_") %>%
     d_Intercept_Age4 = b_Intercept_Age4 - b_Intercept_Age3,
     d_Intercept_Age5 = b_Intercept_Age5 - b_Intercept_Age4,
     d_Intercept_Prop_Age4 = b_Intercept_Prop_Age4 - b_Intercept_Prop_Age3,
+    neg_d_Intercept_Prop_Age4 = d_Intercept_Prop_Age4 * -1,
     d_Intercept_Prop_Age5 = b_Intercept_Prop_Age5 - b_Intercept_Prop_Age4,
     d_Intercept_Prop_Age5_3 = b_Intercept_Prop_Age5 - b_Intercept_Prop_Age3,
     per_d_Intercept_Prop_Age4 = percent_diff(
@@ -830,10 +829,70 @@ test <- posterior_samples(mp_fam, pars = "^b_") %>%
     d_ot3_Age4 = b_ot3_Age4 - b_ot3_Age3,
     d_ot3_Age5 = b_ot3_Age5 - b_ot3_Age4,
     per_d_ot3_Age4 = percent_diff(b_ot3_Age4, b_ot3_Age3),
-    per_d_ot3_Age5 = percent_diff(b_ot3_Age5, b_ot3_Age4))
+    per_d_ot3_Age5 = percent_diff(b_ot3_Age5, b_ot3_Age4)) %>% 
+  as_tibble()
 
-mcmc_intervals(data.frame(x = test$per_d_ot1_Age4))
-# 
+# mcmc_intervals(data.frame(x = test$per_d_ot1_Age4))
+# mcmc_intervals(data.frame(x = test$b_Intercept_Prop_Age3))
+# mcmc_intervals(test,  regex_pars = "Intercept_Prop")
+# mcmc_intervals_data(test,  regex_pars = "Intercept_Prop")
+
+props <- test %>% 
+  mcmc_intervals_data(regex_pars = "Intercept_Prop") %>% 
+  mutate(
+    parameter = parameter %>% stringr::str_replace("Intercept_Prop_", "")) %>% 
+  split(.$parameter) %>% 
+  fmt_inline_median_interval() %>% 
+  add_ui_slug_to_first("90% UI: ") %>% 
+  lapply(stringr::str_replace_all, "0[.]", ".")
+
+time1 <- test %>% 
+  mcmc_intervals_data(regex_pars = "ot1") %>% 
+  split(.$parameter) %>% 
+  fmt_inline_median_interval() %>% 
+  lapply(stringr::str_replace_all, "0[.]", ".")
+
+time1$per_d_ot1_Age4 <- time1$per_d_ot1_Age4 %>% 
+  stringr::str_replace_all("([.]\\d+)", . %>% as.numeric %>% scales::percent())
+time1$per_d_ot1_Age5 <- time1$per_d_ot1_Age5 %>% 
+  stringr::str_replace_all("([.]\\d+)", . %>% as.numeric %>% scales::percent())
+
+
+```
+
+
+Figure XX shows how the growth curve features are weighted at each year
+and contribute to the overall growth curve shape.
+At age 3, the intercept term, or average proportion of looks to the
+familiar image, was `r props$b_Age3`. In this situation, the term is
+less useful because the curves all start at a high probability which
+inflates the average value. That said, comparisons remain useful. At
+age 4, the average probability decreased by `r props$neg_d_Age4` to
+`r props$b_Age4`, and at age 5 the average probability returns to age-3
+levels `r props$b_Age5`. These effects contribute to how the age 4
+curves dips below the others and indeed below the .5 level.
+For the linear time term, the slope becomes flatter year over year,
+showing a change of `r time1$per_d_ot1_Age4` from age 3 to age 4, and a
+change of `r time1$per_d_ot1_Age5` from age 4 to age 5. 
+
+Finally, there is an effect of quadratic time. I think of a positive quadratic trend like a
+weight hanging on a string: It pulls and bends the whole curve
+downwards. At age 5, the quadratic is X% smaller than at age 4, meaning
+that the age-5 curve has slightly less bend downwards. There were no
+credible differences in the cubic time component. 
+
+The combination of
+these effect shows in the final panel of the plot. The Age 4 curve dips
+down furthest beneath .5---this is driven by in the intercept effect.
+The Age 5 curve stays above .5 and starts to rise away from its minimum
+value.
+
+The developmental story, if any, is that children stick with the
+familiar object slightly more at age 5. The growth curves hit maximum
+uncertainty, but not at age 5.
+
+
+```{r mp-fam-gca-features, eval = TRUE, fig.width = 7, fig.height = 3, out.width = "100%"}
 # mcmc_intervals(test, regex_pars = "Intercept_A")
 # mcmc_intervals(test, regex_pars = "Intercept_Prop")
 # mcmc_intervals(test, regex_pars = "ot1_Age")

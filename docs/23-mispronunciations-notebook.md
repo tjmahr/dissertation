@@ -97,7 +97,7 @@ compared to real word trials.
 (ref:unfam-initial-mp-trials) Averages of participants' growth curves in each age. The lines represent 100 posterior predictions of the group average. 
 
 <div class="figure" style="text-align: center">
-<img src="23-mispronunciations-notebook_files/figure-html/unfam-initial-mp-trials-1.png" alt="(ref:unfam-initial-mp-trials)" width="50%" />
+<img src="23-mispronunciations-notebook_files/figure-html/unfam-initial-mp-trials-1.png" alt="(ref:unfam-initial-mp-trials)" width="66%" />
 <p class="caption">(\#fig:unfam-initial-mp-trials)(ref:unfam-initial-mp-trials)</p>
 </div>
 
@@ -150,7 +150,7 @@ show any differences in shape.
 
 
 
-I additionally asked whether any child-level factors predictors looking
+I additionally asked whether any child-level factors predicted looking
 behavior under these conditions. First, I asked whether performance on a
 minimal pair discrimination task at age 3 predicted looking behavior at
 age 3. The rationale here is the hypothesis that children with better
@@ -183,23 +183,34 @@ There was a small effect of expressive vocabulary on looking probability
 at age 3, but no other effects of vocabulary were observed.
 
 
-## Familiar-initial trials
+## Familiar-initial trials: Should I stay or should I go?
 
-Preschoolers associate one-feature onset-mispronunciations with the
-familiar word that matches the rime of the word. 
+The above analyses showed that preschoolers associate one-feature
+onset-mispronunciations with the familiar word that matches the rime of
+the word. But that was only for trials that started on the unfamilar
+object. I now consider the other situation, where children are fixating
+on a familiar object and hear a word that immediately mismatches with
+the name of that familiar object. On the basis of the first segment,
+children have information that supports switching to another image. But
+as the rest of the word unfolds, they hear a syllable rime that supports
+staying.
 
 Figure XX shows the growth curve averages for trials starting on the
-familiar image. Here the looking patterns show a rush into uncertainty.
-At age 3 and age 4, the growth sharply decrease into chance
-level-performance. Behaviorally, they are looking to both images
-equally. One interpretation of this pattern is that the children are
-making brief confirmatory looks to the novel image; they checking out
-the novel image. But this cannot be right because the growth curve never
-dips much below .5 (certainly not below .4). So there is more likely a
-mix of behaviors, with children staying put on some trials and
-considering the novel object on some trials.
+familiar image. The looking patterns show a sharp fall towards .5 which
+is chance-level performance. Behaviorally, children on average move
+quickly to look at both images equally; they rush into maximum
+uncertainty. At age 5, the average of the growth curves never dips below
+.5, and in fact, it shows a late rise to .6 looking probability. At this
+age, children are overall more likely to stay on the familiar object. 
 
-<img src="23-mispronunciations-notebook_files/figure-html/fam-initial-mp-trials-1.png" width="50%" style="display: block; margin: auto;" />
+<!-- One possible interpretation of this pattern is that the children making  -->
+<!-- brief confirmatory looks to the novel image; they checking out -->
+<!-- the novel image. But this cannot be right because the growth curve never -->
+<!-- dips much below .5 (certainly not below .4). So there is more likely a -->
+<!-- mix of behaviors, with children staying put on some trials and -->
+<!-- considering the novel object on some trials. -->
+
+<img src="23-mispronunciations-notebook_files/figure-html/fam-initial-mp-trials-1.png" width="66%" style="display: block; margin: auto;" />
 
 
 * Age 3 and age 4 intercepts differ. Age 4 lower.
@@ -216,14 +227,55 @@ considering the novel object on some trials.
 
 * No credible differences for cubic time component.
 
+In the other analyses, the growth curves become steeper and attain
+higher average values and higher peak values. As a result, it is
+straightforward to interpret how the intercept and linear time effects
+contribute to the growth curve's shape. For this model, some more work is
+required to interpret the model parameters and how they combine
+to form the growth curve shape.
+
+<!-- In terms of models parameters, there are a few different credible -->
+<!-- effects. However, these are not easy to interpret individually. They -->
+<!-- make combine in subtle ways.  -->
+
+
+
+
+Figure XX shows how the growth curve features are weighted at each year
+and contribute to the overall growth curve shape.
+At age 3, the intercept term, or average proportion of looks to the
+familiar image, was .68 [90% UI: .65, .71]. In this situation, the term is
+less useful because the curves all start at a high probability which
+inflates the average value. That said, comparisons remain useful. At
+age 4, the average probability decreased by .05 [.02, .09] to
+.63 [.60, .66], and at age 5 the average probability returns to age-3
+levels .68 [.65, .71]. These effects contribute to how the age 4
+curves dips below the others and indeed below the .5 level.
+For the linear time term, the slope becomes flatter year over year,
+showing a change of &minus;19% [&minus;29%, &minus;7%] from age 3 to age 4, and a
+change of &minus;30% [&minus;42%, &minus;17%] from age 4 to age 5. 
+
+Finally, there is an effect of quadratic time. I think of a positive quadratic trend like a
+weight hanging on a string: It pulls and bends the whole curve
+downwards. At age 5, the quadratic is X% smaller than at age 4, meaning
+that the age-5 curve has slightly less bend downwards. There were no
+credible differences in the cubic time component. 
+
+The combination of
+these effect shows in the final panel of the plot. The Age 4 curve dips
+down furthest beneath .5---this is driven by in the intercept effect.
+The Age 5 curve stays above .5 and starts to rise away from its minimum
+value.
+
+The developmental story, if any, is that children stick with the
+familiar object slightly more at age 5. The growth curves hit maximum
+uncertainty, but not at age 5.
+
+
 <img src="23-mispronunciations-notebook_files/figure-html/mp-fam-gca-features-1.png" width="100%" style="display: block; margin: auto;" />
 
  
-  - When we plot these features out, we see that they add up to make it
-    so that the Age 4 curve dips down lowest and Age 5 does not dip as
-    far down.
-  - The developmental story, if any, is that children stick with the
-    familiar object slightly more at age 5.
+
 
 ***
 
