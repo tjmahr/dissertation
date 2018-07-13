@@ -679,7 +679,102 @@ There was a small effect of expressive vocabulary on looking probability
 at age 3, but no other effects of vocabulary were observed.
 
 
-## Familiar-initial trials: Should I stay or should I go?
+
+
+
+Familiar-initial trials: Should I stay or should I go?
+------------------------------------------------------------------------
+
+```{r mp-fam-effects}
+# Create in-line stats valeus
+
+percent_diff <- function(new, old) {
+  # A change from 100 to 80 is (80 - 100) / 100 = -20 / 100 = -20% change
+  (new - old) / old
+}
+
+mp_fam_fixef <- posterior_samples(mp_fam, pars = "^b_") %>% 
+  transmute(
+    b_Intercept_Age3 = b_Intercept,
+    b_Intercept_Age4 = b_Intercept + b_StudyTimePoint2,
+    b_Intercept_Age5 = b_Intercept + b_StudyTimePoint3,
+    b_ot1_Age3 = b_ot1,
+    b_ot1_Age4 = b_ot1 + `b_ot1:StudyTimePoint2`,
+    b_ot1_Age5 = b_ot1 + `b_ot1:StudyTimePoint3`,
+    b_ot2_Age3 = b_ot2,
+    b_ot2_Age4 = b_ot2 + `b_ot2:StudyTimePoint2`,
+    b_ot2_Age5 = b_ot2 + `b_ot2:StudyTimePoint3`,
+    b_ot3_Age3 = b_ot3,
+    b_ot3_Age4 = b_ot3 + `b_ot3:StudyTimePoint2`,
+    b_ot3_Age5 = b_ot3 + `b_ot3:StudyTimePoint3`,
+    b_Intercept_Prop_Age3 = plogis(b_Intercept_Age3),
+    b_Intercept_Prop_Age4 = plogis(b_Intercept_Age4),
+    b_Intercept_Prop_Age5 = plogis(b_Intercept_Age5),
+    d_Intercept_Age4 = b_Intercept_Age4 - b_Intercept_Age3,
+    d_Intercept_Age5 = b_Intercept_Age5 - b_Intercept_Age4,
+    d_Intercept_Prop_Age4 = b_Intercept_Prop_Age4 - b_Intercept_Prop_Age3,
+    neg_d_Intercept_Prop_Age4 = d_Intercept_Prop_Age4 * -1,
+    d_Intercept_Prop_Age5 = b_Intercept_Prop_Age5 - b_Intercept_Prop_Age4,
+    d_Intercept_Prop_Age5_3 = b_Intercept_Prop_Age5 - b_Intercept_Prop_Age3,
+    per_d_Intercept_Prop_Age4 = percent_diff(
+      b_Intercept_Prop_Age4, 
+      b_Intercept_Prop_Age3),
+    per_d_Intercept_Prop_Age5 = percent_diff(
+      b_Intercept_Prop_Age5, 
+      b_Intercept_Prop_Age4),
+    d_ot1_Age4 = b_ot1_Age4 - b_ot1_Age3,
+    d_ot1_Age5 = b_ot1_Age5 - b_ot1_Age4,
+    per_d_ot1_Age4 = percent_diff(b_ot1_Age4, b_ot1_Age3),
+    per_d_ot1_Age5 = percent_diff(b_ot1_Age5, b_ot1_Age4),
+    neg_per_d_ot1_Age4 = -percent_diff(b_ot1_Age4, b_ot1_Age3),
+    neg_per_d_ot1_Age5 = -percent_diff(b_ot1_Age5, b_ot1_Age4),
+    d_ot2_Age4 = b_ot2_Age4 - b_ot2_Age3,
+    d_ot2_Age5 = b_ot2_Age5 - b_ot2_Age4,
+    per_d_ot2_Age4 = percent_diff(b_ot2_Age4, b_ot2_Age3),
+    per_d_ot2_Age5 = percent_diff(b_ot2_Age5, b_ot2_Age4),
+    neg_per_d_ot2_Age4 = -percent_diff(b_ot2_Age4, b_ot2_Age3),
+    neg_per_d_ot2_Age5 = -percent_diff(b_ot2_Age5, b_ot2_Age4),
+    d_ot3_Age4 = b_ot3_Age4 - b_ot3_Age3,
+    d_ot3_Age5 = b_ot3_Age5 - b_ot3_Age4,
+    per_d_ot3_Age4 = percent_diff(b_ot3_Age4, b_ot3_Age3),
+    per_d_ot3_Age5 = percent_diff(b_ot3_Age5, b_ot3_Age4),
+    neg_per_d_ot3_Age4 = -percent_diff(b_ot3_Age4, b_ot3_Age3),
+    neg_per_d_ot3_Age5 = -percent_diff(b_ot3_Age5, b_ot3_Age4)) %>% 
+  as_tibble()
+
+# mcmc_intervals(data.frame(x = mp_fam_fixef$per_d_ot1_Age4))
+# mcmc_intervals(data.frame(x = mp_fam_fixef$b_Intercept_Prop_Age3))
+# mcmc_intervals(mp_fam_fixef,  regex_pars = "Intercept_Prop")
+# mcmc_intervals_data(mp_fam_fixef,  regex_pars = "Intercept_Prop")
+
+props <- mp_fam_fixef %>% 
+  mcmc_intervals_data(regex_pars = "Intercept_Prop") %>% 
+  mutate(
+    parameter = parameter %>% stringr::str_replace("Intercept_Prop_", "")) %>% 
+  split(.$parameter) %>% 
+  fmt_inline_median_interval() %>% 
+  add_ui_slug_to_first("90% UI: ") %>% 
+  lapply(fmt_remove_leading_zeros_in_text)
+
+time1 <- mp_fam_fixef %>% 
+  mcmc_intervals_data(regex_pars = "ot1") %>% 
+  split(.$parameter) %>% 
+  fmt_inline_median_interval() %>% 
+  purrr::map_at(
+    .at = c("per_d_ot1_Age4", "per_d_ot1_Age5", 
+            "neg_per_d_ot1_Age4", "neg_per_d_ot1_Age5"), 
+    .f = fmt_convert_prop_to_percent)
+
+time2 <- mp_fam_fixef %>% 
+  mcmc_intervals_data(regex_pars = "ot2") %>% 
+  split(.$parameter) %>% 
+  fmt_inline_median_interval() %>% 
+  purrr::map_at(
+    .at = c(
+      "per_d_ot2_Age4", "per_d_ot2_Age5", 
+      "neg_per_d_ot2_Age4", "neg_per_d_ot2_Age5"), 
+    .f = fmt_convert_prop_to_percent)
+```
 
 The above analyses showed that preschoolers associate one-feature
 onset-mispronunciations with the familiar word that matches the rime of
@@ -691,13 +786,14 @@ children have information that supports switching to another image. But
 as the rest of the word unfolds, they hear a syllable rime that supports
 staying.
 
-Figure XX shows the growth curve averages for trials starting on the
-familiar image. The looking patterns show a sharp fall towards .5 which
-is chance-level performance. Behaviorally, children on average move
-quickly to look at both images equally; they rush into maximum
-uncertainty. At age 5, the average of the growth curves never dips below
-.5, and in fact, it shows a late rise to .6 looking probability. At this
-age, children are overall more likely to stay on the familiar object. 
+Figure \@ref(fig:fam-initial-mp-trials) shows the growth curve averages
+for trials starting on the familiar image. The looking patterns show a
+sharp fall towards .5 which is chance-level performance. Behaviorally,
+children on average move quickly to look at both images equally; they
+rush into maximum uncertainty. At age 5, the average of the growth
+curves never dips below .5, and in fact, it shows a late rise to .6
+looking probability. At this age, children are overall more likely to
+stay on the familiar object. 
 
 <!-- One possible interpretation of this pattern is that the children making  -->
 <!-- brief confirmatory looks to the novel image; they checking out -->
@@ -706,7 +802,9 @@ age, children are overall more likely to stay on the familiar object.
 <!-- mix of behaviors, with children staying put on some trials and -->
 <!-- considering the novel object on some trials. -->
 
-```{r fam-initial-mp-trials, fig.width=5, fig.height=4, out.width="66%"}
+(ref:fam-initial-mp-trials) Text reference for caption
+
+```{r fam-initial-mp-trials, fig.cap = "(ref:fam-initial-mp-trials)", fig.width=5, fig.height=4, out.width="66%"}
 f_newdata <- d_f %>% 
   distinct(Study, ResearchID, Time, ot1, ot2, ot3) %>% 
   mutate(Target = 0, Trials = 30)
@@ -758,141 +856,30 @@ ggplot(df_f_plotting) +
     caption = constants$cap_emp_and_draws)
 ```
 
-
-* Age 3 and age 4 intercepts differ. Age 4 lower.
-* Age 4 and age 5 intercepts differ. Age 5 higher.
-* Captures differences in average value.
-
-* Age 3 and age 4 linear slopes differ. Age 4 less negative.
-* Age 4 and age 5 linear slopes differ. Age 5 less negative.
-* Less of a linear trend downwards with age.
-* 3 ish vs 2.5ish vs. 1.75 ish
-
-* Age 4 and age 5 quadratic slopes differ. 
-* Age 5 10% less than age 4, value moves closer to zero (2-ish vs. 1.75 ish).
-
-* No credible differences for cubic time component.
-
 In the other analyses, the growth curves become steeper and attain
 higher average values and higher peak values. As a result, it is
 straightforward to interpret how the intercept and linear time effects
-contribute to the growth curve's shape. For this model, some more work is
-required to interpret the model parameters and how they combine
-to form the growth curve shape.
+contribute to the growth curve's shape. For this model, some more effort
+is required to interpret the model parameters and how they combine to
+form the growth curve shape.
 
-<!-- In terms of models parameters, there are a few different credible -->
-<!-- effects. However, these are not easy to interpret individually. They -->
-<!-- make combine in subtle ways.  -->
-
-```{r mp-fam-effects}
-percent_diff <- function(x, y) {
-  (x - y) / y
-}
-
-test <- posterior_samples(mp_fam, pars = "^b_") %>% 
-  transmute(
-    b_Intercept_Age3 = b_Intercept,
-    b_Intercept_Age4 = b_Intercept + b_StudyTimePoint2,
-    b_Intercept_Age5 = b_Intercept + b_StudyTimePoint3,
-    b_ot1_Age3 = b_ot1,
-    b_ot1_Age4 = b_ot1 + `b_ot1:StudyTimePoint2`,
-    b_ot1_Age5 = b_ot1 + `b_ot1:StudyTimePoint3`,
-    b_ot2_Age3 = b_ot2,
-    b_ot2_Age4 = b_ot2 + `b_ot2:StudyTimePoint2`,
-    b_ot2_Age5 = b_ot2 + `b_ot2:StudyTimePoint3`,
-    b_ot3_Age3 = b_ot3,
-    b_ot3_Age4 = b_ot3 + `b_ot3:StudyTimePoint2`,
-    b_ot3_Age5 = b_ot3 + `b_ot3:StudyTimePoint3`,
-    b_Intercept_Prop_Age3 = plogis(b_Intercept_Age3),
-    b_Intercept_Prop_Age4 = plogis(b_Intercept_Age4),
-    b_Intercept_Prop_Age5 = plogis(b_Intercept_Age5),
-    d_Intercept_Age4 = b_Intercept_Age4 - b_Intercept_Age3,
-    d_Intercept_Age5 = b_Intercept_Age5 - b_Intercept_Age4,
-    d_Intercept_Prop_Age4 = b_Intercept_Prop_Age4 - b_Intercept_Prop_Age3,
-    neg_d_Intercept_Prop_Age4 = d_Intercept_Prop_Age4 * -1,
-    d_Intercept_Prop_Age5 = b_Intercept_Prop_Age5 - b_Intercept_Prop_Age4,
-    d_Intercept_Prop_Age5_3 = b_Intercept_Prop_Age5 - b_Intercept_Prop_Age3,
-    per_d_Intercept_Prop_Age4 = percent_diff(
-      b_Intercept_Prop_Age4, 
-      b_Intercept_Prop_Age3),
-    per_d_Intercept_Prop_Age5 = percent_diff(
-      b_Intercept_Prop_Age5, 
-      b_Intercept_Prop_Age4),
-    d_ot1_Age4 = b_ot1_Age4 - b_ot1_Age3,
-    d_ot1_Age5 = b_ot1_Age5 - b_ot1_Age4,
-    per_d_ot1_Age4 = percent_diff(b_ot1_Age4, b_ot1_Age3),
-    per_d_ot1_Age5 = percent_diff(b_ot1_Age5, b_ot1_Age4),
-    d_ot2_Age4 = b_ot2_Age4 - b_ot2_Age3,
-    d_ot2_Age5 = b_ot2_Age5 - b_ot2_Age4,
-    per_d_ot2_Age4 = percent_diff(b_ot2_Age4, b_ot2_Age3),
-    per_d_ot2_Age5 = percent_diff(b_ot2_Age5, b_ot2_Age4),
-    d_ot3_Age4 = b_ot3_Age4 - b_ot3_Age3,
-    d_ot3_Age5 = b_ot3_Age5 - b_ot3_Age4,
-    per_d_ot3_Age4 = percent_diff(b_ot3_Age4, b_ot3_Age3),
-    per_d_ot3_Age5 = percent_diff(b_ot3_Age5, b_ot3_Age4)) %>% 
-  as_tibble()
-
-# mcmc_intervals(data.frame(x = test$per_d_ot1_Age4))
-# mcmc_intervals(data.frame(x = test$b_Intercept_Prop_Age3))
-# mcmc_intervals(test,  regex_pars = "Intercept_Prop")
-# mcmc_intervals_data(test,  regex_pars = "Intercept_Prop")
-
-props <- test %>% 
-  mcmc_intervals_data(regex_pars = "Intercept_Prop") %>% 
-  mutate(
-    parameter = parameter %>% stringr::str_replace("Intercept_Prop_", "")) %>% 
-  split(.$parameter) %>% 
-  fmt_inline_median_interval() %>% 
-  add_ui_slug_to_first("90% UI: ") %>% 
-  lapply(stringr::str_replace_all, "0[.]", ".")
-
-time1 <- test %>% 
-  mcmc_intervals_data(regex_pars = "ot1") %>% 
-  split(.$parameter) %>% 
-  fmt_inline_median_interval() %>% 
-  lapply(stringr::str_replace_all, "0[.]", ".")
-
-time1$per_d_ot1_Age4 <- time1$per_d_ot1_Age4 %>% 
-  stringr::str_replace_all("([.]\\d+)", . %>% as.numeric %>% scales::percent())
-time1$per_d_ot1_Age5 <- time1$per_d_ot1_Age5 %>% 
-  stringr::str_replace_all("([.]\\d+)", . %>% as.numeric %>% scales::percent())
-
-
-```
-
-
-Figure XX shows how the growth curve features are weighted at each year
-and contribute to the overall growth curve shape.
-At age 3, the intercept term, or average proportion of looks to the
-familiar image, was `r props$b_Age3`. In this situation, the term is
+Figure \@ref(fig:mp-fam-gca-features) shows how the growth curve features
+are weighted at each year and contribute to the overall growth curve
+shape. At age 3, the intercept term, or average proportion of looks to
+the familiar image, was `r props$b_Age3`. In this situation, the term is
 less useful because the curves all start at a high probability which
 inflates the average value. That said, comparisons remain useful. At
 age 4, the average probability decreased by `r props$neg_d_Age4` to
 `r props$b_Age4`, and at age 5 the average probability returns to age-3
 levels `r props$b_Age5`. These effects contribute to how the age 4
-curves dips below the others and indeed below the .5 level.
-For the linear time term, the slope becomes flatter year over year,
-showing a change of `r time1$per_d_ot1_Age4` from age 3 to age 4, and a
-change of `r time1$per_d_ot1_Age5` from age 4 to age 5. 
+curves dips below the others and indeed below the .5 level. For the
+linear time term, the slope becomes flatter year over year, decreasing
+by `r time1$neg_per_d_ot1_Age4` from age 3 to age 4 and decreasing by
+`r time1$neg_per_d_ot1_Age5` from age 4 to age 5.
 
-Finally, there is an effect of quadratic time. I think of a positive quadratic trend like a
-weight hanging on a string: It pulls and bends the whole curve
-downwards. At age 5, the quadratic is X% smaller than at age 4, meaning
-that the age-5 curve has slightly less bend downwards. There were no
-credible differences in the cubic time component. 
+(ref:mp-fam-gca-features) Weighted growth curve features. For the first four panels, the *y* axes are scaled to the same range. This scaling highlights how the cubic time component contributes less to the overall shape than the other features.
 
-The combination of
-these effect shows in the final panel of the plot. The Age 4 curve dips
-down furthest beneath .5---this is driven by in the intercept effect.
-The Age 5 curve stays above .5 and starts to rise away from its minimum
-value.
-
-The developmental story, if any, is that children stick with the
-familiar object slightly more at age 5. The growth curves hit maximum
-uncertainty, but not at age 5.
-
-
-```{r mp-fam-gca-features, eval = TRUE, fig.width = 7, fig.height = 3, out.width = "100%"}
+```{r mp-fam-gca-features, fig.cap = "(ref:mp-fam-gca-features)", eval = TRUE, fig.width = 7, fig.height = 3, out.width = "100%"}
 # mcmc_intervals(test, regex_pars = "Intercept_A")
 # mcmc_intervals(test, regex_pars = "Intercept_Prop")
 # mcmc_intervals(test, regex_pars = "ot1_Age")
@@ -901,7 +888,7 @@ uncertainty, but not at age 5.
 # mcmc_intervals(test, regex_pars = "Intercept_Prop")
 # mcmc_intervals(test, regex_pars = "Age")
 
-draws <- test %>% 
+draws <- mp_fam_fixef %>% 
   tibble::rowid_to_column(".draw") %>% 
   sample_n(200) 
 
@@ -938,9 +925,7 @@ feature_draws <- bind_rows(by_study) %>%
   distinct(.draw, Study, Time, b_Intercept, b_ot1, b_ot2, b_ot3, b_sum) %>% 
   tidyr::gather("Feature", "Value", b_Intercept:b_sum) 
 
-
-feature_draws %>% 
-  # filter(Feature != "b_sum") %>% 
+p <- feature_draws %>% 
   mutate(
     Feature = factor(
       Feature, 
@@ -958,37 +943,61 @@ feature_draws %>%
       scales = "free_y") +
     scale_color_study() + 
     guides(color = FALSE) +
-    # guides(color = guide_legend(override.aes = list(alpha = 1))) + 
     geom_text(
       aes(label = Study, hjust = hjust),
       data = data_frame(
-        Study = c("Age 3", "Age 4", "Age 5", "Age 5"),
-        Time = c(650, 900, 300, 900),
-        Value = c(1.1, .20, 0, 0),
-        hjust = c(0, .5, 0, .5),
-        Feature = c("Time^1", "Intercept", "Time^1", "Time^2")), 
-      # hjust = 0, 
+        Study = c("Age 3", "Age 4", "Age 5", "Age 5", "Age 5"),
+        Time = c(650, 900, 300, 900, 1400),
+        Value = c(1.1, .20, 0, 0, .9),
+        hjust = c(0, .5, 0, .5, 1),
+        Feature = c("Time^1", "Intercept", "Time^1", "Time^2", "Total")), 
       size = 4,
       family = "Lato Semibold") + 
     expand_limits(y = range(by_study$`Age 3`$b_ot1)) +
   labs(
     x = constants$x_time, 
-    y = "Growth curve feature (logits)",
+    y = "Growth curve feature (log-odds)",
     caption = "200 posterior samples of population-average (fixed) effects")
+p
 ```
 
+There was a credible change in the quadratic time parameter at
+age 5. One way to think of positive quadratic trend is like a weight
+hanging on a string: It pulls and bends the whole curve downwards. At
+age 5, the quadratic is `r time2$neg_per_d_ot2_Age5` smaller than at
+age 4, meaning that the age-5 curve has slightly less bend downwards.
+Finally, there were no credible differences in the cubic time component. Compared to the other features, the cubic time feature only a small amount to the overall shape of the growth curves.
+
+The combination of these effects shows in the final panel of the plot.
+The Age 4 curve dips down furthest beneath 0 log-odds (.5
+probability)---this is driven by in the intercept feature. The Age 5
+curve stays above 0 log-odds and starts to rise away from its minimum
+value, owning to the dampened linear and quadratic features.
+
+The developmental story, if any, is that children stick with the
+familiar object slightly more at age 5. The growth curves hit maximum
+uncertainty, but not at age 5.
  
 
 
-***
+### Quantifying looking behaviors
 
-I asked whether growth curve "valleys" provided a meaningful feature for
-this data. This value was defined as the median of the five smallest
-proportions of a growth curve. It reflects the maximum degree to which
-the novel image is considered as a referent for the mispronunciation.
+In the earlier analyses, I derived a growth curve peak value. Here, I
+asked whether analagous growth curve "valleys" provided a meaningful
+feature for looking behavior in this context. This value was defined as
+the median of the five smallest proportions of a growth curve.
+Intuitively, it reflects the maximum degree to which the novel image is
+considered as a referent for the mispronunciation.
 
+Figure \@ref(fig:fam-peaks-by-age) shows the posterior means of
+participants' growth curve valleys. Note that there is considerable
+variability at each age, with the 0--1 interval nearly covered at age 4.
+That said, the median value is closer to .5 at age 5 which matches how
+the growth curves looked.
 
-```{r fam-peaks-by-age, fig.width=4, fig.height=3, out.width="50%"}
+(ref:fam-peaks-by-age) Text reference for caption
+
+```{r fam-peaks-by-age, fig.cap = "(ref:fam-peaks-by-age)", fig.width = 4, fig.height = 3, out.width = "50%"}
 study_peak_counts <- fam_peaks %>%
   distinct(Study, ResearchID) %>%
   mutate(
@@ -1010,7 +1019,8 @@ fam_peaks %>%
       aes(x = Study, y = Peak) + 
       geom_hline(yintercept = .5, size = 2, color = "white") + 
       geom_boxplot(width = .4, fill = NA, outlier.alpha = 0) +
-      geom_point(position = position_jitter(width = .2), alpha = .3, shape = 1) + 
+      geom_point(
+        position = position_jitter(width = .2), alpha = .3, shape = 1) + 
       labs(
         title = "Growth curve valleys",
         subtitle = constants$note_mp_fam,
@@ -1022,15 +1032,21 @@ fam_peaks %>%
 
 ```
 
-* There is considerable spread at each age. 
-* The middle boxplot almost stretches perfectly from 0 to 1.
-* There is probably a few different behaviors being captured here.
-* That said, the median is closer to .5 at age 5 which matches how the 
-  growth curves looked.
+Given the wide range of values for the growth curve minima, I visualized children's individual growth curves based on their growth curve minima.
 
-What curve features capture different looking behaviors?
+Within each year, I grouped children into sextiles based on the
+posterior mean of the their growth curve valley and plotted their
+individual growth curves. Figure \@ref(fig:age3-valley-curves) shows the
+results from age 3. The final two bins show children who on average
+stayed with the familiar image throughout the mispronuciation trials.
+The first two bins mostly contain children switched to the unfamilar
+image and stayed there. These are also some children whose curves show a
+pronounced u-shaped trajectory; the curves with the highest ending
+points in the first three bins show children with u-shaped trajectories.
 
-```{r diffs, width = 6, height = 6, out.width="80%"}
+(ref:age3-valley-curves) Text reference for caption
+
+```{r age3-valley-curves, fig.cap = "(ref:age3-valley-curves)", width = 6, height = 6, out.width="80%"}
 peak_groups <- fam_peaks %>% 
   mutate(
     Study = convert_study_to_age(Study),
@@ -1039,23 +1055,134 @@ peak_groups <- fam_peaks %>%
   summarise_at(vars(Time, Peak), mean, na.rm = TRUE) %>% 
   mutate(
     ntile = factor(ntile(Peak, 6)),
-    num = fct_add_counts(ntile) %>% as.character()) %>% 
+    num = ntile %>% fct_add_counts() %>% as.character()) %>% 
   distinct(Study, ResearchID, Peak, ntile, num)
 
-m_f_new_fits_each %>% 
+set.seed(20180713)
+
+to_plot <- m_f_new_fits_each %>% 
   sample_n_of(10, .draw) %>% 
   left_join(peak_groups) %>% 
   filter(Study == "Age 3") %>% 
-  group_by(ResearchID, Study, .draw) %>% 
-  ggplot() + 
-    aes(x = Time, y = plogis(.posterior_value), color = ResearchID) + 
-    geom_line(aes(group = .group), alpha = .1) + 
-    facet_wrap("num") + 
-    guides(color = FALSE) + 
-    labs(
-      title = "Age 3 children binned into 6-tiles by min value",
-      caption = "10 posterior samples per child")
+  group_by(ResearchID, Study, .draw)
 
+minima <- to_plot %>% 
+  summarise(
+    num = unique(num), 
+    min = min(plogis(.posterior_value)), 
+    Time = max(Time)) %>% 
+  group_by(ResearchID, Study, .draw)
+
+ggplot(to_plot) + 
+  aes(x = Time, y = plogis(.posterior_value), color = ResearchID) + 
+  geom_hline(size = 2, yintercept = .5, color = "white") + 
+  geom_rug(
+    aes(group = .group, y = min),
+    sides = "r", 
+    data = minima, 
+    alpha = .1, 
+    color = constants$col_off_black) +
+  geom_line(aes(group = .group), alpha = .1) +
+  facet_wrap("num") + 
+  guides(color = FALSE) + 
+  labs(
+    x = constants$x_time,
+    y = constants$y_prop_fam,
+    title = "Age 3 children binned into sextiles by valley",
+    caption = "10 posterior samples per child. Right rugs: Valleys in panel.")
+
+peak_groups %>% 
+  ungroup() %>% 
+  filter(Study == "Age 3") %>% 
+  select(-Study) %>% 
+  inner_join(scores) %>% 
+  ggplot() + 
+  aes(x = Peak, y = EVT_Standard, color = Study) + 
+  geom_point() + 
+  stat_smooth(method = "lm")
+
+peak_groups %>% 
+  ungroup() %>% 
+  inner_join(scores) %>% 
+  ggplot() + 
+  aes(x = EVT_Standard, y = Peak, color = Study) + 
+  geom_point() + 
+  stat_smooth(method = "lm")
+
+peak_groups %>% 
+  ungroup() %>% 
+  inner_join(scores) %>% 
+  lm(Peak ~ scale(EVT_Standard) * Study, .) %>% 
+  summary()
+
+peak_groups %>% 
+  ungroup() %>% 
+  inner_join(scores) %>% 
+  filter(Study == "Age 5") %>% 
+  lm(Peak ~ scale(EVT_Standard), .) %>% 
+  summary()
+
+
+```
+
+```{r}
+# Minimal pairs predicting Age 3 minimum
+peak_groups %>% 
+  ungroup() %>% 
+  inner_join(scores) %>% 
+  filter(Study == "Age 3") %>% 
+  ggplot() + 
+    aes(x = MinPair_ProportionCorrect, y = Peak, color = Study) + 
+    geom_point() + 
+    stat_smooth(method = "lm")
+
+# Minimal pairs predicting Age 3 minimum
+peak_groups %>% 
+  ungroup() %>% 
+  inner_join(scores) %>% 
+  filter(Study == "Age 3") %>% 
+  ggplot() + 
+    aes(x = MinPair_ProportionCorrect, y = Peak, color = Study) + 
+    geom_point() + 
+    stat_smooth(method = "lm")
+
+peak_groups %>% 
+  ungroup() %>% 
+  inner_join(scores) %>% 
+  filter(Study == "Age 3") %>% 
+  lm(Peak ~ MinPair_ProportionCorrect, .) %>% 
+  summary()
+
+peak_groups %>% 
+  ungroup() %>% 
+  inner_join(scores) %>% 
+  filter(Study == "Age 3") %>% 
+  lm(Peak ~ MinPair_ProportionCorrect * EVT_Standard, .) %>% 
+  summary()
+```
+
+```{r}
+# Minimal pairs predicting lowest value of the curve at age 3
+
+peak_groups %>% 
+  ungroup() %>% 
+  inner_join(scores) %>% 
+  filter(Study == "Age 3") %>% 
+  ggplot() + 
+    aes(x = EVT_Standard, y = Peak, color = Study) + 
+    geom_point() + 
+    stat_smooth(method = "lm")
+
+peak_groups %>% 
+  ungroup() %>% 
+  inner_join(scores) %>% 
+  filter(Study == "Age 3") %>% 
+  lm(Peak ~ EVT_Standard, .) %>% 
+  summary()
+```
+
+
+```{r}
 with_peaks <- fam_peaks %>% 
   mutate(
     Study = convert_study_to_age(Study),
@@ -1089,9 +1216,14 @@ m_f_new_fits_each %>%
     facet_wrap("num") + 
     guides(color = FALSE) + 
     labs(
-      title = "Age 3 children binned into 6-tiles by rise after min value",
+      x = constants$x_time,
+      y = constants$y_prop_fam,
+      title = "Age 3 children binned into sextiles by rise after min value",
       caption = "10 posterior samples per child")
+```
 
+
+```{r}
 deltas <- m_f_new_fits_each %>% 
   sample_n_of(10, .draw) %>% 
   mutate(Half = Time <= median(Time)) %>% 
@@ -1118,9 +1250,28 @@ m_f_new_fits_each %>%
     facet_wrap("num") + 
     guides(color = FALSE) + 
     labs(
-      title = "Age 3 children binned into 6-tiles by differences",
+      title = "Age 3 children binned into sextiles by differences",
       subtitle = "Difference = second half max - first half min",
+      x = constants$x_time,
+      y = constants$y_prop_fam,
       caption = "10 posterior samples per child")
+
+deltas %>% 
+  inner_join(scores) %>% 
+  ggplot() + 
+  aes(x = EVT_Standard, y = Delta, color = Study) + 
+  geom_point() + 
+  stat_smooth(method = "lm")
+
+deltas %>% 
+  ungroup() %>% 
+  filter(Study == "Age 3") %>% 
+  select(-Study) %>% 
+  inner_join(scores) %>% 
+  ggplot() + 
+  aes(x = Delta, y = EVT_Standard, color = Study) + 
+  geom_point() + 
+  stat_smooth(method = "lm")
 
 # broomed <- m_f_new_fits_each %>% 
 #   sample_n_of(10, .draw) %>% 
@@ -1162,7 +1313,7 @@ m_f_new_fits_each %>%
     facet_wrap("num") + 
     guides(color = FALSE) + 
     labs(
-      title = "Age 3 children binned into 6-tiles by quadratic trend",
+      title = "Age 3 children binned into sextiles by quadratic trend",
       caption = "10 posterior samples per child")
 ```
 

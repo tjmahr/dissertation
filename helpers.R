@@ -259,6 +259,16 @@ add_ui_slug_to_first <- function(x, slug = "90%&nbsp;UI: ") {
   x
 }
 
+fmt_convert_prop_to_percent <- function(xs) {
+  stringr::str_replace_all(
+    xs,
+    "(0?[.]\\d+)",
+    function(prop) scales::percent(as.numeric(prop)))
+}
+
+fmt_remove_leading_zeros_in_text <- function(xs) {
+  stringr::str_replace_all(xs, "0[.]", ".")
+}
 
 fct_add_counts <- function(xs, fmt = "{levels} ({counts})") {
   levels <- names(table(xs))
@@ -288,3 +298,5 @@ scale_fill_study <- function(..., end = .6, option = "D") {
     option = option)
 
 }
+
+
