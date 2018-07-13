@@ -1100,7 +1100,28 @@ peak_groups %>%
   aes(x = Peak, y = EVT_Standard, color = Study) + 
   geom_point() + 
   stat_smooth(method = "lm")
+```
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
 peak_groups %>% 
   ungroup() %>% 
   inner_join(scores) %>% 
@@ -1121,9 +1142,8 @@ peak_groups %>%
   filter(Study == "Age 5") %>% 
   lm(Peak ~ scale(EVT_Standard), .) %>% 
   summary()
-
-
 ```
+
 
 ```{r}
 # Minimal pairs predicting Age 3 minimum
@@ -1222,6 +1242,33 @@ m_f_new_fits_each %>%
       caption = "10 posterior samples per child")
 ```
 
+```{r}
+# Nothing predicts diffs
+
+# with_peaks %>% 
+#   ungroup() %>% 
+#   inner_join(scores) %>% 
+#   filter(Study == "Age 3") %>% 
+#   ggplot() + 
+#     aes(x = MinPair_ProportionCorrect, y = Diff, color = Study) + 
+#     geom_point() + 
+#     stat_smooth(method = "lm")
+# 
+# with_peaks %>% 
+#   ungroup() %>% 
+#   inner_join(scores) %>% 
+#   filter(Study == "Age 3") %>% 
+#   lm(Diff ~ MinPair_ProportionCorrect, .) %>% 
+#   summary()
+# 
+# with_peaks %>% 
+#   ungroup() %>% 
+#   inner_join(scores) %>% 
+#   filter(Study == "Age 3") %>% 
+#   lm(Diff ~ MinPair_ProportionCorrect * EVT_Standard, .) %>% 
+#   summary()
+```
+
 
 ```{r}
 deltas <- m_f_new_fits_each %>% 
@@ -1256,22 +1303,57 @@ m_f_new_fits_each %>%
       y = constants$y_prop_fam,
       caption = "10 posterior samples per child")
 
-deltas %>% 
-  inner_join(scores) %>% 
-  ggplot() + 
-  aes(x = EVT_Standard, y = Delta, color = Study) + 
-  geom_point() + 
-  stat_smooth(method = "lm")
+# deltas %>% 
+#   inner_join(scores) %>% 
+#   ggplot() + 
+#   aes(x = EVT_Standard, y = Delta, color = Study) + 
+#   geom_point() + 
+#   stat_smooth(method = "lm")
 
-deltas %>% 
-  ungroup() %>% 
-  filter(Study == "Age 3") %>% 
-  select(-Study) %>% 
-  inner_join(scores) %>% 
-  ggplot() + 
-  aes(x = Delta, y = EVT_Standard, color = Study) + 
-  geom_point() + 
-  stat_smooth(method = "lm")
+# deltas %>%
+#   ungroup() %>%
+#   inner_join(scores) %>%
+#   filter(Study == "Age 3") %>%
+#   ggplot() +
+#     aes(x = MinPair_ProportionCorrect, y = Delta, color = Study) +
+#     geom_point() +
+#     stat_smooth(method = "lm")
+# 
+# deltas %>%
+#   ungroup() %>%
+#   inner_join(scores) %>%
+#   filter(Study == "Age 3") %>%
+#   lm(Delta ~ MinPair_ProportionCorrect, .) %>%
+#   summary()
+# 
+# deltas %>%
+#   ungroup() %>%
+#   inner_join(scores) %>%
+#   filter(Study == "Age 3") %>%
+#   lm(Delta ~ MinPair_ProportionCorrect * EVT_Standard, .) %>%
+#   summary()
+
+
+
+
+
+
+
+
+# deltas %>% 
+#   ungroup() %>% 
+#   filter(Study == "Age 3") %>% 
+#   select(-Study) %>% 
+#   inner_join(scores) %>% 
+#   ggplot() + 
+#   aes(x = Delta, y = EVT_Standard, color = Study) + 
+#   geom_point() + 
+#   stat_smooth(method = "lm")
+```
+
+
+```{r}
+
 
 # broomed <- m_f_new_fits_each %>% 
 #   sample_n_of(10, .draw) %>% 
@@ -1288,7 +1370,6 @@ broomed2 <- m_f_new_fits_each %>%
       purrr::map(~ lm(plogis(.posterior_value) ~ ot1 + ot2 + ot3, .x)),
     results = purrr::map(model, broom::tidy))
 
-# bowls <- broomed %>% 
 bowls <- broomed2 %>% 
   select(-model, -data) %>% 
   tidyr::unnest(results) %>% 
@@ -1315,6 +1396,49 @@ m_f_new_fits_each %>%
     labs(
       title = "Age 3 children binned into sextiles by quadratic trend",
       caption = "10 posterior samples per child")
+
+
+bowls %>% 
+  filter(term == "ot2") %>% 
+  inner_join(scores) %>%
+  ggplot() +
+  aes(x = EVT_Standard, y = estimate, color = Study) +
+  geom_point() +
+  stat_smooth(method = "lm")
+
+# 
+# bowls %>% 
+#   inner_join(scores) %>%
+#   ggplot() +
+#   aes(x = EVT_Standard, y = estimate, color = Study) +
+#   geom_point() +
+#   facet_wrap("term", scales = "free") + 
+#   stat_smooth(method = "lm")
+
+bowls %>% 
+  filter(term == "ot2") %>% 
+  inner_join(scores) %>%
+  filter(Study == "Age 3") %>%
+  ggplot() +
+    aes(x = MinPair_ProportionCorrect, y = estimate, color = Study) +
+    geom_point() +
+    stat_smooth(method = "lm")
+
+bowls %>% 
+  filter(term == "ot2") %>% 
+  inner_join(scores) %>%
+  filter(Study == "Age 3") %>%
+  lm(estimate ~ MinPair_ProportionCorrect, .) %>%
+  summary()
+
+bowls %>% 
+  filter(term == "ot2") %>% 
+  inner_join(scores) %>%
+  filter(Study == "Age 3") %>%
+  lm(estimate ~ MinPair_ProportionCorrect + EVT_Standard, .) %>%
+  summary()
+
+
 ```
 
 
