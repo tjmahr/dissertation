@@ -1204,17 +1204,17 @@ evt_cutpoint <- raw_m_evt_minp_age3 %>%
 #   geom_point() + 
 #   stat_smooth(method = "lm")
 
-minp_neg_f_delta_by_1 <- (coef(f_m_evt_minp_age3)[2] * .1) %>% 
+evt_minp_neg_f_delta_by_1_mip <- (coef(f_m_evt_minp_age3)[2] * .1) %>% 
   abs() %>% 
   printy::fmt_fix_digits(2) %>% 
   printy::fmt_leading_zero()
 
-evt_neg_f_delta_by_15 <- (coef(f_m_evt_minp_age3)[3] * 15) %>% 
+evt_minp_f_delta_by_15_evt <- (coef(f_m_evt_minp_age3)[3] * 15) %>% 
   abs() %>% 
   printy::fmt_fix_digits(2) %>% 
   printy::fmt_leading_zero()
 
-minp_f_peak_evt_r_squared <- f_m_evt_minp_age3 %>% 
+evt_minp_f_peak_r_squared <- f_m_evt_minp_age3 %>% 
   broom::glance() %>% 
   pull(r.squared) %>%
   printy::fmt_fix_digits(2) %>% 
@@ -1292,7 +1292,10 @@ discrimination also had a small effect on growth curve valleys, *R*^2^ =
 increase in minimal pair discrimination accuracy of .1 probability units
 predicts a decrease of growth curve peak by `r neg_f_delta_minp_by_1`.
 
-I regressed age-3 valleys onto both EVT-2 standard score and minimal 
+I regressed age-3 valleys onto both EVT-2 standard score, minimal-pair
+discrimination accuracy and their interaction, and all effects were
+statistically significant, *R*^2^ =
+`r evt_minp_f_peak_r_squared`, *n* = `r nobs(f_m_evt_minp_age3)`. The effects of vocabulary and minimal-pair discrimination were both negative, while their interaction was positive For an average participant, a 15-point increase in expressive vocabulary predicted decrease in growth curve valley of `r evt_minp_f_delta_by_15_evt`, and an increase minimal pair accuracy of .1 predicted a decrease in valley of `r evt_minp_f_delta_by_15_evt`. The positive interaction term means that increasing one of the predictors simulataneously weakens the effect of the other. Thus, the effect of expressive vocabulary is no longer nominally significant when minimal pair accuracy is `r minp_cutpoint` or greater, and conversely the minimal pair accuracy effect is no longer significant when expressive vocabulary is `r evt_cutpoint` or greater. (The average accurary is.... and vocabulary is ... .)
 
 
 
