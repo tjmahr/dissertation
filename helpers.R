@@ -270,10 +270,11 @@ fmt_remove_leading_zeros_in_text <- function(xs) {
   stringr::str_replace_all(xs, "0[.]", ".")
 }
 
-fct_add_counts <- function(xs, fmt = "{levels} ({counts})") {
+fct_add_counts <- function(xs, fmt = "{levels} ({counts})", first_fmt = "{levels} ({counts})") {
   levels <- names(table(xs))
   counts <- unname(table(xs))
   with_counts <- as.character(glue::glue(fmt))
+  with_counts[1] <- as.character(glue::glue(first_fmt))[1]
   factor(xs, levels, labels = with_counts)
 }
 
