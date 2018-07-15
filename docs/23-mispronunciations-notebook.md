@@ -2,6 +2,13 @@
 Sensitivity to mispronunciations
 =======================================================================
 
+- [x] update p1 code to work on new peak dataframes
+- [x] make a p1 code chunk that verifies no relationship between gca features and minp/evt
+- [x] update p2 code to work on new peak dataframes
+- [x] report evt x minp interaction for valleys
+- [x] describe and plot quadratic effect
+- [x] report evt and minp effects for quadratic effects
+
 
 
 
@@ -69,14 +76,6 @@ and 5, respectively.
 
 
 
-
-
-
-
-
-
-
-
 When children start on the image of a novel object and hear a
 mispronunciation, they look to the familiar image.
 Figure \@ref(fig:unfam-initial-mp-trials) shows the average of
@@ -102,8 +101,8 @@ compared to real word trials.
 </div>
 
 Of the growth curve features, developmental changes were only observed
-for the average probability (intercept) and peak probability features. At age 3, the average
-proportion of looks to the familiar image was
+for the average probability (intercept) and peak probability features.
+At age 3, the average proportion of looks to the familiar image was
 .37 [90% UI: .34, .40]. The looking proportion increased by
 .04 [&minus;.01, .08] to .40 [.37, .44] at
 age 4. This year-over-year change is probably positive, but a change
@@ -150,27 +149,35 @@ show any differences in shape.
 
 
 
+
+
+
+
 I additionally asked whether any child-level factors predicted looking
 behavior under these conditions. First, I asked whether performance on a
-minimal pair discrimination task at age 3 predicted looking behavior at
-age 3. The rationale here is the hypothesis that children with better
+minimal pair discrimination task at age 3 predicted looking behavior at
+age 3. The rationale here is the hypothesis that children with better
 minimal pair discrimination may be especially sensitive to
 mispronunciations. Proportion of items correct on the task did not
-correlate with growth curve peaks, *r* = &minus;.03 [90% UI: &minus;.05, &minus;.01] with *n* =
+correlate with growth curve peaks, *r* = &minus;.03 [90% UI: &minus;.05, &minus;.01] with *n* =
 138, or with any other growth curve measures.
 
+(ref:plot-evt-mp-unfam-peaks) Relationship between expressive vocabulary and growth curve peaks for mispronunciation trials starting on the unfamiliar image. I drew 100 samples from the posterior distribution and computed participant's growth curve peaks for each draw. Points represent the mean and standard error of the 100 peaks. For each draw, I regressed the peak values onto EVT-2 standard score. Lines represent the fits of the regressions.
 
-<img src="23-mispronunciations-notebook_files/figure-html/plot-evt-peaks-1.png" width="50%" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="23-mispronunciations-notebook_files/figure-html/plot-evt-mp-unfam-peaks-1.png" alt="(ref:plot-evt-mp-unfam-peaks)" width="50%" />
+<p class="caption">(\#fig:plot-evt-mp-unfam-peaks)(ref:plot-evt-mp-unfam-peaks)</p>
+</div>
 
 I also tested whether expressive vocabulary (EVT-2 standard score)
 predicted performance in this condition. In this case, there were
-significant effects at age 3 where a higher expressive vocabulary
+significant effects at age 3 where a higher expressive vocabulary
 predicted a higher growth curve peak and a higher average probability.
-These effects, however, were very small. For example,
-a 15-point increase in expressive vocabulary predicted an increase of
-growth curve peak of .03, *R*^2^ =
-.03---see Figure XX. Expressive vocabulary did not
-predict any of the growth curve features at age 4 or at age 5.
+These effects, however, were very small. For example, a 15-point
+increase in expressive vocabulary predicted an increase of growth curve
+peak of .03, *R*^2^ = .03---see
+Figure \@ref(fig:plot-evt-mp-unfam-peaks) . Expressive vocabulary did
+not predict any of the growth curve features at age 4 or at age 5.
 
 
 **Summary**. When children look at the unfamiliar object and hear a
@@ -183,7 +190,13 @@ There was a small effect of expressive vocabulary on looking probability
 at age 3, but no other effects of vocabulary were observed.
 
 
-## Familiar-initial trials: Should I stay or should I go?
+
+
+
+Familiar-initial trials: Should I stay or should I go?
+------------------------------------------------------------------------
+
+
 
 The above analyses showed that preschoolers associate one-feature
 onset-mispronunciations with the familiar word that matches the rime of
@@ -195,13 +208,14 @@ children have information that supports switching to another image. But
 as the rest of the word unfolds, they hear a syllable rime that supports
 staying.
 
-Figure XX shows the growth curve averages for trials starting on the
-familiar image. The looking patterns show a sharp fall towards .5 which
-is chance-level performance. Behaviorally, children on average move
-quickly to look at both images equally; they rush into maximum
-uncertainty. At age 5, the average of the growth curves never dips below
-.5, and in fact, it shows a late rise to .6 looking probability. At this
-age, children are overall more likely to stay on the familiar object. 
+Figure \@ref(fig:fam-initial-mp-trials) shows the growth curve averages
+for trials starting on the familiar image. The looking patterns show a
+sharp fall towards .5 which is chance-level performance. Behaviorally,
+children on average move quickly to look at both images equally; they
+rush into maximum uncertainty. At age 5, the average of the growth
+curves never dips below .5, and in fact, it shows a late rise to .6
+looking probability. At this age, children are overall more likely to
+stay on the familiar object. 
 
 <!-- One possible interpretation of this pattern is that the children making  -->
 <!-- brief confirmatory looks to the novel image; they checking out -->
@@ -210,98 +224,205 @@ age, children are overall more likely to stay on the familiar object.
 <!-- mix of behaviors, with children staying put on some trials and -->
 <!-- considering the novel object on some trials. -->
 
-<img src="23-mispronunciations-notebook_files/figure-html/fam-initial-mp-trials-1.png" width="66%" style="display: block; margin: auto;" />
+(ref:fam-initial-mp-trials) Averages of participants' growth curves in each age. The lines represent 100 posterior predictions of the group average. 
 
-
-* Age 3 and age 4 intercepts differ. Age 4 lower.
-* Age 4 and age 5 intercepts differ. Age 5 higher.
-* Captures differences in average value.
-
-* Age 3 and age 4 linear slopes differ. Age 4 less negative.
-* Age 4 and age 5 linear slopes differ. Age 5 less negative.
-* Less of a linear trend downwards with age.
-* 3 ish vs 2.5ish vs. 1.75 ish
-
-* Age 4 and age 5 quadratic slopes differ. 
-* Age 5 10% less than age 4, value moves closer to zero (2-ish vs. 1.75 ish).
-
-* No credible differences for cubic time component.
+<div class="figure" style="text-align: center">
+<img src="23-mispronunciations-notebook_files/figure-html/fam-initial-mp-trials-1.png" alt="(ref:fam-initial-mp-trials)" width="66%" />
+<p class="caption">(\#fig:fam-initial-mp-trials)(ref:fam-initial-mp-trials)</p>
+</div>
 
 In the other analyses, the growth curves become steeper and attain
 higher average values and higher peak values. As a result, it is
 straightforward to interpret how the intercept and linear time effects
-contribute to the growth curve's shape. For this model, some more work is
-required to interpret the model parameters and how they combine
-to form the growth curve shape.
+contribute to the growth curve's shape. For this model, some more effort
+is required to interpret the model parameters and how they combine to
+form the growth curve shape.
 
-<!-- In terms of models parameters, there are a few different credible -->
-<!-- effects. However, these are not easy to interpret individually. They -->
-<!-- make combine in subtle ways.  -->
-
-
-
-
-Figure XX shows how the growth curve features are weighted at each year
-and contribute to the overall growth curve shape.
-At age 3, the intercept term, or average proportion of looks to the
-familiar image, was .68 [90% UI: .65, .71]. In this situation, the term is
+Figure \@ref(fig:mp-fam-gca-features) shows how the growth curve features
+are weighted at each year and contribute to the overall growth curve
+shape. At age 3, the intercept term, or average proportion of looks to
+the familiar image, was .68 [90% UI: .65, .71]. In this situation, the term is
 less useful because the curves all start at a high probability which
 inflates the average value. That said, comparisons remain useful. At
 age 4, the average probability decreased by .05 [.02, .09] to
 .63 [.60, .66], and at age 5 the average probability returns to age-3
 levels .68 [.65, .71]. These effects contribute to how the age 4
-curves dips below the others and indeed below the .5 level.
-For the linear time term, the slope becomes flatter year over year,
-showing a change of &minus;19% [&minus;29%, &minus;7%] from age 3 to age 4, and a
-change of &minus;30% [&minus;42%, &minus;17%] from age 4 to age 5. 
+curves dips below the others and indeed below the .5 level. For the
+linear time term, the slope becomes flatter year over year, decreasing
+by 19% [7%, 29%] from age 3 to age 4 and decreasing by
+30% [17%, 42%] from age 4 to age 5.
 
-Finally, there is an effect of quadratic time. I think of a positive quadratic trend like a
-weight hanging on a string: It pulls and bends the whole curve
-downwards. At age 5, the quadratic is X% smaller than at age 4, meaning
-that the age-5 curve has slightly less bend downwards. There were no
-credible differences in the cubic time component. 
+(ref:mp-fam-gca-features) Weighted growth curve features. For the first four panels, the *y* axes are scaled to the same range. This scaling highlights how the cubic time component contributes less to the overall shape than the other features.
 
-The combination of
-these effect shows in the final panel of the plot. The Age 4 curve dips
-down furthest beneath .5---this is driven by in the intercept effect.
-The Age 5 curve stays above .5 and starts to rise away from its minimum
-value.
+<div class="figure" style="text-align: center">
+<img src="23-mispronunciations-notebook_files/figure-html/mp-fam-gca-features-1.png" alt="(ref:mp-fam-gca-features)" width="100%" />
+<p class="caption">(\#fig:mp-fam-gca-features)(ref:mp-fam-gca-features)</p>
+</div>
+
+There was a credible change in the quadratic time parameter at
+age 5. One way to think of positive quadratic trend is like a weight
+hanging on a string: It pulls and bends the whole curve downwards. At
+age 5, the quadratic is 12% [1%, 22%] smaller than at
+age 4, meaning that the age-5 curve has slightly less bend downwards.
+Finally, there were no credible differences in the cubic time component. Compared to the other features, the cubic time feature only a small amount to the overall shape of the growth curves.
+
+The combination of these effects shows in the final panel of the plot.
+The Age 4 curve dips down furthest beneath 0 log-odds (.5
+probability)---this is driven by in the intercept feature. The Age 5
+curve stays above 0 log-odds and starts to rise away from its minimum
+value, owning to the dampened linear and quadratic features.
 
 The developmental story, if any, is that children stick with the
 familiar object slightly more at age 5. The growth curves hit maximum
 uncertainty, but not at age 5.
-
-
-<img src="23-mispronunciations-notebook_files/figure-html/mp-fam-gca-features-1.png" width="100%" style="display: block; margin: auto;" />
-
  
 
 
-***
+### Quantifying looking behaviors
 
-I asked whether growth curve "valleys" provided a meaningful feature for
-this data. This value was defined as the median of the five smallest
-proportions of a growth curve. It reflects the maximum degree to which
-the novel image is considered as a referent for the mispronunciation.
+In the earlier analyses, I derived a growth curve peak value. Here, I
+asked whether analogous growth curve "valleys" provided a meaningful
+feature for looking behavior in this context. This value was defined as
+the median of the five smallest proportions of a growth curve.
+Intuitively, it reflects the maximum degree to which the novel image is
+considered as a referent for the mispronunciation.
 
+Figure \@ref(fig:fam-peaks-by-age) shows the posterior means of
+participants' growth curve valleys. Note that there is considerable
+variability at each age, with the 0--1 interval nearly covered at age 4.
+The median value is closer to .5 at age 5, and this difference is
+consistent with the growth curve trajectories where the average age 5
+curve had did not dip as low as the other curves.
 
-<img src="23-mispronunciations-notebook_files/figure-html/fam-peaks-by-age-1.png" width="50%" style="display: block; margin: auto;" />
-
-* There is considerable spread at each age. 
-* The middle boxplot almost stretches perfectly from 0 to 1.
-* There is probably a few different behaviors being captured here.
-* That said, the median is closer to .5 at age 5 which matches how the 
-  growth curves looked.
-
-What curve features capture different looking behaviors?
-
-<img src="23-mispronunciations-notebook_files/figure-html/diffs-1.png" width="80%" style="display: block; margin: auto;" /><img src="23-mispronunciations-notebook_files/figure-html/diffs-2.png" width="80%" style="display: block; margin: auto;" /><img src="23-mispronunciations-notebook_files/figure-html/diffs-3.png" width="80%" style="display: block; margin: auto;" /><img src="23-mispronunciations-notebook_files/figure-html/diffs-4.png" width="80%" style="display: block; margin: auto;" />
+(ref:fam-peaks-by-age) Growth curve peaks by age for mispronunciation trials starting on the familiar image.
 
 
-<img src="23-mispronunciations-notebook_files/figure-html/unnamed-chunk-3-1.png" width="80" style="display: block; margin: auto;" /><img src="23-mispronunciations-notebook_files/figure-html/unnamed-chunk-3-2.png" width="80" style="display: block; margin: auto;" /><img src="23-mispronunciations-notebook_files/figure-html/unnamed-chunk-3-3.png" width="80" style="display: block; margin: auto;" /><img src="23-mispronunciations-notebook_files/figure-html/unnamed-chunk-3-4.png" width="80" style="display: block; margin: auto;" /><img src="23-mispronunciations-notebook_files/figure-html/unnamed-chunk-3-5.png" width="80" style="display: block; margin: auto;" /><img src="23-mispronunciations-notebook_files/figure-html/unnamed-chunk-3-6.png" width="80" style="display: block; margin: auto;" /><img src="23-mispronunciations-notebook_files/figure-html/unnamed-chunk-3-7.png" width="80" style="display: block; margin: auto;" /><img src="23-mispronunciations-notebook_files/figure-html/unnamed-chunk-3-8.png" width="80" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="23-mispronunciations-notebook_files/figure-html/fam-peaks-by-age-1.png" alt="(ref:fam-peaks-by-age)" width="50%" />
+<p class="caption">(\#fig:fam-peaks-by-age)(ref:fam-peaks-by-age)</p>
+</div>
+
+The wide range of values for the growth curve valleys suggests that
+there are a few different listening behaviors that are being averaged
+over in the above analyses. For example, the valleys above .6 indicate
+that some children stay with the familiar image on average, and the
+valleys below .4 indicate children who favor the unfamiliar image. 
+
+To explore individual listening behaviors, I visualized children's
+individual growth curves based on their growth curve valleys. Within
+each year, I grouped children into sextiles based on the posterior mean
+of the their growth curve valley and plotted their individual growth
+curves. Figure \@ref(fig:age3-valley-curves) shows the results from
+age 3. The final two bins show children who on average stayed with the
+familiar image throughout the mispronuciation trials. The first two bins
+mostly contain children switched to the unfamilar image and stayed
+there. These are also some children whose curves show a pronounced
+u-shaped trajectory; the curves with the highest ending points in the
+first three bins show children with u-shaped trajectories.
+
+(ref:age3-valley-curves) Growth curves for mispronunciations trials starting on the unfamilar object at age 3. Children were grouped into sextiles based on the posterior mean of the growth curve valley (minimum). Ten lines are drawn per child to visualize uncertainty. Children were assigned colors arbitrarily. On the right side of each panel are "rugs" which mark the valleys in that panel.
+
+<div class="figure" style="text-align: center">
+<img src="23-mispronunciations-notebook_files/figure-html/age3-valley-curves-1.png" alt="(ref:age3-valley-curves)" width="80%" />
+<p class="caption">(\#fig:age3-valley-curves)(ref:age3-valley-curves)</p>
+</div>
 
 
 
+
+
+
+
+
+
+
+I asked whether any child-level factors predicted children's looking
+behaviors. I first regressed growth curve valleys on EVT-2 standard
+score. There was a small effect at age 3, *R*^2^ =
+.09, *n* = 145. A 15-point
+increase in expressive vocabulary predicted decrease in growth curve
+valley of .05. At the other ages, the effects are
+neglibly small, as shown in Figure \@ref(fig:mp-fam-valley-evt).
+
+(ref:mp-fam-valley-evt) Relationship between expressive vocabulary and growth curve valleys for mispronunciation trials starting on the familiar image. Valleys were computed on 100 draws of the posterior distribution. Points represent the mean and standard error of the valleys. Lines represent the fit of the regression in each draw. Although the slope of age 4 and age 5 lines are noticeably different from the age 3 one, they cover a tiny amount of the *y* axis so they represent a neglible effect.
+
+<div class="figure" style="text-align: center">
+<img src="23-mispronunciations-notebook_files/figure-html/mp-fam-valley-evt-1.png" alt="(ref:mp-fam-valley-evt)" width="50%" />
+<p class="caption">(\#fig:mp-fam-valley-evt)(ref:mp-fam-valley-evt)</p>
+</div>
+
+
+At age 3, a child's proportion of trials correct on minimal pairs
+discrimination also had a small effect on growth curve valleys, *R*^2^ =
+.08, *n* = 140. An
+increase in minimal pair discrimination accuracy of .1 probability units
+predicts a decrease of growth curve peak by .04.
+
+I regressed age-3 valleys onto both EVT-2 standard score, minimal-pair
+discrimination accuracy and their interaction. Both main effects and the
+interaction were statistically significant, *R*^2^ =
+.17, *n* = 139. The
+effects of vocabulary and minimal-pair discrimination were both
+negative, so that higher scores on these measures predicted lower growth
+curve valleys. For an average participant, a 15-point increase in
+expressive vocabulary predicted decrease of
+.03, and an increase of minimal pair
+accuracy of .1 predicted a decrease in valley of
+.03. The interaction term, however,
+was positive, meaning that increasing one of the predictors
+simulataneously weakens the effect of the other. The simple effect of
+expressive vocabulary is no longer nominally significant when minimal
+pair accuracy is .71 or greater (at the
+60-percentile or greater). Conversely, the simple
+effect of minimal pair accuracy is no longer significant when expressive
+vocabulary standard score is 119 or greater (at the
+60-percentile or greater). **interpret this effect**
+
+
+
+
+The valley feature considers the maximum extent to which the novel
+object is considered as the referent on these trials. But the u-shaped
+growth curves in Figure \@ref(fig:age3-valley-curves) reveal another
+listening response on this task: Confirmatory looks to the unfamiliar
+object. In these u-shaped curves, children's probability of fixating on
+the familiar object temporarily decreases as the novel object is
+considered, and the probability rises as that interpretation is
+rejected. To quantify this tendency, I computed each child's growth
+curve on the probability scale and re-estimated the quadratic trends in
+these curves. Exploratory visualization showed that children with higher
+values on this quadratic trend were more likely to have a u-shape curve.
+This feature, however, also favored sigmoid or z-shaped curves that
+rapidly fell and plateaued. To avoid these kinds of curves, I weighted
+the quadratic trend using the median of the final five points of the
+curve. The weighted quadratic feature penalized curves that have a
+strong quadratic trend but end on a low probability. Figure
+\@ref(fig:mp-fam-prop-ot2-bins) shows growth curves of age 3 children
+binned using this feature. The bottom of panels illustrated how the
+u-shaped features becomes stronger in each bin. The quadratic feature
+was weakly correlated with the growth curve valleys, *r* =
+&minus;.12, and the lack of correlation appears in the figure
+by how the curves in each panel reach different minimum valleys.
+
+(ref:mp-fam-prop-ot2-bins) Text reference for caption
+
+<div class="figure" style="text-align: center">
+<img src="23-mispronunciations-notebook_files/figure-html/mp-fam-prop-ot2-bins-1.png" alt="(ref:mp-fam-prop-ot2-bins)" width="80%" />
+<p class="caption">(\#fig:mp-fam-prop-ot2-bins)(ref:mp-fam-prop-ot2-bins)</p>
+</div>
+
+
+
+
+I regressed the u-shaped curve feature onto expressive vocabulary
+standard score at each age and onto minimal pair discrimination for
+age 3. There was a tiny but yet nominally significant of vocabulary at
+age 5, *R*^2^ = .03, where children with lower vocabularies
+were had a slightly stronger u-shaped trend in their growth curve. This
+effect, however, is so small as to be negligible. None of the effects were 
+significant.
+
+ 
 
 
 
@@ -337,7 +458,9 @@ What curve features capture different looking behaviors?
   - These sets of analyses mainly demonstrate that when children start
     on a familiar image and hear a mispronunciation, they have a few
     options for how to proceed.
-  - This also shows a possible decoupling between lexical processing and referent selection. It is unlikely that children heard the mispronunciations differently in these trials, but rather the responded differently.
-
+  - This also shows a possible decoupling between lexical processing and
+  referent selection. It is unlikely that children heard the mispronunciations
+  differently in these trials, but rather the responded differently.
+  
 
 

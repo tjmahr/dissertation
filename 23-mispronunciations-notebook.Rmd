@@ -1,6 +1,13 @@
 Sensitivity to mispronunciations
 =======================================================================
 
+- [x] update p1 code to work on new peak dataframes
+- [x] make a p1 code chunk that verifies no relationship between gca features and minp/evt
+- [x] update p2 code to work on new peak dataframes
+- [x] report evt x minp interaction for valleys
+- [x] describe and plot quadratic effect
+- [x] report evt and minp effects for quadratic effects
+
 ```{r setup, include = FALSE}
 knitr::read_chunk("./helpers.R")
 if (interactive()) source("./helpers.R")
@@ -12,9 +19,6 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 
 ```{r plotting-helpers, include = FALSE}
 # knitr::opts_chunk$set(cache = TRUE)
-constants$cap_emp_and_sim <- 
-  "Points: Emprical means ± SE.
-Ribbons: Mean ± 95% CI for 1000 simulated children."
 constants$cap_emp_and_draw <- 
   "Intervals: Empirical mean ± SE. Lines: 100 posterior means."
 
@@ -60,8 +64,8 @@ d <- d %>%
 d_u <- d %>% filter(Bias_Fam == "Unfamiliar")
 d_f <- d %>% filter(Bias_Fam == "Familiar")
 
-readr::write_csv(d_u, "./data/aim2-mp-unfam-modeled-data.csv.gz")
-readr::write_csv(d_f, "./data/aim2-mp-fam-modeled-data.csv.gz")
+# readr::write_csv(d_u, "./data/aim2-mp-unfam-modeled-data.csv.gz")
+# readr::write_csv(d_f, "./data/aim2-mp-fam-modeled-data.csv.gz")
 
 library(brms)
 mp_unfam <- readr::read_rds("./data/aim2-mp-unfam.rds.gz")
@@ -70,10 +74,23 @@ mp_unfam
 mp_fam <- readr::read_rds("data/aim2-mp-fam.rds.gz")
 mp_fam
 
-unfam_peaks <- readr::read_csv("./data/aim2-mp-unfam-peaks.csv.gz")  %>% 
+unfam_peaks <- readr::read_csv(
+  file = "./data/aim2-mp-unfam-peaks.csv.gz", 
+  col_types = readr::cols(
+    .default = readr::col_double(),
+    .draw = readr::col_integer(),
+    Study = readr::col_character(),
+    ResearchID = readr::col_character()))  %>% 
   mutate(Study = convert_study_to_age(Study)) %>% 
   rename(Peak = Peak_Prop)
-fam_peaks <- readr::read_csv("./data/aim2-mp-fam-peaks.csv.gz") %>% 
+
+fam_peaks <- readr::read_csv(
+  file = "./data/aim2-mp-fam-peaks.csv.gz", 
+  col_types = readr::cols(
+    .default = readr::col_double(),
+    .draw = readr::col_integer(),
+    Study = readr::col_character(),
+    ResearchID = readr::col_character())) %>% 
   mutate(Study = convert_study_to_age(Study))
 ```
 
@@ -134,7 +151,7 @@ and 5, respectively.
 
 ## Unfamiliar-initial trials
 
-```{r unfam-model}
+```{r unfam-model-intervals}
 test <- posterior_samples(mp_unfam, pars = "^b_") %>% 
   mutate(
     b_Intercept_Age3 = b_Intercept,
@@ -187,7 +204,7 @@ unfam_ceilings <- unfam_peaks %>%
   ungroup() %>% 
   select(Study, Ceiling) %>%
   tidyr::nest(-Study) %>% 
-  mutate(intervals = data %>% purrr::map(bayesplot::mcmc_intervals_data)) %>% 
+  mutate(intervals = data %>% purrr::map(mcmc_intervals_data)) %>% 
   select(-data) %>% 
   tidyr::unnest(intervals) %>% 
   mutate(
@@ -205,7 +222,6 @@ i_ints <- mcmc_intervals_data(test, regex_pars = "Prop_Age") %>%
   add_ui_slug_to_first("90% UI: ") %>% 
   lapply(stringr::str_replace_all, "0[.]", ".")
 ```
-
 
 When children start on the image of a novel object and hear a
 mispronunciation, they look to the familiar image.
@@ -279,8 +295,8 @@ ggplot(d_u_plotting) +
 ```
 
 Of the growth curve features, developmental changes were only observed
-for the average probability (intercept) and peak probability features. At age 3, the average
-proportion of looks to the familiar image was
+for the average probability (intercept) and peak probability features.
+At age 3, the average proportion of looks to the familiar image was
 `r i_ints$b_Intercept_Prop_Age3`. The looking proportion increased by
 `r i_ints$d_Intercept_Prop_Age4` to `r i_ints$b_Intercept_Prop_Age4` at
 age 4. This year-over-year change is probably positive, but a change
@@ -309,36 +325,39 @@ listeners achieve a peak of looking probability of .99: At age 5, only
 (ref:unfam-peaks-by-age) Growth curve peaks by age for mispronunciation trials starting on the unfamiliar image.
 
 ```{r unfam-peaks-by-age, fig.cap = "(ref:unfam-peaks-by-age)", fig.width=4, fig.height=3, out.width="50%"}
+set.seed(20180715)
+
 study_peak_counts <- unfam_peaks %>%
   distinct(Study, ResearchID) %>%
-  mutate(
-    Study = Study %>% convert_study_to_age(),
-    StudyCounts = Study %>% fct_add_counts()) %>%
+  mutate(StudyCounts = Study %>% fct_add_counts()) %>%
   distinct(Study, StudyCounts)
 
 x_levels <- setNames(
   as.character(study_peak_counts$StudyCounts), 
   as.character(study_peak_counts$Study))
 
-unfam_peaks %>% 
+unfam_peaks_avgs <- unfam_peaks %>% 
   group_by(Study, ResearchID) %>% 
   summarise_at(vars(Peak), mean, na.rm = TRUE) %>% 
-  ggplot() + 
-    aes(x = Study, y = Peak) + 
-    geom_hline(yintercept = .5, size = 2, color = "white") + 
-    geom_boxplot(width = .4, fill = NA, outlier.alpha = 0) +
-    geom_point(
-      position = position_jitter(width = .2), 
-      alpha = .4, 
-      shape = 1) + 
-    labs(
-      title = "Growth curve peaks",
-      subtitle = constants$note_mp_unfam,
-      x = NULL,
-      y = NULL,
-      caption = "Points: Participant posterior means.") + 
-    scale_x_discrete(labels = x_levels) +
-    theme(plot.subtitle = element_text(size = rel(.9))) 
+  ungroup() 
+
+ggplot(unfam_peaks_avgs) + 
+  aes(x = Study, y = Peak) + 
+  geom_hline(yintercept = .5, size = 2, color = "white") + 
+  geom_boxplot(width = .4, fill = NA, outlier.alpha = 0) +
+  geom_point(
+    position = position_jitter(width = .2), 
+    alpha = .4, 
+    shape = 1) + 
+  labs(
+    title = "Growth curve peaks",
+    subtitle = constants$note_mp_unfam,
+    x = NULL,
+    y = NULL,
+    caption = "Points: Participant posterior means.") + 
+  scale_x_discrete(labels = x_levels) +
+  theme(plot.subtitle = element_text(size = rel(.9))) 
+
 # + 
 #     scale_y_continuous(
 #       minor_breaks = c(.1, .3, .5, .7, .9),
@@ -369,39 +388,21 @@ tp1 <- scores %>% filter(Study == "Age 3")
 tp2 <- scores %>% filter(Study == "Age 4")
 tp3 <- scores %>% filter(Study == "Age 5")
 
-# ppvt <- readr::read_csv(file = "./data-raw/test_scores.csv") %>%
-#   # filter(Study == "TimePoint1") %>%
-#   select(Study, ResearchID, PPVT_Age, PPVT_GSV, EVT_Age, PPVT_GSV)
-# 
 # minp <- readr::read_csv(file = "./data-raw/age3-minpair-fits.csv") %>%
 #   filter(Model == "base + age + ppvt") %>%
 #   mutate(Study = "Age 3")
 
-unfam_peaks_avgs <- unfam_peaks %>% 
-  group_by(Study, ResearchID) %>% 
-  summarise_at(vars(Peak), mean, na.rm = TRUE) %>% 
-  ungroup() 
-
 minp_cors <- unfam_peaks %>% 
   filter(Study == "Age 3") %>% 
-  left_join(tp1) %>% 
+  left_join(tp1, by = c("Study", "ResearchID")) %>% 
   group_by(.draw) %>%  
   tidy_correlation(Peak, MinPair_ProportionCorrect) 
-
-# minp_cors <- unfam_peaks %>% 
-#   mutate(
-#     Study = convert_study_to_age(Study),
-#     Peak = plogis(med)) %>% 
-#   filter(Study == "Age 3") %>% 
-#   left_join(minp) %>% 
-#   group_by(.draw) %>%  
-#   tidy_correlation(Peak, coef) 
 
 min_p_cor <- minp_cors %>% 
   filter(column1 == "Peak", column2 == "MinPair_ProportionCorrect") %>% 
   select(MinP = estimate) %>% 
   mcmc_intervals_data() %>% 
-    split(.$parameter) %>% 
+  split(.$parameter) %>% 
   fmt_inline_median_interval() %>% 
   add_ui_slug_to_first("90% UI: ") %>% 
   lapply(stringr::str_replace_all, "0[.]", ".")
@@ -411,74 +412,23 @@ min_p_n <- minp_cors %>%
   pull(n) %>% 
   unique()
 
-# unfam_peaks_avgs %>%  
-#   filter(Study == "Age 3") %>% 
-#   left_join(tp1) %>% 
-#   ggplot() + 
-#     aes(x = MinPair_ProportionCorrect, y = Peak) + 
-#     geom_point(shape = 1) + 
-#     geom_smooth(method = "lm") + 
-#     labs(y = "Growth curve peak", caption = "Age 3")
+# Report Peak ~ EVT at age 3
+m_evt_age3 <- unfam_peaks_avgs %>% 
+  left_join(scores, by = c("Study", "ResearchID")) %>% 
+  filter(Study == "Age 3") %>% 
+  lm(Peak ~ scale(EVT_Standard, scale = FALSE), .)
+summary(m_evt_age3)
 
-# unfam_peaks_avgs %>%  
-#   left_join(scores) %>% 
-#   ggplot() + 
-#     aes(x = EVT_Standard, y = Peak, color = Study) + 
-#     geom_point(shape = 1) + 
-#     geom_smooth(method = "lm") + 
-#     labs(y = "Growth curve peak", caption = "Age 3")
-# 
+# Small effect
+delta_by_15 <- (coef(m_evt_age3)[2] * 15) %>% 
+  printy::fmt_fix_digits(2) %>% 
+  printy::fmt_leading_zero()
 
-broomed_u <- m_u_new_fits_each %>% 
-  tidyr::nest(-Study, -ResearchID) %>% 
-  mutate(
-    model = data %>% 
-      purrr::map(~ lm(.posterior_value ~ ot1 + ot2 + ot3, .x)),
-    results = purrr::map(model, broom::tidy))
-
-features_u <- broomed_u %>% 
-  select(-model, -data) %>% 
-  tidyr::unnest(results) %>% 
-  # select(.draw:estimate) %>% 
-  select(Study:estimate) %>% 
-  group_by(Study, ResearchID, term) %>% 
-  summarise(estimate = mean(estimate)) %>% 
-  group_by(Study, term) %>% 
-   mutate(
-    ntile = factor(ntile(estimate, 6)),
-    num = fct_add_counts(ntile) %>% as.character()) 
-
-# features_u %>%
-#   ungroup() %>%
-#   filter(Study == "Age 3") %>%
-#   left_join(scores) %>%
-#   ggplot() +
-#     aes(x = MinPair_ProportionCorrect, y = estimate, color = term) +
-#     geom_point() +
-#     geom_smooth(method = "lm") +
-#     labs(y = "Growth curve feature", caption = "Age 3")
-
-
-
-# features_u %>%
-#   ungroup() %>%
-#   filter(Study == "Age 3") %>%
-#   left_join(scores) %>%
-#   filter(term == "(Intercept)") %>%
-#   lm(estimate ~ scale(EVT_Standard), .) %>%
-#   summary()
-
-# unfam_peaks_avgs %>%
-#   left_join(scores) %>%
-#   filter(Study == "Age 3") %>%
-#   lm(Peak ~ scale(EVT_Standard), .) %>%
-#   summary()
-
-# unfam_peaks_avgs %>% 
-#   left_join(scores) %>% 
-#   filter(Study == "Age 3") %>% 
-#   lm(Peak ~ scale(MinPair_ProportionCorrect), .) %>% 
-#   summary()
+peak_evt_r_squared <- m_evt_age3 %>% 
+  broom::glance() %>% 
+  pull(r.squared) %>%
+  printy::fmt_fix_digits(2) %>% 
+  printy::fmt_leading_zero()
 
 # Get 100 samples of peaks to model
 to_model <- unfam_peaks %>% 
@@ -498,35 +448,9 @@ lines <- to_model %>%
     model = data %>% 
       purrr::map(~ lm(Peak ~ EVT_Standard, .x)),
     grid = data %>% purrr::map(make_grid),
-    grid = purrr:::map2(grid, model, modelr::add_predictions)) %>% 
+    grid = purrr::map2(grid, model, modelr::add_predictions)) %>% 
   select(Study, .draw, grid) %>% 
   tidyr::unnest()
-
-# models <- to_model %>% 
-#   tidyr::nest(-Study, -.draw) %>% 
-#   mutate(
-#     model = data %>% 
-#       purrr::map(~ lm(Peak ~ EVT_Standard, .x)),
-#     glance = model %>% purrr::map(broom::glance)) %>% 
-#   select(Study, .draw, glance) %>% 
-#   tidyr::unnest()
-
-m_evt_age3 <- unfam_peaks_avgs %>% 
-  left_join(scores) %>% 
-  filter(Study == "Age 3") %>% 
-  lm(Peak ~ scale(EVT_Standard, scale = FALSE), .)
-summary(m_evt_age3)
-
-# Small effect
-delta_by_15 <- (coef(m_evt_age3)[2] * 15) %>% 
-  printy::fmt_fix_digits(2) %>% 
-  printy::fmt_leading_zero()
-
-peak_evt_r_squared <- m_evt_age3 %>% 
-  broom::glance() %>% 
-  pull(r.squared) %>%
-  printy::fmt_fix_digits(2) %>% 
-  printy::fmt_leading_zero()
 
 p_evt_peaks <- to_model %>% 
   filter(!is.na(EVT_Standard)) %>% 
@@ -554,41 +478,58 @@ p_evt_peaks <- to_model %>%
       y = "Growth curve peak",
       title = "Vocabulary weakly predicts peaks at age 3",
       caption = "Lines: Regressions on 100 posterior samples of peaks")
-
-# unfam_peaks_avgs %>% 
-#   left_join(scores) %>% 
-#   filter(Study == "Age 3") %>% 
-#   lm(Peak ~ scale(EVT_Standard), .) %>% 
-#   summary()
-
-# 
-# features_u %>%
-#   ungroup() %>%
-#   filter(Study == "Age 5") %>%
-#   left_join(scores) %>%
-#   filter(term == "ot3") %>%
-#   lm(estimate ~ scale(EVT_Standard), .) %>%
-#   summary()
-#   
-# gca_means <- broomed_u %>%
-#   select(-data, -model) %>%
-#   tidyr::unnest(results) %>%
-#   select(Study:estimate)
-# 
-# gca_means %>%
-#   left_join(scores) %>%
-#   filter(Study == "Age 5") %>%
-#   split(.$term) %>%
-#   lapply(function(df) lm(estimate ~ EVT_Standard, df)) %>%
-#   lapply(summary)
-# 
-# gca_means %>%
-#   left_join(scores) %>%
-#   filter(Study == "Age 3") %>%
-#   split(.$term) %>%
-#   lapply(function(df) lm(estimate ~ MinPair_ProportionCorrect, df)) %>%
-#   lapply(summary)
 ```
+
+
+```{r optionally-verify-unfam-regressions, eval = FALSE}
+# This code checks over whether any regression effects held between MinPair/EVT
+# and GCA.
+regressions <- unfam_peaks %>% 
+  sample_n_of(100, .draw) %>% 
+  select(.draw, Study, ResearchID, Peak, Prop_Intercept:Prop_ot3) %>% 
+  left_join(scores, by = c("Study", "ResearchID")) %>%
+  tidyr::gather("Feature", "Value", Prop_Intercept:Prop_ot3, Peak) %>% 
+  tidyr::gather(
+    "Predictor", "Score", 
+    EVT_Standard, MinPair_ProportionCorrect) %>% 
+  anti_join(
+    data_frame(
+      Study = c("Age 4", "Age 5"), 
+      Predictor = c("MinPair_ProportionCorrect", "MinPair_ProportionCorrect")),
+    by = c("Study", "Predictor")) %>% 
+  tidyr::nest(-.draw, -Study, -Feature, -Predictor) %>% 
+  mutate(
+    results = data %>% 
+      purrr::map(~ lm(Value ~ Score, .x)) %>% 
+      purrr::map(broom::tidy)) %>% 
+  select(-data) %>% 
+  tidyr::unnest(results) %>% 
+  filter(term != "(Intercept)")
+
+# Just quickly eyeball/confirm that EVT Standard predicted age 3
+# reliability/accuracy feature. It's bad practice to look at p-values like this
+# but I need a quick piece of code to run/re-run to verify my claim in the prose
+# that the only effects held on age 3 x evt standard x intercept/peak.
+ggplot(regressions %>% group_by(Study, Feature, Predictor)) +
+  aes(x = Feature, y = p.value, color = Study) +
+  stat_summary(
+    aes(group = .group), 
+    fun.data = median_hilow, 
+    position = position_dodge(width = .4)) +
+  geom_hline(yintercept = .05) + 
+  facet_wrap("Predictor")
+  
+# gca_sextiles <- unfam_peaks %>% 
+#   select(.draw, Study, ResearchID, Peak, Prop_Intercept:Prop_ot3) %>% 
+#   tidyr::gather("Feature", "Value", Prop_Intercept:Prop_ot3, Peak) %>% 
+#   group_by(Study, ResearchID, Feature) %>% 
+#   summarise(Value = mean(Value)) %>% 
+#   group_by(Study, Feature) %>% 
+#    mutate(
+#     ntile = factor(ntile(Value, 6)),
+#     num = fct_add_counts(ntile) %>% as.character()) 
+```
+
 
 I additionally asked whether any child-level factors predicted looking
 behavior under these conditions. First, I asked whether performance on a
@@ -942,7 +883,6 @@ curve had did not dip as low as the other curves.
 study_peak_counts <- fam_peaks %>%
   distinct(Study, ResearchID) %>%
   mutate(
-    Study = Study %>% convert_study_to_age(),
     StudyCounts = Study %>% fct_add_counts()) %>%
   distinct(Study, StudyCounts)
 
@@ -951,13 +891,10 @@ x_levels <- setNames(
   as.character(study_peak_counts$Study))
 
 fam_peaks %>% 
-  mutate(
-    Study = convert_study_to_age(Study),
-    Peak = plogis(med)) %>% 
   group_by(Study, ResearchID) %>% 
-  summarise_at(vars(Time, Peak), mean, na.rm = TRUE) %>% 
+  summarise_at(vars(Valley_Prop), mean, na.rm = TRUE) %>% 
     ggplot() + 
-      aes(x = Study, y = Peak) + 
+      aes(x = Study, y = Valley_Prop) + 
       geom_hline(yintercept = .5, size = 2, color = "white") + 
       geom_boxplot(width = .4, fill = NA, outlier.alpha = 0) +
       geom_point(
@@ -970,7 +907,6 @@ fam_peaks %>%
         caption = "Points: Participant posterior means.") + 
     scale_x_discrete(labels = x_levels) +
     theme(plot.subtitle = element_text(size = rel(.9)))
-
 ```
 
 The wide range of values for the growth curve valleys suggests that
@@ -994,22 +930,40 @@ first three bins show children with u-shaped trajectories.
 (ref:age3-valley-curves) Growth curves for mispronunciations trials starting on the unfamilar object at age 3. Children were grouped into sextiles based on the posterior mean of the growth curve valley (minimum). Ten lines are drawn per child to visualize uncertainty. Children were assigned colors arbitrarily. On the right side of each panel are "rugs" which mark the valleys in that panel.
 
 ```{r age3-valley-curves, fig.cap = "(ref:age3-valley-curves)", width = 6, height = 6, out.width="80%"}
-peak_groups <- fam_peaks %>% 
-  mutate(
-    Study = convert_study_to_age(Study),
-    Peak = plogis(med)) %>% 
+feature_means <- fam_peaks %>% 
   group_by(Study, ResearchID) %>% 
-  summarise_at(vars(Time, Peak), mean, na.rm = TRUE) %>% 
+  summarise_at(
+    vars(
+      Valley_Prop, RiseAfterValley_Prop, PeakAfterValley_Prop, 
+      Prop_Intercept:Logit_ot3), 
+    mean, na.rm = TRUE) %>% 
+  ungroup()
+
+ends <- m_f_new_fits_each %>% 
+  group_by(Study, ResearchID, .draw) %>% 
+  top_n(5, Time) %>% 
+  summarise(End = median(plogis(.posterior_value))) %>% 
+  ungroup()
+
+feature_means <- feature_means %>% 
+  left_join(
+    ends %>% group_by(Study, ResearchID) %>% summarise(End = mean(End))) %>% 
+  mutate(WeightedProp_ot2 = Prop_ot2 * End)
+
+valley_groups <- feature_means %>% 
+  group_by(Study) %>% 
   mutate(
-    ntile = factor(ntile(Peak, 6)),
-    num = ntile %>% fct_add_counts(first_fmt = "{levels} ({counts} children)") %>% as.character()) %>% 
-  distinct(Study, ResearchID, Peak, ntile, num)
+    ntile = factor(ntile(Valley_Prop, 6)),
+    num = ntile %>% 
+      fct_add_counts(first_fmt = "{levels} ({counts} children)") %>% 
+      as.character()) %>% 
+  distinct(Study, ResearchID, Valley_Prop, ntile, num)
 
 set.seed(20180713)
 
 to_plot <- m_f_new_fits_each %>% 
   sample_n_of(10, .draw) %>% 
-  left_join(peak_groups) %>% 
+  left_join(valley_groups, by = c("Study", "ResearchID")) %>% 
   filter(Study == "Age 3") %>% 
   group_by(ResearchID, Study, .draw)
 
@@ -1035,11 +989,11 @@ ggplot(to_plot) +
   labs(
     x = constants$x_time,
     y = constants$y_prop_fam,
-    title = "Age 3 children binned into sextiles by valley",
+    title = "Age 3 children binned by valley",
     caption = "10 posterior samples per child. Right rugs: Valleys in panel.")
 
 # # This looks at whether age 3 valley predicts later vocab
-# peak_groups %>%
+# valley_groups %>%
 #   ungroup() %>%
 #   filter(Study == "Age 3") %>%
 #   select(-Study) %>%
@@ -1051,46 +1005,51 @@ ggplot(to_plot) +
 ```
 
 ```{r evt-vs-mp-valley, include = FALSE}
-peak_groups %>% 
+# Extract a model coefficient and optionally multiply it a value
+pull_effect <- function(model, index, scale = 1) {
+  coef(model)[index] * scale
+}
+
+valley_groups %>% 
   ungroup() %>% 
   inner_join(scores) %>% 
-  lm(Peak ~ scale(EVT_Standard) * Study, .) %>% 
+  lm(Valley_Prop ~ scale(EVT_Standard) * Study, .) %>% 
   summary()
 
-peak_groups %>% 
+valley_groups %>% 
   ungroup() %>% 
   inner_join(scores) %>% 
   filter(Study == "Age 3") %>% 
-  lm(Peak ~ scale(EVT_Standard), .) %>% 
+  lm(Valley_Prop ~ scale(EVT_Standard), .) %>% 
   summary()
 
-peak_groups %>% 
+valley_groups %>% 
   ungroup() %>% 
   inner_join(scores) %>% 
   filter(Study == "Age 4") %>% 
-  lm(Peak ~ scale(EVT_Standard), .) %>% 
+  lm(Valley_Prop ~ scale(EVT_Standard), .) %>% 
   summary()
 
-peak_groups %>% 
+valley_groups %>% 
   ungroup() %>% 
   inner_join(scores) %>% 
   filter(Study == "Age 5") %>% 
-  lm(Peak ~ scale(EVT_Standard), .) %>% 
+  lm(Valley_Prop ~ scale(EVT_Standard), .) %>% 
   summary()
 
-f_m_evt_age3 <- peak_groups %>% 
-  left_join(scores) %>% 
+m_fam_valley_evt_age3 <- valley_groups %>% 
+  left_join(scores, by = c("Study", "ResearchID")) %>% 
   filter(Study == "Age 3") %>% 
-  lm(Peak ~ scale(EVT_Standard, scale = FALSE), .)
-summary(f_m_evt_age3)
+  lm(Valley_Prop ~ scale(EVT_Standard, scale = FALSE), .)
+summary(m_fam_valley_evt_age3)
 
 # Small effect
-neg_f_delta_by_15 <- (coef(f_m_evt_age3)[2] * 15) %>% 
-  abs() %>% 
+neg_valley_delta_by_evt15 <- m_fam_valley_evt_age3 %>% 
+  pull_effect("scale(EVT_Standard, scale = FALSE)", -15) %>% 
   printy::fmt_fix_digits(2) %>% 
   printy::fmt_leading_zero()
 
-f_peak_evt_r_squared <- f_m_evt_age3 %>% 
+r2_valley_evt <- m_fam_valley_evt_age3 %>% 
   broom::glance() %>% 
   pull(r.squared) %>%
   printy::fmt_fix_digits(2) %>% 
@@ -1098,57 +1057,73 @@ f_peak_evt_r_squared <- f_m_evt_age3 %>%
 
 
 
+
+```
+
+```{r minp-vs-mp-valley, include = FALSE}
 # minp <- readr::read_csv(file = "./data-raw/age3-minpair-fits.csv") %>%
 #   filter(Model == "base + age + ppvt") %>%
 #   mutate(Study = "Age 3") %>% 
 #   select(ResearchID, Study, MinPair_Ability = coef)
 
-f_m_minp_age3_simple <- peak_groups %>% 
-  left_join(scores) %>% 
+m_fam_valley_prop_age3 <- valley_groups %>% 
+  left_join(scores, by = c("Study", "ResearchID")) %>% 
   filter(Study == "Age 3") %>% 
-  lm(Peak ~ scale(MinPair_ProportionCorrect, scale = FALSE), .)
-summary(f_m_minp_age3_simple)
+  lm(Valley_Prop ~ scale(MinPair_ProportionCorrect, scale = FALSE), .)
+summary(m_fam_valley_prop_age3)
 
 # Small effect
-neg_f_delta_minp_by_1 <- (coef(f_m_minp_age3_simple)[2] * .1) %>% 
-  abs() %>% 
+neg_valley_delta_by_minp1 <- m_fam_valley_prop_age3 %>% 
+  pull_effect("scale(MinPair_ProportionCorrect, scale = FALSE)", -.1) %>% 
   printy::fmt_fix_digits(2) %>% 
   printy::fmt_leading_zero()
 
-f_peak_minp_r_squared <- f_m_minp_age3_simple %>% 
+r2_valley_minp <- m_fam_valley_prop_age3 %>% 
   broom::glance() %>% 
   pull(r.squared) %>%
   printy::fmt_fix_digits(2) %>% 
   printy::fmt_leading_zero()
+```
 
-
-
-
-evt_minp_age3 <- peak_groups %>% 
-  left_join(scores) %>% 
+```{r evt-x-minp-vs-mp-valley, include = FALSE}
+evt_minp_age3 <- valley_groups %>% 
+  left_join(scores, by = c("Study", "ResearchID")) %>% 
   filter(Study == "Age 3") %>% 
   filter(!is.na(MinPair_ProportionCorrect), !is.na(EVT_Standard))
 
-f_m_evt_minp_age3 <- 
+m_fam_valley_evt_minp_age3 <- 
   lm(
-    Peak ~ 
+    scale(Valley_Prop, scale = FALSE) ~ 
       scale(MinPair_ProportionCorrect, scale = FALSE) * 
       scale(EVT_Standard, scale = FALSE), 
     evt_minp_age3)
-summary(f_m_evt_minp_age3)
+summary(m_fam_valley_evt_minp_age3)
 
-raw_m_evt_minp_age3 <- lm(
-  Peak ~ MinPair_ProportionCorrect * EVT_Standard, 
+m_fam_valley_evt_minp_age3_raw <- lm(
+  Valley_Prop ~ MinPair_ProportionCorrect * EVT_Standard, 
   evt_minp_age3)
-summary(raw_m_evt_minp_age3)
+summary(m_fam_valley_evt_minp_age3_raw)
 
 # jtools::sim_slopes(
-#   raw_m_minp_age3,
+#   m_fam_valley_evt_minp_age3_raw,
 #   pred = MinPair_ProportionCorrect,
 #   modx = EVT_Standard,
 #   jnplot = TRUE)
 
-minp_cutpoint <- raw_m_evt_minp_age3 %>% 
+# jtools::interact_plot(
+#   m_fam_valley_evt_minp_age3_raw,
+#   pred = MinPair_ProportionCorrect,
+#   modx = EVT_Standard,
+#   plot.points = TRUE)
+# 
+# jtools::interact_plot(
+#   m_fam_valley_evt_minp_age3_raw,
+#   pred = EVT_Standard,
+#   modx = MinPair_ProportionCorrect,
+#   plot.points = TRUE)
+
+
+minp_cutpoint <- m_fam_valley_evt_minp_age3_raw %>% 
   jtools::johnson_neyman(
     pred = EVT_Standard, 
     modx = MinPair_ProportionCorrect) %>% 
@@ -1157,76 +1132,101 @@ minp_cutpoint <- raw_m_evt_minp_age3 %>%
   printy::fmt_fix_digits(2) %>% 
   printy::fmt_leading_zero()
   
-evt_cutpoint <- raw_m_evt_minp_age3 %>% 
+evt_cutpoint <- m_fam_valley_evt_minp_age3_raw %>% 
   jtools::johnson_neyman(
     pred = MinPair_ProportionCorrect, 
     modx = EVT_Standard) %>% 
   getElement("bounds") %>% 
   getElement("Lower") %>% 
   round()
-  
 
+evt_cutpoint_tile <- 
+  round(ecdf(evt_minp_age3$EVT_Standard)(evt_cutpoint), 2) * 100
 
-# minp_set <- peak_groups %>% 
-#   left_join(scores) %>% 
-#   filter(Study == "Age 3") 
-# 
-# m_minp_set <- minp_set %>% 
-#   lm(Peak ~ MinPair_ProportionCorrect * EVT_Standard, .)
-# 
-# minp_set %>% 
-#   mutate(minp = ntile(MinPair_ProportionCorrect, 3)) %>% 
-#   filter(!is.na(minp)) %>% 
-#   ggplot() + 
-#   aes(x = EVT_Standard, y = Peak, color = factor(minp)) + 
-#   geom_point() + 
-#   stat_smooth(method = "lm")
-# 
-# minp_set %>% 
-#   ggplot() + 
-#   aes(x = MinPair_ProportionCorrect, y = Peak) + 
-#   geom_point() + 
-#   stat_smooth(method = "lm")
-# 
-# minp_set %>% 
-#   mutate(evt = ntile(EVT_Standard, 4)) %>% 
-#   filter(!is.na(evt)) %>% 
-#   ggplot() + 
-#   aes(x = MinPair_ProportionCorrect, y = Peak, color = factor(evt)) + 
-#   geom_point() + 
-#   stat_smooth(method = "lm", se = FALSE)
-# 
-# minp_set %>% 
-#   mutate(minp = ntile(MinPair_ProportionCorrect, 3)) %>% 
-#   filter(!is.na(minp)) %>% 
-#   ggplot() + 
-#   aes(x = MinPair_ProportionCorrect, y = Peak) + 
-#   geom_point() + 
-#   stat_smooth(method = "lm")
+minp_cutpoint_tile <- 
+  round(ecdf(evt_minp_age3$MinPair_ProportionCorrect)(minp_cutpoint), 2) * 100
 
-evt_minp_neg_f_delta_by_1_mip <- (coef(f_m_evt_minp_age3)[2] * .1) %>% 
-  abs() %>% 
+neg_evt_minp_valley_delta_by_minp1 <- m_fam_valley_evt_minp_age3 %>% 
+  pull_effect("scale(MinPair_ProportionCorrect, scale = FALSE)", -.1) %>% 
   printy::fmt_fix_digits(2) %>% 
   printy::fmt_leading_zero()
 
-evt_minp_f_delta_by_15_evt <- (coef(f_m_evt_minp_age3)[3] * 15) %>% 
-  abs() %>% 
+neg_evt_minp_valley_delta_by_evt15 <- m_fam_valley_evt_minp_age3 %>% 
+  pull_effect("scale(EVT_Standard, scale = FALSE)", -15) %>% 
   printy::fmt_fix_digits(2) %>% 
   printy::fmt_leading_zero()
 
-evt_minp_f_peak_r_squared <- f_m_evt_minp_age3 %>% 
+r2_valley_evt_minp <- m_fam_valley_evt_minp_age3 %>% 
   broom::glance() %>% 
   pull(r.squared) %>%
   printy::fmt_fix_digits(2) %>% 
   printy::fmt_leading_zero()
 ```
 
+```{r, eval = FALSE}
+# This code checks over whether any regression effects held between MinPair/EVT
+# and GCA.
+regressions <- fam_peaks %>% 
+  mutate(WeightedProp_ot2_alt = Prop_ot2 * PeakAfterValley_Prop) %>% 
+  sample_n_of(100, .draw) %>% 
+  select(
+    .draw, Study, ResearchID, Valley_Prop, RiseAfterValley_Prop, 
+    PeakAfterValley_Prop, Peak_Prop, Prop_Intercept:Prop_ot3,
+    WeightedProp_ot2_alt) %>% 
+  left_join(scores, by = c("Study", "ResearchID")) %>%
+  tidyr::gather(
+    "Feature", "Value", Valley_Prop, RiseAfterValley_Prop, 
+    PeakAfterValley_Prop, Peak_Prop, Prop_Intercept:Prop_ot3,
+    WeightedProp_ot2_alt) %>% 
+  tidyr::gather(
+    "Predictor", "Score", 
+    EVT_Standard, MinPair_ProportionCorrect) %>% 
+  anti_join(
+    data_frame(
+      Study = c("Age 4", "Age 5"), 
+      Predictor = c("MinPair_ProportionCorrect", "MinPair_ProportionCorrect")),
+    by = c("Study", "Predictor")) %>% 
+  tidyr::nest(-.draw, -Study, -Feature, -Predictor) %>% 
+  mutate(
+    results = data %>% 
+      purrr::map(~ lm(Value ~ Score, .x)) %>% 
+      purrr::map(broom::tidy)) %>% 
+  select(-data) %>% 
+  tidyr::unnest(results) %>% 
+  filter(term != "(Intercept)")
+
+# Just quickly eyeball/confirm that EVT Standard predicted age 3
+# reliability/accuracy feature. It's bad practice to look at p-values like this
+# but I need a quick piece of code to run/re-run to verify my claim in the prose
+# that the only effects held on age 3 x evt standard x intercept/peak.
+ggplot(regressions %>% group_by(Study, Feature, Predictor)) +
+  aes(x = Feature, y = p.value, color = Study) +
+  stat_summary(
+    aes(group = .group), 
+    fun.data = median_hilow, 
+    position = position_dodge(width = .4)) +
+  geom_hline(yintercept = .05) + 
+  facet_wrap("Predictor") + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0))
+
+# These things tend to be super correlated
+feature_means %>% 
+  group_by(Study) %>% 
+  select(
+    Study, ResearchID, Valley_Prop, RiseAfterValley_Prop, 
+    PeakAfterValley_Prop, Prop_Intercept:Prop_ot3) %>% 
+  tidy_correlation(
+    Valley_Prop, RiseAfterValley_Prop, 
+    PeakAfterValley_Prop, Prop_Intercept:Prop_ot3)
+```
+
+
 I asked whether any child-level factors predicted children's looking
 behaviors. I first regressed growth curve valleys on EVT-2 standard
 score. There was a small effect at age 3, *R*^2^ =
-`r f_peak_evt_r_squared`, *n* = `r nobs(f_m_evt_age3)`. A 15-point
+`r r2_valley_evt`, *n* = `r nobs(m_fam_valley_evt_age3)`. A 15-point
 increase in expressive vocabulary predicted decrease in growth curve
-valley of `r neg_f_delta_by_15`. At the other ages, the effects are
+valley of `r neg_valley_delta_by_evt15`. At the other ages, the effects are
 neglibly small, as shown in Figure \@ref(fig:mp-fam-valley-evt).
 
 (ref:mp-fam-valley-evt) Relationship between expressive vocabulary and growth curve valleys for mispronunciation trials starting on the familiar image. Valleys were computed on 100 draws of the posterior distribution. Points represent the mean and standard error of the valleys. Lines represent the fit of the regression in each draw. Although the slope of age 4 and age 5 lines are noticeably different from the age 3 one, they cover a tiny amount of the *y* axis so they represent a neglible effect.
@@ -1235,9 +1235,6 @@ neglibly small, as shown in Figure \@ref(fig:mp-fam-valley-evt).
 # Get 100 samples of peaks to model
 to_model <- fam_peaks %>% 
   sample_n_of(100, .draw) %>% 
-  mutate(
-    Study = convert_study_to_age(Study), 
-    Peak = plogis(med)) %>% 
   left_join(scores) 
 
 # Given a df with a EVT_Standard column, make a grid for ploting based on that
@@ -1251,7 +1248,7 @@ lines <- to_model %>%
   tidyr::nest(-Study, -.draw) %>% 
   mutate(
     model = data %>% 
-      purrr::map(~ lm(Peak ~ EVT_Standard, .x)),
+      purrr::map(~ lm(Valley_Prop ~ EVT_Standard, .x)),
     grid = data %>% purrr::map(make_grid),
     grid = purrr:::map2(grid, model, modelr::add_predictions)) %>% 
   select(Study, .draw, grid) %>% 
@@ -1260,7 +1257,7 @@ lines <- to_model %>%
 to_model %>% 
   filter(!is.na(EVT_Standard)) %>% 
   ggplot() + 
-    aes(x = EVT_Standard, y = Peak, color = Study) + 
+    aes(x = EVT_Standard, y = Valley_Prop, color = Study) + 
     geom_hline(size = 2, color = "white", yintercept = .5) +
     stat_summary(fun.y = mean, geom = "point") + 
     stat_summary(fun.data = mean_se, geom = "linerange") + 
@@ -1273,7 +1270,7 @@ to_model %>%
       data = data_frame(
         EVT_Standard = c(55, 72),
         Study = c("Age 3", "Age 5"),
-        Peak = c(.70, .36)),
+        Valley_Prop = c(.70, .36)),
         size = 5, 
        family = "Lato Semibold") +
     scale_color_study() +
@@ -1288,451 +1285,200 @@ to_model %>%
 
 At age 3, a child's proportion of trials correct on minimal pairs
 discrimination also had a small effect on growth curve valleys, *R*^2^ =
-`r f_peak_minp_r_squared`, *n* = `r nobs(f_m_minp_age3_simple)`. An
+`r r2_valley_minp`, *n* = `r nobs(m_fam_valley_prop_age3)`. An
 increase in minimal pair discrimination accuracy of .1 probability units
-predicts a decrease of growth curve peak by `r neg_f_delta_minp_by_1`.
+predicts a decrease of growth curve peak by `r neg_valley_delta_by_minp1`.
 
 I regressed age-3 valleys onto both EVT-2 standard score, minimal-pair
-discrimination accuracy and their interaction, and all effects were
-statistically significant, *R*^2^ =
-`r evt_minp_f_peak_r_squared`, *n* = `r nobs(f_m_evt_minp_age3)`. The effects of vocabulary and minimal-pair discrimination were both negative, while their interaction was positive For an average participant, a 15-point increase in expressive vocabulary predicted decrease in growth curve valley of `r evt_minp_f_delta_by_15_evt`, and an increase minimal pair accuracy of .1 predicted a decrease in valley of `r evt_minp_f_delta_by_15_evt`. The positive interaction term means that increasing one of the predictors simulataneously weakens the effect of the other. Thus, the effect of expressive vocabulary is no longer nominally significant when minimal pair accuracy is `r minp_cutpoint` or greater, and conversely the minimal pair accuracy effect is no longer significant when expressive vocabulary is `r evt_cutpoint` or greater. (The average accurary is.... and vocabulary is ... .)
+discrimination accuracy and their interaction. Both main effects and the
+interaction were statistically significant, *R*^2^ =
+`r r2_valley_evt_minp`, *n* = `r nobs(m_fam_valley_evt_minp_age3)`. The
+effects of vocabulary and minimal-pair discrimination were both
+negative, so that higher scores on these measures predicted lower growth
+curve valleys. For an average participant, a 15-point increase in
+expressive vocabulary predicted decrease of
+`r neg_evt_minp_valley_delta_by_evt15`, and an increase of minimal pair
+accuracy of .1 predicted a decrease in valley of
+`r neg_evt_minp_valley_delta_by_minp1`. The interaction term, however,
+was positive, meaning that increasing one of the predictors
+simulataneously weakens the effect of the other. The simple effect of
+expressive vocabulary is no longer nominally significant when minimal
+pair accuracy is `r minp_cutpoint` or greater (at the
+`r minp_cutpoint_tile`-percentile or greater). Conversely, the simple
+effect of minimal pair accuracy is no longer significant when expressive
+vocabulary standard score is `r evt_cutpoint` or greater (at the
+`r minp_cutpoint_tile`-percentile or greater). **interpret this effect**
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-```{r}
-# peak_groups %>% 
-#   ungroup() %>% 
-#   inner_join(scores) %>% 
-#   ggplot() + 
-#   aes(x = EVT_Standard, y = Peak, color = Study) + 
-#   geom_point() + 
-#   stat_smooth(method = "lm")
-
-
-```
-
-
-```{r}
-# Minimal pairs predicting Age 3 minimum
-peak_groups %>% 
-  ungroup() %>% 
-  inner_join(scores) %>% 
-  filter(Study == "Age 3") %>% 
-  ggplot() + 
-    aes(x = MinPair_ProportionCorrect, y = Peak, color = Study) + 
-    geom_point() + 
-    stat_smooth(method = "lm")
-
-# Minimal pairs predicting Age 3 minimum
-peak_groups %>% 
-  ungroup() %>% 
-  inner_join(scores) %>% 
-  filter(Study == "Age 3") %>% 
-  ggplot() + 
-    aes(x = MinPair_ProportionCorrect, y = Peak, color = Study) + 
-    geom_point() + 
-    stat_smooth(method = "lm")
-
-peak_groups %>% 
-  ungroup() %>% 
-  inner_join(scores) %>% 
-  filter(Study == "Age 3") %>% 
-  lm(Peak ~ MinPair_ProportionCorrect, .) %>% 
-  summary()
-
-peak_groups %>% 
-  ungroup() %>% 
-  inner_join(scores) %>% 
-  filter(Study == "Age 3") %>% 
-  lm(Peak ~ MinPair_ProportionCorrect * EVT_Standard, .) %>% 
-  summary()
-```
-
-```{r}
-# Minimal pairs predicting lowest value of the curve at age 3
-
-peak_groups %>% 
-  ungroup() %>% 
-  inner_join(scores) %>% 
-  filter(Study == "Age 3") %>% 
-  ggplot() + 
-    aes(x = EVT_Standard, y = Peak, color = Study) + 
-    geom_point() + 
-    stat_smooth(method = "lm")
-
-peak_groups %>% 
-  ungroup() %>% 
-  inner_join(scores) %>% 
-  filter(Study == "Age 3") %>% 
-  lm(Peak ~ EVT_Standard, .) %>% 
-  summary()
-```
-
-
-```{r}
-with_peaks <- fam_peaks %>% 
-  mutate(
-    Study = convert_study_to_age(Study),
-    Peak = plogis(med)) %>% 
-  group_by(Study, ResearchID) %>% 
-  summarise_at(vars(Time, Peak), mean, na.rm = TRUE) %>% 
-  rename(PeakTime = Time) %>% 
-  ungroup() %>% 
-  left_join(m_f_new_fits_each) %>% 
+```{r compute-weighted-quadratic}
+ends <- m_f_new_fits_each %>% 
   group_by(Study, ResearchID, .draw) %>% 
-  filter(Time >= PeakTime) %>% 
-  top_n(5, .posterior_value) %>% 
-  summarise(
-    Peak = mean(Peak),
-    EndPeak = plogis(median(.posterior_value)),
-    Diff = EndPeak - Peak) %>% 
-  group_by(Study, ResearchID) %>% 
-  summarise_at(vars(Peak, EndPeak, Diff), mean, na.rm = TRUE) %>% 
-   mutate(
-    ntile = factor(ntile(Diff, 6)),
-    num = fct_add_counts(ntile) %>% as.character())
+  top_n(5, Time) %>% 
+  summarise(End = median(plogis(.posterior_value)))
 
-m_f_new_fits_each %>% 
-  sample_n_of(10, .draw) %>% 
-  left_join(with_peaks) %>% 
-  filter(Study == "Age 3") %>% 
-  group_by(ResearchID, Study, .draw) %>% 
-  ggplot() + 
-    aes(x = Time, y = plogis(.posterior_value), color = ResearchID) + 
-    geom_line(aes(group = .group), alpha = .1) + 
-    facet_wrap("num") + 
-    guides(color = FALSE) + 
-    labs(
-      x = constants$x_time,
-      y = constants$y_prop_fam,
-      title = "Age 3 children binned into sextiles by rise after min value",
-      caption = "10 posterior samples per child")
-```
+end_means <- ends %>% 
+  summarise(End = mean(End))
 
-```{r}
-# Nothing predicts diffs
+feature_means <- feature_means %>% 
+  left_join(end_means) %>% 
+  mutate(WeightedProp_ot2 = Prop_ot2 * End)
 
-# with_peaks %>% 
-#   ungroup() %>% 
-#   inner_join(scores) %>% 
-#   filter(Study == "Age 3") %>% 
-#   ggplot() + 
-#     aes(x = MinPair_ProportionCorrect, y = Diff, color = Study) + 
-#     geom_point() + 
-#     stat_smooth(method = "lm")
-# 
-# with_peaks %>% 
-#   ungroup() %>% 
-#   inner_join(scores) %>% 
-#   filter(Study == "Age 3") %>% 
-#   lm(Diff ~ MinPair_ProportionCorrect, .) %>% 
-#   summary()
-# 
-# with_peaks %>% 
-#   ungroup() %>% 
-#   inner_join(scores) %>% 
-#   filter(Study == "Age 3") %>% 
-#   lm(Diff ~ MinPair_ProportionCorrect * EVT_Standard, .) %>% 
-#   summary()
-```
-
-
-```{r}
-deltas <- m_f_new_fits_each %>% 
-  sample_n_of(10, .draw) %>% 
-  mutate(Half = Time <= median(Time)) %>% 
-  group_by(.draw, Study, ResearchID) %>% 
-  summarise(
-    # Halfy = ifelse(Half, min(.posterior_value), max(.posterior_value)),
-    HalfMin = min(ifelse(Half, plogis(.posterior_value), 1000)),
-    HalfMax = max(ifelse(!Half, plogis(.posterior_value), -1000)),
-    Delta = HalfMax - HalfMin) %>% 
-  group_by(Study, ResearchID) %>% 
-  summarise_at(vars(HalfMin, HalfMax, Delta), mean, na.rm = TRUE) %>% 
-   mutate(
-    ntile = factor(ntile(Delta, 6)),
-    num = fct_add_counts(ntile) %>% as.character())
-  
-m_f_new_fits_each %>% 
-  sample_n_of(10, .draw) %>% 
-  left_join(deltas) %>% 
-  filter(Study == "Age 3") %>% 
-  group_by(ResearchID, Study, .draw) %>% 
-  ggplot() + 
-    aes(x = Time, y = plogis(.posterior_value), color = ResearchID) + 
-    geom_line(aes(group = .group), alpha = .1) + 
-    facet_wrap("num") + 
-    guides(color = FALSE) + 
-    labs(
-      title = "Age 3 children binned into sextiles by differences",
-      subtitle = "Difference = second half max - first half min",
-      x = constants$x_time,
-      y = constants$y_prop_fam,
-      caption = "10 posterior samples per child")
-
-# deltas %>% 
-#   inner_join(scores) %>% 
-#   ggplot() + 
-#   aes(x = EVT_Standard, y = Delta, color = Study) + 
-#   geom_point() + 
-#   stat_smooth(method = "lm")
-
-# deltas %>%
-#   ungroup() %>%
-#   inner_join(scores) %>%
-#   filter(Study == "Age 3") %>%
-#   ggplot() +
-#     aes(x = MinPair_ProportionCorrect, y = Delta, color = Study) +
-#     geom_point() +
-#     stat_smooth(method = "lm")
-# 
-# deltas %>%
-#   ungroup() %>%
-#   inner_join(scores) %>%
-#   filter(Study == "Age 3") %>%
-#   lm(Delta ~ MinPair_ProportionCorrect, .) %>%
-#   summary()
-# 
-# deltas %>%
-#   ungroup() %>%
-#   inner_join(scores) %>%
-#   filter(Study == "Age 3") %>%
-#   lm(Delta ~ MinPair_ProportionCorrect * EVT_Standard, .) %>%
-#   summary()
-
-
-
-
-
-
-
-
-# deltas %>% 
-#   ungroup() %>% 
-#   filter(Study == "Age 3") %>% 
-#   select(-Study) %>% 
-#   inner_join(scores) %>% 
-#   ggplot() + 
-#   aes(x = Delta, y = EVT_Standard, color = Study) + 
-#   geom_point() + 
-#   stat_smooth(method = "lm")
-```
-
-
-```{r}
-
-
-# broomed <- m_f_new_fits_each %>% 
-#   sample_n_of(10, .draw) %>% 
-#   tidyr::nest(-Study, -ResearchID, -.draw) %>% 
-#   mutate(
-#     model = data %>% 
-#       purrr::map(~ lm(.posterior_value ~ ot1 + ot2 + ot3, .x)),
-#     results = purrr::map(model, broom::tidy))
-
-broomed2 <- m_f_new_fits_each %>% 
-  tidyr::nest(-Study, -ResearchID) %>% 
+prop_ot2_groups <- feature_means %>% 
+  group_by(Study) %>% 
   mutate(
-    model = data %>% 
-      purrr::map(~ lm(plogis(.posterior_value) ~ ot1 + ot2 + ot3, .x)),
-    results = purrr::map(model, broom::tidy))
+    ntile = factor(ntile(WeightedProp_ot2, 6)),
+    num = ntile %>% 
+      fct_add_counts(first_fmt = "{levels} ({counts} children)") %>% 
+      as.character()) %>% 
+  distinct(Study, ResearchID, WeightedProp_ot2, ntile, num)
 
-bowls <- broomed2 %>% 
-  select(-model, -data) %>% 
-  tidyr::unnest(results) %>% 
-  # select(.draw:estimate) %>% 
-  select(Study:estimate) %>% 
-  group_by(Study, ResearchID, term) %>% 
-  summarise(estimate = mean(estimate)) %>% 
-  group_by(Study, term) %>% 
-   mutate(
-    ntile = factor(ntile(estimate, 6)),
-    num = fct_add_counts(ntile) %>% as.character()) 
+cor_prop_valley <- cor(feature_means$Prop_ot2, feature_means$Valley_Prop) %>% 
+  printy::fmt_fix_digits(2) %>% 
+  printy::fmt_leading_zero() %>% 
+  printy::fmt_minus_sign()
+
+cor_wprop_valley <- feature_means$WeightedProp_ot2 %>% 
+  cor(feature_means$Valley_Prop) %>% 
+  printy::fmt_fix_digits(2) %>% 
+  printy::fmt_leading_zero() %>% 
+  printy::fmt_minus_sign()
+
+cor_wprop_prop <- feature_means$WeightedProp_ot2 %>% 
+  cor(feature_means$Prop_ot2) %>% 
+  printy::fmt_fix_digits(2) %>% 
+  printy::fmt_leading_zero() %>% 
+  printy::fmt_minus_sign()
+```
 
 
-m_f_new_fits_each %>% 
+The valley feature considers the maximum extent to which the novel
+object is considered as the referent on these trials. But the u-shaped
+growth curves in Figure \@ref(fig:age3-valley-curves) reveal another
+listening response on this task: Confirmatory looks to the unfamiliar
+object. In these u-shaped curves, children's probability of fixating on
+the familiar object temporarily decreases as the novel object is
+considered, and the probability rises as that interpretation is
+rejected. To quantify this tendency, I computed each child's growth
+curve on the probability scale and re-estimated the quadratic trends in
+these curves. Exploratory visualization showed that children with higher
+values on this quadratic trend were more likely to have a u-shape curve.
+This feature, however, also favored sigmoid or z-shaped curves that
+rapidly fell and plateaued. To avoid these kinds of curves, I weighted
+the quadratic trend using the median of the final five points of the
+curve. The weighted quadratic feature penalized curves that have a
+strong quadratic trend but end on a low probability. Figure
+\@ref(fig:mp-fam-prop-ot2-bins) shows growth curves of age 3 children
+binned using this feature. The bottom of panels illustrated how the
+u-shaped features becomes stronger in each bin. The quadratic feature
+was weakly correlated with the growth curve valleys, *r* =
+`r cor_wprop_valley`, and the lack of correlation appears in the figure
+by how the curves in each panel reach different minimum valleys.
+
+(ref:mp-fam-prop-ot2-bins) Text reference for caption
+
+```{r mp-fam-prop-ot2-bins, fig.cap = "(ref:mp-fam-prop-ot2-bins)", width = 6, height = 6, out.width="80%"}
+set.seed(20180713)
+
+prop_ot2_to_plot <- m_f_new_fits_each %>% 
   sample_n_of(10, .draw) %>% 
-  left_join(bowls %>% filter(term == "ot2")) %>% 
+  left_join(prop_ot2_groups, by = c("Study", "ResearchID")) %>% 
+  filter(Study == "Age 5") %>% 
+  group_by(ResearchID, Study, .draw)
+
+ggplot(prop_ot2_to_plot) + 
+  aes(x = Time, y = plogis(.posterior_value), color = ResearchID) + 
+  geom_hline(size = 2, yintercept = .5, color = "white") + 
+  geom_line(aes(group = .group), alpha = .1) +
+  facet_wrap("num") + 
+  guides(color = FALSE) + 
+  labs(
+    x = constants$x_time,
+    y = constants$y_prop_fam,
+    title = "Age 5 children binned by weighted quadratic trend",
+    caption = "10 posterior samples per child.")
+
+# bottom_fifth <- function(xs) {
+#   xs <= quantile(xs, .2)
+# }
+# ggplot(prop_ot2_to_plot %>% inner_join(scores)) + 
+#   aes(x = Time, y = plogis(.posterior_value), color = bottom_fifth(EVT_Standard)) + 
+#   geom_hline(size = 2, yintercept = .5, color = "white") + 
+#   geom_line(aes(group = .group), alpha = .1) +
+#   facet_wrap("num") + 
+#   guides(color = FALSE) + 
+#   scale_color_manual(values = c("grey50", constants$col_blue_highlight)) +
+#   labs(
+#     x = constants$x_time,
+#     y = constants$y_prop_fam,
+#     title = "Age 5 children binned by weighted quadratic trend",
+#     caption = "10 posterior samples per child.")
+```
+
+
+```{r, include = FALSE}
+prop_ot2_groups %>% 
+  ungroup() %>% 
+  inner_join(scores) %>% 
+  lm(WeightedProp_ot2 ~ scale(EVT_Standard) * Study, .) %>% 
+  summary()
+
+prop_ot2_groups %>% 
+  ungroup() %>% 
+  inner_join(scores) %>% 
   filter(Study == "Age 3") %>% 
-  group_by(ResearchID, Study, .draw) %>% 
+  lm(WeightedProp_ot2 ~ scale(MinPair_ProportionCorrect), .) %>% 
+  summary()
+
+prop_ot2_groups %>% 
+  ungroup() %>% 
+  inner_join(scores) %>% 
+  filter(Study == "Age 3") %>% 
+  lm(WeightedProp_ot2 ~ scale(EVT_Standard), .) %>% 
+  summary()
+
+prop_ot2_groups %>% 
+  ungroup() %>% 
+  inner_join(scores) %>% 
+  filter(Study == "Age 4") %>% 
+  lm(WeightedProp_ot2 ~ scale(EVT_Standard), .) %>% 
+  summary()
+
+prop_ot2_groups %>% 
+  ungroup() %>% 
+  inner_join(scores) %>% 
+  filter(Study == "Age 5") %>% 
+  tidy_correlation(EVT_Standard, WeightedProp_ot2)
+
+m_fam_wot2_evt_age5 <- prop_ot2_groups %>% 
+  left_join(scores, by = c("Study", "ResearchID")) %>% 
+  filter(Study == "Age 5") %>% 
+  lm(WeightedProp_ot2 ~ scale(EVT_Standard, scale = FALSE), .)
+summary(m_fam_wot2_evt_age5)
+
+# Small effect
+r2_wot2_evt <- m_fam_wot2_evt_age5 %>% 
+  broom::glance() %>% 
+  pull(r.squared) %>%
+  printy::fmt_fix_digits(2) %>% 
+  printy::fmt_leading_zero()
+
+prop_ot2_groups %>% 
+  left_join(scores, by = c("Study", "ResearchID")) %>% 
   ggplot() + 
-    aes(x = Time, y = plogis(.posterior_value), color = ResearchID) + 
-    geom_line(aes(group = .group), alpha = .1) + 
-    facet_wrap("num") + 
-    guides(color = FALSE) + 
-    labs(
-      title = "Age 3 children binned into sextiles by quadratic trend",
-      caption = "10 posterior samples per child")
-
-
-bowls %>% 
-  filter(term == "ot2") %>% 
-  inner_join(scores) %>%
-  ggplot() +
-  aes(x = EVT_Standard, y = estimate, color = Study) +
-  geom_point() +
-  stat_smooth(method = "lm")
-
-# 
-# bowls %>% 
-#   inner_join(scores) %>%
-#   ggplot() +
-#   aes(x = EVT_Standard, y = estimate, color = Study) +
-#   geom_point() +
-#   facet_wrap("term", scales = "free") + 
-#   stat_smooth(method = "lm")
-
-bowls %>% 
-  filter(term == "ot2") %>% 
-  inner_join(scores) %>%
-  filter(Study == "Age 3") %>%
-  ggplot() +
-    aes(x = MinPair_ProportionCorrect, y = estimate, color = Study) +
-    geom_point() +
+    aes(x = EVT_Standard, y = WeightedProp_ot2, color = Study) + 
+    geom_point() + 
     stat_smooth(method = "lm")
-
-bowls %>% 
-  filter(term == "ot2") %>% 
-  inner_join(scores) %>%
-  filter(Study == "Age 3") %>%
-  lm(estimate ~ MinPair_ProportionCorrect, .) %>%
-  summary()
-
-bowls %>% 
-  filter(term == "ot2") %>% 
-  inner_join(scores) %>%
-  filter(Study == "Age 3") %>%
-  lm(estimate ~ MinPair_ProportionCorrect + EVT_Standard, .) %>%
-  summary()
-
-
 ```
 
+I regressed the u-shaped curve feature onto expressive vocabulary
+standard score at each age and onto minimal pair discrimination for
+age 3. There was a tiny but yet nominally significant of vocabulary at
+age 5, *R*^2^ = `r r2_wot2_evt`, where children with lower vocabularies
+were had a slightly stronger u-shaped trend in their growth curve. This
+effect, however, is so small as to be negligible. None of the effects were 
+significant.
 
-```{r}
-scores <- readr::read_csv("./data-raw/test_scores.csv") %>% 
-  mutate(
-    MinPair_ProportionCorrect = ifelse(
-      MinPair_ProportionCorrect < .2, NA, MinPair_ProportionCorrect))
-tp1 <- scores %>% filter(Study == "TimePoint1")
-tp2 <- scores %>% filter(Study == "TimePoint2")
-tp3 <- scores %>% filter(Study == "TimePoint3")
+ 
 
-bowls %>%
-  ungroup() %>% 
-  filter(Study == "Age 3") %>% 
-  left_join(scores %>% mutate(Study = convert_study_to_age(Study))) %>% 
-  ggplot() + 
-    aes(x = MinPair_ProportionCorrect, y = estimate, color = term) + 
-    geom_point() + 
-    geom_smooth(method = "lm") + 
-    labs(y = "Growth curve feature", caption = "Age 3")
-
-
-with_peaks %>%
-  ungroup() %>% 
-  filter(Study == "Age 3") %>% 
-  left_join(scores %>% mutate(Study = convert_study_to_age(Study))) %>% 
-  ggplot() + 
-    aes(x = MinPair_ProportionCorrect, y = Peak) + 
-    geom_point() + 
-    geom_smooth(method = "lm") + 
-    labs(y = "Growth curve valley", caption = "Age 3")
-
-deltas %>%
-  ungroup() %>% 
-  filter(Study == "Age 3") %>% 
-  left_join(scores %>% mutate(Study = convert_study_to_age(Study))) %>% 
-  ggplot() + 
-    aes(x = MinPair_ProportionCorrect, y = Delta) + 
-    geom_point() + 
-    geom_smooth(method = "lm") + 
-    labs(y = "second half max - first half min", caption = "Age 3")
-
-with_peaks %>%
-  ungroup() %>% 
-  filter(Study == "Age 3") %>% 
-  left_join(scores %>% mutate(Study = convert_study_to_age(Study))) %>% 
-  ggplot() + 
-    aes(x = MinPair_ProportionCorrect, y = Peak) + 
-    geom_point() + 
-    geom_smooth(method = "lm") + 
-   labs(y = "Growth curve valley", caption = "Age 3")
-
-  
-
-
-with_peaks %>%
-  ungroup() %>% 
-  # filter(Study == "Age 3") %>% 
-  left_join(scores %>% mutate(Study = convert_study_to_age(Study))) %>% 
-  ggplot() + 
-    aes(x = EVT_Standard, y = Peak, color = Study) + 
-    geom_point() + 
-    geom_smooth(method = "lm") + 
-    labs(y = "Growth curve valley")
-
-with_peaks %>%
-  ungroup() %>% 
-  # filter(Study == "Age 3") %>% 
-  left_join(scores %>% mutate(Study = convert_study_to_age(Study))) %>% 
-  ggplot() + 
-    aes(x = EVT_GSV, y = Peak, color = Study) + 
-    geom_point() + 
-    geom_smooth(method = "lm") + 
-    labs(y = "Growth curve valley")
-
-with_peaks %>%
-  ungroup() %>% 
-  filter(Study != "Age 5") %>%
-  left_join(scores %>% mutate(Study = convert_study_to_age(Study))) %>% 
-  ggplot() + 
-    aes(x = PPVT_GSV, y = Peak, color = Study) + 
-    geom_point() + 
-    geom_smooth(method = "lm") + 
-    labs(y = "Growth curve valley")
-
-with_peaks %>%
-  ungroup() %>% 
-  # filter(Study == "Age 3") %>% 
-  left_join(scores %>% mutate(Study = convert_study_to_age(Study))) %>% 
-  ggplot() + 
-    aes(x = PPVT_GSV, y = Peak, color = Study) + 
-    geom_point() + 
-    geom_smooth(method = "lm") + 
-    labs(y = "Growth curve valley")
-
-  
-
-
-
-
-# w_evt <- scores %>% 
-#   filter(Study != "TimePoint2") %>% 
-#   select(ResearchID, Study, EVT_Standard) %>% 
-#   tidyr::spread(Study, EVT_Standard) %>% 
-#   inner_join(do_it_1 %>% filter(Study == "TimePoint1")) %>% 
-#   modelr::add_residuals(
-#     lm(TimePoint3 ~ TimePoint1, .), 
-#     "EVT_Residualized")
-```
-
-
-
-```{r, eval}
-
-```
 
 
 ## Discussion
@@ -1767,7 +1513,9 @@ with_peaks %>%
   - These sets of analyses mainly demonstrate that when children start
     on a familiar image and hear a mispronunciation, they have a few
     options for how to proceed.
-  - This also shows a possible decoupling between lexical processing and referent selection. It is unlikely that children heard the mispronunciations differently in these trials, but rather the responded differently.
-
+  - This also shows a possible decoupling between lexical processing and
+  referent selection. It is unlikely that children heard the mispronunciations
+  differently in these trials, but rather the responded differently.
+  
 
 
