@@ -1,13 +1,6 @@
 Sensitivity to mispronunciations
 =======================================================================
 
-- [x] update p1 code to work on new peak dataframes
-- [x] make a p1 code chunk that verifies no relationship between gca features and minp/evt
-- [x] update p2 code to work on new peak dataframes
-- [x] report evt x minp interaction for valleys
-- [x] describe and plot quadratic effect
-- [x] report evt and minp effects for quadratic effects
-
 ```{r setup, include = FALSE}
 knitr::read_chunk("./helpers.R")
 if (interactive()) source("./helpers.R")
@@ -95,21 +88,21 @@ fam_peaks <- readr::read_csv(
 ```
 
 For the mispronunciation trials, there is no correct "target", as there
-is for real word or nonword trials. The design of the task allows
-the child to associate the mispronunciation with a unfamiliar object or
-with a familiar object with phonologically similar name. As a result,
-there are not any "distractor-initial" trials, so I analyzed the
-mispronunciation trials separately for both initial-fixation locations.
-One model handled trials where a child's gaze started on the familiar object
-and another model handled trials starting on the unfamiliar object. For
-these models, I fit a growth curve model that included indicators for
-Age and Time × Age interactions, as in the model from
-[Chapter \@ref(fam-rec)](#fam-rec). The basic model was therefore:
+is for the other conditions. The design of the task allows the child to
+associate a mispronunciation with an unfamiliar object or with the
+familiar object with a name that sounds like the mispronunciation. As a
+result, I analyzed the mispronunciation trials separately for both
+initial-fixation locations. One analysis handled trials where a child's
+gaze started on the familiar object and another analysis handled trials
+starting on the unfamiliar object. For these models, I fit a Bayesian
+logistic regression growth curve model that included indicators for Age
+and Time × Age interactions, as in the model from
+[Chapter \@ref(fam-rec)](#fam-rec). The linear model was therefore:
 
 `r insert_html_math()`
 \small
 \begin{align*}
-   \text{log-odds}(\mathit{looking\,}) =\
+   \text{log-odds}(\mathit{looking}) =\
     &\beta_0 + 
       \beta_1\text{Time}^1 + 
       \beta_2\text{Time}^2 + 
@@ -128,28 +121,27 @@ Age and Time × Age interactions, as in the model from
 \end{align*}
 `r insert_html_math()`
 
+The mixed effects model included by-child and by-child-by-age random
+effects so that it would capture how a child's growth curve features may
+be similar over developmental time (by-child effects) and may differ at
+each age (by-child-by-age effects).
 [Appendix \@ref(aim2-gca-models)](#aim2-gca-models) contains the R code
-used to fit these models along with a description of the specifications
-represented by the model syntax. The mixed effects model included
-by-child and by-child-by-age random effects so that it could capture how
-a child's growth curve features may be similar over developmental time
-(by-child effects) and may differ at each age (by-child-by-age effects).
+used to fit these models along with a description of the model's
+specification/syntax.
 
 For these analyses, I modeled the data from `r min(d$Time)`
 to `r max(d$Time)` ms after target onset. As in the real word vs.
 nonword analyses, I removed any Age × Child levels if the child's data
 had fewer than 4 fixations in a single time bin. As a result, children
-had to have at least 4 looks to one of the two images in every 50 ms
-time bin. For the familiar-initial trials, this screening removed
-`r study_counts_f$T1` `r noun_f_t1` at age 3, `r study_counts_f$T2` at
-age 4, and `r study_counts_f$T3` at age 5, and for the
-unfamiliar-initial trials, this screening removed `r study_counts_u$T1`,
-`r study_counts_u$T2`, and `r study_counts_u$T3` children at ages 3, 4,
-and 5, respectively.
+had to have at least 4 looks to one of the two images in every 50-ms
+time bin. For the unfamiliar-initial trials, this screening removed
+`r study_counts_u$T1` children at age 3, `r study_counts_u$T2` at age 4,
+and `r study_counts_u$T3` at age 5, and for the familiar-initial trials,
+this screening removed `r study_counts_f$T1`, `r study_counts_f$T2`, and
+`r study_counts_f$T3` children at ages 3, 4, and 5, respectively.
 
 
-
-## Unfamiliar-initial trials
+## Unfamiliar-initial trials: Move along now
 
 ```{r unfam-model-intervals}
 test <- posterior_samples(mp_unfam, pars = "^b_") %>% 
@@ -223,22 +215,22 @@ i_ints <- mcmc_intervals_data(test, regex_pars = "Prop_Age") %>%
   lapply(stringr::str_replace_all, "0[.]", ".")
 ```
 
-When children start on the image of a novel object and hear a
-mispronunciation, they look to the familiar image.
+When preschoolers started on the image of a novel object and heard a
+mispronunciation, they looked to the familiar image.
 Figure \@ref(fig:unfam-initial-mp-trials) shows the average of
 children's growth curves along with the 100 model-estimated group
-averages. The growth curves all cross the .5 threshold, so that the
+averages. The growth curves all cross the .5 threshold, so the
 children on average looked more to the familiar than the unfamiliar
-image. Granted, the degree of referent selection is not as great as
+image. Granted, the degree of referent selection is not as strong as
 that observed for the real words or nonwords. For those conditions, the
-average growth curves reached a peak of around .77 at age 3 whereas for
-the mispronunciations the age-3 peak is around .62. Children were slower
-to process mispronunciations. For the real-word condition, the average
-age 3 growth curve crosses .5 looking probability around 775 ms after
-target onset whereas in the mispronunciation condition, this threshold
-is crossed at 1000 ms. Children associate the mispronunciation with the
-familiar object, although they are slower and show greater uncertainty
-compared to real word trials.
+average growth curve reached a peak of around .77 at age 3, but for the
+mispronunciations the age-3 peak is around .62. Children also were
+comparatively slower to process mispronunciations. For the real-word
+condition, the average age-3 growth curve crosses .5 looking probability
+around 775 ms after target onset, whereas in the mispronunciation
+condition, this threshold is crossed at 1000 ms. Children associate the
+mispronunciation with the familiar object, although they are slower and
+show greater uncertainty compared to real word trials.
 
 (ref:unfam-initial-mp-trials) Averages of participants' growth curves in each age. The lines represent 100 posterior predictions of the group average. 
 
@@ -297,30 +289,29 @@ ggplot(d_u_plotting) +
 Of the growth curve features, developmental changes were only observed
 for the average probability (intercept) and peak probability features.
 At age 3, the average proportion of looks to the familiar image was
-`r i_ints$b_Intercept_Prop_Age3`. The looking proportion increased by
-`r i_ints$d_Intercept_Prop_Age4` to `r i_ints$b_Intercept_Prop_Age4` at
-age 4. This year-over-year change is probably positive, but a change
-of 0 is still a plausible result. Visually, this uncertainty appears in
-the growth curve plot by how close together the age-3 and age-4 growth
-curves appear. The average proportion of looks increased by
-`r i_ints$d_Intercept_Prop_Age5` to `r i_ints$b_Intercept_Prop_Age5` at
-age 5. Here, there is more certainty that the year-over-year change was
-positive. In short, performance was similar for age 3 and age 4 but
-there was a marked improvement at age 5.
+`r i_ints$b_Intercept_Prop_Age3`. At age 4, the looking proportion
+increased by `r i_ints$d_Intercept_Prop_Age4` to
+`r i_ints$b_Intercept_Prop_Age4`. This year-over-year change was probably
+positive, but the the uncertainty interval still includes a change of 0
+as a plausible result. Visually, this uncertainty appears in the growth
+curve plot by how close together the age-3 and age-4 growth curves
+appear. At age 4, the average proportion of looks
+increased by `r i_ints$d_Intercept_Prop_Age5` to
+`r i_ints$b_Intercept_Prop_Age5`. Here, there is more certainty that the
+year-over-year change was positive, and this result is consistent with
+the visual separation of the age-5 growth curve from the others. In
+short, performance was similar for age 3 and age 4 but there was a
+marked improvement at age 5.
 
 Figure \@ref(fig:unfam-peaks-by-age) shows participant's growth curve
-peaks for each year of the study. There were computed as in other
-chapters by taking the median of the five highest values on a growth
-curve. The average of the participants' growth curve peaks followed the
-same pattern as the intercept: similar levels at age 3 and age 4
+peaks for each year of the study. The peaks were computed as in other
+chapters by taking the median of the five highest values on the curve.
+The average of the participants' peak looking probabilities followed the same
+pattern as the average looking probabilities: similar levels at age 3 and age 4
 (`r group_peaks[["Age 3"]]` versus `r group_peaks[["Age 4"]]`) but a
 clear gain in looking peak probability at age 5
-(`r group_peaks[["Age 5"]]`). The bottom hinge of the boxplots in
-Figure \@ref(fig:unfam-peaks-by-age) mark the location of the 25th
-percentile. Thus, at age 3, approximately 75% of children were at or
-above the .5 threshold. Unlike the nonword conditions, very few
-listeners achieve a peak of looking probability of .99: At age 5, only
-`r ceilings[["Age 5"]]` children reached ceiling performance.
+(`r group_peaks[["Age 5"]]`). 
+
 
 (ref:unfam-peaks-by-age) Growth curve peaks by age for mispronunciation trials starting on the unfamiliar image.
 
@@ -364,14 +355,22 @@ ggplot(unfam_peaks_avgs) +
 #       breaks = c(0, .2, .4, .6, .8, 1),
 #       labels = c("0", ".2", ".4", ".6", ".8", "1.0")) 
 ```
+Figure \@ref(fig:unfam-peaks-by-age) also indicates how most of the
+children at each age favored the familiar object over the unfamilar
+object. The bottom hinge of the boxplots mark the location of the 25th
+percentile. Therefore, approximately 75% of children at age 3 were on or
+above the .5 threshold. Unlike the other conditions, very few
+listeners achieve a peak of looking probability of .99: At age 5, only
+`r ceilings[["Age 5"]]` children reached ceiling performance, compared
+to approximately 40 for nonwords and 13 for real words.
 
 None of the other growth curve features showed developmental changes.
 That is, there were no credible year-over-year changes for the linear,
 quadratic or cubic time components of the growth curve. Although
 Figure \@ref(fig:unfam-initial-mp-trials) shows children's probability
 of looking to the familiar image increasing more quickly at age 5, this
-effect cannot be clear tied to any of the model's polynomial time
-features. After about 600 ms, the age 5 curve is almost parallel to
+effect cannot be clearly tied to any of the model's polynomial time
+features. After 600 ms, the age-5 curve is almost parallel to
 other curves. This visual feature is consistent with the intercept
 effect: The curve is higher than the others on average, but it does not
 show any differences in shape.
@@ -530,41 +529,44 @@ ggplot(regressions %>% group_by(Study, Feature, Predictor)) +
 #     num = fct_add_counts(ntile) %>% as.character()) 
 ```
 
+### Child-level predictors
 
-I additionally asked whether any child-level factors predicted looking
-behavior under these conditions. First, I asked whether performance on a
+I tested whether child-level measures predicted looking
+behavior under these conditions. First, I asked if performance on a
 minimal pair discrimination task at age 3 predicted looking behavior at
 age 3. The rationale here is the hypothesis that children with better
 minimal pair discrimination may be especially sensitive to
 mispronunciations. Proportion of items correct on the task did not
-correlate with growth curve peaks, *r* = `r min_p_cor` with *n* =
-`r min_p_n`, or with any other growth curve measures.
+correlate with growth curve peaks, *r* = `r min_p_cor`, *n* =
+`r min_p_n`, nor with any other growth curve measures.
 
-(ref:plot-evt-mp-unfam-peaks) Relationship between expressive vocabulary and growth curve peaks for mispronunciation trials starting on the unfamiliar image. I drew 100 samples from the posterior distribution and computed participant's growth curve peaks for each draw. Points represent the mean and standard error of the 100 peaks. For each draw, I regressed the peak values onto EVT-2 standard score. Lines represent the fits of the regressions.
+I also tested whether expressive vocabulary (EVT-2 standard score)
+predicted performance in this condition. In this case, there were
+significant effects at age 3 where a higher expressive vocabulary
+predicted higher peak probabilities and higher average probabilities.
+These effects, however, were very small. As shown in
+Figure \@ref(fig:plot-evt-mp-unfam-peaks), for example, a 15-point
+increase in expressive vocabulary predicted an increase of growth curve
+peak of `r delta_by_15`, *R*^2^ = `r peak_evt_r_squared`. Expressive
+vocabulary did not predict any of the growth curve features at age 4 or
+at age 5.
+
+(ref:plot-evt-mp-unfam-peaks) Relationship between expressive vocabulary and growth curve peaks for mispronunciation trials starting on the unfamiliar image. I took 100 draws from the posterior distribution and computed participant's growth curve peaks for each draw. Points represent the mean and standard error of 100 peaks. Lines represent regressions fit on each draw. 
 
 ```{r plot-evt-mp-unfam-peaks, fig.cap = "(ref:plot-evt-mp-unfam-peaks)", out.width = "50%", fig.width = 4.25, fig.height = 4}
 p_evt_peaks
 ```
 
-I also tested whether expressive vocabulary (EVT-2 standard score)
-predicted performance in this condition. In this case, there were
-significant effects at age 3 where a higher expressive vocabulary
-predicted a higher growth curve peak and a higher average probability.
-These effects, however, were very small. For example, a 15-point
-increase in expressive vocabulary predicted an increase of growth curve
-peak of `r delta_by_15`, *R*^2^ = `r peak_evt_r_squared`---see
-Figure \@ref(fig:plot-evt-mp-unfam-peaks) . Expressive vocabulary did
-not predict any of the growth curve features at age 4 or at age 5.
-
-
-**Summary**. When children look at the unfamiliar object and hear a
-mispronunciation, they on average look to the familiar image that sounds
-like the mispronunciation. Children are much more uncertain in this
-condition, compared to the conditions whether appropriate referent is
-more obvious. The only development changes observed were the increases
-in average looking probability and peak looking probability at age 5.
-There was a small effect of expressive vocabulary on looking probability
-at age 3, but no other effects of vocabulary were observed.
+**Summary**. When children are looking at the unfamiliar object and hear
+a mispronunciation, they on average shift their looks to the familiar
+image that sounds like the mispronunciation. Children are much more
+uncertain in this condition, compared to the real-word and nonword
+conditions where the appropriate referent is more obvious. The only
+developmental changes observed were the increases in average looking
+probability and peak looking probability at age 5. Finally, there was a
+small effect of expressive vocabulary on looking probability at age 3,
+but no other effects of vocabulary were observed. Minimal pair
+discrimination at age 3 also did not predict looking behavior.
 
 
 
@@ -664,9 +666,9 @@ time2 <- mp_fam_fixef %>%
     .f = fmt_convert_prop_to_percent)
 ```
 
-The above analyses showed that preschoolers associate one-feature
+The preceding results showed that preschoolers associate one-feature
 onset-mispronunciations with the familiar word that matches the rime of
-the word. But that was only for trials that started on the unfamilar
+the word. But that was only for trials where children start on the unfamilar
 object. I now consider the other situation, where children are fixating
 on a familiar object and hear a word that immediately mismatches with
 the name of that familiar object. On the basis of the first segment,
@@ -677,11 +679,14 @@ staying.
 Figure \@ref(fig:fam-initial-mp-trials) shows the growth curve averages
 for trials starting on the familiar image. The looking patterns show a
 sharp fall towards .5 which is chance-level performance. Behaviorally,
-children on average move quickly to look at both images equally; they
-rush into maximum uncertainty. At age 5, the average of the growth
+children on average move quickly to look at both images equally. They
+rush into maximum uncertainty, especially at age 4. Patterns are
+somewhat more restrained at age 5. Here, the average of the growth
 curves never dips below .5, and in fact, it shows a late rise to .6
 looking probability. At this age, children are overall more likely to
-stay on the familiar object. 
+stay on the familiar object. Finally, at age-3, the curve begins to fall
+later than the other curves, reflecting a slower change from the
+starting probability.
 
 <!-- One possible interpretation of this pattern is that the children making  -->
 <!-- brief confirmatory looks to the novel image; they checking out -->
@@ -744,26 +749,27 @@ ggplot(df_f_plotting) +
     caption = constants$cap_emp_and_draw)
 ```
 
-In the other analyses, the growth curves become steeper and attain
-higher average values and higher peak values. As a result, it is
-straightforward to interpret how the intercept and linear time effects
-contribute to the growth curve's shape. For this model, some more effort
-is required to interpret the model parameters and how they combine to
-form the growth curve shape.
+In other analyses, growth curves rise and plateau, and age-related
+effects appear in how quickly the curves rise or the height at which
+they plateau. In those cases, it is straightforward to interpret how the
+intercept and linear time effects contribute to the curve's shape over
+development. For this model, the curves *fall* and plateau, and there is
+not an obvious developmental, year-over-year change among the curves.
+Thus, more effort is required to interpret the model parameters and how
+they combine to form the growth curve shape.
 
-Figure \@ref(fig:mp-fam-gca-features) shows how the growth curve features
-are weighted at each year and contribute to the overall growth curve
-shape. At age 3, the intercept term, or average proportion of looks to
-the familiar image, was `r props$b_Age3`. In this situation, the term is
-less useful because the curves all start at a high probability which
-inflates the average value. That said, comparisons remain useful. At
-age 4, the average probability decreased by `r props$neg_d_Age4` to
-`r props$b_Age4`, and at age 5 the average probability returns to age-3
-levels `r props$b_Age5`. These effects contribute to how the age 4
-curves dips below the others and indeed below the .5 level. For the
-linear time term, the slope becomes flatter year over year, decreasing
-by `r time1$neg_per_d_ot1_Age4` from age 3 to age 4 and decreasing by
-`r time1$neg_per_d_ot1_Age5` from age 4 to age 5.
+Figure \@ref(fig:mp-fam-gca-features) visualizes how the growth curve
+features are weighted at each year and how they contribute to the
+overall growth curve shape. At age 3, the intercept feature, or average
+proportion of looks to the familiar image, was `r props$b_Age3`. The
+feature is less meaningful in this situation because the curves all
+start at a high probability which inflates the average value. That said,
+comparisons remain useful. At age 4, the average probability decreased
+by `r props$neg_d_Age4` to `r props$b_Age4`, and at age 5 the average
+probability returns to age-3 levels, `r props$b_Age5`. This intercept
+effect contributes to how the age-4 curve dips below the others and
+indeed briefly crosses the .5 probability threshold.
+
 
 (ref:mp-fam-gca-features) Weighted growth curve features. For the first four panels, the *y* axes are scaled to the same range. This scaling highlights how the cubic time component contributes less to the overall shape than the other features.
 
@@ -841,20 +847,36 @@ p <- feature_draws %>%
 p
 ```
 
-There was a credible change in the quadratic time parameter at
-age 5. One way to think of positive quadratic trend is like a weight
+
+For the linear time feature, the slope becomes flatter year over year,
+decreasing by `r time1$neg_per_d_ot1_Age4` from age 3 to age 4 and
+decreasing by `r time1$neg_per_d_ot1_Age5` from age 4 to age 5. For
+these curves, however, the starting location is the highest value on the
+curve, so the linear time feature in this case mostly works to set the
+starting location of the curves. When the features are combined in
+Figure \@ref(fig:mp-fam-gca-features), the age-3 curve, which has the
+steepest linear time feature, starts at a higher value than the others.
+
+There was a credible change in the quadratic time feature at
+age 5. One way to think of a positive quadratic trend is like a weight
 hanging on a string: It pulls and bends the whole curve downwards. At
-age 5, the quadratic is `r time2$neg_per_d_ot2_Age5` smaller than at
-age 4, meaning that the age-5 curve has slightly less bend downwards.
-Finally, there were no credible differences in the cubic time component. Compared to the other features, the cubic time feature only a small amount to the overall shape of the growth curves.
+age 5, the quadratic feature is `r time2$neg_per_d_ot2_Age5` smaller than at
+age 4, meaning that the age-5 curve has slightly less bend downwards.
+Finally, there were no credible differences in the cubic time feature.
+Compared to the other features, the cubic trend only a small amount to
+the overall shape of the curves.
 
-The combination of these effects shows in the final panel of the plot.
-The Age 4 curve dips down furthest beneath 0 log-odds (.5
-probability)---this is driven by in the intercept feature. The Age 5
-curve stays above 0 log-odds and starts to rise away from its minimum
-value, owning to the dampened linear and quadratic features.
+The combination of these effects shows in the final panel of
+Figure \@ref(fig:mp-fam-gca-features). The age-4 curve dips down
+furthest beneath 0 log-odds (.5 probability)---this is driven by in the
+intercept feature. The age-5 curve stays above 0 log-odds and eventually
+starts to rise away from its minimum value, owning to the dampened
+linear and quadratic features.
 
-The developmental story, if any, is that children stick with the
+Given the interplay of these features, I will avoid assigning a developmental intepretation to individual features. The two main developmental features here are that the age 3 curve starts to fall a little later than the other curves. (This difference is more apparent in Figure \@ref(fig:fam-initial-mp-trials).)
+
+The individual feature changes do not have a developmental interpretation. It would be incorrect to say that the younger children show a 
+story, if any, is that children stick with the
 familiar object slightly more at age 5. The growth curves hit maximum
 uncertainty, but not at age 5.
  
