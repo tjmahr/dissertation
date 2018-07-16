@@ -411,6 +411,7 @@ condition_means <- peaks %>%
 
 ggplot(condition_means) + 
   aes(x = Study, y = Peak, color = Condition) + 
+  geom_hline(yintercept = .5, size = 2, color = "white") + 
   geom_text(
     aes(label = Condition),
     data = data_frame(
