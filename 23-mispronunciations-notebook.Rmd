@@ -1639,6 +1639,74 @@ ggplot(condition_means) +
   theme(plot.subtitle = element_text(size = rel(.9)))
 
 
+min_peak <- condition_means %>% 
+  filter(Condition == "mp", Study == "Age 3") %>% 
+  filter(Peak == min(Peak))  
+  
+ggplot(condition_means) + 
+  aes(x = Study, y = Peak, color = Condition) + 
+    geom_hline(yintercept = .5, size = 2, color = "white") + 
+  geom_text(
+    aes(label = label),
+    data = data_frame(
+      Peak = 1.06, 
+      label = c("mispronunciations", " "),
+      Condition = c("mp", "real"),
+      Study = c("Age 3", "Age 3")), 
+    position = position_dodge(width = .75), 
+    size = 3, 
+    family = "Lato Semibold") +
+  geom_text(
+    aes(label = label),
+    data = data_frame(
+      Peak = 1.06, 
+      label = c(" ", "real words"),
+      Condition = c("mp", "real"),
+      Study = c("Age 4", "Age 4")), 
+    position = position_dodge(width = 1.15), 
+    size = 3, 
+    family = "Lato Semibold") +
+  geom_point(
+    data = . %>% anti_join(min_peak),
+    position = position_jitterdodge(jitter.width = 0.25, dodge.width = 1.05), 
+    alpha = .5, 
+    shape = 1) +
+  ggrepel::geom_text_repel(
+    aes(label = "posterior mean"),
+    force = 10,
+    xlim = c(.90, NA),
+    # ylim = c(NA, .07),
+    color = "grey30",
+    data = min_peak,
+    size = 3, 
+    direction = "x",
+    family = "Lato Medium",
+    vjust = .5, 
+    point.padding = .5,
+    label.padding = .5,
+    position = position_nudge(x = -.25)) +
+  geom_point(
+    data = min_peak,
+    shape = 1, 
+    position = position_nudge(x = -.25)) +
+  geom_boxplot(
+    width = .2, 
+    position = position_dodge(width = .3), 
+    outlier.alpha = 0)  +
+  guides(color = FALSE) +
+  labs(
+    title = "Mispronunciation penalty",
+    x = NULL,
+    y = NULL,
+    subtitle = "Peaks for trials starting on unfamiliar image") + 
+  scale_x_discrete(labels = x_levels) +
+  scale_y_continuous(
+    minor_breaks = c(.1, .3, .5, .7, .9),
+    breaks = c(0, .2, .4, .6, .8, 1)) +
+  scale_color_manual(values = c("cyan4", "#6b7a8f", "#f7882f"))  +
+  theme(plot.subtitle = element_text(size = rel(.9)))
+
+
 ```
 
 

@@ -499,6 +499,9 @@ One complication to the lexical processing interpretation is that this is a two-
 <div class="figure" style="text-align: center">
 <img src="23-mispronunciations-notebook_files/figure-html/mp-vs-real-peaks-1.png" alt="(ref:mp-vs-real-peaks)" width="50%" />
 <p class="caption">(\#fig:mp-vs-real-peaks)(ref:mp-vs-real-peaks)</p>
+</div><div class="figure" style="text-align: center">
+<img src="23-mispronunciations-notebook_files/figure-html/mp-vs-real-peaks-2.png" alt="(ref:mp-vs-real-peaks)" width="50%" />
+<p class="caption">(\#fig:mp-vs-real-peaks)(ref:mp-vs-real-peaks)</p>
 </div>
 
 
