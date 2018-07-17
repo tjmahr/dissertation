@@ -1516,30 +1516,36 @@ on this measure.
 
 ## Discussion
 
-In the lab, when preschoolers are looking at a novel object and hear the name of
-a different familiar object, albeit mispronounced, they look to the familiar
-object. Children do this reliably at age 3 and even more reliably at age 5. They
-look much less to the object compared to trials where they hear a correct
-production of the familiar word---see Figure \@ref(fig:mp-vs-real-peaks)--or
-when they hear a nonword in a context that supports fast-referent selection.
-Therefore, they are unquestionably sensitive to mispronunciations of familiar
-words so that they are more uncertain when they hear a mispronunciation.
+In the lab, when preschoolers are looking at a novel object and hear the
+name of a different familiar object, albeit mispronounced, they look to
+the familiar object. Children do this reliably at age 3 and even more
+reliably at age 5. Thus, children recognized these mispronunciations as
+productions of familiar words, but this recognition was not without a
+penalty. They looked much less to the familiar object under these
+conditions, compared to trials where they hear a correct production of
+the familiar object---see Figure \@ref(fig:mp-vs-real-peaks)--or when
+they hear a nonword in a context that supports fast-referent selection. 
+Therefore, preschoolers are unquestionably sensitive to
+mispronunciations of familiar words so that they show more uncertainty when
+hearing a mispronunciation.
 
-  - Unlike those conditions which started to show ceiling effects at
-    age 4, children are much more uncertain here.
-  - In terms of lexical processing, the syllable onset leads them down a
-    garden path. They have to hear more of the word in order to
-    associate the mispronunciation with the target. This is a bit like
-    processing a rime word.
-  - The development story is that they can use the rest of the word more
-    effectively to associate the MP with the familiar image. This would
-    predict that children become more sensitive to rime-based lexical
-    competitors during the preschool years.
-  - But there is no effect of expressive vocabulary here, especially at older ages.
-  - So they are sensitive but they become more accommodating of the
+In terms of lexical processing, the mispronounced syllable onset leads
+them down a phonological garden path. The "d" in *dirl* activates a
+neighborhood a d-inital words. The rest of the syllable, however,
+provides information needed to activate "girl". Figure XX illustrates
+these differences. Children therefore are slower to build up activation
+of the word because the onset-mismatch, and they show less activation
+overall because the word only matches the rime of the word. They get a
+late start and have to work with a poor-fitting form of the word. The
+finding that children are better at processing mispronunciations at
+age 5 suggests that children can recover build up more activation to
+these candidate rime words. 
+
+One complication to the lexical processing interpretation is that this is a two-image task. Children have had to time to view each image before the noun onset. In viewing the images, children can build up an expectations for the words they will hear named. This expectation can build up the resting activation of the word "girl" before it is labeled as "dirl". Thus, the lexical processing interpretation is not quite as simple as the child building up information from the rest of the word and matching "dirl" to the photo of the girl. Not sure where I am going here... It's not just the word forms alone but the child's expectations I guess and those expectations might change or become more efficient with age. This is not as big of a concern for the four-image task because the child hears well-formed words.
+
+- There is no effect of expressive vocabulary here, especially at older ages.
+- So they are sensitive but they become more accommodating of the
     mispronounced version.
-  
-
 
 (ref:mp-vs-real-peaks) Text reference for caption
 
@@ -1559,9 +1565,20 @@ peaks_all <- unfam_peaks %>%
   rename(mp = Peak) %>% 
   right_join(peaks)
 
+peaks_all <- unfam_peaks %>% 
+  group_by(Study, ResearchID) %>% 
+  summarise_at(vars(Peak), mean, na.rm = TRUE) %>% 
+  ungroup() %>% 
+  rename(mp = Peak) %>% 
+  right_join(peaks) %>% 
+  mutate(penalty = mp - real, advantage = real - mp)
+
+
+
+
 
 condition_means <- peaks_all %>% 
-  select(-nonsense) %>% 
+  select(-nonsense, -penalty, -advantage) %>% 
   filter(!is.na(mp), !is.na(real)) %>% 
   tidyr::gather("Condition", "Peak", -Study, -ResearchID) %>%
   ungroup()
@@ -1619,8 +1636,20 @@ ggplot(condition_means) +
     minor_breaks = c(.1, .3, .5, .7, .9),
     breaks = c(0, .2, .4, .6, .8, 1)) +
   scale_color_manual(values = c("cyan4", "#6b7a8f", "#f7882f"))  +
-  theme(plot.subtitle = element_text(size = rel(.9))) 
+  theme(plot.subtitle = element_text(size = rel(.9)))
+
+
 ```
+
+
+```{r, out.width = "100%"}
+knitr::include_graphics("./misc/placeholder.png")
+```
+
+
+
+
+
 
 
   - For second set of analyses, there is no one clear strategy for
@@ -1633,9 +1662,158 @@ ggplot(condition_means) +
   - These sets of analyses mainly demonstrate that when children start
     on a familiar image and hear a mispronunciation, they have a few
     options for how to proceed.
+  
   - This also shows a possible decoupling between lexical processing and
   referent selection. It is unlikely that children heard the mispronunciations
-  differently in these trials, but rather the responded differently.
+  differently in these trials, but rather they responded differently. Not sure where I am going here. None of the child level predictors were related to u-shaped patterns.
+  
+  - Child level predictors only were preditive at age 3 for curve valley. In this case, children with larger vocabularies or better minimal pair discrimination showed more consideration of the nonword object. I speculate that in this situation, the effect reflects that children with better abilities in these areas were more sensitive to the mispronunciation. These children are good at recognizing the mismatch from partial information.
   
 
 
+
+
+
+```{r advantage-predictions, include = FALSE}
+# Quantify an advantage
+ggplot(peaks_all) + 
+  aes(x = Study, y = advantage) + 
+  geom_hline(yintercept = 0, size = 2, color = "white") +
+  geom_point(
+    position = position_jitter(width = 0.25), 
+    alpha = .5, 
+    shape = 1) +
+  geom_boxplot(
+    width = .2, fill = NA,
+    outlier.alpha = 0) + 
+  labs(y = "real word advantage")
+
+# No relationships between advantage and vocab
+peaks_all %>% 
+  left_join(scores) %>% 
+  ggplot() + 
+    aes(x = EVT_Standard, y = advantage, color = Study) + 
+    geom_point() +
+    stat_smooth(method = "lm") +
+    labs(
+      y = "real word advantage",
+      title = "no within age effects")
+
+peaks_all %>% 
+  filter(Study == "Age 3") %>% 
+  inner_join(scores) %>% 
+  ggplot() + 
+    aes(x = MinPair_ProportionCorrect, y = advantage) + 
+    geom_point() +
+    stat_smooth(method = "lm") +
+    labs(y = "real word advantage")
+
+# tiny effect
+peaks_all %>% 
+  filter(Study == "Age 3") %>% 
+  inner_join(scores) %>% 
+  lm(advantage ~ MinPair_ProportionCorrect, .) %>% summary()
+
+
+peaks_all %>% 
+  filter(Study == "Age 3") %>% 
+  inner_join(scores) %>% 
+  lm(cbind(nonsense, mp, real) ~ EVT_Standard, .) %>% 
+  broom::tidy()
+
+peaks_all %>% 
+  filter(Study == "Age 4") %>% 
+  inner_join(scores) %>% 
+  lm(cbind(nonsense, mp, real) ~ EVT_Standard, .) %>% 
+  broom::tidy()
+
+peaks_all %>% 
+  filter(Study == "Age 5") %>% 
+  inner_join(scores) %>% 
+  lm(cbind(nonsense, mp, real) ~ EVT_Standard, .) %>% 
+  broom::tidy()
+
+# tiny effect
+peaks_all %>% 
+  filter(Study == "Age 3") %>% 
+  inner_join(scores) %>% 
+  lm(cbind(nonsense, mp, real) ~ MinPair_ProportionCorrect, .) %>% 
+  broom::tidy()
+
+
+peaks_all %>% 
+  filter(Study == "Age 3") %>% 
+  inner_join(
+    scores %>% 
+      filter(Study == "Age 5") %>% 
+      select(ResearchID, EVT_Standard)) %>% 
+  ggplot() + 
+  aes(x = advantage, y = EVT_Standard) + 
+  geom_point() +
+  stat_smooth(method = "lm") +
+  labs(
+    title = "no predictive effects",
+    x = "real word advantage (age 3)", 
+    y = "EVT Standard (age 5)")
+
+```
+
+```{r advantage-correlations, include = FALSE}
+# Advantages are not well correlated with other peaks
+
+by_year <- peaks_all %>% 
+  select(Study, ResearchID, real, mp, nonsense, advantage) %>% 
+  filter(!is.na(mp), !is.na(real)) %>% 
+  tidyr::gather("Condition", "Peak", -Study, -ResearchID) %>%
+  ungroup()
+
+by_type <- by_year %>% 
+  mutate(Study = stringr::str_replace(Study, " ", "")) %>% 
+  tidyr::unite(Study, Study, Condition) %>% 
+  tidyr::spread(Study, Peak)  
+
+ggplot(by_type) + 
+  aes(x = `Age3_advantage`, y = `Age4_advantage`) + 
+  geom_point() +
+  stat_smooth(method = "lm") 
+
+ggplot(by_type) + 
+  aes(x = `Age4_advantage`, y = `Age5_advantage`) + 
+  geom_point() +
+  stat_smooth(method = "lm") 
+
+ggplot(by_type) + 
+  aes(x = `Age3_nonsense`, y = `Age4_nonsense`) + 
+  geom_point() +
+  stat_smooth(method = "lm") 
+
+ggplot(by_type) + 
+  aes(x = `Age3_real`, y = `Age4_real`) + 
+  geom_point() +
+  stat_smooth(method = "lm") 
+
+ggplot(by_type) + 
+  aes(x = `Age3_real`, y = `Age3_nonsense`) + 
+  geom_point() +
+  stat_smooth(method = "lm") 
+
+ggplot(by_type) + 
+  aes(x = `Age3_mp`, y = `Age3_nonsense`) + 
+  geom_point() +
+  stat_smooth(method = "lm") 
+
+ggplot(by_type) + 
+  aes(x = `Age4_mp`, y = `Age4_nonsense`) + 
+  geom_point() +
+  stat_smooth(method = "lm") 
+
+ggplot(by_type) + 
+  aes(x = `Age5_mp`, y = `Age5_nonsense`) + 
+  geom_point() +
+  stat_smooth(method = "lm") 
+
+by_type %>% 
+  select(-ResearchID, -ends_with("advantage")) %>% 
+  cor(use = "pairwise.complete.obs") %>% 
+  round(2)
+```

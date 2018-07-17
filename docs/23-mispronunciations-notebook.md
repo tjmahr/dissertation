@@ -463,30 +463,36 @@ on this measure.
 
 ## Discussion
 
-In the lab, when preschoolers are looking at a novel object and hear the name of
-a different familiar object, albeit mispronounced, they look to the familiar
-object. Children do this reliably at age 3 and even more reliably at age 5. They
-look much less to the object compared to trials where they hear a correct
-production of the familiar word---see Figure \@ref(fig:mp-vs-real-peaks)--or
-when they hear a nonword in a context that supports fast-referent selection.
-Therefore, they are unquestionably sensitive to mispronunciations of familiar
-words so that they are more uncertain when they hear a mispronunciation.
+In the lab, when preschoolers are looking at a novel object and hear the
+name of a different familiar object, albeit mispronounced, they look to
+the familiar object. Children do this reliably at age 3 and even more
+reliably at age 5. Thus, children recognized these mispronunciations as
+productions of familiar words, but this recognition was not without a
+penalty. They looked much less to the familiar object under these
+conditions, compared to trials where they hear a correct production of
+the familiar object---see Figure \@ref(fig:mp-vs-real-peaks)--or when
+they hear a nonword in a context that supports fast-referent selection. 
+Therefore, preschoolers are unquestionably sensitive to
+mispronunciations of familiar words so that they show more uncertainty when
+hearing a mispronunciation.
 
-  - Unlike those conditions which started to show ceiling effects at
-    age 4, children are much more uncertain here.
-  - In terms of lexical processing, the syllable onset leads them down a
-    garden path. They have to hear more of the word in order to
-    associate the mispronunciation with the target. This is a bit like
-    processing a rime word.
-  - The development story is that they can use the rest of the word more
-    effectively to associate the MP with the familiar image. This would
-    predict that children become more sensitive to rime-based lexical
-    competitors during the preschool years.
-  - But there is no effect of expressive vocabulary here, especially at older ages.
-  - So they are sensitive but they become more accommodating of the
+In terms of lexical processing, the mispronounced syllable onset leads
+them down a phonological garden path. The "d" in *dirl* activates a
+neighborhood a d-inital words. The rest of the syllable, however,
+provides information needed to activate "girl". Figure XX illustrates
+these differences. Children therefore are slower to build up activation
+of the word because the onset-mismatch, and they show less activation
+overall because the word only matches the rime of the word. They get a
+late start and have to work with a poor-fitting form of the word. The
+finding that children are better at processing mispronunciations at
+age 5 suggests that children can recover build up more activation to
+these candidate rime words. 
+
+One complication to the lexical processing interpretation is that this is a two-image task. Children have had to time to view each image before the noun onset. In viewing the images, children can build up an expectations for the words they will hear named. This expectation can build up the resting activation of the word "girl" before it is labeled as "dirl". Thus, the lexical processing interpretation is not quite as simple as the child building up information from the rest of the word and matching "dirl" to the photo of the girl. Not sure where I am going here... It's not just the word forms alone but the child's expectations I guess and those expectations might change or become more efficient with age. This is not as big of a concern for the four-image task because the child hears well-formed words.
+
+- There is no effect of expressive vocabulary here, especially at older ages.
+- So they are sensitive but they become more accommodating of the
     mispronounced version.
-  
-
 
 (ref:mp-vs-real-peaks) Text reference for caption
 
@@ -494,6 +500,14 @@ words so that they are more uncertain when they hear a mispronunciation.
 <img src="23-mispronunciations-notebook_files/figure-html/mp-vs-real-peaks-1.png" alt="(ref:mp-vs-real-peaks)" width="50%" />
 <p class="caption">(\#fig:mp-vs-real-peaks)(ref:mp-vs-real-peaks)</p>
 </div>
+
+
+<img src="./misc/placeholder.png" width="100%" style="display: block; margin: auto;" />
+
+
+
+
+
 
 
   - For second set of analyses, there is no one clear strategy for
@@ -506,9 +520,18 @@ words so that they are more uncertain when they hear a mispronunciation.
   - These sets of analyses mainly demonstrate that when children start
     on a familiar image and hear a mispronunciation, they have a few
     options for how to proceed.
+  
   - This also shows a possible decoupling between lexical processing and
   referent selection. It is unlikely that children heard the mispronunciations
-  differently in these trials, but rather the responded differently.
+  differently in these trials, but rather they responded differently. Not sure where I am going here. None of the child level predictors were related to u-shaped patterns.
   
+  - Child level predictors only were preditive at age 3 for curve valley. In this case, children with larger vocabularies or better minimal pair discrimination showed more consideration of the nonword object. I speculate that in this situation, the effect reflects that children with better abilities in these areas were more sensitive to the mispronunciation. These children are good at recognizing the mismatch from partial information.
+  
+
+
+
+
+
+
 
 
