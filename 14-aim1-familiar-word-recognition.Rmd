@@ -438,25 +438,33 @@ lpred %>%
     geom_hline(yintercept = .25, color = "white", size = 2) +
     geom_line(
       aes(group = interaction(Study, ResearchID, .draw)), 
-      alpha = .1) +
+      alpha = .05) +
     stat_summary(
       aes(y = Prop, group = Study), 
       data = d_m %>% 
         mutate(Study = convert_study_to_age(Study)), 
-      fun.y = "mean", geom = "line", 
-      color = constants$col_off_black, size = 1) + 
+      fun.y = "mean", 
+      geom = "line", 
+      color = constants$col_off_black, 
+      size = 1) + 
     geom_text(
-      aes(color = "Age 5", label = "Age 5"), 
-      x = 1390, y = .83, family = "Lato") +
+      aes(label = Study, y = y), 
+      data = data_frame(Time = 1390, y = .83, Study = "Age 5"),
+      size = 5,
+      family = "Lato Semibold") +
     geom_text(
-      aes(color = "Age 3", label = "Age 3"), 
-      x = 1380, y = .46, family = "Lato") +
+      aes(label = Study, y = y), 
+      data = data_frame(Time = 1380, y = .46, Study = "Age 3"),
+      family = "Lato Semibold", 
+      size = 5) +
     expand_limits(y = .85) +
+    scale_color_study() +
     guides(color = "none") +
     labs(
       title = "Observed means and 200 posterior fits",
       x = constants$x_time,
       y = constants$y_prop_target)
+  
 ```
 
 
@@ -651,6 +659,7 @@ p1 <- ggplot(pairwise %>% filter(!(parameter %in% c("Peak", "Intercept")))) +
     title = "Differences in average effects",
     caption = " ") + 
   theme_grey() +
+  # theme_teej() +
   theme(
     strip.placement = "outside", 
     strip.background = element_rect(fill = NA),
@@ -844,13 +853,16 @@ ggplot(lpred %>% mutate(Study = convert_study_to_age(Study))) +
       sample_n_of(1, .draw) %>% 
       mutate(Study = convert_study_to_age(Study)), 
     color = "grey20",
+    size = 1,
     show.legend = FALSE) +
   facet_wrap("Study") + 
+  scale_color_study() +
   guides(color = guide_legend("none")) +
   labs(
     title = "Posterior predictions for 1,000 new participants",
     x = constants$x_time,
     y = constants$y_prop_target)
+
 ```
 
 (ref:new-participants-intervals) Uncertainty intervals for the simulated participants. Variability is widest at age 3 and narrowest at age 5, consistent with the prediction that children become less variable as they grow older.
@@ -870,6 +882,7 @@ ggplot(lpred %>% mutate(Study = convert_study_to_age(Study))) +
     size = 1.5, 
     geom = "linerange") + 
   facet_wrap("Study") + 
+  scale_color_study() +
   guides(color = guide_legend("none")) +
   labs(
     title = "Posterior predictions for 1,000 new participants",
@@ -921,14 +934,19 @@ range_labels <- tibble::tribble(
 ggplot(by_draw %>% mutate(Study = convert_study_to_age(Study))) +
   aes(x = Time, y = extent, color = Study) +
   geom_point() + 
-  geom_text(aes(label = Study), data = range_labels, family = "Lato") +
+  geom_text(
+    aes(label = Study), 
+    data = range_labels, 
+    family = "Lato Semibold",
+    size = 4) +
   facet_wrap("range", labeller = label_parsed) +
   expand_limits(y = .06) +
+  scale_color_study() +
+  guides(color = "none") +
   labs(
     title = "Ranges of predictions for 1000 new participants",
     x = constants$x_time,
-    y = "Difference of percentiles") + 
-  guides(color = "none")
+    y = "Difference of percentiles")
 ```
 
 The developmental pattern of increasing reliability and decreasing
@@ -1068,12 +1086,12 @@ subtitle <- glue::glue(
 
 w_intervals <- posterior_w %>% 
   rename(
-    Intercept = `intercept`, `Time` = ot1, `Time^2` = ot2, `Time^3` = ot3,
-    Peak = peak_logit, `Random~ratings` = `random numbers`) %>% 
+    `Avg.~Probability` = `intercept`, `Time^1` = ot1, `Time^2` = ot2, `Time^3` = ot3,
+    `Peak~Probability` = peak_logit, `Random~ratings` = `random numbers`) %>% 
   mcmc_intervals_data(prob_outer = .9, prob = .5) %>% 
   mutate(
     parameter = factor(parameter, c(
-      "Random~ratings", "Time^3", "Time^2", "Time", "Intercept", "Peak"))) 
+      "Random~ratings", "Time^3", "Time^2", "Time^1", "Peak~Probability", "Avg.~Probability"))) 
 
 ggplot(w_intervals) + 
   aes(y = parameter) +

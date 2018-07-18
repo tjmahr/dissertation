@@ -694,21 +694,3 @@ priors <- c(prior_intercept, prior_b, prior_ot1, prior_cor, prior_sd, prior_sigm
 
 ```
 
-
-
-
-
-
-<!-- Observations: -->
-
-<!--   - Probability of looking to familiar image given real word increased in -->
-<!--     year 3. Kind of unexpected that they could improve noticeably on this simple -->
-<!--     two-image task. -->
-<!--   - Probability of looking to unfamiliar given a nonword increases each year. -->
-<!--   - Probability of looking to familiar given a mispronunciation increased -->
-<!--   - 250 to 1500 looks like a reasonable analysis window. -->
-<!--   - Before the onset of the target word, there appears to be some looking -->
-<!--     preferences—maybe—for the familiar at timepoint 1 and unfamiliar -->
-<!--     in timepoint 3. -->
-<!--   - The "peak" growth curve feature will need to be flipped for the nonword -->
-<!--     trials. -->

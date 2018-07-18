@@ -1,9 +1,7 @@
-```{block, include = identical(knitr:::pandoc_to(), "html")}
+
 Dedication {-}
 ========================================================================
 
 For Penny
-
-```
 
 

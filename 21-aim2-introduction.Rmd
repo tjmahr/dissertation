@@ -9,8 +9,30 @@ stimuli.
 
 One productive line of research has focused on how children respond to
 mispronunciations of familar words [e.g., @Swingley2000;
-@Swingley2002]. @WhiteMorgan2008 presented toddlers with images of a
-familiar and novel object, and children heard a correct production of
+@Swingley2002]. The motivation for this research was to determine how
+detailed children's phonological representations were. One hypothesis
+held that infants and toddlers did not need to store words in much
+phonetic or phonological detail because they know so few words. Words
+are lazily encoded, details filled in as the need arises. In fact, this
+could be advantageous: "Perhaps children benefit from the sparseness of
+their lexicon by encoding only the detail necessary to distinguish
+words" [@Swingley2000, p. 148]. Mispronunciation studies effectively
+nullified this hypothesis. For example, @Swingley2000 presented 18--23
+month-olds two familiar images onscreen, like baby and dog, and heard a
+correct production (*where's the baby*) or a mispronunciation (*where's
+the vaby*). Children looked to the correct productions about 73% of the
+time and mispronunciations 61% of the time. They look more than chance
+but less than the correct production, indicating they were sensitive to
+the mispronunciation. Children had encoded *baby* in enough phonetic
+detail that a small phonetic change made them less certain during word
+recognition. (@Swingley2002 found the same pattern of results for 14--15
+month olds with 60% looks to correct productions and around 53.5% looks
+for mispronunications.)
+
+One limitation with this design is that the child has no way to reject *vaby*: They have to choose either *baby* or *dog*. @WhiteMorgan2008 explored that possibility.
+<!-- @WhiteMorgan2008 changed design to include an iamge of a familiar object and a unfamiliar object on each trial. In this way, a child could reject *vaby* and treat it as a novel word that labels a novel object.  -->
+They presented toddlers with images of a
+familiar object and a novel object, and children heard a correct production of
 the familiar object, mispronunciations of the familiar object of varying
 severity, or an unrelated nonword. Toddlers looked less to a familiar
 word when the first segment was mispronounced. Moreover, they
@@ -24,6 +46,8 @@ moment. A similar pattern of effects was observed in the
 mispronunciation study by @MPPaper with preschoolers mapping real words
 to familiar objects, nonwords to novel objects, and equivocating about
 mispronunciations of familiar words.
+
+Swingley and Aslin (2007) trained 18 month olds on novel words. These words were either totally new words (like meb or shang) or neighbors of known words (like tog [dog] or gall [ball]). 
 
 _add more mispronunciation findings_
 

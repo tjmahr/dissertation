@@ -339,10 +339,10 @@ null concordance statistics support that claim because the Time^2^ and
 Time^3^ features differentiate children across studies as well as random
 numbers.
 
-Concordance is strongest for the peak feature, *W* = .59
-[.57, .60] and the intercept term, *W* =
-.58 [.57, .60], followed by the
-linear time term, *W* = .50 [.48, .52].
+Concordance is strongest for the peak feature, *W* = 
+[] and the intercept term, *W* =
+ [], followed by the
+linear time term, *W* =  [].
 Because these values are far removed from the statistics for random
 ratings, I conclude that there is a credible degree of correspondence
 across studies when ranking children using their peak looking

@@ -1,4 +1,4 @@
-```{block, include = identical(knitr:::pandoc_to(), "html")}
+
 Acknowledgements {-}
 ========================================================================
 
@@ -75,6 +75,5 @@ without your love, support, humor, and nerdery. People sometimes thought
 I was a workaholic because I would get to my office at 8 am. But really,
 I just wanted to ride the bus with you in the morning. We started a
 family together! Shout out to Kiki and Nooper for the snuggles. 
-```
 
 \mainmatter
