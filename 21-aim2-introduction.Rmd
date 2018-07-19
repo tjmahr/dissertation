@@ -65,7 +65,7 @@ selection. At face value, we might expect a child’s ability to associate
 new words with unfamiliar objects to be more direct measure of
 word-learning capacity than a child’s ability to process known words.
 Under this assumption, we would expect individual differences in fast
-referent selection to be highly correlated with vocabulary growth. But
+referent selection to be correlated with vocabulary growth. But
 @McMurray2012 propose that the same basic process is at play in both
 recognition of familiar words and fast association of nonwords. In
 experiments, the observed behaviors are the same: Children hear a word

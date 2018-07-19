@@ -1538,10 +1538,14 @@ of the word because the onset-mismatch, and they show less activation
 overall because the word only matches the rime of the word. They get a
 late start and have to work with a poor-fitting form of the word. The
 finding that children are better at processing mispronunciations at
-age 5 suggests that children can recover build up more activation to
+age 5 suggests that children are able to build up more activation to
 these candidate rime words. 
 
 One complication to the lexical processing interpretation is that this is a two-image task. Children have had to time to view each image before the noun onset. In viewing the images, children can build up an expectations for the words they will hear named. This expectation can build up the resting activation of the word "girl" before it is labeled as "dirl". Thus, the lexical processing interpretation is not quite as simple as the child building up information from the rest of the word and matching "dirl" to the photo of the girl. Not sure where I am going here... It's not just the word forms alone but the child's expectations I guess and those expectations might change or become more efficient with age. This is not as big of a concern for the four-image task because the child hears well-formed words.
+
+
+Child-level measures were not predictive of looking behaviors at age 4 or age 5. Perhaps this is too easy. 
+
 
 - There is no effect of expressive vocabulary here, especially at older ages.
 - So they are sensitive but they become more accommodating of the
@@ -1719,25 +1723,34 @@ knitr::include_graphics("./misc/placeholder.png")
 
 
 
-
-  - For second set of analyses, there is no one clear strategy for
-    referent selection. We see a few different patterns among children.
-    Some stay put. Some always switch. Some do both.
-  - The growth curve averages rush to .5, which is equal looks to both
-    images, which is maximum uncertainty.
-  - The age 5 curve doesn't dip as far, so they are slightly more likely
-    to stay put.
-  - These sets of analyses mainly demonstrate that when children start
-    on a familiar image and hear a mispronunciation, they have a few
-    options for how to proceed.
+I also analyzed trials where children started on the familiar word and heard a
+mispronunciation. In this situation, there is no one clear strategy for referent
+selection, and children exhibit a few different patterns. Some stay put. Some
+reliably switch to the novel image. Some look at both equally. On average, the
+growth curve averages rush to .5, which is equal looks to both images, which is
+maximum uncertainty. At age 5, the curve does not reach quite as far down as the
+other curves, so they never fall into maximum uncertainty. These sets of
+analyses mainly demonstrate that when children start on a familiar image and
+hear a mispronunciation, they have a few options for how to proceed.
   
+Child level predictors only were preditive at age 3 for curve valley. In
+this case, children with larger vocabularies or better minimal pair
+discrimination showed more consideration of the nonword object. I
+speculate that in this situation, the effect reflects that children with
+better abilities in these areas were more sensitive to the
+mispronunciation. These children were good at recognizing the mismatch
+from partial information and thus allocated more credibility to the
+alternative image.
+
+In these analyses, I defined a weighted quadratic growth curve feature
+that measured how u-shaped the curves were. I was interested in whether
+confirmatory looking behaviors were reliably related to child level
+factors. They were not, outside of neglibly small effect of vocabulary
+at age 5.
+
   - This also shows a possible decoupling between lexical processing and
   referent selection. It is unlikely that children heard the mispronunciations
   differently in these trials, but rather they responded differently. Not sure where I am going here. None of the child level predictors were related to u-shaped patterns.
-  
-  - Child level predictors only were preditive at age 3 for curve valley. In this case, children with larger vocabularies or better minimal pair discrimination showed more consideration of the nonword object. I speculate that in this situation, the effect reflects that children with better abilities in these areas were more sensitive to the mispronunciation. These children are good at recognizing the mismatch from partial information.
-  
-
 
 
 
