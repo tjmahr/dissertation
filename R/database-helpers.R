@@ -207,6 +207,23 @@ get_eyetracking_looks <- function() {
 }
 
 
+# Download children's responses from task where they had to
+# identify the novel images
+get_mp_closed_results <- function() {
+  l2t <- l2t_connect(find_database_config(), db_name = "l2t")
+  on.exit(DBI::dbDisconnect(l2t$con))
+
+  tbl_trials_to_keep <- tbl(l2t, "MPNormingClosed_Items") %>%
+    rename_all(stringr::str_replace, "MPNormingClosed_", "MPNorm_") %>%
+    rename(WordGroup = MPNorm_WordGroup) %>%
+    select(-ChildStudyID) %>%
+    collect()
+
+  tbl_trials_to_keep %>%
+    verbosely_write_csv("./data-raw/age5-mp-norming.csv")
+}
+
+
 # Download participant abilities from an item-response analysis of
 # age-3 minimal pairs data
 get_tp1_minpair_scores <- function() {

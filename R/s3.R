@@ -14,10 +14,22 @@ put_object_to_data <- function(file) {
   put_object(paths$cloud, file = paths$local)
 }
 
+save_object_to_data_raw <- function(file) {
+  paths <- get_data_paths(file)
+  save_object(paths$cloud_raw, file = paths$local_raw)
+}
+
+put_object_to_data_raw <- function(file) {
+  paths <- get_data_paths(file)
+  put_object(paths$cloud_raw, file = paths$local_raw)
+}
+
 get_data_paths <- function(file) {
   list(
     local = file.path("./data", file),
-    cloud = file.path("s3://bunnyhat/data", file)
+    cloud = file.path("s3://bunnyhat/data", file),
+    local_raw = file.path("./data-raw", file),
+    cloud_raw = file.path("s3://bunnyhat/data-raw", file)
   )
 }
 
@@ -193,4 +205,16 @@ download_aim2_mp_models <- function() {
   save_object_to_data("aim2-mp-unfam.rds.gz")
   save_object_to_data("aim2-mp-fam-peaks.csv.gz")
   save_object_to_data("aim2-mp-unfam-peaks.csv.gz")
+}
+
+upload_aim2_mp_norm_models <- function() {
+  put_object_to_data_raw("age5-mp-norming.csv")
+  put_object_to_data("mp-norming-m1.rds.gz")
+  put_object_to_data("mp-norming-m2.rds.gz")
+}
+
+download_aim2_mp_norm_models <- function() {
+  save_object_to_data_raw("age5-mp-norming.csv")
+  save_object_to_data("mp-norming-m1.rds.gz")
+  save_object_to_data("mp-norming-m2.rds.gz")
 }
