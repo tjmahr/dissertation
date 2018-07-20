@@ -395,7 +395,7 @@ however, do qualitatively match the patterns in the group averages.
 The two conditions did not reliably differ at age 3. The
 population-level average proportion of looks to the target for nonwords
 was `r props3$b_Nonword`, compared to `r props3$b_Real` for real
-words---a difference (nonword advantage) of `r d_NonwordvReal`. For the
+words---a difference (nonword advantage) of `r props3$d_NonwordvReal`. For the
 linear time feature, the nonword slope increases by
 `r time1_3$neg_per_d_NonwordvReal_ot1` in the real word condition. Both
 these 90% intervals include 0 as a plausible estimate for the condition
