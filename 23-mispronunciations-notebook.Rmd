@@ -1,37 +1,3 @@
-```{r include=FALSE, cache=FALSE}
-# ---- set-options ----
-library(methods)
-knitr::opts_chunk$set(
-  tidy = FALSE,
-  collapse = TRUE,
-  comment = "#>",
-  out.width = 80,
-  fig.align = "center",
-  dpi = 300
-)
-
-options(width = 80)
-
-
-# ---- knitr-helper-functions ----
-is_word_output <- function() {
-  knitr::opts_knit$get("rmarkdown.pandoc.to") == "docx"
-}
-is_html_output <- knitr:::is_html_output
-is_latex_output <- knitr:::is_latex_output
-
-# Make a function that prints a string of characters if the output is pdf
-make_latex_decorator <- function(output, otherwise) {
-  function() {
-    if (is_latex_output()) output else otherwise
-  }
-}
-
-# insert_pause <- make_latex_decorator(". . .", "\n")
-# insert_slide_break <- make_latex_decorator("----", "\n")
-# insert_inc_bullet <- make_latex_decorator("> *", "*")
-insert_html_math <- make_latex_decorator("", "$$")
-```
 Sensitivity to mispronunciations
 =======================================================================
 
@@ -1562,35 +1528,43 @@ two of the novel objects were paired. For example, the flasks (*sooze*)
 was paired with the trolley (*geeve*) from the nonword condition.
 Children saw the two images of the two (say, trolley1.jpeg and
 flasks1.jpeg), heard one of novel labels, and had to point to the named
-object. In a later trial during testing, the other word was tested but
-using different images with each object (trolley2.jpeg and
+object. In a later trial during testing, the other label was tested but
+using different images for the objects (trolley2.jpeg and
 flasks2.jpeg). In a block of testing, there were 12 trials, 6 for
 nonwords and 6 for mispronunciations.
 
+The chunk label `table-single` provides an implicit label 
+for Table \@ref(tab:mp-norming-table).
+
+
 Table TTT shows the results for each items.
 
-```{r}
+```{r mp-norming-table}
 se_prop <- littlelisteners::se_prop
+
 mp_norming <- readr::read_csv("./data-raw/age5-mp-norming.csv") %>% 
-  mutate(Study = convert_study_to_age(Study))
+  mutate(Study = convert_study_to_age(Study))  %>% 
+  rename(
+    ItemType = MPNorm_Type, 
+    Item = MPNorm_Item,
+    Correct = MPNorm_Correct)
 
 mpn_items <- mp_norming %>% 
-  group_by(WordGroup, MPNorm_Type, MPNorm_Item) %>% 
+  group_by(WordGroup, ItemType, Item) %>% 
   summarise(
-    NCorrect = sum(MPNorm_Correct),
+    NCorrect = sum(Correct),
     NTrials = n(),
-    Percent = mean(MPNorm_Correct) %>% round(2) %>% scales::percent(),
-    SE = se_prop(mean(MPNorm_Correct), NTrials) %>% round(3))
-
+    Percent = mean(Correct) %>% round(2) %>% scales::percent(),
+    SE = se_prop(mean(Correct), NTrials) %>% round(3))
 
 mpn_items_all <- mp_norming %>% 
-  mutate(WordGroup = "(all)", MPNorm_Item = "&nbsp;") %>% 
-  group_by(WordGroup, MPNorm_Type, MPNorm_Item) %>% 
+  mutate(WordGroup = "(all)", Item = "&nbsp;") %>% 
+  group_by(WordGroup, ItemType, Item) %>% 
   summarise(
-    NCorrect = sum(MPNorm_Correct),
+    NCorrect = sum(Correct),
     NTrials = n(),
-    Percent = mean(MPNorm_Correct) %>% round(2) %>% scales::percent(),
-    SE = se_prop(mean(MPNorm_Correct), NTrials) %>% round(3))
+    Percent = mean(Correct) %>% round(2) %>% scales::percent(),
+    SE = se_prop(mean(Correct), NTrials) %>% round(3))
 
 both <- bind_rows(mpn_items, mpn_items_all)
 
@@ -1602,23 +1576,46 @@ both$Correct <- both %>%
     "{stringr::str_pad(NCorrect, width = 3, side = 'left', pad = ' ')} / {NTrials}") %>% 
   as.character()
   
-both %>%
+both <- both %>%
   ungroup() %>% 
   mutate(
     WordGroup = tjmisc::replace_if_same_as_last(WordGroup, "&nbsp;")) %>% 
   select(
     `Word Group` = WordGroup,
-    `Type` = MPNorm_Type,
-    `Item` = MPNorm_Item,
+    `Type` = ItemType,
+    `Item` = Item,
     `Trials Correct` = Correct,
-    `Percent Correct` = Percent) %>% 
-  knitr::kable(align = "lllrr")
+    `Percent Correct` = Percent) 
+
+both %>% 
+  knitr::kable(
+    align = "lllrr", 
+    booktabs = TRUE, 
+    caption = "Results for the item recognition tests.")
+```
+
+```{r}
+# library(huxtable)
+# options(huxtable.knit_print_df = FALSE)
+# 
+# ht <- both %>% 
+#   as_hux(add_colnames = TRUE) %>% 
+#   set_escape_contents(FALSE) %>% 
+#   set_bold(row = final(2), col = everywhere, TRUE) %>% 
+#   set_bold(row = 1, col = everywhere, TRUE) %>% 
+#   set_align(
+#     row = everywhere, 
+#     col = c("Trials Correct", "Percent Correct"), 
+#     "right") %>% 
+#   set_caption("Results for the item recognition tests.")
+# 
+# ht
 ```
 
 
 I performed an item-response analysis using a
 mixed-effects logistic regression model. The model included varying
-intercepts ("random intercept") for child, child x item type, item, and
+intercepts for child, child x item type, item, and
 item x word-group. The first two effects capture information about a
 child's general ability and their ability on each type of item. The
 second two effects capture information about an item's difficulty and
@@ -1648,7 +1645,7 @@ by_cond_peaks <- unfam_peaks %>%
   select(-real_mean, -real_sd) %>% 
   filter(Study == "Age 5") %>% 
   tidyr::gather(stat, value, mispronunciation_mean:nonword_sd) %>% 
-  tidyr::separate(stat, c("MPNorm_Type", "stat")) %>% 
+  tidyr::separate(stat, c("ItemType", "stat")) %>% 
   tidyr::spread(stat, value) %>% 
   rename(peak_mean = mean, peak_sd = sd)
 
@@ -1661,41 +1658,27 @@ by_cond_peaks <- unfam_peaks %>%
 #   rename(mispronunciation = mp, nonword = nonsense) %>% 
 #   select(-real) %>% 
 #   filter(Study == "Age 5") %>% 
-#   tidyr::gather(MPNorm_Type, Peak, mispronunciation, nonword)
+#   tidyr::gather(ItemType, Peak, mispronunciation, nonword)
 
 mp_norming_peaks <- by_cond_peaks %>% 
-  inner_join(mp_norming) %>% 
+  inner_join(mp_norming)
+
+d_centered_peaks <- mp_norming_peaks %>% 
+  distinct(Study, ResearchID, ItemType, peak_mean) %>% 
+  group_by(ItemType) %>% 
   mutate(
-    c_peak_mean = scale(peak_mean, scale = FALSE))
-# priors <- c(
-#   set_prior(class = "Intercept", "normal(0, 1)"),
-#   set_prior(class = "b", "normal(0, 1)"),
-#   set_prior(class = "sd", "student_t(7, 0, 2)"))
-# 
-# m_norm2 <- brm(
-#   MPNorm_Correct ~ 
-#     MPNorm_Type * peak_mean + 
-#     (1 | ResearchID/MPNorm_Type) + 
-#     (1 | WordGroup) + 
-#     (1 | MPNorm_Item),
-#   prior = priors,
-#   family = bernoulli,
-#   chains = 4,
-#   cores = 4,
-#   control = list(adapt_delta = .99),
-#   data = mp_norming_peaks)
-# 
-# m_norm1 <- update(
-#   m_norm2, . ~ MPNorm_Type + 
-#     (1 | ResearchID/MPNorm_Type) + 
-#     (1 | WordGroup) + 
-#     (1 | MPNorm_Item))
+    mean = mean(peak_mean, na.rm = TRUE), 
+    sd = sd(peak_mean, na.rm = TRUE),
+    # unit change represents change of .1 from mean
+    c_peak_10 = (peak_mean - mean) * 10) %>% 
+  ungroup() 
 
-# readr::write_rds(m_norm1, "./data/mp-norming-m1.rds.gz")
-# readr::write_rds(m_norm2, "./data/mp-norming-m2.rds.gz")
+mp_norming_peaks <- mp_norming_peaks %>% 
+  left_join(d_centered_peaks)
 
-m_norm1 <- readr::read_rds("./data/mp-norming-m1.rds.gz")
-m_norm2 <- readr::read_rds("./data/mp-norming-m2.rds.gz")
+readr::write_csv(mp_norming_peaks, "./data/mp-norming-data.csv.gz")
+
+m_norm <- readr::read_rds("./data/mp-norming-m2.rds.gz")
 
 mean_se_prop <- function(x) {
   x <- stats::na.omit(x)
@@ -1706,41 +1689,46 @@ mean_se_prop <- function(x) {
 }
 
 new_data <- mp_norming_peaks %>% 
-  split(.$MPNorm_Type) %>% 
+  split(.$ItemType) %>% 
   lapply(
     modelr::data_grid, 
-    peak_mean = c(
-      modelr::seq_range(peak_mean, 200), 
-      mean(peak_mean, na.rm = TRUE)),
+    c_peak_10 = modelr::seq_range(c_peak_10, 200),
+    mean = mean,
+    sd = sd,
     ResearchID = "Average",
-    MPNorm_Item = "ignore",
+    Item = "ignore",
     WordGroup = "ignore",
-    MPNorm_Type = unique(MPNorm_Type)) %>% 
-  bind_rows()
+    ItemType = unique(ItemType)) %>% 
+  bind_rows() %>% 
+  mutate(
+    peak_mean = (c_peak_10 / 10) + mean)
 
 aaa <- augment_linpred(
-  m_norm2, 
+  m_norm, 
   data = new_data, 
   transform = TRUE,
   all_new_levels = TRUE,
   re_formula = NA)
 
 means <- mp_norming_peaks %>% 
-  group_by(MPNorm_Type) %>% 
+  group_by(ItemType) %>% 
   summarise(
-    peak = mean(peak_mean, na.rm = TRUE),
-    sd = sd(peak_mean, na.rm = TRUE),
+    m_value = unique(mean),
+    sd_value = unique(sd),
+    peak = mean(c_peak_10, na.rm = TRUE),
+    sd = sd(c_peak_10, na.rm = TRUE),
     peak_upsd = peak + sd) %>% 
-  split(.$MPNorm_Type)
+  split(.$ItemType)
 
-norm_fixef <- posterior_samples(m_norm2, pars = "b_") %>% 
+norm_fixef <- m_norm %>% 
+  posterior_samples(pars = "b_") %>% 
   as_tibble() %>% 
   transmute(
     b_mispronunciation = b_Intercept,
-    b_nonword = b_Intercept + b_MPNorm_Typenonword,
+    b_nonword = b_Intercept + b_ItemTypenonword,
         
-    b_peak_mispronunciation = b_peak_mean,
-    b_peak_nonword = b_peak_mean + `b_MPNorm_Typenonword:peak_mean`,
+    b_peak_mispronunciation = b_c_peak_10,
+    b_peak_nonword = b_c_peak_10 + `b_ItemTypenonword:c_peak_10`,
     
     b_mean_mispronunciation = b_mispronunciation + 
       means$mispronunciation$peak * b_peak_mispronunciation,
@@ -1758,12 +1746,9 @@ norm_fixef <- posterior_samples(m_norm2, pars = "b_") %>%
     b_mean_mispronunciation_prop = plogis(b_mean_mispronunciation),
     b_mean_nonword_prop = plogis(b_mean_nonword),
   
-    d_mean_upsd_mispronunciation_prop =  b_mean_upsd_mispronunciation_prop - b_mean_mispronunciation_prop,
-    d_mean_upsd_nonword_prop = b_mean_upsd_nonword_prop - b_mean_nonword_prop,
-    
-    or_nonword = exp(b_mean_nonword - b_mean_mispronunciation),
-    or_peak_mispronunciation_10 = exp(b_peak_mispronunciation * .1),
-    or_peak_mispronunciation_10 = exp(b_peak_mispronunciation * .1)) 
+    d_mean_upsd_mispronunciation_prop =  
+      b_mean_upsd_mispronunciation_prop - b_mean_mispronunciation_prop,
+    d_mean_upsd_nonword_prop = b_mean_upsd_nonword_prop - b_mean_nonword_prop) 
 
 props <- norm_fixef %>% 
   mcmc_intervals_data(
@@ -1780,22 +1765,22 @@ props_sd <- norm_fixef %>%
   fmt_inline_median_interval() %>% 
   lapply(fmt_remove_leading_zeros_in_text)
 
-# sjPlot::tab_model(m_norm2)
+# sjPlot::tab_model(m_norm)
 
-mean_mp_peak <- means$mispronunciation$peak %>% 
+mean_mp_peak <- means$mispronunciation$m_value %>% 
   printy::fmt_fix_digits(2) %>% 
   printy::fmt_leading_zero()
 
-mean_nw_peak <- means$nonword$peak %>% 
+mean_nw_peak <- means$nonword$m_value %>% 
   printy::fmt_fix_digits(2) %>% 
   printy::fmt_leading_zero()
 
-sd_mp_peak <- means$mispronunciation$sd %>% 
+sd_mp_peak <- means$mispronunciation$sd_value %>% 
   printy::fmt_fix_digits(2) %>% 
   printy::fmt_leading_zero()
 
-sd_nw_peak <- means$nonword$sd %>% 
-  printy::fmt_fix_digits(3) %>% 
+sd_nw_peak <- means$nonword$sd_value %>% 
+  printy::fmt_fix_digits(2) %>% 
   printy::fmt_leading_zero()
 ```
 
@@ -1823,33 +1808,33 @@ Figure \@ref(fig:mp-norm-trials-by-peak) visualizes this effect.
 (ref:mp-norm-trials-by-peak) Effect of growth curve peaks on children's accuracy on retention trials. For the mispronunciations, I used the peak looks to the familiar image on trials where the child started on the unfamilar image, so it represents, say, how much a child looked at *shoes* given "suze". More permissive listeners looked did more poorly on the retention trials. For the nonwords, I used the peak look to the unfamilar image on trials where the child started on the familiar image.
 Points were jittered by 1% to avoid overplotting. There were six trials per condition which is why the points fall into 6 bands.
 
-```{r mp-norm-trials-by-peak, fig.cap = "(ref:mp-norm-trials-by-peak)", fig.width=5, fig.height=3, out.width="50%"}
+```{r mp-norm-trials-by-peak, fig.cap = "(ref:mp-norm-trials-by-peak)", fig.width=5, fig.height=3.5, out.width="50%"}
 aaa %>% 
-  group_by(MPNorm_Type, .draw) %>% 
+  group_by(ItemType, .draw) %>% 
   ggplot() + 
-    aes(x = peak_mean, y = .posterior_value, color = MPNorm_Type) + 
+    aes(x = peak_mean, y = .posterior_value, color = ItemType) + 
   geom_hline(yintercept = .5, size = 2, color = "white") +
       stat_summary(
-      aes(y = MPNorm_Correct),
+      aes(y = Correct),
       data = mp_norming_peaks,
       fun.data = mean_se_prop,
       geom = "point",
       position = position_jitter(.01, .01), shape = 1)  + 
     stat_summary(
-      aes(fill = MPNorm_Type),
+      aes(fill = ItemType),
       fun.data = median_hilow,
       fun.args = list(conf.int = .9),
       geom = "ribbon", 
       alpha = .25, color = NA)  + 
     stat_summary(
-      aes(fill = MPNorm_Type),
+      aes(fill = ItemType),
       fun.data = median_hilow,
       fun.args = list(conf.int = .5),
       geom = "ribbon", 
       alpha = .3, 
       color = NA) + 
     stat_summary(
-      aes(fill = MPNorm_Type),
+      aes(fill = ItemType),
       fun.data = median_hilow,
       fun.args = list(conf.int = .05),
       geom = "ribbon", 
@@ -1860,7 +1845,7 @@ aaa %>%
       data = data_frame(
         peak_mean = c(.2, .9), 
         label = c("mispronunciations", "nonwords"),
-        MPNorm_Type = c("mispronunciation", "nonword"),
+        ItemType = c("mispronunciation", "nonword"),
         .posterior_value = c(.55, .93)), 
       size = 4, 
       family = "Lato Semibold") +

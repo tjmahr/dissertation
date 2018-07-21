@@ -1,6 +1,12 @@
 Computational details for Specific Aim 2 {#aim2-gca-models}
 ========================================================================
 
+```{r, include = FALSE}
+knitr::read_chunk("./helpers.R")
+if (interactive()) source("./helpers.R")
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
 Growth curve analyses
 ------------------------------------------------------------------------
 
@@ -52,10 +58,16 @@ tails which allow extreme or outlying values.
 
 ```{r, eval = FALSE, eval = FALSE}
 priors <- c(
+  # Population-average intercept
   set_prior(class = "Intercept", "normal(0, 1)"),
+  # Population-average slopes
   set_prior(class = "b", "normal(0, 1)"),
+  # ... expect somewhat larger range of effects for linear time
   set_prior(class = "b", coef = "ot1", "normal(0, 2)"),
+  # Correlations for random effect terms
   set_prior(class = "cor", "lkj(2)"),
+  # Standard deviation of the distribution from
+  # which random-intercepts are drawn
   set_prior(class = "sd", "student_t(7, 0, 3)"))
 ```
 
@@ -71,6 +83,7 @@ m_age3 <- brm(
   data = d_age3,
   prior = priors,
   chains = 4,
+  iter = 2000,
   cores = 4,
   control = list(adapt_delta = .99))
 
@@ -85,12 +98,256 @@ converging, and even when a passable model was obtained, a bug in the
 modeling software prevented me from obtaining posterior predictions. I
 reported the bug in an issue for the package's source code repository. 
 
+### Models for mispronunications
+
+Like the models above, these ones are Bayesian mixed-effects logistic
+regression growth curve models. I fit two separate models, one for
+unfamilar-initial trials and familiar-initial trials. Each model
+included data from all three years of the study. 
+
+```{r, eval = FALSE}
+
+library(brms)
+
+# Fit a hierarchical logistic regression model
+formula <- bf(
+  Target | trials(Trials) ~ 
+    (1 + ot1 + ot2 + ot3) * Study + 
+    (1 + ot1 + ot2 + ot3 | ResearchID/Study), 
+  family = binomial)
+
+priors <- c(
+  set_prior(class = "Intercept", "normal(0, 1)"),
+  set_prior(class = "b", "normal(0, 1)"),
+  set_prior(class = "b", coef = "ot1", "normal(0, 2)"),
+  set_prior(class = "cor", "lkj(2)"),
+  set_prior(class = "sd", "student_t(7, 0, 2)"))
+
+mp_unfam <- brm(
+  formula = formula,
+  data = d_u,
+  prior = priors,
+  chains = 4,
+  cores = 4,
+  # Run extra iterations to get a higher effective sample size
+  iter = 3000,
+  control = list(
+    adapt_delta = .995, 
+    max_treedepth = 15))
+
+# Save the output
+readr::write_rds(mp_unfam, "./data/aim2-mp-unfam.rds.gz")
+
+mp_fam <- brm(
+  formula = formula,
+  data = d_f,
+  prior = priors,
+  chains = 4,
+  cores = 4,
+  control = list(
+    adapt_delta = .99, 
+    max_treedepth = 15))
+
+# Save the output
+readr::write_rds(mp_fam, "./data/aim2-mp-fam.rds.gz")
+```
+
+The priors for this
+model are the same, except for a tighter prior on scale/standard
+deviations for the random effect distributions. The model had difficulty
+obtaining an effective number of samples for these parameters.
+Initially, I tried to tell the model to do more work on sampling step
+(`adapt_delta = .995` and `max_treedepth = 15`) and run the chains
+for 50% longer (`iter = 3000`) to no success.
+
+The figure below illustrates the change and how the posterior value were well
+enclosed by both priors.
+
+```{r, include = FALSE}
+library(tidyverse)
+library(brms)
+
+mp_unfam <- readr::read_rds("./data/aim2-mp-unfam.rds.gz")
+
+densities <- mp_unfam %>% 
+  posterior_samples(pars = "sd") %>% 
+  as_tibble() %>% 
+  bayesplot:::mcmc_areas_data(prob = 1, n_dens = 5000) %>% 
+  filter(interval == "inner")
+
+
+# densities2 <- mp_unfam %>% 
+#   posterior_samples(pars = "sd") %>% 
+#   as_tibble() %>% 
+#   tidyr::gather("var", "value")
+# 
+# ggplot(densities2) + 
+#   aes(x = value, color = var) + 
+#   stat_density(position = "identity") 
+
+p2 <- ggplot(densities) + 
+  aes(x = x, y = density) + 
+  annotate(
+    "rect", xmin =  -Inf, xmax = Inf,
+    ymin = -Inf, ymax = Inf, 
+    alpha = .25, fill = "lightskyblue1") +
+  geom_line(aes(group = parameter)) + 
+  guides(color = FALSE) + 
+  labs(
+    x = "SD value", y = "Posterior density") 
+  
+  
+
+p1 <- ggplot(data_frame(x = 0:15)) + 
+  aes(x = x) + 
+  annotate(
+    "rect", 
+    xmin =  -Inf, 
+    xmax = max(densities$x),
+    ymin = -Inf, ymax = Inf, 
+    alpha = .25, fill = "lightskyblue1") +
+  stat_function(
+    # aes(color = "student_t(7, 0, 2)"), 
+    fun = dstudent_t, args = list(df = 7, mu = 0, sigma = 2),
+    size = 1, 
+    color = "lightpink4") + 
+  stat_function(
+    fun = dstudent_t, args = list(df = 7, mu = 0, sigma = 3),
+    size = 1,
+     color = "slateblue4") + 
+  geom_text(
+    aes(label = label, y = y),
+    data = data_frame(
+      color = "student_t(7, 0, 3)",
+      label =  "student_t(7, 0, 3) \nhas a fatter tail",
+      x = 6, 
+      y = .04),
+    family = "Lato Semibold",
+    hjust = 0,
+    color = "slateblue4") + 
+  geom_text(
+    aes(label = label, y = y),
+    data = data_frame(
+      color = "student_t(7, 0, 2)",
+      label =  "student_t(7, 0, 2) \nfavors values up to 7.5",
+      x = 2.0, 
+      y = .16),
+    hjust = 0,
+    family = "Lato Semibold",
+    color = "lightpink4") + 
+  geom_text(
+    aes(label = label, y = y),
+    data = data_frame(
+      color = "student_t(7, 0, 3)",
+      label =  "range of\nposterior\ndensities",
+      x = 0, 
+      y = .02),
+    family = "Lato Medium",
+    hjust = 0,
+    color = "lightskyblue4",
+    size = 3) + 
+  guides(color = FALSE) + 
+  labs(
+    x = "SD value", y = "Prior density")
+  
+library(patchwork)
+
+p1 + p2
+```
+
+
+
 ### Model summaries
 
-### Real words versus nonwords at age 3
+Real words versus nonwords at age 3
 
 ```{r}
 m1 <- readr::read_rds("./data/aim2-real-vs-nw-tp1.rds.gz")
-summary(m1, priors = TRUE)
+summary(m1, priors = TRUE, prob = .9)
 ```
+
+Real words versus nonwords at age 4
+
+```{r}
+m2 <- readr::read_rds("./data/aim2-real-vs-nw-tp2.rds.gz")
+summary(m2, priors = TRUE, prob = .9)
+```
+
+Real words versus nonwords at age 5
+
+```{r}
+m3 <- readr::read_rds("./data/aim2-real-vs-nw-tp3.rds.gz")
+summary(m3, priors = TRUE, prob = .9)
+```
+
+
+
+## Item response analysis for novel word retention
+
+This is an item-response analysis carried out using a Bayesian
+mixed-effects logistic regression model. These models were fit in R
+[vers. 3.5.0; @R-base] with the brms package [vers. 2.3.1; @brms]. I
+used weakly informative priors.
+
+
+```{r, eval = FALSE}
+d <- readr::read_csv("./data/mp-norming-data.csv.gz")
+
+priors <- c(
+  # Population-average intercept
+  set_prior(class = "Intercept", "normal(0, 1)"),
+  # Population-average slopes
+  set_prior(class = "b", "normal(0, 1)"),
+  # Standard deviation of the distribution from
+  # which random-intercepts are drawn
+  set_prior(class = "sd", "student_t(7, 0, 2)"))
+
+m_norm <- brm(
+  Correct ~ ItemType * c_peak_10 +
+    (1 | ResearchID/ItemType) +
+    (1 | WordGroup) +
+    (1 | Item),
+  prior = priors,
+  family = bernoulli,
+  chains = 4,
+  iter = 2000,
+  cores = 4,
+  control = list(adapt_delta = .99),
+  data = d)
+
+readr::write_rds(m_norm, "./data/mp-norming-m2.rds.gz") 
+```
+
+The linear model `Correct ~ ItemType * c_peak_10` says to
+estimate the log-odds of answering correctly using on mispronunciations
+(intercept) using the growth curve peaks `c_peak_10`, adjust it for
+nonwords `ItemType` and for the nonword x peak interaction. The peaks were
+mean-centered within each type and multiplied by 10 so that the slope represents
+the effect of change of .1 from the mean peak value. The model includes four
+random intercepts: general child ability and
+child-by-condition (simultaneously requested using 
+`1 | ResearchID/ItemType`, i.e., `ResearchID` levels have `ItemType` levels nested under them), plus specific item-level difficulties 
+(`1 | Item`) and item-pair level difficulties (`1 | WordGroup`).
+
+```{r, eval = FALSE, include = FALSE}
+# Code to fit a model without the peaks
+m_norm1 <- update(
+  m_norm, . ~ ItemType +
+    (1 | ResearchID/ItemType) +
+    (1 | WordGroup) +
+    (1 | Item))
+
+readr::write_rds(m_norm1, "./data/mp-norming-m1.rds.gz")
+readr::write_rds(m_norm, "./data/mp-norming-m2.rds.gz")
+```
+
+
+```{r, include = FALSE}
+m_norm <- readr::read_rds("./data/mp-norming-m2.rds.gz")
+```
+
+```{r}
+summary(m_norm, priors = TRUE, prob = .9)
+```
+
 

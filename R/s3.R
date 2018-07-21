@@ -209,12 +209,14 @@ download_aim2_mp_models <- function() {
 
 upload_aim2_mp_norm_models <- function() {
   put_object_to_data_raw("age5-mp-norming.csv")
+  put_object_to_data("mp-norming-data.csv.gz")
   put_object_to_data("mp-norming-m1.rds.gz")
   put_object_to_data("mp-norming-m2.rds.gz")
 }
 
 download_aim2_mp_norm_models <- function() {
   save_object_to_data_raw("age5-mp-norming.csv")
+  save_object_to_data("mp-norming-data.csv.gz")
   save_object_to_data("mp-norming-m1.rds.gz")
   save_object_to_data("mp-norming-m2.rds.gz")
 }
