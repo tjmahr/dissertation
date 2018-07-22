@@ -7,16 +7,31 @@ all the words they encounter. Thus, another avenue for studying word
 recognition is to examine how listeners respond to unfamiliar or novel
 stimuli.
 
-One productive line of research has focused on how children respond to
-mispronunciations of familar words [e.g., @Swingley2000;
-@Swingley2002]. The motivation for this research was to determine how
+How phonetically detailed are children's words?
+------------------------------------------------------------------------
+
+The study I report here is a mispronunciation study. It is part of a long, productive line of research has focused on how children respond to
+mispronunciations of familar words. The motivation for this research was to determine how
 detailed children's phonological representations were. One hypothesis
 held that infants and toddlers did not need to store words in much
-phonetic or phonological detail because they know so few words. Words
-are lazily encoded, details filled in as the need arises. In fact, this
-could be advantageous: "Perhaps children benefit from the sparseness of
+phonetic or phonological detail because they know so few words. In other words, their lexicon had *underspecified* or *holistic* representations.
+
+Some of the earliest arguments for underspecified or holistic representations come from arguments based on principles of how to design or engineer a lexicon. Namely, the sound-word learning system should be lazy: It should encode just enough phonetic detail needed to recognize a word and fill in more details as the need arises. This is what is meant by underspecification. Why encode detail on “doggie” when there are no competing items like “toggie” or “dokkie” or “tokkie”? Novice word learners have very few words, so they should need not very specified representations to recognize their first words. 
+In fact, this could be advantageous: "Perhaps children benefit from the sparseness of
 their lexicon by encoding only the detail necessary to distinguish
-words" [@Swingley2000, p. 148]. Mispronunciation studies effectively
+words" [@Swingley2000, p. 148]. 
+
+
+I use the word *lazy* because of 
+
+Charles-Luce and Luce (1990, 1995) are commonly cited advocates of this view. They examined the lexicons of 5 year olds, 7 year olds and adults, determined the number of phonological neighbors (words differing in just one phoneme), and found that 5-year-olds have much sparser phonological neighborhoods than adults. They argued that children do not need as detailed phonological representations of words, because they have less densely packed phonological neighborhoods.
+
+But those argument are based on how a system *ought* to learn words. Early behavior evidence of underspecification comes from the observation that children have trouble learning minimal pairs—words differing a single phoneme segment. Barton (1976) found that 2 year olds had trouble learning minimal pairs of real words. When these children could spontaneously name words in a minimal pair (“bear” and “pear”) they could reliably choose one of those words in a forced-choice task (approx. 90% successful). But when the child had to be taught one of the words (as when a child had to learn “pear”), they were much less successful (50-60% successful). The conclusion was that the recently learned words are underspecified.
+
+
+
+
+Mispronunciation studies effectively
 nullified this hypothesis. For example, @Swingley2000 presented 18--23
 month-olds two familiar images onscreen, like baby and dog, and heard a
 correct production (*where's the baby*) or a mispronunciation (*where's
@@ -28,6 +43,10 @@ detail that a small phonetic change made them less certain during word
 recognition. (@Swingley2002 found the same pattern of results for 14--15
 month olds with 60% looks to correct productions and around 53.5% looks
 for mispronunications.)
+
+
+
+
 
 One limitation with this design is that the child has no way to reject *vaby*: They have to choose either *baby* or *dog*. @WhiteMorgan2008 explored that possibility.
 <!-- @WhiteMorgan2008 changed design to include an iamge of a familiar object and a unfamiliar object on each trial. In this way, a child could reject *vaby* and treat it as a novel word that labels a novel object.  -->
@@ -74,3 +93,15 @@ tackle these questions by describing how mispronunciations are processed
 as children grow older and by examining whether familiar word
 recognition and fast referent selection dissociate and which one is a
 better predictor of vocabulary growth.
+
+
+
+
+
+
+
+
+
+
+
+In programming, there is a distinction between eager and lazy evaluation. In the former, a function call like f(x, g(y)) computes the value of subfunction call g(y) immediately, but in the latter, g(y) is only computed when it is needed. If the value of g(y) is never used inside of f(), perhaps because of some if-branch, then g(y) is never evaluated, saving computation resources.

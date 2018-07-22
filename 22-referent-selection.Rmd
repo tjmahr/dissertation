@@ -418,7 +418,7 @@ This difference shows up in the growth curve model through intercept
 effects, although it is plausible that children's nonword growth curves
 were steeper than the real word curves at age 4.
 
-Summary. There is a decisive advantage for the nonword condition after age 3. Performance begins to saturate at age 4 with the group averages for peak looking probabilities over 90%. The real word condition is more anomalous with performance only showing average increases from age 4 to age 5.
+
 
 
 
@@ -543,21 +543,54 @@ meds_by_year <- do_it_1 %>%
   group_by(Study) %>% 
   summarise(nonsense = median(nonsense), real = median(real))
 
+tp1_non_med <- meds_by_year %>% 
+  filter(Study == "TimePoint1") %>% 
+  pull(nonsense) %>% 
+  printy::fmt_fix_digits(2) %>% 
+  printy::fmt_leading_zero()
+
+tp1_r_med <- meds_by_year %>% 
+  filter(Study == "TimePoint1") %>% 
+  pull(real) %>% 
+  printy::fmt_fix_digits(2) %>% 
+  printy::fmt_leading_zero()
+
 tp2_non_med <- meds_by_year %>% 
   filter(Study == "TimePoint2") %>% 
   pull(nonsense) %>% 
   printy::fmt_fix_digits(2) %>% 
   printy::fmt_leading_zero()
+
+tp3_non_med <- meds_by_year %>% 
+  filter(Study == "TimePoint3") %>% 
+  pull(nonsense) %>% 
+  printy::fmt_fix_digits(2) %>% 
+  printy::fmt_leading_zero()
+
+tp2_r_med <- meds_by_year %>% 
+  filter(Study == "TimePoint2") %>% 
+  pull(real) %>% 
+  printy::fmt_fix_digits(2) %>% 
+  printy::fmt_leading_zero()
+
+tp3_r_med <- meds_by_year %>% 
+  filter(Study == "TimePoint3") %>% 
+  pull(real) %>% 
+  printy::fmt_fix_digits(2) %>% 
+  printy::fmt_leading_zero()
 ```
 
-Descriptive statistics reveal the developmental trends for this
-task. At age 3, the median peak values were similar for the two
-conditions, both around .83. The peaks increased for the nonword
-condition in the following year with a median value of `r tp2_non_med`.
-It is worth emphasizing what this statistic tells us: At age 4, half of
-the children had a peak looking probability of `r tp2_non_med` *or
-greater*. In other words, half the children performed near the ceiling
-on this task by age 4. 
+Descriptive statistics reveal the developmental trends for this task. At
+age 3, the median peak values were similar for the two conditions:
+`r tp1_non_med` for nonwords and `r tp1_r_med` for real words. The peaks
+increased for the nonword condition in the following year with a median
+value of `r tp2_non_med`. It is worth emphasizing what this statistic
+tells us: At age 4, half of the children had a peak looking probability
+of `r tp2_non_med` *or greater*. In other words, half the children
+performed near the ceiling on this task by age 4. At age 5, the median
+nonword peak was `r tp3_non_med`, essentially unchanged from age 4. For
+the real words, the median peak increased from `r tp2_r_med` at age 4 to
+`r tp3_r_med` at age 5.
 
 To quantify the degree of ceiling performance, I calculated the number
 of children per condition with a growth curve peak greater than or equal
@@ -657,6 +690,8 @@ only a significant improvement from age 4 to age 5, *B*<sub>5-4</sub> =
 `r t2_t3_real$b`, *t* = `r t2_t3_real$t`.
 
 
+
+
 <!-- [pvalues]: The lme4 package does not provide *p*-values because it is -->
 <!-- unclear what number to use for the degrees of freedom with hierarchical -->
 <!-- or repeated measures data. One approach is the so-called "normal -->
@@ -708,7 +743,112 @@ peaks %>%
 ```
 
 
-**Summary**. Children performed similiarly for real words and nonwords
+Finally, I asked whether expressive vocabulary size correlated with peak looking performance on the two conditions. At all three years, children with larger vocabularies had higher peak looking values. At age 3 and age 4, vocabulary positively correlated with real-word looking performance, but only the age-4 correlation was significant.
+
+```{r}
+scores <- readr::read_csv("./data-raw/test_scores.csv")
+tp1 <- scores %>% filter(Study == "TimePoint1")
+tp2 <- scores %>% filter(Study == "TimePoint2")
+tp3 <- scores %>% filter(Study == "TimePoint3")
+
+peaks_and_vocabs <- peaks %>% 
+  mutate(Study = convert_study_to_age(Study)) %>% 
+  group_by(Study, ResearchID) %>% 
+  summarise_at(vars(nonsense:diff), mean) %>% 
+  ungroup() 
+
+peaks_and_vocabs_w <- peaks_and_vocabs %>% 
+  left_join(
+    scores %>% mutate(Study = convert_study_to_age(Study))) 
+
+peaks_and_vocabs_l <- peaks_and_vocabs %>% 
+  tidyr::gather("Condition", "Peak", -ResearchID, -Study) %>% 
+  left_join(
+    scores %>% mutate(Study = convert_study_to_age(Study))) 
+
+  
+peaks_and_vocabs_l %>% 
+  filter(Condition != "diff") %>% 
+  group_by(Study, Condition) %>% 
+  tidy_correlation(EVT_Standard, Peak) %>% 
+  ungroup() %>% 
+  mutate(Condition = convert_condition_to_name(Condition)) %>% 
+  select(Study, Condition, n, r = estimate, p = p.value) %>% 
+  mutate(
+    r = r %>% 
+      printy::fmt_fix_digits(2) %>% 
+      printy::fmt_leading_zero() %>% 
+      printy::fmt_minus_sign(),
+    p = printy::fmt_p_value(p)) %>% 
+  knitr::kable(
+    align = c("llrrr"),
+    caption = "Correlation between EVT-2 standard scores and curve peaks")
+
+library(lme4)
+# peaks_and_vocabs_l %>% 
+#   filter(Condition != "diff") %>% 
+#   filter(Study == "Age 3") %>% 
+#   lmer(Peak ~ scale(EVT_Standard) * Condition + (1 | ResearchID), .) %>% 
+#   summary()
+# 
+# peaks_and_vocabs_l %>% 
+#   filter(Condition != "diff") %>% 
+#   filter(Study == "Age 4") %>% 
+#   lmer(Peak ~ scale(EVT_Standard) * Condition + (1 | ResearchID), .) %>% 
+#   summary()
+# 
+# peaks_and_vocabs_l %>% 
+#   filter(Condition != "diff") %>% 
+#   filter(Study == "Age 5") %>% 
+#   lmer(Peak ~ scale(EVT_Standard) * Condition + (1 | ResearchID), .) %>% 
+#   summary()
+
+# peaks_and_vocabs_w %>% 
+#   filter(Study == "Age 3") %>% 
+#   lm(nonsense ~ scale(EVT_Standard) * scale(real), .) %>% 
+#   summary()
+# 
+# peaks_and_vocabs_w %>% 
+#   filter(Study == "Age 4") %>% 
+#   lm(nonsense ~ scale(EVT_Standard) * scale(real), .) %>% 
+#   summary()
+# 
+# peaks_and_vocabs_w %>% 
+#   filter(Study == "Age 5") %>% 
+#   lm(nonsense ~ scale(EVT_Standard) * scale(real), .) %>% 
+#   summary()
+
+peak_corrs <- peaks_and_vocabs_w %>% 
+  group_by(Study) %>% 
+  tidy_correlation(nonsense, real) %>% 
+  ungroup() 
+
+peaks_and_vocabs_l %>% 
+  filter(Condition != "diff") %>% 
+  ggplot() + 
+    aes(x = EVT_Standard, y = Peak, color = Condition) + 
+    geom_point(shape = 1) + 
+    facet_wrap("Study") + 
+    stat_smooth(method = "lm")
+# 
+# peaks_and_vocabs %>% 
+#   ggplot() + 
+#     aes(x = EVT_GSV, y = nonsense) + 
+#     geom_point() + 
+#     facet_wrap("Study") + 
+#     stat_smooth(method = "lm")
+# 
+# peaks_and_vocabs %>% 
+#   ggplot() + 
+#     aes(x = EVT_GSV, y = nonsense) + 
+#     geom_point() + 
+#     facet_wrap("Study") + 
+#     stat_smooth(method = "lm")
+```
+
+**Summary.** There is a decisive advantage for the nonword condition after age 3. Performance begins to saturate at age 4 with the group averages for peak looking probabilities over 90%. The real word condition is more anomalous with performance only showing average increases from age 4 to age 5.
+
+**Summary**. Children performed similarly for real words and nonwords
 at age 3. Children's processing of nonwords improved at age 4. At this
 age, performance also began to saturate with the group average for peak
 looking probability greater than .9 for the nonword condition.
@@ -716,10 +856,12 @@ Consequently, children did not improve in processing of nonwords from
 age 4 to age 5. For the real word condition, children's performance did
 not change from age 3 to age 4 but it did improve from age 4 to age 5.
 At both age 4 and age 5, there was a decisive advantage for the nonword
-condition.
+condition. Finally, children with larger vocabularies looked more to the
+nonwords compared to children with smaller vocabularies. A comparable effect for
+real words was observed at age 3 and age 4 but only reliably observed at age 4.
 
 
-## Does age 3 referent selection better predicts age 5 vocabulary?
+## Does age 3 referent selection better predict age 5 vocabulary?
 
 I hypothesized that performance on the nonword condition would be a
 better predictor of future vocabulary size than the real word condition.
@@ -735,12 +877,7 @@ Pairing this finding with my hypothesis, I predicted that the growth
 curve peaks in the nonword condition at age 3 would be better predictors
 of vocabulary at age 5 than the real word peaks at age 3.
 
-```{r}
-scores <- readr::read_csv("./data-raw/test_scores.csv")
-tp1 <- scores %>% filter(Study == "TimePoint1")
-tp2 <- scores %>% filter(Study == "TimePoint2")
-tp3 <- scores %>% filter(Study == "TimePoint3")
-
+```{r, include = FALSE}
 w_evt <- scores %>% 
   filter(Study != "TimePoint2") %>% 
   select(ResearchID, Study, EVT_Standard) %>% 
@@ -749,9 +886,6 @@ w_evt <- scores %>%
   modelr::add_residuals(
     lm(TimePoint3 ~ TimePoint1, .), 
     "EVT_Residualized")
-
-
-
 
 evt_t1_z <- lm(scale(TimePoint3) ~ scale(TimePoint1), w_evt)
 evt_t1 <- lm(TimePoint3 ~ scale(TimePoint1), w_evt)
@@ -841,7 +975,7 @@ strong relationship between age 3 and age 5 vocabulary, *R*^2^ =
 `r base_r2`. A 1-SD (`r t1_sd`-point) increase in vocabulary at age 3
 predicted an `r t3_sd_change`-SD (`r t3_change`-point) increase at
 age 5. There was no effect of age-3 real-word peak over and above age-3
-vocabulary, *p* = `p_real`. There was a significant effect of the
+vocabulary, *p* = `r p_real`. There was a significant effect of the
 nonword peak, *p* = `r p_nonsense`, *ΔR*^2^ = `r nonsense_delta`, over
 and above age-3 vocabulary. A .1 increase in nonword peak probability
 predicted a `r z_nonsense_change`-SD (`r nonsense_change`-point)
@@ -851,7 +985,7 @@ condition and small slope for the nonword condition.
 
 (ref:age-5-from-peaks) Marginal effects of age-3 referent selection measures on age-5 expressive vocabulary standard scores. The vocabulary scores were adjusted (residualized) to control for age-3 vocabulary, so these regression lines show the effects of the predictors over and above age-3 vocabulary.
 
-```{r age-5-from-peaks, fig.cap = "(ref:age-5-from-peaks)", out.width = "100%", fig.height = 2.5, fig.width = 6}
+```{r age-5-from-peaks, fig.cap = "(ref:age-5-from-peaks)", out.width = "100%", fig.height = 4, fig.width = 4}
 w_l <- w_evt %>% 
   select(ResearchID, EVT_Residualized, nonsense, real, diff, both) %>% 
   rename(
@@ -927,17 +1061,41 @@ tenth of the test norms' standard deviation.
 
 ## Discussion
 
-The advantage of nonwords over real words was an unexpected result. My
-pre-analysis hypotheses were that word recognition in the real word
+For this discussion, I limited discussion to the main results.
+
+For these two conditions, I hypothesized were word recognition in the real word
 condition would be easier than in the nonword condition, or failing
-that, the two conditions would not reliably differ. I had discounted the
-third possibility of an overall advantage for nonwords over real words.
+that, the two conditions would not reliably differ. I had discounted a
+third possibility of any overall advantage for nonwords over real words.
+The advantage of nonwords at age 4 and age 5 over real words was an therefore
+unexpected result.
+
+Why would children perform better for the nonword trials?
+The results are consistent with a novelty bias in referent selection [@Horst2011]. Alternatively, the presense of the mispronunciation trials, analyzed in chapter XX, may undermine familiar word recognition. For one-third of the trials, children hear a bad version of a familiar word and they show more uncertain responses to them. This could make recognition of familiar words more difficult by priming children to not rely as heavily on syllable-initial sounds for recognition. In contrast, the nonword trials are unambiguous.
 
 
-The results are consistent however with a novelty bias in reference selection
-[@Horst2011].
+Children also showed limited year-over-year changes in this task. Indeed, many children obtained ceiling performance with growth curve peaks at .99 or greater. Therefore we might say that children have mastered nonword fast-referent selection in a two-alternative forced choice context by age 4.
 
-Children hit ceiling performance on this task.
+
+
+* talk about vocab effects
+
+The findings here replicated those of @Bion2013, namely that concurrent vocabulary size positively predicted the amount of looking to the novel object on nonword trials. They however make a point to note that fast referent selection is not necessary for word-learning: "In fact, those 18-month-olds whose accuracy scores on Disambiguation trials were lower than 0.50 were reported to produce as many as 389 words .... those 24-month-olds who failed to show a disambiguation bias produced as many as 417 words". In other words, a toddler may purportedly know hundreds of words but still not reliably look to a novel object given a novel label.
+
+* talk about how nonword peaks were weak predictors of growth
+
+
+
+In @Horst2011, two-year-olds were familiarized to novel objects. They were later tested to prompted to select a novel object (*can you get the fode?*) from three choices: 2 familiarized novel objects and 1 new unfamiliarized novel object. They demonstrated a clear preference for the unfamiliarized novel object. 
+
+
+
+
+@Bion2013 tested referent-selection in 18, 24, and 30 month-olds. In that article's second experiment, toddlers were trained on two novel words on disambiguation trials. They would see a familiar object and an unfamiliar object and hear a prompt with a nonword. Later retention trials presented the two unfamilar objects were presented and named. Mixed in with these trials were familiar object trials  in which the familiar object was labeled (e.g., car). In that experiment, children looked more to the target on the familiar word trialsthan on the nonword trials. For the 30-month olds: 82% versus 68% percentage of looks to the target. Importantly, they found a correlation between CDI expressive vocabulary and proportion of looks on disambiguation trials, r(61) = .37, (this is a partial correlation that controls for age).
+
+In this experiment, children heard more words in total (6). The 3-year-olds in our study had the same peak looking proportion for both kinds of words around .83.
+
+CHildren's year-over-year development on this task was limited.
 
 <!-- For this task, I will model how the looks to the familiar image differ -->
 <!-- in each condition (real words, mispronunciations, nonwords) and how the -->

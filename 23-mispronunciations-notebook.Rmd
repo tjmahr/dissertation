@@ -1523,21 +1523,21 @@ novel objects using the labels from the task. For example, the
 rainbow-filled flasks used for *sooze* (mispronounced *shoes*) were
 called *science*, *potions*, *magic*, *bottles*, among other labels. 
 
-After the naming task, children had a closed-set recognition task where
+Following the open-set naming task, children had a closed-set recognition task where
 two of the novel objects were paired. For example, the flasks (*sooze*)
 was paired with the trolley (*geeve*) from the nonword condition.
-Children saw the two images of the two (say, trolley1.jpeg and
-flasks1.jpeg), heard one of novel labels, and had to point to the named
+Children saw two images of the novel objevts (say, *trolley1.jpeg* and
+*flasks1.jpeg*), heard one of novel labels, and had to point to the named
 object. In a later trial during testing, the other label was tested but
-using different images for the objects (trolley2.jpeg and
-flasks2.jpeg). In a block of testing, there were 12 trials, 6 for
+using different images for the objects (*trolley2.jpeg* and
+*flasks2.jpeg*). In a block of testing, there were 12 trials, 6 for
 nonwords and 6 for mispronunciations.
 
-The chunk label `table-single` provides an implicit label 
-for Table \@ref(tab:mp-norming-table).
-
-
-Table TTT shows the results for each items.
+Table \@ref(tab:mp-norming-table) shows the results for each item. Overall, 
+children performed better on the nonwords than the real words. For
+four of the pairs, children performed decidedly better on the nonwords
+than the mispronunciations on four of pairs, and performed about equally
+well on the remaining two (*gake*-*pumm*, *wice*-*bape*). 
 
 ```{r mp-norming-table}
 se_prop <- littlelisteners::se_prop
@@ -1548,6 +1548,13 @@ mp_norming <- readr::read_csv("./data-raw/age5-mp-norming.csv") %>%
     ItemType = MPNorm_Type, 
     Item = MPNorm_Item,
     Correct = MPNorm_Correct)
+
+# mp_norming %>% 
+#   group_by(ResearchID, ItemType) %>% 
+#   summarise(Proportion = mean(Correct)) %>% 
+#   ggplot() + 
+#     aes(x = Proportion, fill = ItemType) + 
+#     geom_histogram(position = position_dodge())
 
 mpn_items <- mp_norming %>% 
   group_by(WordGroup, ItemType, Item) %>% 
@@ -1613,18 +1620,6 @@ both %>%
 ```
 
 
-I performed an item-response analysis using a
-mixed-effects logistic regression model. The model included varying
-intercepts for child, child x item type, item, and
-item x word-group. The first two effects capture information about a
-child's general ability and their ability on each type of item. The
-second two effects capture information about an item's difficulty and
-difficulty of object-pairs. I also asked whether growth curve peaks
-predicted novel word recognition accuracy. For the nonwords, I used the
-age-5 peak proportion of looks to the novel image for trials that
-started on the familiar object. For the mispronunciations, I used the
-peak looks to the familiar object on trials that started on the
-unfamiliar object. 
 
 ```{r}
 set.seed(20180715)
@@ -1649,15 +1644,15 @@ by_cond_peaks <- unfam_peaks %>%
   tidyr::spread(stat, value) %>% 
   rename(peak_mean = mean, peak_sd = sd)
 
-# by_cond_peaks2 <- fam_peaks %>% 
-#   group_by(Study, ResearchID) %>% 
-#   summarise_at(vars(Valley_Prop), mean, na.rm = TRUE) %>% 
-#   ungroup() %>% 
-#   rename(mp = Valley_Prop) %>% 
-#   right_join(peaks) %>% 
-#   rename(mispronunciation = mp, nonword = nonsense) %>% 
-#   select(-real) %>% 
-#   filter(Study == "Age 5") %>% 
+# by_cond_peaks2 <- fam_peaks %>%
+#   group_by(Study, ResearchID) %>%
+#   summarise_at(vars(Valley_Prop), mean, na.rm = TRUE) %>%
+#   ungroup() %>%
+#   rename(mp = Valley_Prop) %>%
+#   right_join(peaks) %>%
+#   rename(mispronunciation = mp, nonword = nonsense) %>%
+#   select(-real) %>%
+#   filter(Study == "Age 5") %>%
 #   tidyr::gather(ItemType, Peak, mispronunciation, nonword)
 
 mp_norming_peaks <- by_cond_peaks %>% 
@@ -1675,6 +1670,10 @@ d_centered_peaks <- mp_norming_peaks %>%
 
 mp_norming_peaks <- mp_norming_peaks %>% 
   left_join(d_centered_peaks)
+
+n_peaks <- mp_norming_peaks %>% 
+  distinct(ResearchID) %>% 
+  nrow()
 
 readr::write_csv(mp_norming_peaks, "./data/mp-norming-data.csv.gz")
 
@@ -1784,31 +1783,55 @@ sd_nw_peak <- means$nonword$sd_value %>%
   printy::fmt_leading_zero()
 ```
 
-For a child with an average misproncunciation peak of `r mean_mp_peak`,
-the predicted proportion correct on the mispronunciation retention
-trials was `r props$b_mean_mispronunciation_prop`. For a child with an
-average peak on the nonword trials of `r props$b_mean_mispronunciation_prop`,
-the predicted proportion correct on the mispronunciation retention
-trials was `r props$b_mean_nonword_prop`. Children were much more
-successful on the nonword trials. A 1-SD, or `r sd_mp_peak`, increase in
+I performed an item-response analysis using a mixed-effects logistic
+regression model. Appendix XXX reports the code used to specify the
+model. The model included varying intercepts for child, child x item
+type, item, and item x word-group. The first two effects capture
+information about a child's general ability and their ability on each
+type of item. The second two effects capture information about an item's
+difficulty and difficulty of object-pairs. I also asked whether growth
+curve peaks predicted novel word recognition accuracy, so I included
+growth curve peaks from each condition in the model. For the nonwords, I
+used the age-5 peak proportion of looks to the novel image for trials
+that started on the familiar object. For the mispronunciations, I used
+the peak looks to the familiar object on trials that started on the
+unfamiliar object. I chose those peaks based on the conclusion that
+children were reliably treating the mispronunciations as imperfect
+productions of the familiar word. The model included data from
+`r n_peaks` children.
+
+The model confirmed that children were much more successful on the
+nonword trials. For a child with an average misproncunciation peak
+(`r mean_mp_peak`), the predicted proportion correct on the
+mispronunciation retention trials was
+`r props$b_mean_mispronunciation_prop`. For a child with an average peak
+on the nonword trials (`r mean_nw_peak`), the predicted proportion
+correct on the mispronunciation retention trials was
+`r props$b_mean_nonword_prop`. A 1-SD (`r sd_mp_peak`) increase in
 the mispronunciation peak predicted a change in proportion correct of
 `r props_sd$d_mean_upsd_mispronunciation_prop`. Children who looked more
-to the familiar word on these mispronunciation trials were less
-successfull during the retention trials. A 1-SD increase, or
-`r sd_nw_peak` to 1.00, in nonword peaks predicted a change in
-proporiton correct of `r props_sd$d_mean_upsd_nonword_prop`. The
-uncertainty interval here includes positive and negative values so it is
+to the familiar object on these mispronunciation trials were less
+successful during the retention trials. A 1-SD increase 
+(`r sd_nw_peak` to 1.00) in nonword peaks predicted a change in
+proportion correct of `r props_sd$d_mean_upsd_nonword_prop`. The
+uncertainty interval here includes positive and negative values. It is
 uncertain where the effect is positive or negative, so I conclude that
-there is no effect in the nonword case.
+there was not a reliable effect in the nonword case. 
 
-Add n.
+Figure \@ref(fig:mp-norm-trials-by-peak) visualizes the model results.
+First, the difference in height between the two curves reflects the
+general advantage in the nonword condition. The negative slope for the
+mispronunciation line captures the effect of growth curve peaks. A
+change in misprounciation growth curve peak from .5 to 1 roughly
+predicts a change from 4/6 to 3/6 mispronunciation items correct. The
+nonword line hovers around 5/6 items correct: There is not enough
+information in the peaks or in the number of retention trials for a
+reliable effect to emerge.
 
-Figure \@ref(fig:mp-norm-trials-by-peak) visualizes this effect.
-
-(ref:mp-norm-trials-by-peak) Effect of growth curve peaks on children's accuracy on retention trials. For the mispronunciations, I used the peak looks to the familiar image on trials where the child started on the unfamilar image, so it represents, say, how much a child looked at *shoes* given "suze". More permissive listeners looked did more poorly on the retention trials. For the nonwords, I used the peak look to the unfamilar image on trials where the child started on the familiar image.
+(ref:mp-norm-trials-by-peak) Effect of growth curve peaks on children's accuracy on retention trials. For the mispronunciations, I used the peak looks to the familiar image on trials where the child started on the unfamilar image, so it represents, say, how much a child looked at *shoes* given "suze". Thus, more permissive listeners looked performed more poorly on the retention trials. For the nonwords, I used the peak look to the unfamilar image on trials where the child started on the familiar image.
 Points were jittered by 1% to avoid overplotting. There were six trials per condition which is why the points fall into 6 bands.
 
-```{r mp-norm-trials-by-peak, fig.cap = "(ref:mp-norm-trials-by-peak)", fig.width=5, fig.height=3.5, out.width="50%"}
+```{r mp-norm-trials-by-peak, fig.cap = "(ref:mp-norm-trials-by-peak)", fig.width=5, fig.height=3.5, out.width="66%"}
 aaa %>% 
   group_by(ItemType, .draw) %>% 
   ggplot() + 
@@ -1859,7 +1882,7 @@ aaa %>%
 
 ```
 
-**Summary**. Children
+**Summary**. When 5-years-olds were tested on their retention of the unfamiliar images used on the mispronunciations and nonword trials, child were much more accurate for the nonwords than the mispronunciations. Children's accuracy on the mispronunciations was related to their looking behaviors: Children looked more to the familiar image during mispronunciation trials had a lower accuracy on the mispronunciation retention trials.
 
 
 ## Discussion
@@ -1893,7 +1916,6 @@ One complication to the lexical processing interpretation is that this is a two-
 
 
 Child-level measures were not predictive of looking behaviors at age 4 or age 5. Perhaps this is too easy. 
-
 
 - There is no effect of expressive vocabulary here, especially at older ages.
 - So they are sensitive but they become more accommodating of the
@@ -2081,7 +2103,7 @@ other curves, so they never fall into maximum uncertainty. These sets of
 analyses mainly demonstrate that when children start on a familiar image and
 hear a mispronunciation, they have a few options for how to proceed.
   
-Child level predictors only were preditive at age 3 for curve valley. In
+Child-level predictors only were predictive at age 3 for curve valley. In
 this case, children with larger vocabularies or better minimal pair
 discrimination showed more consideration of the nonword object. I
 speculate that in this situation, the effect reflects that children with
@@ -2090,7 +2112,7 @@ mispronunciation. These children were good at recognizing the mismatch
 from partial information and thus allocated more credibility to the
 alternative image.
 
-In these analyses, I defined a weighted quadratic growth curve feature
+In these analyses, I also defined a weighted quadratic growth curve feature
 that measured how u-shaped the curves were. I was interested in whether
 confirmatory looking behaviors were reliably related to child level
 factors. They were not, outside of neglibly small effect of vocabulary
@@ -2246,3 +2268,26 @@ by_type %>%
   cor(use = "pairwise.complete.obs") %>% 
   round(2)
 ```
+
+
+At age 5, we were able to test children's retention of the
+mispronunciations and nonwords. Children were much more likely to recall
+which unfamiliar object appeared on the nonword trials than the
+mispronunciation trials. This difference is not unexpected. In the
+nonword trials, children looked to an unfamiliar object when given an
+unambiguous novel word for a label. Thus, each trial worked to build an
+association between a new word and an unfamiliar object. But children
+treated the mispronunciations as productions of the familiar words. For
+the unfamiliar-initial trials, they look more to the familiar object, a
+result that held at all three ages. Rather than developing an
+object-label mapping, children are working on resolving an ambiguous and
+uncertain production on these trial. This idea is consistent with the
+effect of growth curve peaks on retention accuracy: Child who looked
+less to the unfamiliar object on mispronunciation trials were less
+likely to recall that unfamiliar object during retention testing. This result
+here is consistent with Swingley and Aslin (2007) in which toddlers were better
+able to retain unneighbored nonwords (like *shang* or *meb*) compared to
+neighbored nonwords (i.e., mispronunciations like *tog* [*dog*] or *gall*
+[*ball*]). They concluded that part of the fast-referent selection involves a
+probability calculation in which children "evaluat[e] the likelihood that an
+utterance conveys a new word".
