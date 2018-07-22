@@ -112,10 +112,10 @@ The priors for the intercept and regression coefficients are wide, very
 weakly informative normal distributions. These distributions are
 centered at 0, so negative and positive effects are equally likely. The
 intercept distribution as a standard deviation of 5, and the
-coefficients have a distribution around 3. On the log-odds scale, 95%
-looking to target would be 2.94, so effects of this magnitude are easily
-accommodated by distributions like Normal(0 [mean], 3 [SD]) and
-Normal(0, 5).
+coefficients have a standard deviation of around 3. On the log-odds
+scale, 95% looking to target would be 2.94, so effects of this magnitude
+are easily accommodated by distributions like 
+Normal(0 [mean], 3 [SD]) and Normal(0, 5).
 
 For the random-effect part of the model, I used RStanARM's `decov()`
 prior which simultaneously sets a prior on the variances and
@@ -145,6 +145,18 @@ ggplot(correlations) +
     caption = "4,000 prior samples drawn per model")
 ```
 
+
+Summary of the familiar word recognition model:
+
+```{r}
+# the last 20 column names are the random effects
+ranef_names <- tail(colnames(as_tibble(m)), 20)
+
+summary(
+  object = m, 
+  pars = c("alpha", "beta", ranef_names),
+  probs = c(.05, .5, .95))
+```
 
 
 
@@ -182,6 +194,8 @@ I fit the generalized additive model with the code below. The outcome
 competitor relative to the unrelated word.
 
 ```{r, eval = FALSE}
+library(mgcv)
+
 phon_gam <- bam(
   elog ~ S2 +
     s(Time) + s(Time, by = S2) +
@@ -209,3 +223,22 @@ for the basis function. The other smooths use the default number of
 knots (10). I used fewer knots for the by-child smooths because of
 limited data. As a result, these smooths capture by-child variation by
 making coarse adjustments to study-level growth curves. 
+
+Summary of the phonological model:
+
+```{r, include = FALSE}
+library(mgcv)
+```
+
+```{r, message = FALSE}
+m_p <- readr::read_rds("./data/aim1-phon-random-smooths.rds.gz")
+summary(m_p)
+```
+
+Summary of the semantic model:
+
+```{r, message = FALSE}
+m_s <- readr::read_rds("./data/aim1-semy-random-smooths.rds.gz")
+summary(m_s)
+```
+

@@ -7,7 +7,7 @@ if (interactive()) source("./helpers.R")
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 ```
 
-Growth curve analyses
+Real words versus nonwords growth curves
 ------------------------------------------------------------------------
 
 These models were fit in R [vers. 3.5.0; @R-base] with the brms package
@@ -48,12 +48,12 @@ The priors for the model are described below. The regression effects
 (`class = "b"`) have a moderately informative prior of Normal(0, 1).
 Because most of the action in the growth curves is a sharp rise, the
 linear time effect `ot1` has a slightly wider prior of Normal(0, 2). A
-weakly informative LKJ(2) prior is put on the random effect
+weakly informative LKJ(2) prior is put on the random-effect
 correlations. I review the role of the LKJ prior in  
 [Appendix \@ref(aim1-gca-models)](#aim1-gca-models). A weakly informative
-prior is put on the random effect standard deviations
-Student-t([df] 7, [mean] 0, [sd] 3). The Student-t distribution
-with is like the normal distribution but it provides slightly thicker
+prior is put on the random-effect standard deviations
+Student-*t*([df] 7, [mean] 0, [sd] 3). The Student-*t* distribution
+is like the normal distribution but it provides slightly thicker
 tails which allow extreme or outlying values.
 
 ```{r, eval = FALSE, eval = FALSE}
@@ -71,11 +71,11 @@ priors <- c(
   set_prior(class = "sd", "student_t(7, 0, 3)"))
 ```
 
-I fit a separate model for each year of the study using syntax like the
-following. This fits the model using four sampling `chains` in parallel
-over four processing `cores`. Early attempts at the model produced
-warnings, so I increased the `adapt_delta` control option to make the
-sampling more robust and eliminate the warnings.
+I originally tried a single model containing all three years with
+corresponding year effects, year × time interactions, and
+year × condition × time interactions, but this model took 30 hours to
+run and did not converge. Therefore, I fit separate models for
+each year of the study using syntax like the following. 
 
 ```{r, eval = FALSE}
 m_age3 <- brm(
@@ -91,22 +91,46 @@ m_age3 <- brm(
 readr::write_rds(m_age3, "age3_mp.rds.gz")
 ```
 
-I originally tried a single model containing all three years with
-corresponding year effects, year-by-time interactions, and
-year-by-condition-by-time conditions. But this model had difficulty
-converging, and even when a passable model was obtained, a bug in the
-modeling software prevented me from obtaining posterior predictions. I
-reported the bug in an issue for the package's source code repository. 
+This code fits the model using four sampling `chains` in parallel over
+four processing `cores`. Early attempts at the model produced warnings,
+so I increased the `adapt_delta` control option to make the sampling
+more robust and eliminate the warnings.
 
-### Models for mispronunications
+Model summary for real words versus nonwords at age 3:
+
+```{r, echo = TRUE}
+m1 <- readr::read_rds("./data/aim2-real-vs-nw-tp1.rds.gz")
+summary(m1, priors = TRUE, prob = .9)
+```
+
+Model summary for real words versus nonwords at age 4:
+
+```{r, echo = TRUE}
+m2 <- readr::read_rds("./data/aim2-real-vs-nw-tp2.rds.gz")
+summary(m2, priors = TRUE, prob = .9)
+```
+
+Model summary for real words versus nonwords at age 5:
+
+```{r, echo = TRUE}
+m3 <- readr::read_rds("./data/aim2-real-vs-nw-tp3.rds.gz")
+summary(m3, priors = TRUE, prob = .9)
+```
+
+
+
+Mispronunication growth curves
+------------------------------------------------------------------------
+
 
 Like the models above, these ones are Bayesian mixed-effects logistic
-regression growth curve models. I fit two separate models, one for
-unfamilar-initial trials and familiar-initial trials. Each model
-included data from all three years of the study. 
+regression growth curve models fit with brms. I used two separate
+models, one for unfamilar-initial trials and familiar-initial trials.
+Each model included data from all three years of the study. The code is
+essentially the same syntax with a `Study` variable replacing the
+`Condition` variable.
 
-```{r, eval = FALSE}
-
+```{r, eval = FALSE, echo = TRUE}
 library(brms)
 
 # Fit a hierarchical logistic regression model
@@ -152,22 +176,27 @@ mp_fam <- brm(
 readr::write_rds(mp_fam, "./data/aim2-mp-fam.rds.gz")
 ```
 
-The priors for this
-model are the same, except for a tighter prior on scale/standard
-deviations for the random effect distributions. The model had difficulty
-obtaining an effective number of samples for these parameters.
-Initially, I tried to tell the model to do more work on sampling step
-(`adapt_delta = .995` and `max_treedepth = 15`) and run the chains
-for 50% longer (`iter = 3000`) to no success.
+The priors for this model are the same, except for a tighter prior on
+scale/standard deviations for the random effect distributions. The model
+had difficulty obtaining an effective number of samples for these
+parameters. Initially, I tried to tell the model to do more work on each
+sampling step (`adapt_delta = .995` and `max_treedepth = 15`) and run
+the chains for 50% longer (`iter = 3000`). These changes did not solve
+the problem. By using a tighter prior, the model had a smaller search
+space meaning it could obtain samples more efficiently. 
 
-The figure below illustrates the change and how the posterior value were well
-enclosed by both priors.
+The revised prior was still weakly informative. Figure
+\@ref(fig:student-t-priors) llustrates the differences in the prior
+densities---that is, which values are plausible before seeing the data.
+It also shows posterior densities from the model and how those values
+are easily enclosed by the prior densities.
 
 ```{r, include = FALSE}
 library(tidyverse)
 library(brms)
 
 mp_unfam <- readr::read_rds("./data/aim2-mp-unfam.rds.gz")
+mp_fam <- readr::read_rds("./data/aim2-mp-fam.rds.gz")
 
 densities <- mp_unfam %>% 
   posterior_samples(pars = "sd") %>% 
@@ -251,44 +280,47 @@ p1 <- ggplot(data_frame(x = 0:15)) +
     x = "SD value", y = "Prior density")
   
 library(patchwork)
+```
 
+(ref:student-t-priors) Prior densities (left) versus posterior densities (right) for the random-effect standard deviations. I changed the prior to be tighter, so that it favor values up to 7.5. This prior still turned out to be very conservative, given that the posterior samples for these values are all less than 3.
+
+```{r student-t-priors, echo = FALSE, fig.cap = "(ref:student-t-priors)", fig.width = 4, fig.height = 3, out.width = "66%"}
 p1 + p2
 ```
 
-
-
-### Model summaries
-
-Real words versus nonwords at age 3
+Model summary for unfamiliar-initial mispronunciation trials:
 
 ```{r}
-m1 <- readr::read_rds("./data/aim2-real-vs-nw-tp1.rds.gz")
-summary(m1, priors = TRUE, prob = .9)
+summary(mp_unfam, priors = TRUE, prob = .9)
 ```
 
-Real words versus nonwords at age 4
+Model summary for familiar-initial mispronunciation trials:
 
 ```{r}
-m2 <- readr::read_rds("./data/aim2-real-vs-nw-tp2.rds.gz")
-summary(m2, priors = TRUE, prob = .9)
-```
-
-Real words versus nonwords at age 5
-
-```{r}
-m3 <- readr::read_rds("./data/aim2-real-vs-nw-tp3.rds.gz")
-summary(m3, priors = TRUE, prob = .9)
+summary(mp_fam, priors = TRUE, prob = .9)
 ```
 
 
 
-## Item response analysis for novel word retention
+Item-response analysis for novel word retention
+------------------------------------------------------------------------
 
 This is an item-response analysis carried out using a Bayesian
 mixed-effects logistic regression model. These models were fit in R
 [vers. 3.5.0; @R-base] with the brms package [vers. 2.3.1; @brms]. I
 used weakly informative priors.
 
+The linear model `Correct ~ ItemType * c_peak_10` says to
+estimate the log-odds of answering correctly using on mispronunciations
+(intercept) using the growth curve peaks (`c_peak_10`), adjust it for
+nonwords (`ItemType`) and for the nonword × peak interaction. The peaks
+were mean-centered within each type and multiplied by 10 so that the
+slope represents the effect of change of .1 from the mean peak value.
+The model includes four random intercepts: general child ability and
+child × condition ability adjustments (simultaneously requested using 
+`1 | ResearchID/ItemType`, i.e., `ResearchID` levels have `ItemType` levels
+nested under `/` them), plus specific item-level difficulties (`1 | Item`)
+and item-pair level difficulties (`1 | WordGroup`).
 
 ```{r, eval = FALSE}
 d <- readr::read_csv("./data/mp-norming-data.csv.gz")
@@ -318,16 +350,6 @@ m_norm <- brm(
 readr::write_rds(m_norm, "./data/mp-norming-m2.rds.gz") 
 ```
 
-The linear model `Correct ~ ItemType * c_peak_10` says to
-estimate the log-odds of answering correctly using on mispronunciations
-(intercept) using the growth curve peaks `c_peak_10`, adjust it for
-nonwords `ItemType` and for the nonword x peak interaction. The peaks were
-mean-centered within each type and multiplied by 10 so that the slope represents
-the effect of change of .1 from the mean peak value. The model includes four
-random intercepts: general child ability and
-child-by-condition (simultaneously requested using 
-`1 | ResearchID/ItemType`, i.e., `ResearchID` levels have `ItemType` levels nested under them), plus specific item-level difficulties 
-(`1 | Item`) and item-pair level difficulties (`1 | WordGroup`).
 
 ```{r, eval = FALSE, include = FALSE}
 # Code to fit a model without the peaks
@@ -341,6 +363,7 @@ readr::write_rds(m_norm1, "./data/mp-norming-m1.rds.gz")
 readr::write_rds(m_norm, "./data/mp-norming-m2.rds.gz")
 ```
 
+Model summary for retention trials at age 5:
 
 ```{r, include = FALSE}
 m_norm <- readr::read_rds("./data/mp-norming-m2.rds.gz")

@@ -118,10 +118,10 @@ The priors for the intercept and regression coefficients are wide, very
 weakly informative normal distributions. These distributions are
 centered at 0, so negative and positive effects are equally likely. The
 intercept distribution as a standard deviation of 5, and the
-coefficients have a distribution around 3. On the log-odds scale, 95%
-looking to target would be 2.94, so effects of this magnitude are easily
-accommodated by distributions like Normal(0 [mean], 3 [SD]) and
-Normal(0, 5).
+coefficients have a standard deviation of around 3. On the log-odds
+scale, 95% looking to target would be 2.94, so effects of this magnitude
+are easily accommodated by distributions like 
+Normal(0 [mean], 3 [SD]) and Normal(0, 5).
 
 For the random-effect part of the model, I used RStanARM's `decov()`
 prior which simultaneously sets a prior on the variances and
@@ -143,6 +143,103 @@ extreme, degenerate values.
 <p class="caption">(\#fig:lkj-prior)(ref:lkj-prior)</p>
 </div>
 
+
+Summary of the familiar word recognition model:
+
+
+```r
+# the last 20 column names are the random effects
+ranef_names <- tail(colnames(as_tibble(m)), 20)
+
+summary(
+  object = m, 
+  pars = c("alpha", "beta", ranef_names),
+  probs = c(.05, .5, .95))
+#> 
+#> Model Info:
+#> 
+#>  function:     stan_glmer
+#>  family:       binomial [logit]
+#>  formula:      cbind(Primary, Others) ~ (ot1 + ot2 + ot3) * Study + (ot1 + ot2 + 
+#> 	   ot3 | ResearchID/Study)
+#>  algorithm:    sampling
+#>  priors:       see help('prior_summary')
+#>  sample:       4000 (posterior sample size)
+#>  observations: 12584
+#>  groups:       Study:ResearchID (484), ResearchID (195)
+#> 
+#> Estimates:
+#>                                                   mean   sd   5%   50%   95%
+#> (Intercept)                                     -0.5    0.0 -0.5 -0.5  -0.4 
+#> ot1                                              1.6    0.1  1.5  1.6   1.7 
+#> ot2                                              0.0    0.0  0.0  0.0   0.1 
+#> ot3                                             -0.2    0.0 -0.2 -0.2  -0.1 
+#> StudyTimePoint2                                  0.4    0.0  0.4  0.4   0.5 
+#> StudyTimePoint3                                  0.7    0.0  0.6  0.7   0.8 
+#> ot1:StudyTimePoint2                              0.6    0.1  0.4  0.6   0.7 
+#> ot1:StudyTimePoint3                              1.1    0.1  1.0  1.1   1.2 
+#> ot2:StudyTimePoint2                             -0.2    0.1 -0.2 -0.2  -0.1 
+#> ot2:StudyTimePoint3                             -0.4    0.1 -0.4 -0.4  -0.3 
+#> ot3:StudyTimePoint2                             -0.1    0.0 -0.2 -0.1  -0.1 
+#> ot3:StudyTimePoint3                             -0.2    0.0 -0.3 -0.2  -0.2 
+#> Sigma[Study:ResearchID:(Intercept),(Intercept)]  0.1    0.0  0.1  0.1   0.1 
+#> Sigma[Study:ResearchID:ot1,(Intercept)]          0.0    0.0  0.0  0.0   0.1 
+#> Sigma[Study:ResearchID:ot2,(Intercept)]          0.0    0.0  0.0  0.0   0.0 
+#> Sigma[Study:ResearchID:ot3,(Intercept)]          0.0    0.0  0.0  0.0   0.0 
+#> Sigma[Study:ResearchID:ot1,ot1]                  0.5    0.0  0.4  0.5   0.6 
+#> Sigma[Study:ResearchID:ot2,ot1]                  0.0    0.0  0.0  0.0   0.0 
+#> Sigma[Study:ResearchID:ot3,ot1]                 -0.1    0.0 -0.1 -0.1  -0.1 
+#> Sigma[Study:ResearchID:ot2,ot2]                  0.2    0.0  0.2  0.2   0.2 
+#> Sigma[Study:ResearchID:ot3,ot2]                  0.0    0.0  0.0  0.0   0.0 
+#> Sigma[Study:ResearchID:ot3,ot3]                  0.1    0.0  0.1  0.1   0.1 
+#> Sigma[ResearchID:(Intercept),(Intercept)]        0.1    0.0  0.1  0.1   0.1 
+#> Sigma[ResearchID:ot1,(Intercept)]                0.1    0.0  0.1  0.1   0.1 
+#> Sigma[ResearchID:ot2,(Intercept)]                0.0    0.0  0.0  0.0   0.0 
+#> Sigma[ResearchID:ot3,(Intercept)]                0.0    0.0  0.0  0.0   0.0 
+#> Sigma[ResearchID:ot1,ot1]                        0.2    0.0  0.1  0.2   0.3 
+#> Sigma[ResearchID:ot2,ot1]                        0.0    0.0 -0.1  0.0   0.0 
+#> Sigma[ResearchID:ot3,ot1]                        0.0    0.0  0.0  0.0   0.0 
+#> Sigma[ResearchID:ot2,ot2]                        0.0    0.0  0.0  0.0   0.0 
+#> Sigma[ResearchID:ot3,ot2]                        0.0    0.0  0.0  0.0   0.0 
+#> Sigma[ResearchID:ot3,ot3]                        0.0    0.0  0.0  0.0   0.0 
+#> 
+#> Diagnostics:
+#>                                                 mcse Rhat n_eff
+#> (Intercept)                                     0.0  1.0  1086 
+#> ot1                                             0.0  1.0   857 
+#> ot2                                             0.0  1.0   842 
+#> ot3                                             0.0  1.0  1156 
+#> StudyTimePoint2                                 0.0  1.0  1034 
+#> StudyTimePoint3                                 0.0  1.0   959 
+#> ot1:StudyTimePoint2                             0.0  1.0   674 
+#> ot1:StudyTimePoint3                             0.0  1.0   934 
+#> ot2:StudyTimePoint2                             0.0  1.0   836 
+#> ot2:StudyTimePoint3                             0.0  1.0   762 
+#> ot3:StudyTimePoint2                             0.0  1.0  1183 
+#> ot3:StudyTimePoint3                             0.0  1.0  1390 
+#> Sigma[Study:ResearchID:(Intercept),(Intercept)] 0.0  1.0  1093 
+#> Sigma[Study:ResearchID:ot1,(Intercept)]         0.0  1.0   475 
+#> Sigma[Study:ResearchID:ot2,(Intercept)]         0.0  1.0   323 
+#> Sigma[Study:ResearchID:ot3,(Intercept)]         0.0  1.0   792 
+#> Sigma[Study:ResearchID:ot1,ot1]                 0.0  1.0   547 
+#> Sigma[Study:ResearchID:ot2,ot1]                 0.0  1.0   277 
+#> Sigma[Study:ResearchID:ot3,ot1]                 0.0  1.0   806 
+#> Sigma[Study:ResearchID:ot2,ot2]                 0.0  1.0   665 
+#> Sigma[Study:ResearchID:ot3,ot2]                 0.0  1.0  1131 
+#> Sigma[Study:ResearchID:ot3,ot3]                 0.0  1.0  1220 
+#> Sigma[ResearchID:(Intercept),(Intercept)]       0.0  1.0   913 
+#> Sigma[ResearchID:ot1,(Intercept)]               0.0  1.0   636 
+#> Sigma[ResearchID:ot2,(Intercept)]               0.0  1.0   307 
+#> Sigma[ResearchID:ot3,(Intercept)]               0.0  1.0   711 
+#> Sigma[ResearchID:ot1,ot1]                       0.0  1.0   261 
+#> Sigma[ResearchID:ot2,ot1]                       0.0  1.0   242 
+#> Sigma[ResearchID:ot3,ot1]                       0.0  1.0   331 
+#> Sigma[ResearchID:ot2,ot2]                       0.0  1.0   257 
+#> Sigma[ResearchID:ot3,ot2]                       0.0  1.0   439 
+#> Sigma[ResearchID:ot3,ot3]                       0.0  1.0   340 
+#> 
+#> For each parameter, mcse is Monte Carlo standard error, n_eff is a crude measure of effective sample size, and Rhat is the potential scale reduction factor on split chains (at convergence Rhat=1).
+```
 
 
 
@@ -182,6 +279,8 @@ competitor relative to the unrelated word.
 
 
 ```r
+library(mgcv)
+
 phon_gam <- bam(
   elog ~ S2 +
     s(Time) + s(Time, by = S2) +
@@ -209,3 +308,76 @@ for the basis function. The other smooths use the default number of
 knots (10). I used fewer knots for the by-child smooths because of
 limited data. As a result, these smooths capture by-child variation by
 making coarse adjustments to study-level growth curves. 
+
+Summary of the phonological model:
+
+
+
+
+```r
+m_p <- readr::read_rds("./data/aim1-phon-random-smooths.rds.gz")
+summary(m_p)
+#> 
+#> Family: gaussian 
+#> Link function: identity 
+#> 
+#> Formula:
+#> elog ~ S2 + s(Time) + s(Time, by = S2) + s(Time, R, bs = "fs", 
+#>     m = 1, k = 5)
+#> 
+#> Parametric coefficients:
+#>               Estimate Std. Error t value Pr(>|t|)    
+#> (Intercept)   0.159200   0.048807   3.262  0.00111 ** 
+#> S2TimePoint1 -0.002641   0.013840  -0.191  0.84864    
+#> S2TimePoint3  0.151073   0.013601  11.107  < 2e-16 ***
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> 
+#> Approximate significance of smooth terms:
+#>                          edf  Ref.df     F  p-value    
+#> s(Time)                7.277   8.165 10.61 3.51e-15 ***
+#> s(Time):S2TimePoint1   5.478   6.590 17.10  < 2e-16 ***
+#> s(Time):S2TimePoint3   1.001   1.002 17.86 2.37e-05 ***
+#> s(Time,R)            852.928 974.000 12.97  < 2e-16 ***
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> 
+#> R-sq.(adj) =  0.311   Deviance explained = 33.1%
+#> fREML =  41726  Scale est. = 0.8629    n = 30008
+```
+
+Summary of the semantic model:
+
+
+```r
+m_s <- readr::read_rds("./data/aim1-semy-random-smooths.rds.gz")
+summary(m_s)
+#> 
+#> Family: gaussian 
+#> Link function: identity 
+#> 
+#> Formula:
+#> elog ~ S2 + s(Time) + s(Time, by = S2) + s(Time, R, bs = "fs", 
+#>     m = 1, k = 5)
+#> 
+#> Parametric coefficients:
+#>              Estimate Std. Error t value Pr(>|t|)    
+#> (Intercept)   0.43878    0.04907   8.943  < 2e-16 ***
+#> S2TimePoint1 -0.13985    0.01352 -10.345  < 2e-16 ***
+#> S2TimePoint3  0.06486    0.01329   4.881 1.06e-06 ***
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> 
+#> Approximate significance of smooth terms:
+#>                          edf  Ref.df      F  p-value    
+#> s(Time)                7.038   7.988 11.018 1.16e-15 ***
+#> s(Time):S2TimePoint1   1.001   1.001  0.387 0.534636    
+#> s(Time):S2TimePoint3   3.739   4.623  4.909 0.000323 ***
+#> s(Time,R)            867.572 974.000 15.750  < 2e-16 ***
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> 
+#> R-sq.(adj) =  0.379   Deviance explained = 39.7%
+#> fREML =  42860  Scale est. = 0.85001   n = 30976
+```
+

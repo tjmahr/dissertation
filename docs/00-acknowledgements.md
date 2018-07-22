@@ -18,13 +18,13 @@ and Lizzy Hill. Special thanks to Nancy and Bob Wermuth for being role
 models. 
 
 A lot of smart and busy people gave me their time and thoughts. Thanks
-to the faculty who were always willing to advise me: Audra Sterling,
-Jenny Saffran, Courtney Seidel, Katie Hustad. Thanks for Susan Ellis
-Weismer for taking me under her wing and helping me through some
-stressful periods. Thanks to Tim Rogers for being on my prelim
-committee. Thanks to Bob McMurray for giving an enthusiastic,
-eye-opening lecture at ASHA 2013 about how eyetracking data works as a
-measure of word recognition. 
+to the faculty who were always willing to advise me: Margarita
+Kaushanskaya, Audra Sterling, Jenny Saffran, Courtney Seidel, Katie
+Hustad. Thanks for Susan Ellis Weismer for taking me under her wing and
+helping me through some stressful periods. Thanks to Tim Rogers for
+being on my prelim committee. Thanks to Bob McMurray for giving an
+enthusiastic, eye-opening lecture at ASHA 2013 about how eyetracking
+data works as a measure of word recognition. 
 
 Thanks to my compatriots at Waisman and elsewhere whom I commiserated
 with often: Pierce Edmiston, Courtney Venker, Ron Pomper, Martin
