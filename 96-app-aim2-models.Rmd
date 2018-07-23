@@ -7,6 +7,10 @@ if (interactive()) source("./helpers.R")
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 ```
 
+```{r helpers, message = FALSE, warning = FALSE}
+```
+
+
 Real words versus nonwords growth curves
 ------------------------------------------------------------------------
 
@@ -33,7 +37,7 @@ The line `(ot1 + ot2 + ot3 | ResearchID/Condition)` describes the
 random-effect structure of the model with the `/` indicating that data
 from each `Condition` is nested within each `ResearchID`.
 
-```{r, eval = FALSE}
+```{r, eval = FALSE, echo = TRUE}
 library(brms)
 
 # Fit a hierarchical logistic regression model
@@ -56,7 +60,7 @@ Student-*t*([df] 7, [mean] 0, [sd] 3). The Student-*t* distribution
 is like the normal distribution but it provides slightly thicker
 tails which allow extreme or outlying values.
 
-```{r, eval = FALSE, eval = FALSE}
+```{r, eval = FALSE, echo = TRUE}
 priors <- c(
   # Population-average intercept
   set_prior(class = "Intercept", "normal(0, 1)"),
@@ -77,7 +81,7 @@ year × condition × time interactions, but this model took 30 hours to
 run and did not converge. Therefore, I fit separate models for
 each year of the study using syntax like the following. 
 
-```{r, eval = FALSE}
+```{r, eval = FALSE, echo = TRUE}
 m_age3 <- brm(
   formula = formula,
   data = d_age3,
@@ -284,19 +288,19 @@ library(patchwork)
 
 (ref:student-t-priors) Prior densities (left) versus posterior densities (right) for the random-effect standard deviations. I changed the prior to be tighter, so that it favor values up to 7.5. This prior still turned out to be very conservative, given that the posterior samples for these values are all less than 3.
 
-```{r student-t-priors, echo = FALSE, fig.cap = "(ref:student-t-priors)", fig.width = 4, fig.height = 3, out.width = "66%"}
+```{r student-t-priors, echo = FALSE, fig.cap = "(ref:student-t-priors)", fig.width = 6, fig.height = 2.75, out.width = "100%"}
 p1 + p2
 ```
 
 Model summary for unfamiliar-initial mispronunciation trials:
 
-```{r}
+```{r, echo = TRUE}
 summary(mp_unfam, priors = TRUE, prob = .9)
 ```
 
 Model summary for familiar-initial mispronunciation trials:
 
-```{r}
+```{r, echo = TRUE}
 summary(mp_fam, priors = TRUE, prob = .9)
 ```
 
@@ -322,7 +326,7 @@ child × condition ability adjustments (simultaneously requested using
 nested under `/` them), plus specific item-level difficulties (`1 | Item`)
 and item-pair level difficulties (`1 | WordGroup`).
 
-```{r, eval = FALSE}
+```{r, eval = FALSE, echo = TRUE}
 d <- readr::read_csv("./data/mp-norming-data.csv.gz")
 
 priors <- c(
@@ -369,7 +373,7 @@ Model summary for retention trials at age 5:
 m_norm <- readr::read_rds("./data/mp-norming-m2.rds.gz")
 ```
 
-```{r}
+```{r, echo = TRUE}
 summary(m_norm, priors = TRUE, prob = .9)
 ```
 

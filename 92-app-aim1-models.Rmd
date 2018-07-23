@@ -1,6 +1,15 @@
 Computational details for Specific Aim 1 {#aim1-gca-models}
 ========================================================================
 
+```{r setup, include = FALSE}
+knitr::read_chunk("./helpers.R")
+if (interactive()) source("./helpers.R")
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+```{r helpers, message = FALSE, warning = FALSE}
+```
+
 Growth curve analyses
 ------------------------------------------------------------------------
 
@@ -13,11 +22,11 @@ scaling a unit change in Time^1^ was equal to change from the start to
 the end of the analysis window. Table \@ref(tab:poly-feature-range) shows
 the ranges of the time features.
 
-```{r poly-feature-range, echo = FALSE, message = FALSE, warning = FALSE}
+```{r poly-feature-ranges, echo = FALSE, message = FALSE, warning = FALSE}
 library(dplyr)
 library(rstanarm)
 library(ggplot2)
-theme_set(theme_grey())
+theme_set(theme_teej())
 
 d_m <- readr::read_csv("./data/aim1-model-ready.csv.gz")
 
@@ -49,7 +58,7 @@ each time bin; `Others` counts looks to the other three images.
 `cbind(Primary, Others)` is used to package both counts together for a
 logistic regression.
 
-```{r, eval = FALSE}
+```{r, eval = FALSE, echo = TRUE}
 library(rstanarm)
 
 # Run chains on different cores
@@ -85,26 +94,24 @@ using `Study:ResearchID` effects. The effects in each level are allowed
 to correlate. For example, I would expect that participants with low
 average looking probabilities (low intercepts) to have flatter growth
 curves (low Time^1^ effects), and this relationship would be captured by
-one of the random-effect correlation terms. All told, the random effect
-structure and point estimates for these effects were:
+one of the random-effect correlation terms. 
+
+Printing the model object reports the point estimates of the model fixed
+effects and point-estimate correlation matrices for the random effects.
 
 ```{r, include = FALSE}
 b <- readr::read_rds("./data/stan_aim1_cubic_model.rds.gz")
 b$stan_function <- "stan_glmer"
 m <- b
-print_out <- purrr::quietly(print)(b)
-lines <- print_out$output %>% stringr::str_split("\\n") %>% unlist()
-start <- lines %>% stringr::str_which(c("Error terms"))
-end <- lines %>% stringr::str_which(c("Num. levels"))
 ```
 
-```{r, echo = FALSE}
-cat(lines[start:end], sep = "\n")
+```{r, echo = TRUE}
+print(m, digits = 2)
 ```
 
 The model used the following priors:
 
-```{r}
+```{r, echo = TRUE}
 prior_summary(m)
 ```
 
@@ -137,7 +144,7 @@ correlations <- readr::read_csv("./data/aim1-lkj-prior-demo.csv.gz")
 
 ggplot(correlations) +
   aes(x = sdcor) +
-  geom_histogram(binwidth = .1, boundary = 0) +
+  geom_histogram(binwidth = .1, boundary = 0, color = "grey92") +
   facet_wrap("Model", labeller = label_both) +
   labs(
     x = "Random effect correlation",
@@ -145,17 +152,18 @@ ggplot(correlations) +
     caption = "4,000 prior samples drawn per model")
 ```
 
+Summary of the familiar word recognition model with diagnostics and 90%
+uncertainty intervals:
 
-Summary of the familiar word recognition model:
-
-```{r}
+```{r, echo = TRUE}
 # the last 20 column names are the random effects
 ranef_names <- tail(colnames(as_tibble(m)), 20)
 
 summary(
   object = m, 
   pars = c("alpha", "beta", ranef_names),
-  probs = c(.05, .5, .95))
+  probs = c(.05, .95),
+  digits = 3)
 ```
 
 
@@ -175,7 +183,7 @@ order to articulate the modeling decisions at play. I first convert
 the categorical variables into the right types, so that the model can 
 fit difference smooths.
 
-```{r, eval = FALSE}
+```{r, eval = FALSE, echo = TRUE}
 # Create a Study dummy variabe with Age 4 as the reference level
 phon_d$S <- factor(phon_d$Study, c("TimePoint2", "TimePoint1", "TimePoint3"))
 
@@ -193,7 +201,7 @@ I fit the generalized additive model with the code below. The outcome
 `elog` is the empirical log-odds of looking to the phonological
 competitor relative to the unrelated word.
 
-```{r, eval = FALSE}
+```{r, eval = FALSE, echo = TRUE}
 library(mgcv)
 
 phon_gam <- bam(
@@ -230,14 +238,14 @@ Summary of the phonological model:
 library(mgcv)
 ```
 
-```{r, message = FALSE}
+```{r, message = FALSE, echo = TRUE}
 m_p <- readr::read_rds("./data/aim1-phon-random-smooths.rds.gz")
 summary(m_p)
 ```
 
 Summary of the semantic model:
 
-```{r, message = FALSE}
+```{r, message = FALSE, echo = TRUE}
 m_s <- readr::read_rds("./data/aim1-semy-random-smooths.rds.gz")
 summary(m_s)
 ```

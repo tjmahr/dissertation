@@ -2084,7 +2084,7 @@ ggplot(condition_means) +
 ```
 
 
-```{r, out.width = "100%"}
+```{r, out.width = "100%", eval = FALSE}
 knitr::include_graphics("./misc/placeholder.png")
 ```
 

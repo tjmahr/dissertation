@@ -63,6 +63,42 @@ looked more to a target (e.g., *shoe*) compared to a distractor (*door*)
 when primed by an image (*clock*, assumed to activate *sock* which
 primed *shoe*).[^semantic-priming]
 
+
+@AltvaterMackensen2013 demonstrated phonological-semantic priming even
+when the prime is a mispronunciations. German-learning two-year-olds
+heard a prime word, and 200 ms later two images appear on screen (a cow,
+Kuh and a fork, Gabel), one of which was labeled ("Kuh").The prime word
+was a semantically related word ("Schaf", sheep), an
+onset-mispronunciation of the related word ("Faf" or "Taf"), or an
+unrelated prime ("Buch", book). Children looked to the target about
+equally well in the two prime conditions: approximately .62 proportion
+looks to target with a normal prime versus approximately .60 for a
+mispronunced prime. In contrast, they looked less to the target in the
+unrelated prime condition (approximately .55). Thus, the children in
+this study showed cascading activation where the mispronunciation
+activates the mispronounced word which in term activates a semantically
+related word.
+
+@Chow2017 performed a very similar study to the one I present for Aim 1.
+applied a very similar Visual World Paradigm English-learning 24-
+and 30-month-olds saw a 2 x 2 grid of images which included a
+phonological (cohort) competitor and a semantic competitor, and they
+heard a prompt to view one of the images (Look at the bee). On filler
+trials, the target word and an unrelated image onscreen alongside the
+competitors. On test trials, the target word (bee) was not pictured
+onscreen, so the display had two unrelated images (sandwich, dress), a
+phonological competitor (bus), and a semantic competitor (cat). They
+found an early temporary advantage (a growth curve bump) in looks to the
+phonological competitor, followed by a late, more stable advantage for
+the semantic competitor. They found that increased receptive vocabulary
+predicted more looks to the phonological competitor and fewer looks to
+the semantic competitor. (They interpret the semantic effect as a
+consequence of the early phonological effect causing children to fixate
+on the semantic word later.) Their results support a kind of cascading
+activation: "Toddlers, like adults, extract phonological information
+from the spoken word faster than they extract semantic information." 
+
+
 [^semantic-priming]: @Arias-Trejo2009 is commonly cited as evidence of
 semantic priming effects. Toddlers heard sentences like "I saw a cat...
 dog". During the word *dog*, two images (dog and door) are presented.

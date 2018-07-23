@@ -16,6 +16,9 @@ haystack develops regularity and becomes easier to search.
 
 But there's a trap here. One promising route to efficient lexical representations is to have children lazily encode lexical information on demand. That's the idea of holistic or underspecified representations, and it is safe to say that it has been discredited by mispronunciation studies and word recognition studies. So how we take for granted that lexical representations are well specified. 
 
+Leach and Samuel (2007) make a distinction between *lexical configuration* and *lexical engagement*. If we adopt the analogy that the lexicon is a mental dictionary, a word's configuration is the information found in its dictionary entry: sound, meaning, syntactic roles, and orthography. A word's engagement is its connection to other words, like competitors or cohorts or semantic relatives. Children's words are well-configured for the earliest stages of development.
+
+
 I occasionally like to describe word recognition or lexical access. 
 
 Suppose . Then this finding is somewhat puzzling: 
