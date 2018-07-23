@@ -2,37 +2,86 @@ Referent selection {#aim2-introduction}
 =======================================================================
 
 In the earlier chapters, I studied word recognition by examining how
-young listeners recognize familar words. But these children do not know
-all the words they encounter. Thus, another avenue for studying word
+young listeners recognized familar words. But these children do not know
+all the words they encounter. Another avenue for studying word
 recognition is to examine how listeners respond to unfamiliar or novel
-stimuli.
+stimuli. This study looks at how children responded to mispronunciations
+and novel words in a two-image word recognition experiment.
 
 How phonetically detailed are children's words?
 ------------------------------------------------------------------------
 
-The study I report here is a mispronunciation study. It is part of a long, productive line of research has focused on how children respond to
-mispronunciations of familar words. The motivation for this research was to determine how
-detailed children's phonological representations were. One hypothesis
-held that infants and toddlers did not need to store words in much
-phonetic or phonological detail because they know so few words. In other words, their lexicon had *underspecified* or *holistic* representations.
+There has been long, productive line of research of how children respond to
+mispronunciations of familar words. The motivation for this research was
+to determine how detailed children's phonological representations are.
+One hypothesis held that infants and toddlers do not need to store words
+in much phonetic or phonological detail because they know so few words.
+In other words, their lexicon had *underspecified* or *holistic*
+representations.
 
-Some of the earliest arguments for underspecified or holistic representations come from arguments based on principles of how to design or engineer a lexicon. Namely, the sound-word learning system should be lazy: It should encode just enough phonetic detail needed to recognize a word and fill in more details as the need arises. This is what is meant by underspecification. Why encode detail on “doggie” when there are no competing items like “toggie” or “dokkie” or “tokkie”? Novice word learners have very few words, so they should need not very specified representations to recognize their first words. 
-In fact, this could be advantageous: "Perhaps children benefit from the sparseness of
-their lexicon by encoding only the detail necessary to distinguish
-words" [@Swingley2000, p. 148]. 
+One common argument for underspecified or holistic representations poses
+the problem as a design or enginneering problem. It considers the
+question: What would be a smart way to build up a lexicon? One solution
+is that the lexical learning system should be lazy, encoding words in
+just enough phonetic detail to differentiate others and adding more
+details as the need arises. In other words, early words should be
+underspecified and pick up details on demand. Why fully encode the
+phonetic form of "doggie" when there is no competition from similiar
+words like “toggie” or “dokkie” or “tokkie”? A more efficient solution
+would be to encode a minimal amount of phonetic detail. In fact, this
+strategy could be developmentally advantageous: "Perhaps children
+benefit from the sparseness of their lexicon by encoding only the detail
+necessary to distinguish words" [@Swingley2000, p. 148].
+
+Charles-Luce and Luce (1990, 1995) are commonly cited touchstones for
+this argument. Charles-Luce and Luce compared the expressive (1990) and
+receptive (1995) lexicons of 5- and 7 year-olds against those of adults.
+They observed that adults had much denser phonological neighborhoods
+than the children, and they suggest that children may only have holistic
+representation of words given these sparser neighborhoods. Dollaghan
+(1994) rebutted the 1990 study, observing that the kids have sparser
+neighborhoods because they have sparse lexicons. Dollaghan (1994) also
+showed that young children indeed have packed lexicons. Coady and Aslin
+(2003) observed that children's lexicons are comparatively denser early
+on in development if a child's first words are made up of more common
+sounds and word shapes.
+
+Large scale structural studies of lexicons are rather limited. They describe the knowledge to be learned instead of the content of the representations throughout development.
+
+Better to report the things that young children do.
+
+Shvachkin (1948/1973) taught Russian children (10-24 months old) minimal pairs like gak/dak, and then requested one of the words. These children failed to discriminate the minimal pairs. Barton (1976) found that 27--35-month-olds who, say, knew the words "bear" and "pear" could differentiate them successfully, but when the children had to learn one of the words, then they were less successful at differentiating them.
+
+found that 2-year-olds had difficulty learning minimal
+pairs of real words like bear and pear. If children could spontaneously
+name, say, bear and pear, they could reliably select those words in a
+forced-choice test (at approximately 90% accuracy). If a child had learn
+one of the pair's words, say *pear*, they were much less successful on
+the forced choice task (50-60% successful). The discrepancy leads to the
+conclusion that newly learned words are underspecified.
 
 
-I use the word *lazy* because of 
-
-Charles-Luce and Luce (1990, 1995) are commonly cited advocates of this view. They examined the lexicons of 5 year olds, 7 year olds and adults, determined the number of phonological neighbors (words differing in just one phoneme), and found that 5-year-olds have much sparser phonological neighborhoods than adults. They argued that children do not need as detailed phonological representations of words, because they have less densely packed phonological neighborhoods.
-
-But those argument are based on how a system *ought* to learn words. Early behavior evidence of underspecification comes from the observation that children have trouble learning minimal pairs—words differing a single phoneme segment. Barton (1976) found that 2 year olds had trouble learning minimal pairs of real words. When these children could spontaneously name words in a minimal pair (“bear” and “pear”) they could reliably choose one of those words in a forced-choice task (approx. 90% successful). But when the child had to be taught one of the words (as when a child had to learn “pear”), they were much less successful (50-60% successful). The conclusion was that the recently learned words are underspecified.
 
 
 
+Early behavioral evidence of underspecification comes from the observation that children have trouble learning minimal pairs—words differing a single phoneme segment.
 
-Mispronunciation studies effectively
-nullified this hypothesis. For example, @Swingley2000 presented 18--23
+Fully encoding those phonetic features seems inefficient for the small lexicons.
+
+Novice word learners have very few words, so they should need not very specified representations to recognize their first words. 
+
+Extensive work by Werker and colleagues' with the Switch task has clarified things. 
+
+The Switch Task, studied extensively by Werker and colleagues, also supports the underspecification argument. In the classic Switch paradigm, a child is habituated to the ostensive naming of two novel-object/novel-word associations. In other words, they see a novel object and hear a paired novel word (*liff*) and see different novel object with a different paired nonword (*neem*). Once the child is habituated, there is a critical switch trial where the *liff*-object is displayed but labeled with the other nonword *neem*. If the child looks longer on the switch, then we infer that they detected the change and are paying more attention because their expectations were violated. This paradigm fits into the debate about representations because 14-month-olds could detect the *liff*-*neem* switch but not a minimal pair *bih*-*dih* switch. 
+
+
+Werker and colleagues consistently apply a developmental explanation for these findings. Learning a sound-object mapping is more difficult than detecting a change perceptual change. 17 month olds and 20 month olds can successfully learn bih/dih, and 14 month olds with larger vocabularies may be more successful at detecting the bih/dih switch. The older children are more experienced word-learners, so they can learn a minimal pair more easily. The 14 month olds are still novice word learners, but the ones who know more words may be more likely learn the minimal pair. The attentional and cognitive demands of word-learning for these children are too great for them to encode the fine-grained phonetic detail needed to learn a minimal pair.
+
+These behavioral results suggest that children may have underspecified representations for recently learned words. Or that minimal pairs are harder to learn because they require a child to build up two differentiated representations.
+That conclusion begs the question, however, of whether a child has actually learned the word or just has an inchoate representation from a few laboratory exposures to a nonword. They provide scant evidence that a child's representations are indeed holistic or underspecified.
+
+Rather than focusing on how to design a lexicon or children's challenges in learning phonetically similar words, why just study the specificity of children's lexical representations? This is where the mispronunciation studies come into play.  
+@Swingley2000 presented 18--23
 month-olds two familiar images onscreen, like baby and dog, and heard a
 correct production (*where's the baby*) or a mispronunciation (*where's
 the vaby*). Children looked to the correct productions about 73% of the
@@ -44,6 +93,7 @@ recognition. (@Swingley2002 found the same pattern of results for 14--15
 month olds with 60% looks to correct productions and around 53.5% looks
 for mispronunications.)
 
+Bailey and Plunkett created custom word-lists for children and included mispronunciations for words that a child purportedly learned long before testing and only recently before testing. They did not find a difference between the two types of words.
 
 
 
@@ -61,23 +111,39 @@ and a 2-feature mispronunciation yielded more looks than a 3-feature
 one. Finally, in the nonword condition, the children looked more to the
 novel object than the familiar one, demonstrating *fast referent
 selection* as they associated novel words to novel objects in the
-moment. A similar pattern of effects was observed in the
+moment. 
+
+
+Our lab showed a similar pattern of effects was observed in the
 mispronunciation study by @MPPaper with preschoolers mapping real words
 to familiar objects, nonwords to novel objects, and equivocating about
-mispronunciations of familiar words.
+mispronunciations of familiar words. But in that version of the task,
+children heard both a word and its mispronunciation in the same block of trials. 
+Thus, they had some basis of comparison with which to deduce that a mispronunciation was not a production of the canonical form.
+
+
+The experiment in this study is blah blah blah. 
+
+
+For this project, I am interested in whether any developmental changes in mispronunciation process occur over the preschool years. A priori, I expect children to become more permissive.
 
 Swingley and Aslin (2007) trained 18 month olds on novel words. These words were either totally new words (like meb or shang) or neighbors of known words (like tog [dog] or gall [ball]). 
 
-_add more mispronunciation findings_
 
-As with lexical competition, it is unclear how children’s responses to
-mispronunciations and novel words change over time or how individual
-differences among children change over time. For example, do children
-become more forgiving of mispronunciations as they mature and learn more
-words? We might expect so, as children become more experienced at
-listening to noisy, degraded, or misspoken speech.
 
-_add more novel word selection findings_
+
+
+Referent selection
+-----------------------------------------------------------------------
+
+Mispronunciations are not the only nonwords a young child might hear. In fact,
+if a child knows very few words, we expect them to bombarded by new and
+novel words. There has been a great deal of research on how children handle 
+nonwords, especially when paired with a novel object as its referent (mutual exclusivity, as in .... and novel-name nameless ....
+
+
+
+"To the extent that a word links sound and meaning, any time that link is used to guide behavior, a word is being used. Thus, word use also includes processes such as comprehending known words, and even determining referents for new words."
 
 Another open question involves the development of fast referent
 selection. At face value, we might expect a child’s ability to associate
@@ -85,6 +151,7 @@ new words with unfamiliar objects to be more direct measure of
 word-learning capacity than a child’s ability to process known words.
 Under this assumption, we would expect individual differences in fast
 referent selection to be correlated with vocabulary growth. But
+
 @McMurray2012 propose that the same basic process is at play in both
 recognition of familiar words and fast association of nonwords. In
 experiments, the observed behaviors are the same: Children hear a word
@@ -95,6 +162,78 @@ recognition and fast referent selection dissociate and which one is a
 better predictor of vocabulary growth.
 
 
+Children have a strong novelty bias. In @Horst2011, two-year-olds were
+familiarized to novel objects. They were later tested with a prompt to
+select a novel object (*Can you get the fode?*) from three choices: two
+familiarized novel objects and one new unfamiliarized *super-novel*
+object. They demonstrated a clear preference for the super-novel object.
+@Mather2012 replicated the preference a super-novel during a word
+recognition eyetracking task. In this case, 22-month-old
+English-learning toddlers were pre-exposed to images of novel objects.
+Late, during a test trial, a familiar object, a familiarized novel
+object, and new unseen super-novel object appeared onscreen with a
+prompt to view a nonword (*Look at the gub! Look! Gub!*). Children
+looked to the novel object more than the other two objects. In a second
+experiment, they removed the familiar object leaving just the
+familiarized and super-novel objects. The advantage of the super-novel
+object only emerged after the third repetition of the trial.
+
+
+
+
+
+@Bion2013 tested referent selection in 18-, 24-, and 30-month-olds. In
+that article's second experiment, toddlers were trained on two novel
+words on disambiguation trials. They would see a familiar object and an
+unfamiliar object and hear a prompt with a nonword (*Where's the dofa?*). Later retention
+trials presented the two unfamilar objects were presented and prompted (*Where's the dofa?*). 
+Mixed in with these trials were familiar-object trials in which a
+familiar object was labeled (*Where's the car?*). In that experiment, children
+looked more to the target on the familiar word trials than on the
+nonword disambiguation trials. For the 30-month olds: 82% versus 68% percentage of
+looks to the target. 
+
+
+Importantly, they found a correlation between CDI
+expressive vocabulary and proportion of looks on disambiguation trials,
+r(61) = .37, (this is a partial correlation that controls for age). 
+
+Interestingly, they found that children performed better on the familiar-word than the novel-word trials. The authors, however, make a point to note that fast referent selection is not necessary for word-learning: "Those 18-month-olds whose accuracy scores on Disambiguation trials were lower than [*chance*] were reported to produce as many as 389 words .... those 24-month-olds who failed to show a disambiguation bias produced as many as 417 words". In other words, a toddler may purportedly know hundreds of words but still not reliably look to a novel object given a novel label.
+
+
+
+The current study
+------------------------------------------------------------------------
+
+
+As with lexical competition, it is unclear how children’s responses to
+mispronunciations and novel words change over time or how individual
+differences among children change over time. For example, do children
+become more forgiving of mispronunciations as they mature and learn more
+words? We might expect so, as children become more experienced at
+listening to noisy, degraded, or misspoken speech.
+
+
+
+
+<!-- In this study, I tackle these two lines of research: The development of -->
+<!-- lexical competition effects and individual differences in familiar word -->
+<!-- recognition. I report the results of a longitudinal study of word -->
+<!-- recognition in preschoolers at age 3, age 4, and age 5. The study is -->
+<!-- described in detail in [Chapter \@ref(aim1-method)](#aim1-method). -->
+<!-- Briefly stated, this experiment tested word recognition by presenting -->
+<!-- prompts like "find the horse" and recording children's looks to an array -->
+<!-- of four images. The array of images included the target, a phonological -->
+<!-- competitor, a semantic competitor, and an unrelated image. In  -->
+<!-- [Chapter \@ref(fam-rec)](#fam-rec), I analyze the development patterns of -->
+<!-- familiar word recognition (looks to the target) and how individual -->
+<!-- differences change over time. In -->
+<!-- [Chapter \@ref(lex-competitors)](#lex-competitors), I study how the -->
+<!-- phonological and semantic competitors influence word recognition and how -->
+<!-- the influence of the competitors changes over time. Finally, in  -->
+<!-- [Chapter \@ref(aim1-discussion)](#aim1-discussion), I link these two -->
+<!-- lines of research together and describe both sets of results in terms of -->
+<!-- lexical processing dynamics. -->
 
 
 
@@ -103,5 +242,4 @@ better predictor of vocabulary growth.
 
 
 
-
-In programming, there is a distinction between eager and lazy evaluation. In the former, a function call like f(x, g(y)) computes the value of subfunction call g(y) immediately, but in the latter, g(y) is only computed when it is needed. If the value of g(y) is never used inside of f(), perhaps because of some if-branch, then g(y) is never evaluated, saving computation resources.
+<!-- In programming, there is a distinction between eager and lazy evaluation. In the former, a function call like f(x, g(y)) computes the value of subfunction call g(y) immediately, but in the latter, g(y) is only computed when it is needed. If the value of g(y) is never used inside of f(), perhaps because of some if-branch, then g(y) is never evaluated, saving computation resources. -->

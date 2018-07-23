@@ -1080,18 +1080,12 @@ Children also showed limited year-over-year changes in this task. Indeed, many c
 
 * talk about vocab effects
 
-The findings here replicated those of @Bion2013, namely that concurrent vocabulary size positively predicted the amount of looking to the novel object on nonword trials. They however make a point to note that fast referent selection is not necessary for word-learning: "In fact, those 18-month-olds whose accuracy scores on Disambiguation trials were lower than 0.50 were reported to produce as many as 389 words .... those 24-month-olds who failed to show a disambiguation bias produced as many as 417 words". In other words, a toddler may purportedly know hundreds of words but still not reliably look to a novel object given a novel label.
+The findings here replicated those of @Bion2013, namely that concurrent vocabulary size positively predicted the amount of looking to the novel object on nonword trials. 
 
 * talk about how nonword peaks were weak predictors of growth
 
 
 
-In @Horst2011, two-year-olds were familiarized to novel objects. They were later tested to prompted to select a novel object (*can you get the fode?*) from three choices: 2 familiarized novel objects and 1 new unfamiliarized novel object. They demonstrated a clear preference for the unfamiliarized novel object. 
-
-
-
-
-@Bion2013 tested referent-selection in 18, 24, and 30 month-olds. In that article's second experiment, toddlers were trained on two novel words on disambiguation trials. They would see a familiar object and an unfamiliar object and hear a prompt with a nonword. Later retention trials presented the two unfamilar objects were presented and named. Mixed in with these trials were familiar object trials  in which the familiar object was labeled (e.g., car). In that experiment, children looked more to the target on the familiar word trialsthan on the nonword trials. For the 30-month olds: 82% versus 68% percentage of looks to the target. Importantly, they found a correlation between CDI expressive vocabulary and proportion of looks on disambiguation trials, r(61) = .37, (this is a partial correlation that controls for age).
 
 In this experiment, children heard more words in total (6). The 3-year-olds in our study had the same peak looking proportion for both kinds of words around .83.
 
