@@ -45,8 +45,9 @@ A nonword is just a word you haven't learned yet
 --------------------------------------------------------------------------
 
 I hypothesized that the nonword condition might be more difficult than
-the real word condition, particularly for younger children. This
-prediction did not bear out at all, and indeed, there was an advantage
+the real word condition, particularly for younger children as seen in
+@Bion2013. This prediction did not bear out at all, and indeed, there
+was an advantage
 in the nonword condition in later ages. Part of this advantage may be a
 novelty bias. @TRACE_Mispro used the TRACE model of word recognition
 [@TRACE] to simulate these kinds of situations. In one set of
@@ -59,8 +60,30 @@ familiar words causes the novel word to win out. In both of these
 accounts, children can quickly associate the novel object with a nonword
 because there are no familiar words to interfere with the process.
 
+The data probably supports both processing accounts. During data
+reduction, I separated trials based on initial-fixation location because
+children become increasingly likely to start nonword trials on the novel
+object. This bias affected 50% of nonword trials at age 3, 55% at age 4,
+and 59% at age 5. There is a novelty preference that for these trials
+that gets stronger with development. Children are also developing
+inchoate lexical representations of these nonwords, consistent with
+low-frequency lexical item simulations. Children were on average were
+able to recall the unfamiliar image paired with 5/6 nonwords.
 
-In this case, children build up prepotent activation of the novel
+
+The findings of @Swingley2007 can help us understand the mispronunciation retention results.
+In that study, toddlers were better
+able to retain unneighbored nonwords (like *shang* or *meb*) compared to
+neighbored nonwords (mispronunciations like *tog* [*dog*] or *gall*
+[*ball*]). They concluded that part of the fast-referent selection involves a
+probability calculation in which children "evaluat[e] the likelihood that an
+utterance conveys a new word". 
+
+
+
+
+
+@TRACE_Mispro simulated the nonword processing with TRACE in order to 
 
 
 
@@ -84,14 +107,6 @@ Why do children prefer nonwords over familiar words? The most obvious answer wou
 <!-- Not sure where I am going here... It's not just the word forms alone but the child's expectations I guess and those expectations might change or become more efficient with age. This is not as big of a concern for the four-image task because the child hears well-formed words. -->
 
 - referential looking predicted retention
-
-This result
-here is consistent with Swingley and Aslin (2007) in which toddlers were better
-able to retain unneighbored nonwords (like *shang* or *meb*) compared to
-neighbored nonwords (i.e., mispronunciations like *tog* [*dog*] or *gall*
-[*ball*]). They concluded that part of the fast-referent selection involves a
-probability calculation in which children "evaluat[e] the likelihood that an
-utterance conveys a new word". 
 
 
 
