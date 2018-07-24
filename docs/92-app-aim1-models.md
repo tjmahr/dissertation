@@ -2,6 +2,10 @@
 Computational details for Specific Aim 1 {#aim1-gca-models}
 ========================================================================
 
+
+
+
+
 Growth curve analyses
 ------------------------------------------------------------------------
 
@@ -15,7 +19,7 @@ the end of the analysis window. Table \@ref(tab:poly-feature-range) shows
 the ranges of the time features.
 
 
-Table: (\#tab:poly-feature-range)Ranges of the polynomial time features.
+Table: (\#tab:poly-feature-ranges)Ranges of the polynomial time features.
 
 Feature                      Min       Max     Range
 ------------------  ------------  --------  --------
@@ -74,24 +78,54 @@ using `Study:ResearchID` effects. The effects in each level are allowed
 to correlate. For example, I would expect that participants with low
 average looking probabilities (low intercepts) to have flatter growth
 curves (low Time^1^ effects), and this relationship would be captured by
-one of the random-effect correlation terms. All told, the random effect
-structure and point estimates for these effects were:
+one of the random-effect correlation terms. 
+
+Printing the model object reports the point estimates of the model fixed
+effects and point-estimate correlation matrices for the random effects.
 
 
 
 
-```
+```r
+print(m, digits = 2)
+#> stan_glmer
+#>  family:       binomial [logit]
+#>  formula:      cbind(Primary, Others) ~ (ot1 + ot2 + ot3) * Study + (ot1 + ot2 + 
+#> 	   ot3 | ResearchID/Study)
+#>  observations: 12584
+#> ------
+#>                     Median MAD_SD
+#> (Intercept)         -0.47   0.03 
+#> ot1                  1.57   0.06 
+#> ot2                  0.05   0.04 
+#> ot3                 -0.18   0.03 
+#> StudyTimePoint2      0.41   0.03 
+#> StudyTimePoint3      0.70   0.04 
+#> ot1:StudyTimePoint2  0.56   0.08 
+#> ot1:StudyTimePoint3  1.10   0.08 
+#> ot2:StudyTimePoint2 -0.16   0.05 
+#> ot2:StudyTimePoint3 -0.35   0.05 
+#> ot3:StudyTimePoint2 -0.12   0.04 
+#> ot3:StudyTimePoint3 -0.21   0.04 
+#> 
 #> Error terms:
 #>  Groups           Name        Std.Dev. Corr             
-#>  Study:ResearchID (Intercept) 0.305                     
-#>                   ot1         0.691     0.20            
-#>                   ot2         0.437    -0.11  0.02      
-#>                   ot3         0.294    -0.11 -0.44 -0.06
-#>  ResearchID       (Intercept) 0.264                     
-#>                   ot1         0.423     0.78            
-#>                   ot2         0.125    -0.75 -0.56      
-#>                   ot3         0.058    -0.23 -0.31  0.19
-#> Num. levels: Study:ResearchID 484, ResearchID 195
+#>  Study:ResearchID (Intercept) 0.3054                    
+#>                   ot1         0.6914    0.20            
+#>                   ot2         0.4367   -0.11  0.02      
+#>                   ot3         0.2938   -0.11 -0.44 -0.06
+#>  ResearchID       (Intercept) 0.2635                    
+#>                   ot1         0.4228    0.78            
+#>                   ot2         0.1251   -0.75 -0.56      
+#>                   ot3         0.0576   -0.23 -0.31  0.19
+#> Num. levels: Study:ResearchID 484, ResearchID 195 
+#> 
+#> Sample avg. posterior predictive distribution of y:
+#>          Median MAD_SD
+#> mean_PPD 49.86   0.06 
+#> 
+#> ------
+#> For info on the priors used see help('prior_summary.stanreg').
 ```
 
 The model used the following priors:
@@ -143,8 +177,8 @@ extreme, degenerate values.
 <p class="caption">(\#fig:lkj-prior)(ref:lkj-prior)</p>
 </div>
 
-
-Summary of the familiar word recognition model:
+Summary of the familiar word recognition model with diagnostics and 90%
+uncertainty intervals:
 
 
 ```r
@@ -154,7 +188,8 @@ ranef_names <- tail(colnames(as_tibble(m)), 20)
 summary(
   object = m, 
   pars = c("alpha", "beta", ranef_names),
-  probs = c(.05, .5, .95))
+  probs = c(.05, .95),
+  digits = 3)
 #> 
 #> Model Info:
 #> 
@@ -169,74 +204,74 @@ summary(
 #>  groups:       Study:ResearchID (484), ResearchID (195)
 #> 
 #> Estimates:
-#>                                                   mean   sd   5%   50%   95%
-#> (Intercept)                                     -0.5    0.0 -0.5 -0.5  -0.4 
-#> ot1                                              1.6    0.1  1.5  1.6   1.7 
-#> ot2                                              0.0    0.0  0.0  0.0   0.1 
-#> ot3                                             -0.2    0.0 -0.2 -0.2  -0.1 
-#> StudyTimePoint2                                  0.4    0.0  0.4  0.4   0.5 
-#> StudyTimePoint3                                  0.7    0.0  0.6  0.7   0.8 
-#> ot1:StudyTimePoint2                              0.6    0.1  0.4  0.6   0.7 
-#> ot1:StudyTimePoint3                              1.1    0.1  1.0  1.1   1.2 
-#> ot2:StudyTimePoint2                             -0.2    0.1 -0.2 -0.2  -0.1 
-#> ot2:StudyTimePoint3                             -0.4    0.1 -0.4 -0.4  -0.3 
-#> ot3:StudyTimePoint2                             -0.1    0.0 -0.2 -0.1  -0.1 
-#> ot3:StudyTimePoint3                             -0.2    0.0 -0.3 -0.2  -0.2 
-#> Sigma[Study:ResearchID:(Intercept),(Intercept)]  0.1    0.0  0.1  0.1   0.1 
-#> Sigma[Study:ResearchID:ot1,(Intercept)]          0.0    0.0  0.0  0.0   0.1 
-#> Sigma[Study:ResearchID:ot2,(Intercept)]          0.0    0.0  0.0  0.0   0.0 
-#> Sigma[Study:ResearchID:ot3,(Intercept)]          0.0    0.0  0.0  0.0   0.0 
-#> Sigma[Study:ResearchID:ot1,ot1]                  0.5    0.0  0.4  0.5   0.6 
-#> Sigma[Study:ResearchID:ot2,ot1]                  0.0    0.0  0.0  0.0   0.0 
-#> Sigma[Study:ResearchID:ot3,ot1]                 -0.1    0.0 -0.1 -0.1  -0.1 
-#> Sigma[Study:ResearchID:ot2,ot2]                  0.2    0.0  0.2  0.2   0.2 
-#> Sigma[Study:ResearchID:ot3,ot2]                  0.0    0.0  0.0  0.0   0.0 
-#> Sigma[Study:ResearchID:ot3,ot3]                  0.1    0.0  0.1  0.1   0.1 
-#> Sigma[ResearchID:(Intercept),(Intercept)]        0.1    0.0  0.1  0.1   0.1 
-#> Sigma[ResearchID:ot1,(Intercept)]                0.1    0.0  0.1  0.1   0.1 
-#> Sigma[ResearchID:ot2,(Intercept)]                0.0    0.0  0.0  0.0   0.0 
-#> Sigma[ResearchID:ot3,(Intercept)]                0.0    0.0  0.0  0.0   0.0 
-#> Sigma[ResearchID:ot1,ot1]                        0.2    0.0  0.1  0.2   0.3 
-#> Sigma[ResearchID:ot2,ot1]                        0.0    0.0 -0.1  0.0   0.0 
-#> Sigma[ResearchID:ot3,ot1]                        0.0    0.0  0.0  0.0   0.0 
-#> Sigma[ResearchID:ot2,ot2]                        0.0    0.0  0.0  0.0   0.0 
-#> Sigma[ResearchID:ot3,ot2]                        0.0    0.0  0.0  0.0   0.0 
-#> Sigma[ResearchID:ot3,ot3]                        0.0    0.0  0.0  0.0   0.0 
+#>                                                   mean   sd     5%     95% 
+#> (Intercept)                                     -0.469  0.032 -0.523 -0.419
+#> ot1                                              1.575  0.066  1.465  1.682
+#> ot2                                              0.048  0.038 -0.014  0.110
+#> ot3                                             -0.175  0.026 -0.218 -0.130
+#> StudyTimePoint2                                  0.410  0.035  0.355  0.468
+#> StudyTimePoint3                                  0.697  0.035  0.641  0.757
+#> ot1:StudyTimePoint2                              0.565  0.079  0.437  0.695
+#> ot1:StudyTimePoint3                              1.099  0.080  0.968  1.233
+#> ot2:StudyTimePoint2                             -0.157  0.052 -0.242 -0.073
+#> ot2:StudyTimePoint3                             -0.354  0.053 -0.443 -0.267
+#> ot3:StudyTimePoint2                             -0.121  0.036 -0.181 -0.061
+#> ot3:StudyTimePoint3                             -0.213  0.036 -0.275 -0.155
+#> Sigma[Study:ResearchID:(Intercept),(Intercept)]  0.093  0.008  0.081  0.107
+#> Sigma[Study:ResearchID:ot1,(Intercept)]          0.042  0.013  0.022  0.064
+#> Sigma[Study:ResearchID:ot2,(Intercept)]         -0.015  0.008 -0.029 -0.001
+#> Sigma[Study:ResearchID:ot3,(Intercept)]         -0.010  0.005 -0.019 -0.001
+#> Sigma[Study:ResearchID:ot1,ot1]                  0.478  0.043  0.411  0.551
+#> Sigma[Study:ResearchID:ot2,ot1]                  0.006  0.019 -0.026  0.036
+#> Sigma[Study:ResearchID:ot3,ot1]                 -0.089  0.013 -0.111 -0.069
+#> Sigma[Study:ResearchID:ot2,ot2]                  0.191  0.015  0.166  0.217
+#> Sigma[Study:ResearchID:ot3,ot2]                 -0.007  0.008 -0.019  0.005
+#> Sigma[Study:ResearchID:ot3,ot3]                  0.086  0.008  0.074  0.099
+#> Sigma[ResearchID:(Intercept),(Intercept)]        0.069  0.012  0.051  0.090
+#> Sigma[ResearchID:ot1,(Intercept)]                0.087  0.018  0.060  0.117
+#> Sigma[ResearchID:ot2,(Intercept)]               -0.025  0.009 -0.040 -0.011
+#> Sigma[ResearchID:ot3,(Intercept)]               -0.004  0.004 -0.011  0.003
+#> Sigma[ResearchID:ot1,ot1]                        0.179  0.043  0.113  0.252
+#> Sigma[ResearchID:ot2,ot1]                       -0.030  0.015 -0.056 -0.006
+#> Sigma[ResearchID:ot3,ot1]                       -0.008  0.008 -0.022  0.004
+#> Sigma[ResearchID:ot2,ot2]                        0.016  0.008  0.005  0.030
+#> Sigma[ResearchID:ot3,ot2]                        0.001  0.002 -0.002  0.006
+#> Sigma[ResearchID:ot3,ot3]                        0.003  0.002  0.001  0.008
 #> 
 #> Diagnostics:
-#>                                                 mcse Rhat n_eff
-#> (Intercept)                                     0.0  1.0  1086 
-#> ot1                                             0.0  1.0   857 
-#> ot2                                             0.0  1.0   842 
-#> ot3                                             0.0  1.0  1156 
-#> StudyTimePoint2                                 0.0  1.0  1034 
-#> StudyTimePoint3                                 0.0  1.0   959 
-#> ot1:StudyTimePoint2                             0.0  1.0   674 
-#> ot1:StudyTimePoint3                             0.0  1.0   934 
-#> ot2:StudyTimePoint2                             0.0  1.0   836 
-#> ot2:StudyTimePoint3                             0.0  1.0   762 
-#> ot3:StudyTimePoint2                             0.0  1.0  1183 
-#> ot3:StudyTimePoint3                             0.0  1.0  1390 
-#> Sigma[Study:ResearchID:(Intercept),(Intercept)] 0.0  1.0  1093 
-#> Sigma[Study:ResearchID:ot1,(Intercept)]         0.0  1.0   475 
-#> Sigma[Study:ResearchID:ot2,(Intercept)]         0.0  1.0   323 
-#> Sigma[Study:ResearchID:ot3,(Intercept)]         0.0  1.0   792 
-#> Sigma[Study:ResearchID:ot1,ot1]                 0.0  1.0   547 
-#> Sigma[Study:ResearchID:ot2,ot1]                 0.0  1.0   277 
-#> Sigma[Study:ResearchID:ot3,ot1]                 0.0  1.0   806 
-#> Sigma[Study:ResearchID:ot2,ot2]                 0.0  1.0   665 
-#> Sigma[Study:ResearchID:ot3,ot2]                 0.0  1.0  1131 
-#> Sigma[Study:ResearchID:ot3,ot3]                 0.0  1.0  1220 
-#> Sigma[ResearchID:(Intercept),(Intercept)]       0.0  1.0   913 
-#> Sigma[ResearchID:ot1,(Intercept)]               0.0  1.0   636 
-#> Sigma[ResearchID:ot2,(Intercept)]               0.0  1.0   307 
-#> Sigma[ResearchID:ot3,(Intercept)]               0.0  1.0   711 
-#> Sigma[ResearchID:ot1,ot1]                       0.0  1.0   261 
-#> Sigma[ResearchID:ot2,ot1]                       0.0  1.0   242 
-#> Sigma[ResearchID:ot3,ot1]                       0.0  1.0   331 
-#> Sigma[ResearchID:ot2,ot2]                       0.0  1.0   257 
-#> Sigma[ResearchID:ot3,ot2]                       0.0  1.0   439 
-#> Sigma[ResearchID:ot3,ot3]                       0.0  1.0   340 
+#>                                                 mcse  Rhat  n_eff
+#> (Intercept)                                     0.001 1.005 1086 
+#> ot1                                             0.002 1.004  857 
+#> ot2                                             0.001 1.006  842 
+#> ot3                                             0.001 1.002 1156 
+#> StudyTimePoint2                                 0.001 1.007 1034 
+#> StudyTimePoint3                                 0.001 1.006  959 
+#> ot1:StudyTimePoint2                             0.003 1.014  674 
+#> ot1:StudyTimePoint3                             0.003 1.005  934 
+#> ot2:StudyTimePoint2                             0.002 1.003  836 
+#> ot2:StudyTimePoint3                             0.002 1.006  762 
+#> ot3:StudyTimePoint2                             0.001 1.003 1183 
+#> ot3:StudyTimePoint3                             0.001 1.001 1390 
+#> Sigma[Study:ResearchID:(Intercept),(Intercept)] 0.000 1.002 1093 
+#> Sigma[Study:ResearchID:ot1,(Intercept)]         0.001 1.009  475 
+#> Sigma[Study:ResearchID:ot2,(Intercept)]         0.000 1.023  323 
+#> Sigma[Study:ResearchID:ot3,(Intercept)]         0.000 1.003  792 
+#> Sigma[Study:ResearchID:ot1,ot1]                 0.002 1.003  547 
+#> Sigma[Study:ResearchID:ot2,ot1]                 0.001 1.013  277 
+#> Sigma[Study:ResearchID:ot3,ot1]                 0.000 1.005  806 
+#> Sigma[Study:ResearchID:ot2,ot2]                 0.001 1.010  665 
+#> Sigma[Study:ResearchID:ot3,ot2]                 0.000 1.001 1131 
+#> Sigma[Study:ResearchID:ot3,ot3]                 0.000 1.004 1220 
+#> Sigma[ResearchID:(Intercept),(Intercept)]       0.000 1.004  913 
+#> Sigma[ResearchID:ot1,(Intercept)]               0.001 1.008  636 
+#> Sigma[ResearchID:ot2,(Intercept)]               0.001 1.026  307 
+#> Sigma[ResearchID:ot3,(Intercept)]               0.000 1.006  711 
+#> Sigma[ResearchID:ot1,ot1]                       0.003 1.010  261 
+#> Sigma[ResearchID:ot2,ot1]                       0.001 1.021  242 
+#> Sigma[ResearchID:ot3,ot1]                       0.000 1.006  331 
+#> Sigma[ResearchID:ot2,ot2]                       0.000 1.037  257 
+#> Sigma[ResearchID:ot3,ot2]                       0.000 1.009  439 
+#> Sigma[ResearchID:ot3,ot3]                       0.000 1.007  340 
 #> 
 #> For each parameter, mcse is Monte Carlo standard error, n_eff is a crude measure of effective sample size, and Rhat is the potential scale reduction factor on split chains (at convergence Rhat=1).
 ```

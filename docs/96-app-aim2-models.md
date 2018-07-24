@@ -4,6 +4,9 @@ Computational details for Specific Aim 2 {#aim2-gca-models}
 
 
 
+
+
+
 Real words versus nonwords growth curves
 ------------------------------------------------------------------------
 
@@ -31,6 +34,16 @@ random-effect structure of the model with the `/` indicating that data
 from each `Condition` is nested within each `ResearchID`.
 
 
+```r
+library(brms)
+
+# Fit a hierarchical logistic regression model
+formula <- bf(
+  Target | trials(Trials) ~ 
+    (1 + ot1 + ot2 + ot3) * Condition + 
+    (1 + ot1 + ot2 + ot3 | ResearchID/Condition), 
+  family = binomial)
+```
 
 The priors for the model are described below. The regression effects
 (`class = "b"`) have a moderately informative prior of Normal(0, 1).
@@ -45,6 +58,20 @@ is like the normal distribution but it provides slightly thicker
 tails which allow extreme or outlying values.
 
 
+```r
+priors <- c(
+  # Population-average intercept
+  set_prior(class = "Intercept", "normal(0, 1)"),
+  # Population-average slopes
+  set_prior(class = "b", "normal(0, 1)"),
+  # ... expect somewhat larger range of effects for linear time
+  set_prior(class = "b", coef = "ot1", "normal(0, 2)"),
+  # Correlations for random effect terms
+  set_prior(class = "cor", "lkj(2)"),
+  # Standard deviation of the distribution from
+  # which random-intercepts are drawn
+  set_prior(class = "sd", "student_t(7, 0, 3)"))
+```
 
 I originally tried a single model containing all three years with
 corresponding year effects, year × time interactions, and
@@ -53,6 +80,19 @@ run and did not converge. Therefore, I fit separate models for
 each year of the study using syntax like the following. 
 
 
+```r
+m_age3 <- brm(
+  formula = formula,
+  data = d_age3,
+  prior = priors,
+  chains = 4,
+  iter = 2000,
+  cores = 4,
+  control = list(adapt_delta = .99))
+
+# Save the output
+readr::write_rds(m_age3, "age3_mp.rds.gz")
+```
 
 This code fits the model using four sampling `chains` in parallel over
 four processing `cores`. Early attempts at the model produced warnings,
@@ -328,14 +368,15 @@ are easily enclosed by the prior densities.
 (ref:student-t-priors) Prior densities (left) versus posterior densities (right) for the random-effect standard deviations. I changed the prior to be tighter, so that it favor values up to 7.5. This prior still turned out to be very conservative, given that the posterior samples for these values are all less than 3.
 
 <div class="figure" style="text-align: center">
-<img src="96-app-aim2-models_files/figure-html/student-t-priors-1.png" alt="(ref:student-t-priors)" width="66%" />
+<img src="96-app-aim2-models_files/figure-html/student-t-priors-1.png" alt="(ref:student-t-priors)" width="100%" />
 <p class="caption">(\#fig:student-t-priors)(ref:student-t-priors)</p>
 </div>
 
 Model summary for unfamiliar-initial mispronunciation trials:
 
 
-```
+```r
+summary(mp_unfam, priors = TRUE, prob = .9)
 #>  Family: binomial 
 #>   Links: mu = logit 
 #> Formula: Target | trials(Trials) ~ (1 + ot1 + ot2 + ot3) * Study + (1 + ot1 + ot2 + ot3 | ResearchID/Study) 
@@ -400,7 +441,8 @@ Model summary for unfamiliar-initial mispronunciation trials:
 Model summary for familiar-initial mispronunciation trials:
 
 
-```
+```r
+summary(mp_fam, priors = TRUE, prob = .9)
 #>  Family: binomial 
 #>   Links: mu = logit 
 #> Formula: Target | trials(Trials) ~ (1 + ot1 + ot2 + ot3) * Study + (1 + ot1 + ot2 + ot3 | ResearchID/Study) 
@@ -485,6 +527,33 @@ nested under `/` them), plus specific item-level difficulties (`1 | Item`)
 and item-pair level difficulties (`1 | WordGroup`).
 
 
+```r
+d <- readr::read_csv("./data/mp-norming-data.csv.gz")
+
+priors <- c(
+  # Population-average intercept
+  set_prior(class = "Intercept", "normal(0, 1)"),
+  # Population-average slopes
+  set_prior(class = "b", "normal(0, 1)"),
+  # Standard deviation of the distribution from
+  # which random-intercepts are drawn
+  set_prior(class = "sd", "student_t(7, 0, 2)"))
+
+m_norm <- brm(
+  Correct ~ ItemType * c_peak_10 +
+    (1 | ResearchID/ItemType) +
+    (1 | WordGroup) +
+    (1 | Item),
+  prior = priors,
+  family = bernoulli,
+  chains = 4,
+  iter = 2000,
+  cores = 4,
+  control = list(adapt_delta = .99),
+  data = d)
+
+readr::write_rds(m_norm, "./data/mp-norming-m2.rds.gz") 
+```
 
 
 
@@ -494,7 +563,8 @@ Model summary for retention trials at age 5:
 
 
 
-```
+```r
+summary(m_norm, priors = TRUE, prob = .9)
 #>  Family: bernoulli 
 #>   Links: mu = logit 
 #> Formula: Correct ~ ItemType * c_peak_10 + (1 | ResearchID/ItemType) + (1 | WordGroup) + (1 | Item) 

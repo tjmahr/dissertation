@@ -1,5 +1,5 @@
 
-Sensitivity to mispronunciations
+Sensitivity to mispronunciations {#sensitivity-to-mispronunciations}
 =======================================================================
 
 
@@ -462,29 +462,17 @@ on this measure.
 
 ## Looking behaviors and word learning
 
-At age 5, following the second block of this task, we tested children's
-retention of the labels for the novel objects. They were tested using an
-open-set procedure: They were shown each of the images and asked to name
-it. I am not analyzing those results, because children seldom named the
-novel objects using the labels from the task. For example, the
-rainbow-filled flasks used for *sooze* (mispronounced *shoes*) were
-called *science*, *potions*, *magic*, *bottles*, among other labels. 
+At age 5, we tested children's retention of the novel objects paired
+with the mispronunciations and nonwords. Children saw the two novel
+objects and heard either the mispronunciation or the nonword, and they
+had to point to the objects that went with the image. All six nonwords
+and mispronunciations were tested. 
 
-Following the open-set naming task, children had a closed-set recognition task where
-two of the novel objects were paired. For example, the flasks (*sooze*)
-was paired with the trolley (*geeve*) from the nonword condition.
-Children saw two images of the novel objevts (say, *trolley1.jpeg* and
-*flasks1.jpeg*), heard one of novel labels, and had to point to the named
-object. In a later trial during testing, the other label was tested but
-using different images for the objects (*trolley2.jpeg* and
-*flasks2.jpeg*). In a block of testing, there were 12 trials, 6 for
-nonwords and 6 for mispronunciations.
-
-Table \@ref(tab:mp-norming-table) shows the results for each item. Overall, 
-children performed better on the nonwords than the real words. For
-four of the pairs, children performed decidedly better on the nonwords
-than the mispronunciations on four of pairs, and performed about equally
-well on the remaining two (*gake*-*pumm*, *wice*-*bape*). 
+Table \@ref(tab:mp-norming-table)
+shows the results for each item. Overall, children performed better on
+the nonwords than the real words. Children performed decidedly better on
+the nonwords than the mispronunciations on four of pairs, and performed
+about equally well on the remaining two (*gake*-*pumm*, *wice*-*bape*).
 
 
 Table: (\#tab:mp-norming-table)Results for the item recognition tests.
@@ -513,9 +501,9 @@ soup         mispronunciation   shoup           63 / 107   59% &plusmn; 4.8
 
 
 I performed an item-response analysis using a mixed-effects logistic
-regression model. Appendix XXX reports the code used to specify the
-model. The model included varying intercepts for child, child x item
-type, item, and item x word-group. The first two effects capture
+regression model. [Appendix \@ref(aim2-gca-models)](#aim2-gca-models) reports the code used to specify the
+model. The model included varying intercepts for child, child × item
+type, item, and word-group. The first two effects capture
 information about a child's general ability and their ability on each
 type of item. The second two effects capture information about an item's
 difficulty and difficulty of object-pairs. I also asked whether growth
@@ -530,25 +518,25 @@ productions of the familiar word. The model included data from
 101 children.
 
 The model confirmed that children were much more successful on the
-nonword trials. For a child with an average misproncunciation peak
+nonword trials. For a child with an average mispronunciation peak
 (.72), the predicted proportion correct on the
 mispronunciation retention trials was
-.64 [.49, .76]. For a child with an average peak
-on the nonword trials (.90), the predicted proportion
-correct on the mispronunciation retention trials was
-.82 [90% UI: .70, .89]. A 1-SD (.19) increase in
-the mispronunciation peak predicted a change in proportion correct of
+.64 [.49, .76]. A 1-SD (.19) increase
+in the mispronunciation peak predicted a change in proportion correct of
 &minus;.05 [&minus;.10, &minus;.01]. Children who looked more
 to the familiar object on these mispronunciation trials were less
-successful during the retention trials. A 1-SD increase 
-(.10 to 1.00) in nonword peaks predicted a change in
-proportion correct of &minus;.01 [&minus;.05, .02]. The
-uncertainty interval here includes positive and negative values. It is
-uncertain where the effect is positive or negative, so I conclude that
-there was not a reliable effect in the nonword case. 
+successful during the retention trials. For a child with an average peak
+on the nonword trials (.90), the predicted proportion
+correct on the nonword retention trials was
+.82 [90% UI: .70, .89]. A 1-SD increase (.10 to 1.00)
+in nonword peaks predicted a change in proportion correct of
+&minus;.01 [&minus;.05, .02]. The uncertainty interval here
+includes positive and negative values. It is uncertain whether the
+effect is positive or negative, so I conclude that there was not a
+reliable effect in the nonword case.
 
 Figure \@ref(fig:mp-norm-trials-by-peak) visualizes the model results.
-First, the difference in height between the two curves reflects the
+The difference in height between the two curves reflects the
 general advantage in the nonword condition. The negative slope for the
 mispronunciation line captures the effect of growth curve peaks. A
 change in misprounciation growth curve peak from .5 to 1 roughly
@@ -609,13 +597,10 @@ Child-level measures were not predictive of looking behaviors at age 4 or age 5.
 <div class="figure" style="text-align: center">
 <img src="23-mispronunciations-notebook_files/figure-html/mp-vs-real-peaks-1.png" alt="(ref:mp-vs-real-peaks)" width="50%" />
 <p class="caption">(\#fig:mp-vs-real-peaks)(ref:mp-vs-real-peaks)</p>
-</div><div class="figure" style="text-align: center">
-<img src="23-mispronunciations-notebook_files/figure-html/mp-vs-real-peaks-2.png" alt="(ref:mp-vs-real-peaks)" width="50%" />
-<p class="caption">(\#fig:mp-vs-real-peaks)(ref:mp-vs-real-peaks)</p>
 </div>
 
 
-<img src="./misc/placeholder.png" width="100%" style="display: block; margin: auto;" />
+
 
 
 

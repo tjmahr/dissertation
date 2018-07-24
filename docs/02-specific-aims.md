@@ -87,11 +87,11 @@ Summary
 ------------------------------------------------------------------------
 
 This project investigates how word recognition develops during the
-preschool years. There has been no research studying word recognition
-longitudinally after age two. Findings will show how individual
-differences in lexical processing change over time and can reveal how
-low-level mechanisms underlying word recognition mature longitudinally
-in children. These findings will have translational value by studying
-processing abilities that subserve word learning and by assessing the
-predictive relationships between early word recognition ability and
-later language outcomes.
+preschool years. There has been no published research studying word
+recognition longitudinally after age two. Findings will show how
+individual differences in lexical processing change over time and can
+reveal how low-level mechanisms underlying word recognition mature
+longitudinally in children. These findings will have translational value
+by studying processing abilities that subserve word learning and by
+assessing the predictive relationships between early word recognition
+ability and later language outcomes.

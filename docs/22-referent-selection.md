@@ -1,5 +1,5 @@
 
-Development of referent selection
+Development of referent selection {#real-nonword-selection}
 =======================================================================
 
 
@@ -186,7 +186,7 @@ mixed effects model with restricted maximum likelihood via the lme4 R
 package [vers. 1.1.17; @lme4]. I regressed the
 children's average growth curve peaks onto experimental condition, age
 group, and the age × condition interaction. The model included randomly
-varying intercepts for child and child-year. This modeling software does
+varying intercepts for child and child × age. This modeling software does
 not provide *p*-values for its effects estimates, so for these
 comparisons, I decided that an effect was significant when the *t*
 statistic for a population-level ("fixed") effect had an absolute value
@@ -229,23 +229,45 @@ only a significant improvement from age 4 to age 5, *B*<sub>5-4</sub> =
 
 
 
-Finally, I asked whether expressive vocabulary size correlated with peak looking performance on the two conditions. At all three years, children with larger vocabularies had higher peak looking values. At age 3 and age 4, vocabulary positively correlated with real-word looking performance, but only the age-4 correlation was significant.
 
 
-Table: (\#tab:unnamed-chunk-9)Correlation between EVT-2 standard scores and curve peaks
 
-Study   Condition       n            r        p
-------  -----------  ----  -----------  -------
-Age 3   nonwords      137          .30   < .001
-Age 3   real words    137          .15     .086
-Age 4   nonwords      153          .20     .015
-Age 4   real words    153          .23     .004
-Age 5   nonwords      149          .23     .005
-Age 5   real words    149   &minus;.06     .475
+Finally, I asked whether expressive vocabulary size correlated with peak
+looking performance on the two conditions. Correlations among real word
+peaks, nonword peaks, expressive vocabulary and receptive vocabulary are
+given in Table XX. At all three years, children with larger vocabularies
+had higher nonword peak looking values. At age 3 and age 4, vocabulary
+positively correlated with real-word looking performance.
+Figure \@ref(fig:peak-concurrent-vocab-cors) illustrates the relationship
+between the peaks and expressive vocabulary. When there is more
+variability in the peaks, as at age 3, the vocabulary effect on the
+nonwords is strongest. 
 
-<img src="22-referent-selection_files/figure-html/unnamed-chunk-9-1.png" width="80" style="display: block; margin: auto;" />
 
-**Summary.** There is a decisive advantage for the nonword condition after age 3. Performance begins to saturate at age 4 with the group averages for peak looking probabilities over 90%. The real word condition is more anomalous with performance only showing average increases from age 4 to age 5.
+Table: (\#tab:unnamed-chunk-10)Correlation between curve peaks and vocabulary measures
+
+Study    &nbsp;            Real word peak          Nonword peak        PPVT-4 standard   
+-------  ----------------  ----------------------  ------------------  ------------------
+Age 3    Nonword peak      *r*(149) = .24**        &nbsp;              &nbsp;            
+&nbsp;   PPVT-4 standard   *r*(139) = .23**        *r*(139) = .46***   &nbsp;            
+&nbsp;   EVT-2 standard    *r*(137) = .15          *r*(137) = .30***   *r*(137) = .69*** 
+Age 4    Nonword peak      *r*(155) = .29***       &nbsp;              &nbsp;            
+&nbsp;   PPVT-4 standard   *r*(152) = .15          *r*(152) = .23**    &nbsp;            
+&nbsp;   EVT-2 standard    *r*(153) = .23**        *r*(153) = .20*     *r*(152) = .78*** 
+Age 5    Nonword peak      *r*(151) = .13          &nbsp;              &nbsp;            
+&nbsp;   EVT-2 standard    *r*(149) = &minus;.06   *r*(149) = .23**    &nbsp;            
+
+
+
+
+(ref:peak-concurrent-vocab-cors) Text reference for caption
+
+<div class="figure" style="text-align: center">
+<img src="22-referent-selection_files/figure-html/peak-concurrent-vocab-cors-1.png" alt="(ref:peak-concurrent-vocab-cors)" width="75%" />
+<p class="caption">(\#fig:peak-concurrent-vocab-cors)(ref:peak-concurrent-vocab-cors)</p>
+</div>
+
+
 
 **Summary**. Children performed similarly for real words and nonwords
 at age 3. Children's processing of nonwords improved at age 4. At this
@@ -255,9 +277,10 @@ Consequently, children did not improve in processing of nonwords from
 age 4 to age 5. For the real word condition, children's performance did
 not change from age 3 to age 4 but it did improve from age 4 to age 5.
 At both age 4 and age 5, there was a decisive advantage for the nonword
-condition. Finally, children with larger vocabularies looked more to the
-nonwords compared to children with smaller vocabularies. A comparable effect for
-real words was observed at age 3 and age 4 but only reliably observed at age 4.
+condition. Finally, children with larger expressive vocabularies looked
+more to the nonwords compared to children with smaller vocabularies. A
+comparable effect for real words was observed at age 3 and age 4 but
+only reliably observed at age 4.
 
 
 ## Does age 3 referent selection better predict age 5 vocabulary?
@@ -352,18 +375,12 @@ Children also showed limited year-over-year changes in this task. Indeed, many c
 
 * talk about vocab effects
 
-The findings here replicated those of @Bion2013, namely that concurrent vocabulary size positively predicted the amount of looking to the novel object on nonword trials. They however make a point to note that fast referent selection is not necessary for word-learning: "In fact, those 18-month-olds whose accuracy scores on Disambiguation trials were lower than 0.50 were reported to produce as many as 389 words .... those 24-month-olds who failed to show a disambiguation bias produced as many as 417 words". In other words, a toddler may purportedly know hundreds of words but still not reliably look to a novel object given a novel label.
+The findings here replicated those of @Bion2013, namely that concurrent vocabulary size positively predicted the amount of looking to the novel object on nonword trials. 
 
 * talk about how nonword peaks were weak predictors of growth
 
 
 
-In @Horst2011, two-year-olds were familiarized to novel objects. They were later tested to prompted to select a novel object (*can you get the fode?*) from three choices: 2 familiarized novel objects and 1 new unfamiliarized novel object. They demonstrated a clear preference for the unfamiliarized novel object. 
-
-
-
-
-@Bion2013 tested referent-selection in 18, 24, and 30 month-olds. In that article's second experiment, toddlers were trained on two novel words on disambiguation trials. They would see a familiar object and an unfamiliar object and hear a prompt with a nonword. Later retention trials presented the two unfamilar objects were presented and named. Mixed in with these trials were familiar object trials  in which the familiar object was labeled (e.g., car). In that experiment, children looked more to the target on the familiar word trialsthan on the nonword trials. For the 30-month olds: 82% versus 68% percentage of looks to the target. Importantly, they found a correlation between CDI expressive vocabulary and proportion of looks on disambiguation trials, r(61) = .37, (this is a partial correlation that controls for age).
 
 In this experiment, children heard more words in total (6). The 3-year-olds in our study had the same peak looking proportion for both kinds of words around .83.
 
