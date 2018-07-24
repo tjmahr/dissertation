@@ -21,6 +21,7 @@ rmd_files:
   - 18-aim1-general-discussion.Rmd
   - 19-h-check.Rmd
   - 20-part-aim2.Rmd
+  - 21-aim2-introduction.Rmd
   - 22-aim2-methods.Rmd
   - 22-referent-selection.Rmd
   - 23-mispronunciations-notebook.Rmd

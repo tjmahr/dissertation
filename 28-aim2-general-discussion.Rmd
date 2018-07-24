@@ -15,6 +15,8 @@ no dissociation.
 
 novelty, plus penalized performance
 
+Why do children prefer nonwords over familiar words? The most obvious answer would be a novelty effect. Another reason would be that these are unambiguous words. Because of the mispronunciation trials, a child hears familiar words or bad versions of familiar words. It could be that cost of processing or recovering from mispronunciations makes children more cautious or less certain for familiar words. Whereas for the nonwords, there is no ambiguity.
+
 -mispronunciations
 
 In terms of lexical processing, the mispronounced syllable onset leads
@@ -57,4 +59,4 @@ Limitations and implications
 Limitations. The biggest limitation to this study is that it applied a procedure designed for toddlers on preschoolers. That is to say, it was too easy for there to be large year-over-year developmental changes in their performance. Children were successful at recognizing real words and fast-selecting referents for nonwords at age 3 and improved a litt
 
 
-Why do children prefer nonwords over familiar words? The most obvious answer would be a novelty effect. Another reason would be that these are unambiguous words. Because of the mispronunciation trials, a child hears familiar words or bad versions of familiar words. It could be that cost of processing or recovering from mispronunciations makes children more cautious or less certain for familiar words. Granted, this is speculation. Whereas for the nonwords, there is no ambiguity.
+
