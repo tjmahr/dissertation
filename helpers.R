@@ -46,7 +46,10 @@ constants <- list(
     "Mispronunciation trials starting on familiar image",
   note_mp_unfam =
     "Mispronunciation trials starting on unfamiliar image",
-  note_unfam = "Trials starting on unfamiliar image"
+  note_unfam = "Trials starting on unfamiliar image",
+  col_real = "#6b7a8f",
+  col_nonword = "#f7882f",
+  col_mispronunciation = "#cyan4"
 )
 
 library(extrafont)

@@ -1,4 +1,4 @@
-Sensitivity to mispronunciations
+Sensitivity to mispronunciations {#sensitivity-to-mispronunciations}
 =======================================================================
 
 ```{r setup, include = FALSE}
@@ -1525,8 +1525,8 @@ called *science*, *potions*, *magic*, *bottles*, among other labels.
 
 Following the open-set naming task, children had a closed-set recognition task where
 two of the novel objects were paired. For example, the flasks (*sooze*)
-was paired with the trolley (*geeve*) from the nonword condition.
-Children saw two images of the novel objevts (say, *trolley1.jpeg* and
+were paired with the trolley (*geeve*) from the nonword condition.
+Children saw two images of the novel objects (say, *trolley1.jpeg* and
 *flasks1.jpeg*), heard one of novel labels, and had to point to the named
 object. In a later trial during testing, the other label was tested but
 using different images for the objects (*trolley2.jpeg* and
@@ -1534,10 +1534,10 @@ using different images for the objects (*trolley2.jpeg* and
 nonwords and 6 for mispronunciations.
 
 Table \@ref(tab:mp-norming-table) shows the results for each item. Overall, 
-children performed better on the nonwords than the real words. For
-four of the pairs, children performed decidedly better on the nonwords
-than the mispronunciations on four of pairs, and performed about equally
-well on the remaining two (*gake*-*pumm*, *wice*-*bape*). 
+children performed better on the nonwords than the real words. Children
+performed decidedly better on the nonwords than the mispronunciations on
+four of pairs, and performed about equally well on the remaining two
+(*gake*-*pumm*, *wice*-*bape*).
 
 ```{r mp-norming-table}
 se_prop <- littlelisteners::se_prop
@@ -1784,9 +1784,9 @@ sd_nw_peak <- means$nonword$sd_value %>%
 ```
 
 I performed an item-response analysis using a mixed-effects logistic
-regression model. Appendix XXX reports the code used to specify the
-model. The model included varying intercepts for child, child x item
-type, item, and item x word-group. The first two effects capture
+regression model. [Appendix \@ref(aim2-gca-models)](#aim2-gca-models) reports the code used to specify the
+model. The model included varying intercepts for child, child × item
+type, item, and word-group. The first two effects capture
 information about a child's general ability and their ability on each
 type of item. The second two effects capture information about an item's
 difficulty and difficulty of object-pairs. I also asked whether growth
@@ -1801,25 +1801,25 @@ productions of the familiar word. The model included data from
 `r n_peaks` children.
 
 The model confirmed that children were much more successful on the
-nonword trials. For a child with an average misproncunciation peak
+nonword trials. For a child with an average mispronunciation peak
 (`r mean_mp_peak`), the predicted proportion correct on the
 mispronunciation retention trials was
-`r props$b_mean_mispronunciation_prop`. For a child with an average peak
-on the nonword trials (`r mean_nw_peak`), the predicted proportion
-correct on the mispronunciation retention trials was
-`r props$b_mean_nonword_prop`. A 1-SD (`r sd_mp_peak`) increase in
-the mispronunciation peak predicted a change in proportion correct of
+`r props$b_mean_mispronunciation_prop`. A 1-SD (`r sd_mp_peak`) increase
+in the mispronunciation peak predicted a change in proportion correct of
 `r props_sd$d_mean_upsd_mispronunciation_prop`. Children who looked more
 to the familiar object on these mispronunciation trials were less
-successful during the retention trials. A 1-SD increase 
-(`r sd_nw_peak` to 1.00) in nonword peaks predicted a change in
-proportion correct of `r props_sd$d_mean_upsd_nonword_prop`. The
-uncertainty interval here includes positive and negative values. It is
-uncertain where the effect is positive or negative, so I conclude that
-there was not a reliable effect in the nonword case. 
+successful during the retention trials. For a child with an average peak
+on the nonword trials (`r mean_nw_peak`), the predicted proportion
+correct on the nonword retention trials was
+`r props$b_mean_nonword_prop`. A 1-SD increase (`r sd_nw_peak` to 1.00)
+in nonword peaks predicted a change in proportion correct of
+`r props_sd$d_mean_upsd_nonword_prop`. The uncertainty interval here
+includes positive and negative values. It is uncertain whether the
+effect is positive or negative, so I conclude that there was not a
+reliable effect in the nonword case.
 
 Figure \@ref(fig:mp-norm-trials-by-peak) visualizes the model results.
-First, the difference in height between the two curves reflects the
+The difference in height between the two curves reflects the
 general advantage in the nonword condition. The negative slope for the
 mispronunciation line captures the effect of growth curve peaks. A
 change in misprounciation growth curve peak from .5 to 1 roughly
@@ -2013,72 +2013,6 @@ ggplot(condition_means) +
   theme(plot.subtitle = element_text(size = rel(.9)))
 
 
-min_peak <- condition_means %>% 
-  filter(Condition == "mp", Study == "Age 3") %>% 
-  filter(Peak == min(Peak))  
-  
-ggplot(condition_means) + 
-  aes(x = Study, y = Peak, color = Condition) + 
-    geom_hline(yintercept = .5, size = 2, color = "white") + 
-  geom_text(
-    aes(label = label),
-    data = data_frame(
-      Peak = 1.06, 
-      label = c("mispronunciations", " "),
-      Condition = c("mp", "real"),
-      Study = c("Age 3", "Age 3")), 
-    position = position_dodge(width = .75), 
-    size = 3, 
-    family = "Lato Semibold") +
-  geom_text(
-    aes(label = label),
-    data = data_frame(
-      Peak = 1.06, 
-      label = c(" ", "real words"),
-      Condition = c("mp", "real"),
-      Study = c("Age 4", "Age 4")), 
-    position = position_dodge(width = 1.15), 
-    size = 3, 
-    family = "Lato Semibold") +
-  geom_point(
-    data = . %>% anti_join(min_peak),
-    position = position_jitterdodge(jitter.width = 0.25, dodge.width = 1.05), 
-    alpha = .5, 
-    shape = 1) +
-  ggrepel::geom_text_repel(
-    aes(label = "posterior mean"),
-    force = 10,
-    xlim = c(.90, NA),
-    # ylim = c(NA, .07),
-    color = "grey30",
-    data = min_peak,
-    size = 3, 
-    direction = "x",
-    family = "Lato Medium",
-    vjust = .5, 
-    point.padding = .5,
-    label.padding = .5,
-    position = position_nudge(x = -.25)) +
-  geom_point(
-    data = min_peak,
-    shape = 1, 
-    position = position_nudge(x = -.25)) +
-  geom_boxplot(
-    width = .2, 
-    position = position_dodge(width = .3), 
-    outlier.alpha = 0)  +
-  guides(color = FALSE) +
-  labs(
-    title = "Mispronunciation penalty",
-    x = NULL,
-    y = NULL,
-    subtitle = "Peaks for trials starting on unfamiliar image") + 
-  scale_x_discrete(labels = x_levels) +
-  scale_y_continuous(
-    minor_breaks = c(.1, .3, .5, .7, .9),
-    breaks = c(0, .2, .4, .6, .8, 1)) +
-  scale_color_manual(values = c("cyan4", "#6b7a8f", "#f7882f"))  +
-  theme(plot.subtitle = element_text(size = rel(.9)))
 
 
 ```

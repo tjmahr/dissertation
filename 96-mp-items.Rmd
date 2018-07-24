@@ -1,0 +1,243 @@
+Effects of specific mispronunciations {#aim2-mp-items}
+========================================================================
+
+```{r, include = FALSE}
+knitr::read_chunk("./helpers.R")
+if (interactive()) source("./helpers.R")
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+```{r helpers, message = FALSE, warning = FALSE}
+```
+
+```{r, include = FALSE}
+# knitr::opts_chunk$set(cache = TRUE)
+```
+
+```{r}
+library(dplyr)
+library(littlelisteners)
+library(ggplot2)
+
+items <- tribble(
+  ~WordGroup, ~Condition, ~Form,
+  "cake", "real", "cake",
+  "cake", "MP", "gake",
+  "duck", "real", "duck",
+  "duck", "MP", "guck",
+  "girl", "real", "girl",
+  "girl", "MP", "dirl",
+  "rice", "real", "rice",
+  "rice", "MP", "wice",
+  "shoes", "real", "shoes",
+  "shoes", "MP", "suze",
+  "soup", "real", "soup",
+  "soup", "MP", "shoup",
+  "dog", "real", "dog",
+  "dog", "MP", "tog"
+)
+
+d <- readr::read_csv("./data/aim2-screened.csv.gz")
+
+# Aggregate looks to target
+resp_def <- create_response_def(
+  primary = "Target",
+  others = "Distractor",
+  elsewhere = "tracked",
+  missing = NA)
+
+d_trim <- d %>%
+  distinct(Time) %>%
+  littlelisteners::trim_to_bin_width(3, time_var = Time, 0, 1) %>%
+  littlelisteners::assign_bins(3, Time) %>%
+  group_by(.bin) %>%
+  mutate(BinTime = round(min(Time), -1)) %>%
+  ungroup() %>%
+  inner_join(d, .) %>%
+  aggregate_looks(
+    resp_def, Study + Age + Bias_Fam + WordGroup + Condition + BinTime ~ GazeByImageAOI)
+
+d_trim <- d_trim %>%
+  rename(Time = BinTime)
+
+both_d_trim <- d %>%
+  distinct(Time) %>%
+  littlelisteners::trim_to_bin_width(3, time_var = Time, 0, 1) %>%
+  littlelisteners::assign_bins(3, Time) %>%
+  group_by(.bin) %>%
+  mutate(BinTime = round(min(Time), -1)) %>%
+  ungroup() %>%
+  inner_join(d, .) %>%
+  aggregate_looks(
+    resp_def, Study + Age + WordGroup + Condition + BinTime ~ GazeByImageAOI)
+
+both_d_trim <- both_d_trim %>%
+  rename(Time = BinTime)
+
+pairs <- items %>%
+  tidyr::spread(Condition, Form) %>%
+  mutate(pair = sprintf("%s vs %s", real, MP))
+
+
+
+
+```
+
+
+
+
+In this section, I briefly discuss item-level differences for the
+mispronunciation task.
+
+I intended to formally analyze and model these effects as part of the
+main analysis. Prior to beginning this project, I expected that children
+would show different responses for different real-word--mispronunciation
+pairs. Not all mispronunciations are equally bad, and in fact, there
+could be some systematic tendencies in the badness of the
+mispronunciations. I hypothesized that children would show less of a
+penalty for later-acquired sounds. What I had in mind in particular was
+that *rice* and *wice* would be more similar than, say, *duck* and
+*guck* and other pairs.
+
+The design of this experiment and the data collected, however, are not
+equipped to address this hypothesis. I came to this conclusion after
+visualizing the *rice* versus *wice* looking data and observing that
+children looked to *rice* less than the other real words. Figure
+\@ref(fig:mp-vs-real) shows the growth curves for real word and
+mispronunciations. 
+
+
+(ref:mp-vs-real) Average proportion of looks to the familiar object for real words and mispronunciations. A *dog*/*tog* pair was administered at age 3 but it was replaced by *rice*/*wice* at age 4.
+
+```{r mp-vs-real, fig.cap = "(ref:mp-vs-real)", out.width="100%", fig.width = 6, fig.height = 4}
+d_trim %>%
+  left_join(pairs) %>%
+  filter(Condition != "nonsense", Bias_Fam == "Unfamiliar") %>%
+  filter(Time >= 0,  Time <= 1505) %>%
+  filter(WordGroup != "dog") %>%
+  mutate(
+    AgeNum = stringr::str_extract(Age, "\\d"),
+    SuperCondition = paste0(Study, Condition)) %>%
+  group_by(SuperCondition, Condition, Age, WordGroup) %>%
+  ggplot() +
+    aes(x = Time, y = Prop, color = SuperCondition) +
+    geom_hline(yintercept = .5, color = "white", size = 2) +
+    # geom_text(aes(group = .group, label = AgeNum)) +
+    geom_line(aes(group = .group), size = 1) +
+    facet_wrap("pair") +
+    scale_color_manual(
+      values = c("#440154FF", "#44015433", "#35608DFF",  "#35608D44", "#22A884FF",  "#22A88444")) + 
+    guides(color = FALSE) + 
+   geom_text(
+    aes(label = label),
+    data_frame(
+      SuperCondition = "TimePoint1MP",
+      Age = c("Age 3"),
+      pair = c( "soup vs shoup", "shoes vs suze", "duck vs guck"),
+      Time = c(1000, 1000, 1000),
+      Prop = c(.4, .28, .35),
+      label = Age),
+    family = "Lato Semibold", 
+    size = 4) + 
+  geom_text(
+    aes(label = label),
+    data_frame(
+      SuperCondition = "TimePoint2MP",
+      Age = c("Age 4"),
+      pair = c("rice vs wice"),
+      Time = c(1200),
+      Prop = c(.38),
+      label = Age),
+    family = "Lato Semibold", 
+    size = 4) + 
+  geom_text(
+    aes(label = label),
+    data_frame(
+      SuperCondition = "TimePoint3MP",
+      Age = c("Age 5"),
+      pair = c("girl vs dirl", "rice vs wice", "shoes vs suze"),
+      Time = c(400, 1200, 1300),
+      Prop = c(.82, .76, .70),
+      label = Age),
+    family = "Lato Semibold", 
+    size = 4) + 
+    labs(
+      title = "Mispronunciations versus real words",
+      x = constants$x_time,
+      y = constants$y_prop_fam,
+      caption = "Heavy lines: Mispronunciations. Light lines: Real words.",
+      subtitle = "Trials starting on the unfamiliar image") + 
+    theme(plot.subtitle = element_text(size = rel(.9)))
+```
+
+*Rice* and *wice*
+are indeed very similar, but children do not know *rice* very well it
+seems. In the plot, for instance, age-5 *rice* has as many looks as
+age-4 *dirl*. Given that the data tested only 6 mispronunciations per
+year, compounded by the fact that some real words are harder than
+others, I decided that it would not feasible to draw conclusions about
+different kinds of mispronunciations. A more appropriate study would
+test many more mispronunciations and vary the familiarity of the paired
+real words to handle these limitations. 
+
+It is still informative to plot the differences between the real word
+and mispronunciation lines, as in Figure \@ref(fig:mp-real-diffs). This
+plot confirms that *rice* and *wice* are very similar. One interesting,
+and somewhat unexpected feature, is how the differences increase with
+age for some items. Namely, it appears that *dirl* becomes a worse and
+worse realization of *girl* as children grow older. A similar change
+happens with *shoup* for *soup*.
+
+(ref:mp-real-diffs) Difference between the average proportion of looks to real words and mispronunciations.
+
+```{r mp-real-diffs, fig.cap = "(ref:mp-real-diffs)", out.width="100%", fig.width = 6, fig.height = 4}
+d_trim %>%
+  left_join(pairs) %>%
+  select(-(Distractor:Looks), -(PropSE:real)) %>%
+  tidyr::spread(Condition, Prop) %>%
+  mutate(diff = real - MP) %>%
+  filter(Time >= 0, Time <= 1505, Bias_Fam == "Unfamiliar") %>%
+  filter(WordGroup != "dog") %>% 
+  ggplot() +
+  aes(x = Time, y = diff, color = Age) +
+  geom_hline(yintercept = 0, color = "white", size = 2) +
+  geom_line(size = 1) +
+  facet_wrap("pair") +
+  labs(
+    title = "Real word advantage",
+    subtitle = "Trials starting on the unfamiliar image",
+    y = "Real word - mispronunciation") + 
+  scale_color_study() + 
+  geom_text(
+    aes(label = label),
+    data_frame(
+      Age = c("Age 3"),
+      pair = c("cake vs gake", "soup vs shoup", "girl vs dirl", "shoes vs suze"),
+      Time = c(1200, 1200, 800, 800),
+      diff = c(.1, .05, .05, .05),
+      label = Age),
+    family = "Lato Semibold", 
+    size = 4) + 
+  geom_text(
+    aes(label = label),
+    data_frame(
+      Age = c("Age 4"),
+      pair = c("cake vs gake", "girl vs dirl", "shoes vs suze"),
+      Time = c(400, 1400, 1000),
+      diff = c(.15, .05, .43),
+      label = Age),
+    family = "Lato Semibold", 
+    size = 4) + 
+  geom_text(
+    aes(label = label),
+    data_frame(
+      Age = c("Age 5"),
+      pair = c("girl vs dirl", "rice vs wice", "soup vs shoup"),
+      Time = c(1000, 1200, 1200),
+      diff = c(.4, .18, .35),
+      label = Age),
+    family = "Lato Semibold", 
+    size = 4) + 
+      guides(color = FALSE) + 
+  theme(plot.subtitle = element_text(size = rel(.9)))
+```

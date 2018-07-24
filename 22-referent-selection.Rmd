@@ -1,4 +1,4 @@
-Development of referent selection
+Development of referent selection {#real-nonword-selection}
 =======================================================================
 
 ```{r, include = FALSE}
@@ -604,6 +604,7 @@ ceiling-performers at age 3, `r real_ceilings$TP2` at age 4, and
 
 
 ```{r, echo = FALSE}
+
 rw_peak_lme_tp2 <- do_it_1 %>%
   select(Study, ResearchID, nonsense, real) %>%
   tidyr::gather("Condition", "Peak", -Study, -ResearchID) %>%
@@ -669,7 +670,7 @@ mixed effects model with restricted maximum likelihood via the lme4 R
 package [vers. `r packageVersion("lme4")`; @lme4]. I regressed the
 children's average growth curve peaks onto experimental condition, age
 group, and the age × condition interaction. The model included randomly
-varying intercepts for child and child-year. This modeling software does
+varying intercepts for child and child × age. This modeling software does
 not provide *p*-values for its effects estimates, so for these
 comparisons, I decided that an effect was significant when the *t*
 statistic for a population-level ("fixed") effect had an absolute value
@@ -743,8 +744,6 @@ peaks %>%
 ```
 
 
-Finally, I asked whether expressive vocabulary size correlated with peak looking performance on the two conditions. At all three years, children with larger vocabularies had higher peak looking values. At age 3 and age 4, vocabulary positively correlated with real-word looking performance, but only the age-4 correlation was significant.
-
 ```{r}
 scores <- readr::read_csv("./data-raw/test_scores.csv")
 tp1 <- scores %>% filter(Study == "TimePoint1")
@@ -766,25 +765,149 @@ peaks_and_vocabs_l <- peaks_and_vocabs %>%
   left_join(
     scores %>% mutate(Study = convert_study_to_age(Study))) 
 
-  
-peaks_and_vocabs_l %>% 
-  filter(Condition != "diff") %>% 
-  group_by(Study, Condition) %>% 
-  tidy_correlation(EVT_Standard, Peak) %>% 
-  ungroup() %>% 
-  mutate(Condition = convert_condition_to_name(Condition)) %>% 
-  select(Study, Condition, n, r = estimate, p = p.value) %>% 
+
+```
+
+
+Finally, I asked whether expressive vocabulary size correlated with peak
+looking performance on the two conditions. Correlations among real word
+peaks, nonword peaks, expressive vocabulary and receptive vocabulary are
+given in Table XX. At all three years, children with larger vocabularies
+had higher nonword peak looking values. At age 3 and age 4, vocabulary
+positively correlated with real-word looking performance.
+Figure \@ref(fig:peak-concurrent-vocab-cors) illustrates the relationship
+between the peaks and expressive vocabulary. When there is more
+variability in the peaks, as at age 3, the vocabulary effect on the
+nonwords is strongest. 
+
+```{r}
+p_stars <- function(pv) {
+  Signif <- symnum(pv, corr = FALSE, na = FALSE, 
+         cutpoints = c(0, 0.001, 0.01, 0.05, 1), 
+         symbols = c("***", "**", "*", " "))
+  format(Signif)
+}
+
+peaks_and_vocabs_w %>%
+  group_by(Study) %>%
+  tidy_correlation(EVT_Standard, PPVT_Standard, nonsense, real) %>%
+  ungroup() %>%
+  rename(r = estimate, p = p.value) %>% 
   mutate(
     r = r %>% 
       printy::fmt_fix_digits(2) %>% 
       printy::fmt_leading_zero() %>% 
       printy::fmt_minus_sign(),
-    p = printy::fmt_p_value(p)) %>% 
+    p_stars = p_stars(p),
+    line = glue::glue("*r*({n}) = {r}{p_stars}") %>% as.character()) %>% 
+  anti_join(data_frame(Study = "Age 5", column1 = "PPVT_Standard")) %>% 
+  anti_join(data_frame(Study = "Age 5", column2 = "PPVT_Standard")) %>% 
+  select(Study, column1, column2, line) %>%
+  tidyr::spread(column2, line) %>%
+  mutate(
+    column1 = 
+      factor(column1, 
+             levels = c("nonsense", "PPVT_Standard", "EVT_Standard"), 
+             labels = c("Nonword peak", "PPVT-4 standard", "EVT-2 standard"))) %>%
+  mutate_at(vars(-Study, -column1), ~ ifelse(is.na(.x), "&nbsp;", .x)) %>% 
+  arrange(Study, column1) %>%
+  select(Study, column1, real, nonsense, PPVT_Standard) %>% 
+  rename(
+    `Real word peak` = real, 
+    `Nonword peak` = nonsense, 
+    `PPVT-4 standard` = PPVT_Standard,
+    `&nbsp;` = column1) %>% 
+  mutate(
+    Study = Study %>% as.character() %>% replace_if_same_as_last("&nbsp;")) %>% 
   knitr::kable(
-    align = c("llrrr"),
-    caption = "Correlation between EVT-2 standard scores and curve peaks")
+    align = c("lllll"),
+    caption = "Correlation between curve peaks and vocabulary measures")
 
-library(lme4)
+# peaks_and_vocabs_l %>% 
+#   filter(Condition != "diff") %>% 
+#   group_by(Study, Condition) %>% 
+#   tidy_correlation(EVT_Standard, Peak) %>% 
+#   ungroup() %>% 
+#   mutate(Condition = convert_condition_to_name(Condition)) %>% 
+#   select(Study, Condition, n, r = estimate, p = p.value) %>% 
+#   mutate(
+#     r = r %>% 
+#       printy::fmt_fix_digits(2) %>% 
+#       printy::fmt_leading_zero() %>% 
+#       printy::fmt_minus_sign(),
+#     p = printy::fmt_p_value(p)) %>% 
+#   knitr::kable(
+#     align = c("llrrr"),
+#     caption = "Correlation between EVT-2 standard scores and curve peaks")
+```
+
+
+
+
+(ref:peak-concurrent-vocab-cors) Text reference for caption
+
+```{r peak-concurrent-vocab-cors, fig.cap = "(ref:peak-concurrent-vocab-cors)", out.width = "75%", fig.width = 5, height = 3}
+to_plot <- peaks_and_vocabs_l %>% 
+  filter(Condition != "diff") %>% 
+  group_by(Condition) %>% 
+  mutate(Study = fct_add_counts(Study)) %>% 
+  ungroup() 
+
+ggplot(to_plot) + 
+  aes(x = EVT_Standard, y = Peak, color = Condition) + 
+  geom_point(
+    alpha = .8, 
+    shape = 1) + 
+  facet_wrap("Study") + 
+  stat_smooth(method = "lm") + 
+  geom_text(
+    aes(label = label),
+    data = data_frame(
+      Study = stringr::str_subset(to_plot$Study, "Age 3")[1],
+      Peak = .45,
+      EVT_Standard = 45,
+      Condition = "nonsense",
+      label = c("Nonwords")), 
+    hjust = 0,
+    family = "Lato Semibold", 
+    size = 3) + 
+  geom_text(
+    aes(label = label),
+    data = data_frame(
+      Study = stringr::str_subset(to_plot$Study, "Age 4")[1],
+      Peak = .92,
+      EVT_Standard = 45,
+      Condition = "nonsense",
+      label = c("Nonwords")), 
+    hjust = 0,
+    family = "Lato Semibold", 
+    size = 3) + 
+  geom_text(
+    aes(label = label),
+    data = data_frame(
+      Study = stringr::str_subset(to_plot$Study, "Age 5")[1],
+      Peak = .72,
+      EVT_Standard = 50,
+      Condition = "nonsense",
+      label = c("Nonwords")), 
+    hjust = 0,
+    family = "Lato Semibold", 
+    size = 3) + 
+  scale_color_manual(
+    values = c("#f7882f", "#6b7a8f")) +
+  labs(
+    x = "Concurrent expressive vocabulary (EVT-2 standard)",
+    y = "Growth curve peak",
+    caption = "Lines: Regression fit ± SE") + 
+  guides(color = FALSE)
+```
+
+```{r}
+  # 
+  # col_real = "#6b7a8f",
+  # col_nonword = "#f7882f",
+  # col_mispronunciation = "#cyan4"
+
 # peaks_and_vocabs_l %>% 
 #   filter(Condition != "diff") %>% 
 #   filter(Study == "Age 3") %>% 
@@ -823,14 +946,6 @@ peak_corrs <- peaks_and_vocabs_w %>%
   tidy_correlation(nonsense, real) %>% 
   ungroup() 
 
-peaks_and_vocabs_l %>% 
-  filter(Condition != "diff") %>% 
-  ggplot() + 
-    aes(x = EVT_Standard, y = Peak, color = Condition) + 
-    geom_point(shape = 1) + 
-    facet_wrap("Study") + 
-    stat_smooth(method = "lm")
-# 
 # peaks_and_vocabs %>% 
 #   ggplot() + 
 #     aes(x = EVT_GSV, y = nonsense) + 

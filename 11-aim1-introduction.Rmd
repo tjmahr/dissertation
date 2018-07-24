@@ -200,7 +200,10 @@ phonological and semantic competitors influence word recognition and how
 the influence of the competitors changes over time. Finally, in 
 [Chapter \@ref(aim1-discussion)](#aim1-discussion), I link these two
 lines of research together and describe both sets of results in terms of
-lexical processing dynamics.
+lexical processing dynamics. 
+[Chapter \@ref(#aim1-h-check)](#aim1-h-check) reviews the results of my 
+pre-analysis research hypotheses.
+
 
 
 <!-- One first step towards understanding differences in word recognition is -->
