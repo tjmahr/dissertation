@@ -1,7 +1,54 @@
 General discussion {#aim2-discussion}
 =======================================================================
 
-This experiment tested how children responded to familiar words, one-feature mispronunciations of those familiar words, and unambiguous novel words. 
+This experiment tested how children responded to familiar words, one-feature mispronunciations of those familiar words, and unambiguous novel words. These three types of stimuli allow us to examine features of children's representations of familiar words.
+
+
+A lexical processing account of the findings
+------------------------------------------------------------------------
+
+-nonwords and real words
+
+no dissociation.
+
+-why the nonword advantage
+
+novelty, plus penalized performance
+
+-mispronunciations
+
+In terms of lexical processing, the mispronounced syllable onset leads
+them down a phonological garden path. The "d" in *dirl* activates a
+neighborhood a d-inital words. The rest of the syllable, however,
+provides information needed to activate "girl". Children therefore are slower to build up activation
+of the word because the onset-mismatch, and they show less activation
+overall because the word only matches the rime of the word. They get a
+late start and have to work with a poor-fitting form of the word. The
+finding that children are better at processing mispronunciations at
+age 5 suggests that older children are better able to build up more activation to
+these candidate rime words. 
+
+
+One complication with the lexical processing interpretation is that this is a two-image task. Children have ample time to view each image before the noun onset. In viewing the images, children can build up an expectations for the words they will hear named. This expectation can build up the resting activation of the word "girl" before it is labeled as "dirl". Thus, the lexical processing interpretation is not as simple as a child building up information from the rest of the word and matching "dirl" to the photo of the girl. 
+
+<!-- Not sure where I am going here... It's not just the word forms alone but the child's expectations I guess and those expectations might change or become more efficient with age. This is not as big of a concern for the four-image task because the child hears well-formed words. -->
+
+- referential looking predicted retention
+
+This result
+here is consistent with Swingley and Aslin (2007) in which toddlers were better
+able to retain unneighbored nonwords (like *shang* or *meb*) compared to
+neighbored nonwords (i.e., mispronunciations like *tog* [*dog*] or *gall*
+[*ball*]). They concluded that part of the fast-referent selection involves a
+probability calculation in which children "evaluat[e] the likelihood that an
+utterance conveys a new word". 
+
+
+
+
+Limitations and implications
+------------------------------------------------------------------------
+
 
 
 
