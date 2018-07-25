@@ -1,3 +1,37 @@
+```{r include=FALSE, cache=FALSE}
+# ---- set-options ----
+library(methods)
+knitr::opts_chunk$set(
+  tidy = FALSE,
+  collapse = TRUE,
+  comment = "#>",
+  out.width = 80,
+  fig.align = "center",
+  dpi = 300
+)
+
+options(width = 80)
+
+
+# ---- knitr-helper-functions ----
+is_word_output <- function() {
+  knitr::opts_knit$get("rmarkdown.pandoc.to") == "docx"
+}
+is_html_output <- knitr:::is_html_output
+is_latex_output <- knitr:::is_latex_output
+
+# Make a function that prints a string of characters if the output is pdf
+make_latex_decorator <- function(output, otherwise) {
+  function() {
+    if (is_latex_output()) output else otherwise
+  }
+}
+
+# insert_pause <- make_latex_decorator(". . .", "\n")
+# insert_slide_break <- make_latex_decorator("----", "\n")
+# insert_inc_bullet <- make_latex_decorator("> *", "*")
+insert_html_math <- make_latex_decorator("", "$$")
+```
 Effects of phonological and semantic competitors {#lex-competitors}
 =======================================================================
 
@@ -251,8 +285,13 @@ phon_d %>%
     aes(x = Time, y = Prop, color = Study) +
     geom_hline(yintercept = .25, color = "white", size = 2) +
     stat_summary(fun.y = "mean", geom = "line", size = 1) +
-    geom_text(aes(label = Study), data = data_labs, size = 4) +
+    geom_text(
+      aes(label = Study), 
+      data = data_labs, 
+      size = 4, 
+      family = "Lato Semibold") +
     facet_wrap("Focus") +
+    scale_color_study() +
     labs(
       x = "Time after target onset [ms]",
       y = "Mean proportion looking to image") +
@@ -382,7 +421,7 @@ p1 <- ggplot(basis) +
   labs(
     x = constants$x_time,
     y = NULL) +
-  theme_grey(base_size = 9) +
+  theme_teej(base_size = 9) +
   theme(
     plot.background = element_rect(
       fill = constants$col_infobox_blue,
@@ -409,15 +448,15 @@ p2 <- ggplot(weighted) +
     x = 1350, 
     y = .175, 
     color = constants$col_blue_highlight,
-    size = 3,
-    ) +
+    size = 4,
+    family = "Lato Semibold") +
   ylim(c(-.2, .2)) +
   guides(color = FALSE) +
   ggtitle("Weighted basis functions") +
   labs(
     x = constants$x_time,
     y = NULL) +
-  theme_grey(base_size = 9)  +
+  theme_teej(base_size = 9)  +
   theme(
     plot.background = element_rect(
       fill = constants$col_infobox_blue,
@@ -626,7 +665,7 @@ labs_fit_obs <- labs(
 study_labs <- data.frame(
   Age = c("Age 3", "Age 4", "Age 5"),
   x = c(775, NA, 750),
-  y = c(.17, NA, .78)
+  y = c(.07, NA, .80)
 )
 
 p1 <- phon_d %>%
@@ -636,11 +675,16 @@ p1 <- phon_d %>%
     geom_hline(size = 2, yintercept = 0, color = "white") +
     stat_summary(aes(y = elog), fun.data = mean_se, alpha = .7) +
     geom_line(aes(y = fit), data = avg, size = 1) +
-    geom_text(aes(label = Age, x = x, y = y), data = study_labs) +
+    geom_text(
+      aes(label = Age, x = x, y = y), 
+      data = study_labs,
+      size = 5,
+      family = "Lato Semibold") +
     coord_cartesian(ylim = c(-.35, .85)) +
     labs_fit_obs +
     labs(y = constants$y_elog_phon) +
-    guides(color = FALSE)
+    guides(color = FALSE) +
+    scale_color_study()
 
 
 labs_model_ci <- labs(
@@ -663,10 +707,16 @@ p2 <- b2r %>%
     geom_hline(size = 2, yintercept = 0, color = "white") +
     geom_ribbon(aes(ymin = fit - CI, ymax = fit + CI), alpha = .2) +
     geom_line(aes(color = Age), size = 1) +
-    geom_text(aes(label = Age, color = Age, x = x, y = y), data = study_labs) +
+    geom_text(
+      aes(label = Age, color = Age, x = x, y = y), 
+      data = study_labs, 
+      size = 5,
+      family = "Lato Semibold") +
     coord_cartesian(ylim = c(-.35, .85)) +
     labs_model_ci +
-    guides(color = FALSE, fill = FALSE)
+    guides(color = FALSE, fill = FALSE) +
+    scale_color_study() + 
+    scale_fill_study() 
 
 p3 <- cowplot::plot_grid(p1, p2)
 print(p3)
@@ -821,7 +871,7 @@ ggplot(differences) +
     color = constants$col_blue_highlight, linetype = "dashed") +
   geom_vline(
     aes(xintercept = max), data = sig_regions,
-    color = constants$col_blue_highlight ,linetype = "dashed") +
+    color = constants$col_blue_highlight, linetype = "dashed") +
   geom_segment(
       aes(x = min, xend = max, group = streak), y = -Inf, yend = -Inf,
       data = sig_regions, color = constants$col_blue_highlight,
@@ -1023,12 +1073,17 @@ p1 <- semy_d %>%
     geom_hline(size = 2, yintercept = 0, color = "white") +
     stat_summary(aes(y = elog), fun.data = mean_se, alpha = .7) +
     geom_line(aes(y = fit), data = avg, size = 1) +
-    geom_text(aes(x = x, y = y, label = Age), data = study_labs) +
+    geom_text(
+      aes(x = x, y = y, label = Age), 
+      data = study_labs, 
+      family = "Lato Semibold", 
+      size = 5) +
     coord_cartesian(ylim = c(-.25, 1.1)) +
     guides(color = FALSE) + 
     labs_fit_obs +
     labs(y = constants$y_elog_semy) +
-    theme_grey()
+    theme_teej() + 
+    scale_color_study()
 
 p2 <- s2r %>%
   get_predictions(
@@ -1046,8 +1101,11 @@ p2 <- s2r %>%
     geom_text(aes(x = x, y = y, color = Age, label = Age), data = study_labs) +
     coord_cartesian(ylim = c(-.25, 1.1)) +
     labs_model_ci +
-    theme_grey(base_size = 10) +
-    guides(color = FALSE, fill = FALSE)
+    theme_teej() + 
+    guides(color = FALSE, fill = FALSE)  + 
+    scale_color_study()  + 
+    scale_fill_study()
+
 
 p3 <- cowplot::plot_grid(p1, p2)
 print(p3)

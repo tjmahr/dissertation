@@ -48,14 +48,9 @@ abstract: |
   the nonwords equally well, and in fact, performed better in the nonword
   condition. Children also became to associate the familiar object with
   the mispronunciations as they grew older. At age 5, children's retention
-  of the unfamiliar objects paired with the nonwords and mispronuncitions
+  of the unfamiliar objects paired with the nonwords and mispronunciations
   was tested offline, and children showed better retention for the
   nonwords than mispronunciations.
-  
-  Research supported by R01 DC002932, R01 DC012513, T32 DC05359, and U54 HD090256.
-  
-# project will provide an integrated account of how word recognition develops from age 3 to age 5.
-  
   
 # Data for the PDF version
 year: 2018
@@ -91,4 +86,4 @@ Welcome {-}
 
 This book, when finished, will contain my dissertation research. 
 
-- Last compiled: 2018-07-24 08:38:00
+- Last compiled: 2018-07-24 19:04:36

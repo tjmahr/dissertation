@@ -27,6 +27,8 @@ bookdown::word_document2:
   pandoc_args: [
     "--csl", "./assets/apa.csl",
     "--bibliography", "./assets/refs.bib",
+    "--bibliography", "./assets/packages.bib",
+    "--reference-doc", "./assets/2018-05-17-aim1-draft.docx",
     "--filter", "pandoc-citeproc",
     "--filter", "./assets/fix-apa-ampersands.py"
   ]

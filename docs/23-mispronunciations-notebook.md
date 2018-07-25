@@ -553,7 +553,15 @@ Points were jittered by 1% to avoid overplotting. There were six trials per cond
 <p class="caption">(\#fig:mp-norm-trials-by-peak)(ref:mp-norm-trials-by-peak)</p>
 </div>
 
-**Summary**. When 5-years-olds were tested on their retention of the unfamiliar images used on the mispronunciations and nonword trials, child were much more accurate for the nonwords than the mispronunciations. Children's accuracy on the mispronunciations was related to their looking behaviors: Children looked more to the familiar image during mispronunciation trials had a lower accuracy on the mispronunciation retention trials.
+**Summary**. When 5-years-olds were tested on their retention of the
+unfamiliar images used on the mispronunciations and nonword trials,
+child were much more accurate for the nonwords than the
+mispronunciations. Children's accuracy on the mispronunciations was
+related to their looking behaviors: Children looked more to the familiar
+image during mispronunciation trials had a lower accuracy on the
+mispronunciation retention trials.
+
+
 
 
 ## Discussion
@@ -568,100 +576,105 @@ conditions, compared to trials where they hear a correct production of
 the familiar object---see Figure \@ref(fig:mp-vs-real-peaks)--or when
 they hear a nonword in a context that supports fast-referent selection. 
 Therefore, preschoolers are unquestionably sensitive to
-mispronunciations of familiar words so that they show more uncertainty when
+mispronunciations of familiar words, as they show more uncertainty when
 hearing a mispronunciation.
 
-In terms of lexical processing, the mispronounced syllable onset leads
-them down a phonological garden path. The "d" in *dirl* activates a
-neighborhood a d-inital words. The rest of the syllable, however,
-provides information needed to activate "girl". Figure XX illustrates
-these differences. Children therefore are slower to build up activation
-of the word because the onset-mismatch, and they show less activation
-overall because the word only matches the rime of the word. They get a
-late start and have to work with a poor-fitting form of the word. The
-finding that children are better at processing mispronunciations at
-age 5 suggests that children are able to build up more activation to
-these candidate rime words. 
-
-One complication to the lexical processing interpretation is that this is a two-image task. Children have had to time to view each image before the noun onset. In viewing the images, children can build up an expectations for the words they will hear named. This expectation can build up the resting activation of the word "girl" before it is labeled as "dirl". Thus, the lexical processing interpretation is not quite as simple as the child building up information from the rest of the word and matching "dirl" to the photo of the girl. Not sure where I am going here... It's not just the word forms alone but the child's expectations I guess and those expectations might change or become more efficient with age. This is not as big of a concern for the four-image task because the child hears well-formed words.
-
-
-Child-level measures were not predictive of looking behaviors at age 4 or age 5. Perhaps this is too easy. 
-
-- There is no effect of expressive vocabulary here, especially at older ages.
-- So they are sensitive but they become more accommodating of the
-    mispronounced version.
-
-(ref:mp-vs-real-peaks) Text reference for caption
+(ref:mp-vs-real-peaks) Differences in growth curve peaks for the real words and mispronunciations.
 
 <div class="figure" style="text-align: center">
 <img src="23-mispronunciations-notebook_files/figure-html/mp-vs-real-peaks-1.png" alt="(ref:mp-vs-real-peaks)" width="50%" />
 <p class="caption">(\#fig:mp-vs-real-peaks)(ref:mp-vs-real-peaks)</p>
 </div>
 
+Child-level measures generally did not predict how well children
+tolerated mispronunciations. There was a very small effect of expressive
+vocabulary at age 3 such that children with larger vocabularies looked
+more the familiar image on these trials. Althought children differed in
+their tendency to look to a familiar image when given a
+mispronunciation, these differences could not be pinned to any
+child-level measures.
 
+I also analyzed trials where children started on the familiar word and
+heard a mispronunciation. In this situation, there is no one clear
+strategy for referent selection, and children exhibit a few different
+patterns. Some listeners stay with the familiar image. Some reliably
+switch to the novel image. Some look at both equally. On average, the
+growth curve averages rush to .5---equal looking to both images and
+maximum uncertainty. At age 5, the curve does not reach quite as far
+down as the other curves, so they never fall into attain this degree of
+uncertainty. These sets of analyses mainly demonstrate that when
+children start on a familiar image and hear a mispronunciation, they
+have a few options for how to proceed. 
 
-
-
-
-
-
-
-I also analyzed trials where children started on the familiar word and heard a
-mispronunciation. In this situation, there is no one clear strategy for referent
-selection, and children exhibit a few different patterns. Some stay put. Some
-reliably switch to the novel image. Some look at both equally. On average, the
-growth curve averages rush to .5, which is equal looks to both images, which is
-maximum uncertainty. At age 5, the curve does not reach quite as far down as the
-other curves, so they never fall into maximum uncertainty. These sets of
-analyses mainly demonstrate that when children start on a familiar image and
-hear a mispronunciation, they have a few options for how to proceed.
-  
 Child-level predictors only were predictive at age 3 for curve valley. In
 this case, children with larger vocabularies or better minimal pair
 discrimination showed more consideration of the nonword object. I
 speculate that in this situation, the effect reflects that children with
 better abilities in these areas were more sensitive to the
-mispronunciation. These children were good at recognizing the mismatch
+mispronunciation. These children were better at recognizing the mismatch
 from partial information and thus allocated more credibility to the
 alternative image.
 
-In these analyses, I also defined a weighted quadratic growth curve feature
-that measured how u-shaped the curves were. I was interested in whether
-confirmatory looking behaviors were reliably related to child level
-factors. They were not, outside of neglibly small effect of vocabulary
-at age 5.
+One strategy to resolve the uncertainty in this situation would be to
+verify and reject the other image. Therefore, I also defined a weighted
+quadratic growth curve feature that measured how u-shaped the curves
+were. Such curves would reflect a child temporarily decreasing looks to
+the familiar image as a confirmatory looking behaviors. The u-shaped
+curve features were not reliably related to any child-level factors,
+outside of neglibly small effect of expressive vocabulary at age 5.
 
-  - This also shows a possible decoupling between lexical processing and
-  referent selection. It is unlikely that children heard the mispronunciations
-  differently in these trials, but rather they responded differently. Not sure where I am going here. None of the child level predictors were related to u-shaped patterns.
+Children demonstrated different looking behaviors based on their initial
+fixation location. For unfamiliar-initial trials, the growth curves show
+a reliable shift to the familiar image and we infer that the children
+treat the mispronunciation as passable production of the familiar word.
+For the familiar-initial trials, the children show much more uncertainty
+and a reliable advantage for the familiar word only begins to appear by
+age 5. 
+
+What are children doing in this situation? I initially thought that some
+children might "be finished" with the trial when they hear the word.
+That is, the child fixates on the familiar word, hears the
+mispronunciation prompt, and notice that they have found the image, and
+then look other parts of the screen. The problem with this possibility
+is that it does not happen in other conditions. For the nonword and real
+word conditions, when children start on the named image, they stick with
+the target. The average empirical growth curves in
+Figure \@ref(fig:aim2-real-word-spaghetti) and
+Figure \@ref(fig:aim2-nonword-spaghetti) tend to stay around 70--80%
+looking to the target image. Rather than reflecting disengagement from
+the task, the looking patterns indicate increased uncertainty in these
+trials.
+
+Another possibility is that children show increased uncertainty because
+the mispronunciation effect is greater when the child is fixating on the
+familiar word. That is, children fixated on the familiar image might
+internally name the object and have built up the word's resting
+activation. The mispronunciation directly conflicts with the child's
+pre-naming expectations for the word's name, thus inducing more
+uncertainty after the word is named. For the unfamiliar-initial trials,
+on the other hand, a child's attention is on the novel object and they
+have a less potent expectation about the words they might hear.
+
+Visual attention did seem to influence how children retained information
+from the mispronunciation trials. At age 5, we tested children's
+retention of the mispronunciations and nonwords. Children were much more
+likely to recall which unfamiliar object appeared on the nonword trials
+than the mispronunciation trials. This difference is not unexpected. In
+the nonword trials, children looked to an unfamiliar object when given
+an unambiguous novel word for a label. Thus, each trial worked to build
+an association between a new word and an unfamiliar object. But children
+generally treated the mispronunciations as productions of the familiar
+words. For the unfamiliar-initial trials, they looked more to the
+familiar object, a result that held at all three ages. Rather than
+developing a new object-label mapping, children are working on resolving
+an ambiguous and uncertain production on these trials. This idea is
+consistent with the effect of growth curve peaks on retention accuracy:
+Child who looked less to the unfamiliar object on mispronunciation
+trials were less likely to recall that unfamiliar object during
+retention testing.
 
 
 
 
 
 
-
-
-
-At age 5, we were able to test children's retention of the
-mispronunciations and nonwords. Children were much more likely to recall
-which unfamiliar object appeared on the nonword trials than the
-mispronunciation trials. This difference is not unexpected. In the
-nonword trials, children looked to an unfamiliar object when given an
-unambiguous novel word for a label. Thus, each trial worked to build an
-association between a new word and an unfamiliar object. But children
-treated the mispronunciations as productions of the familiar words. For
-the unfamiliar-initial trials, they look more to the familiar object, a
-result that held at all three ages. Rather than developing an
-object-label mapping, children are working on resolving an ambiguous and
-uncertain production on these trial. This idea is consistent with the
-effect of growth curve peaks on retention accuracy: Child who looked
-less to the unfamiliar object on mispronunciation trials were less
-likely to recall that unfamiliar object during retention testing. This result
-here is consistent with Swingley and Aslin (2007) in which toddlers were better
-able to retain unneighbored nonwords (like *shang* or *meb*) compared to
-neighbored nonwords (i.e., mispronunciations like *tog* [*dog*] or *gall*
-[*ball*]). They concluded that part of the fast-referent selection involves a
-probability calculation in which children "evaluat[e] the likelihood that an
-utterance conveys a new word".

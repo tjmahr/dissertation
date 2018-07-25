@@ -120,14 +120,14 @@ average at age 3.
 
 There was an advantage for the nonword condition at age 4 and age 5. The
 population-level average proportion of looks for the nonwords was
-.79 [90% UI: .76, .82], compared to `props4$b_Real` for real words. On
+.79 [90% UI: .76, .82], compared to .62 [.58, .66] for real words. On
 average, children looked less to target for the real words than the
 nonwords. There was a suggestive effect linear time effect where the
 nonword curve was 13% [1%, 25%] steeper than the real word
 one. The curve for real words was probably less steep at age 4 but small
 values near 0 remain plausible. At age 5, only the average probability
 difference was credible, .81 [90% UI: .78, .83] for nonwords compared to
-`props5$b_Real` for real words. In general, children performed better in
+.72 [.68, .75] for real words. In general, children performed better in
 the nonword condition than the real word condition at age 4 and age 5.
 This difference shows up in the growth curve model through intercept
 effects, although it is plausible that children's nonword growth curves
@@ -176,7 +176,7 @@ were 23 [90%&nbsp;UI: 20, 26] children who performed at ceiling at age 3,
 the real word condition, the number of children attaining ceiling
 performance was more uneven: there were 20 [16, 24]
 ceiling-performers at age 3, 13 [10, 16] at age 4, and
-13 [10, 16] at age 5.
+26 [23, 29] at age 5.
 
 
 
@@ -235,7 +235,7 @@ only a significant improvement from age 4 to age 5, *B*<sub>5-4</sub> =
 Finally, I asked whether expressive vocabulary size correlated with peak
 looking performance on the two conditions. Correlations among real word
 peaks, nonword peaks, expressive vocabulary and receptive vocabulary are
-given in Table XX. At all three years, children with larger vocabularies
+given in Table \@ref(tab:table-peak-cor). At all three years, children with larger vocabularies
 had higher nonword peak looking values. At age 3 and age 4, vocabulary
 positively correlated with real-word looking performance.
 Figure \@ref(fig:peak-concurrent-vocab-cors) illustrates the relationship
@@ -244,7 +244,9 @@ variability in the peaks, as at age 3, the vocabulary effect on the
 nonwords is strongest. 
 
 
-Table: (\#tab:unnamed-chunk-10)Correlation between curve peaks and vocabulary measures
+
+
+Table: (\#tab:table-peak-cor)Correlation between curve peaks and vocabulary measures
 
 Study    &nbsp;            Real word peak          Nonword peak        PPVT-4 standard   
 -------  ----------------  ----------------------  ------------------  ------------------
@@ -321,7 +323,7 @@ condition and small slope for the nonword condition.
 (ref:age-5-from-peaks) Marginal effects of age-3 referent selection measures on age-5 expressive vocabulary standard scores. The vocabulary scores were adjusted (residualized) to control for age-3 vocabulary, so these regression lines show the effects of the predictors over and above age-3 vocabulary.
 
 <div class="figure" style="text-align: center">
-<img src="22-referent-selection_files/figure-html/age-5-from-peaks-1.png" alt="(ref:age-5-from-peaks)" width="100%" />
+<img src="22-referent-selection_files/figure-html/age-5-from-peaks-1.png" alt="(ref:age-5-from-peaks)" width="60%" />
 <p class="caption">(\#fig:age-5-from-peaks)(ref:age-5-from-peaks)</p>
 </div>
 
@@ -335,10 +337,10 @@ within-child averages of the two peaks. The model predicted age-5
 vocabulary using the within-child average of the peaks, the nonword
 advantage, and age-3 vocabulary. In this case, condition-averaged
 performance did not significantly predict age-5 vocabulary, *p* =
-`p_both`. The condition differences did predict age-5 vocabulary: A .1
+.22. The condition differences did predict age-5 vocabulary: A .1
 increase in the nonword condition advantage predicted a
 0.08-SD (1.1-point) increase in age-5
-vocabulary, *p* = `p_both`
+vocabulary, *p* = .009
 
 **Summary**. A child's performance in the nonword condition at age 3
 positively predicted expressive vocabulary size at age 5. This effect
@@ -352,11 +354,33 @@ an increase in age-5 vocabulary of 1.4, approximately one
 tenth of the test norms' standard deviation.
 
 
-
-
 ## Discussion
 
-For this discussion, I limited discussion to the main results.
+Children showed developmental improvements in referent selection for the
+real word and nonword trials. The changes were not consistent
+year-over-year improvements however. Nonword processing improved from
+age 3 to age 4 and real word recognition improved from age 4 and to
+age 5. One reason for these limited improvements is that the two-image
+word recognition task was too easy. At age 4, approximately 25% of
+children had nonword growth curve peaks of .99 or greater.
+
+Despite the presense of ceiling effects, vocabulary size had a
+small-to-medium positive correlation with nonword growth curve peaks at
+all three ages. Children who knew more words had a higher probability of
+looking to the novel object when presented with a nonword. This
+replicates the vocabulary advantage in processing nonwords observed by
+@Bion2013 and @MPPaper. This effect is probably bidirectional with
+larger vocabularies making fast referent selection easier, and fast
+referent selection being a crucial mechanism for word-learning. To
+further examine the direction of effect, I tested whether nonword
+performance at age 3 predicted expressive vocabulary size at age 5.
+There was a small effect predictive effective where children with high
+nonword peaks had a larger vocabulary size two years later. Although
+real word and nonword performance had a small-to-medium positive
+correlation, children's processing of the real words had no predictive
+value. Real word peaks did not predict vocabulary, nor did the average
+of real word and nonword peaks did not have an effect over and above the
+difference of the peaks.
 
 For these two conditions, I hypothesized were word recognition in the real word
 condition would be easier than in the nonword condition, or failing
@@ -365,59 +389,16 @@ third possibility of any overall advantage for nonwords over real words.
 The advantage of nonwords at age 4 and age 5 over real words was an therefore
 unexpected result.
 
-Why would children perform better for the nonword trials?
-The results are consistent with a novelty bias in referent selection [@Horst2011]. Alternatively, the presense of the mispronunciation trials, analyzed in chapter XX, may undermine familiar word recognition. For one-third of the trials, children hear a bad version of a familiar word and they show more uncertain responses to them. This could make recognition of familiar words more difficult by priming children to not rely as heavily on syllable-initial sounds for recognition. In contrast, the nonword trials are unambiguous.
-
-
-Children also showed limited year-over-year changes in this task. Indeed, many children obtained ceiling performance with growth curve peaks at .99 or greater. Therefore we might say that children have mastered nonword fast-referent selection in a two-alternative forced choice context by age 4.
-
-
-
-* talk about vocab effects
-
-The findings here replicated those of @Bion2013, namely that concurrent vocabulary size positively predicted the amount of looking to the novel object on nonword trials. 
-
-* talk about how nonword peaks were weak predictors of growth
-
-
-
-
-In this experiment, children heard more words in total (6). The 3-year-olds in our study had the same peak looking proportion for both kinds of words around .83.
-
-CHildren's year-over-year development on this task was limited.
-
-<!-- For this task, I will model how the looks to the familiar image differ -->
-<!-- in each condition (real words, mispronunciations, nonwords) and how the -->
-<!-- growth curves for each condition change year over year. This model will -->
-<!-- use growth curve model described in [Growth Curve Analysis](#growth-curve-analysis) but -->
-<!-- augmented with Condition effects. -->
-
-<!-- I will examine whether and when any dissociation is observed for word -->
-<!-- recognition in the real word and nonword conditions. @McMurray2012 argue that  -->
-<!-- familiar word recognition and fast -->
-<!-- association for novel words reflect the same cognitive process: referent -->
-<!-- selection. Data from this task would support with this hypothesis when -->
-<!-- the growth curves for looks to the familiar image are symmetrical for -->
-<!-- the real word and nonword conditions. Figure \@ref(fig:le-means), showing data -->
-<!-- from @MPPaper [, _n_\ =\ 34 children, 30-46 months old], shows some -->
-<!-- symmetry for the real word and nonword conditions. -->
-
-<!-- I tested whether the two measures ever dissociate by computing the -->
-<!-- posterior predicted difference between the growth curves. This approach -->
-<!-- is similar to the bootstrap-based divergence analyses used in some word -->
-<!-- recognition experiments [e.g., @Oleson2015; @eyetrackingR]. The -->
-<!-- essential question is when—at which specific time points—do two growth -->
-<!-- curves differ from one another. The bootstrap approach -->
-<!-- uses resampling to get an estimate, whereas I use posterior -->
-<!-- predicted samples to estimate these differences. -->
-
-<!-- Specifically, I will compute the posterior-predicted looks to the -->
-<!-- familiar object in the real word condition, P(Familiar | Real Word, Time -->
-<!-- *t*, Child *i*) and the analogous looks to the unfamiliar object in the -->
-<!-- nonword condition, P(Unfamiliar | Nonword, Time *t*, Child *i*). The -->
-<!-- difference between these two probabilities estimates how the time course -->
-<!-- of word recognition differs between these two conditions, and I can use -->
-<!-- 50% and 90% uncertainty intervals to determine during which time points -->
-<!-- the curves credibly differ from each other. -->
-
-
+Why might children perform better on the nonword trials than the real
+words? The results are consistent with a novelty bias in referent
+selection [@Horst2011; @Mather2012]. An additional factor may be the
+presense of the mispronunciation trials---reported in [Chapter
+\@ref(sensitivity-to-mispronunciations)](#sensitivity-to-mispronunciations).
+The mispronunciations may undermine familiar word recognition. For
+one-third of the trials, children hear an imperfect version of a
+familiar word, and they show more uncertain responses to them. This
+environment cause children to downweight the syllable-initial sounds.
+Such an adaptation would lead to lower overall activation of the real
+words. Alternatively, the novelty bias could interfere with processing
+of familiar words. For some amount of trials, children could have
+ignored the familiar word and focused attention on the novel object.

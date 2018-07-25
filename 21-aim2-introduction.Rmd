@@ -2,7 +2,7 @@ Mispronunciations and referent selection {#aim2-introduction}
 =======================================================================
 
 In the earlier chapters, I studied word recognition by examining how
-young listeners recognized familar words. But children do not know
+young listeners recognized familiar words. But children do not know
 all the words they encounter, and another avenue for studying word
 recognition is to examine how listeners respond to unfamiliar or novel
 stimuli. This study looks at how children responded to mispronunciations
@@ -12,7 +12,7 @@ How phonetically detailed are children's words?
 ------------------------------------------------------------------------
 
 There has been long, productive line of research examining how children
-respond to mispronunciations of familar words. The motivation for this
+respond to mispronunciations of familiar words. The motivation for this
 research was to determine how detailed children's phonological
 representations are. One hypothesis held that infants and toddlers do
 not need to store words in much phonetic or phonological detail because
@@ -20,13 +20,13 @@ they know so few words. In other words, their lexicon had
 *underspecified* or *holistic* representations.
 
 A common argument for underspecified or holistic representations poses
-the building a lexicon as a design or enginneering problem. It considers
+the building a lexicon as a design or engineering problem. It considers
 the question: What would be a smart way to build up a lexicon? One
 solution is that the word-learning system should be lazy, encoding
 words in just enough phonetic detail to differentiate among them and adding
 more details as the need arises. Early words should be
 underspecified and pick up details on demand. Why fully encode the
-phonetic form of "doggie" when there is no competition from similiar
+phonetic form of "doggie" when there is no competition from similar
 words like “toggie” or “dokkie” or “tokkie”? An efficient solution
 would be to encode a minimal amount of phonetic detail. In fact, this
 strategy could be developmentally advantageous: "Perhaps children
@@ -36,7 +36,7 @@ necessary to distinguish words" [@Swingley2000, p. 148].
 Charles-Luce and Luce [-@charlesluceluce1990; -@charlesluceluce1995]
 are commonly cited touchstones for this argument. Charles-Luce and Luce
 compared the expressive [-@charlesluceluce1990] and receptive
-[-@charlesluceluce1995] lexicons of 5- and 7 year-olds against those
+[-@charlesluceluce1995] lexicons of 5- and 7-year-olds against those
 of adults. They observed that adults had much denser phonological
 neighborhoods than children, and they suggested that children may only
 have holistic representation of words given these sparser neighborhoods.
@@ -91,7 +91,7 @@ stored.
 Against that backdrop of lexicon design strategies and minimal-pair
 training studies, mispronunciation studies provide a rather direct way
 to study the phonetic representations of the words that children know.
-@Swingley2000 presented 18--23 month-olds two familiar images onscreen,
+@Swingley2000 presented 18--23-month-olds two familiar images onscreen,
 like baby and dog, and heard a correct production (*where's the baby*)
 or a mispronunciation (*where's the vaby*). Children looked to the
 correct productions about 73% of the time and mispronunciations 61% of
@@ -99,11 +99,11 @@ the time. They looked more than chance but less than the correct
 production, indicating they were sensitive to the mispronunciation.
 Children had encoded *baby* in enough phonetic detail that a small
 phonetic change made them less certain during word recognition.
-(@Swingley2002 found the same pattern of results for 14--15 month olds
+(@Swingley2002 found the same pattern of results for 14--15-month-olds
 with 60% looks to correct productions and around 53.5% looks for
-mispronunications.)
+mispronunciations.)
 
-A similar study by Baily and Plunkett (2002) tackled the representations
+A similar study by @Bailey2002 tackled the representations
 of recently learned words. They created custom word-lists for children
 and included mispronunciations for words that the child purportedly
 learned long before testing and only recently before testing. They did
@@ -122,7 +122,7 @@ unrelated nonword. Toddlers looked less to a familiar word when the
 first segment was mispronounced, so they did not treat the
 mispronunciations as nonwords. The children demonstrated graded
 sensitivity such that a 1-feature mispronunciation yielded more looks to
-a familar image than a 2-feature mispronunciation, and a 2-feature
+a familiar image than a 2-feature mispronunciation, and a 2-feature
 mispronunciation yielded more looks than a 3-feature one. Finally, in
 the nonword condition, the children looked more to the novel object than
 the familiar one, demonstrating *fast referent selection* as they
@@ -186,11 +186,11 @@ in 18-, 24-, and 30-month-olds. In the article's second experiment,
 toddlers were trained on two novel words on disambiguation trials. They
 would see a familiar object and an unfamiliar object and heard a prompt
 with a nonword (*Where's the dofa?*). Later retention trials presented
-the two unfamilar objects were presented and prompted (*Where's the
+the two unfamiliar objects were presented and prompted (*Where's the
 dofa?*). Mixed in with these trials were familiar-object trials in which
 a familiar object was labeled (*Where's the car?*). In that experiment,
 children looked more to the target on the familiar word trials than on
-the nonword disambiguation trials. For the 30-month olds: 82% versus 68%
+the nonword disambiguation trials. For the 30-month-olds: 82% versus 68%
 percentage of looks to the target. 
 
 For @Bion2013, toddlers performed better on the familiar-word
@@ -256,16 +256,8 @@ images paired with the nonwords and mispronunciations.
 
 In [Appendix \@ref(aim2-mp-items)](#aim2-mp-items), I briefly present
 the results for specific mispronunciations, although item effects are 
-not formally modelled. Finally, in 
+not formally modeled. Finally, in 
 [Chapter \@ref(aim2-discussion)](#aim2-discussion), I describe the 
 both sets of analyses together, and
 [Chapter \@ref(aim2-h-check)](#aim2-h-check) reviews the results of 
 my pre-analysis research hypotheses.
-
-
-
-
-
-<!-- [^friends]: I am reminded of the saying, "a stranger is just a friend you haven't met yet." A nonword is just a word you haven't learned yet. -->
-
-<!-- rds, why just study the specificity of children's lexical representations? This is where the mispronunciation studies come into play.   -->

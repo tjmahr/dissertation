@@ -74,7 +74,7 @@ onset-mispronunciation of the related word ("Faf" or "Taf"), or an
 unrelated prime ("Buch", book). Children looked to the target about
 equally well in the two prime conditions: approximately .62 proportion
 looks to target with a normal prime versus approximately .60 for a
-mispronunced prime. In contrast, they looked less to the target in the
+mispronounced prime. In contrast, they looked less to the target in the
 unrelated prime condition (approximately .55). Thus, the children in
 this study showed cascading activation where the mispronunciation
 activates the mispronounced word which in term activates a semantically
