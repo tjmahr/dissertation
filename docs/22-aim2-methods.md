@@ -44,10 +44,7 @@ from the design of @MPPaper.
 
 (ref:sample-mp-screen-cap) Example displays for a trial in which *duck* is mispronounced as "guck" (*left*) and a trial in which the nonword "cheem" is presented (*right*).
 
-<div class="figure" style="text-align: center">
-<img src="22-aim2-methods_files/figure-html/sample-mp-screen-1.png" alt="(ref:sample-mp-screen-cap)" width="100%" />
-<p class="caption">(\#fig:sample-mp-screen)(ref:sample-mp-screen-cap)</p>
-</div>
+![(\#fig:sample-mp-screen)(ref:sample-mp-screen-cap)](22-aim2-methods_files/figure-docx/sample-mp-screen-1.png)
 
 <!-- (Maybe explain why the nonword condition give children the license to -->
 <!-- interpret a mispronunciation as a nonword.) -->
@@ -237,18 +234,9 @@ screening and preparation steps.
 
 
 
-<div class="figure" style="text-align: center">
-<img src="22-aim2-methods_files/figure-html/aim2-real-word-spaghetti-1.png" alt="(ref:aim2-real-word-spaghetti)" width="100%" />
-<p class="caption">(\#fig:aim2-real-word-spaghetti)(ref:aim2-real-word-spaghetti)</p>
-</div>
+![(\#fig:aim2-real-word-spaghetti)(ref:aim2-real-word-spaghetti)](22-aim2-methods_files/figure-docx/aim2-real-word-spaghetti-1.png)
 
-<div class="figure" style="text-align: center">
-<img src="22-aim2-methods_files/figure-html/aim2-nonword-spaghetti-1.png" alt="(ref:aim2-nonword-spaghetti)" width="100%" />
-<p class="caption">(\#fig:aim2-nonword-spaghetti)(ref:aim2-nonword-spaghetti)</p>
-</div>
+![(\#fig:aim2-nonword-spaghetti)(ref:aim2-nonword-spaghetti)](22-aim2-methods_files/figure-docx/aim2-nonword-spaghetti-1.png)
 
-<div class="figure" style="text-align: center">
-<img src="22-aim2-methods_files/figure-html/aim2-mispronunciation-spaghetti-1.png" alt="(ref:aim2-mispronunciation-spaghetti)" width="100%" />
-<p class="caption">(\#fig:aim2-mispronunciation-spaghetti)(ref:aim2-mispronunciation-spaghetti)</p>
-</div>
+![(\#fig:aim2-mispronunciation-spaghetti)(ref:aim2-mispronunciation-spaghetti)](22-aim2-methods_files/figure-docx/aim2-mispronunciation-spaghetti-1.png)
 

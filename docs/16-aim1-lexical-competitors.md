@@ -55,10 +55,7 @@ phonological competitor affected word recognition most significantly.
 
 (ref:declining-phon-props) Because children looked more to the target as they grew older, they numerically looked less the foils too. This effect is why I evaluated the phonological and semantic foils by comparing them against the unrelated image.
 
-<div class="figure" style="text-align: center">
-<img src="16-aim1-lexical-competitors_files/figure-html/declining-phon-props-1.png" alt="(ref:declining-phon-props)" width="60%" />
-<p class="caption">(\#fig:declining-phon-props)(ref:declining-phon-props)</p>
-</div>
+![(\#fig:declining-phon-props)(ref:declining-phon-props)](16-aim1-lexical-competitors_files/figure-docx/declining-phon-props-1.png)
 
 As in the models from the previous chapter, I downsampled the data into
 50-ms (3-frame) bins in
@@ -131,7 +128,7 @@ adding simple functions together. The figures below show 9 basis
 functions from a "thin-plate spline" and how they can be weighted and
 summed to fit a growth curve.
 
-<img src="16-aim1-lexical-competitors_files/figure-html/infobox-1-figs-1.png" width="66%" style="display: block; margin: auto;" />
+![](16-aim1-lexical-competitors_files/figure-docx/infobox-1-figs-1.png)<!-- -->
 
 Each of these basis functions is weighted by a model coefficient, but
 the individual basis functions are not a priori meaningful. Rather, it
@@ -211,10 +208,7 @@ phonological competitor versus the unrelated word were
 
 (ref:phon-vs-unre-fits) With each year of the study, children looked more to the phonological competitor (relative to the unrelated image) during and after the target noun. Both figures show means for each year estimated by the generalized additive model. The left panel compares model estimates to observed means and standard errors, and the right panel visualizes estimated means and their 95% confidence intervals.
 
-<div class="figure" style="text-align: center">
-<img src="16-aim1-lexical-competitors_files/figure-html/phon-vs-unre-fits-1.png" alt="(ref:phon-vs-unre-fits)" width="80%" />
-<p class="caption">(\#fig:phon-vs-unre-fits)(ref:phon-vs-unre-fits)</p>
-</div>
+![(\#fig:phon-vs-unre-fits)(ref:phon-vs-unre-fits)](16-aim1-lexical-competitors_files/figure-docx/phon-vs-unre-fits-1.png)
 
 
 
@@ -244,10 +238,7 @@ from other studies differed from the age-4 smooth.
 
 (ref:phon-diff-curves) Differences in the average looks to the phonological competitor versus the unrelated image between age 4 and the other ages. Plotted line is estimated difference and the shaded region is the 95% confidence interval around that difference. Boxes highlight regions where the 95% interval excludes zero. From age 3 to age 4, children become more sensitive to the phonological foil during and after the target noun. The linear difference curve for age 4 versus age 5 indicates that the two years largely have the same curvature, but they steadily diverge over the course of the trial.
 
-<div class="figure" style="text-align: center">
-<img src="16-aim1-lexical-competitors_files/figure-html/phon-diff-curves-1.png" alt="(ref:phon-diff-curves)" width="80%" />
-<p class="caption">(\#fig:phon-diff-curves)(ref:phon-diff-curves)</p>
-</div>
+![(\#fig:phon-diff-curves)(ref:phon-diff-curves)](16-aim1-lexical-competitors_files/figure-docx/phon-diff-curves-1.png)
 
 The age-3 and age-4 curves significantly differed, EDF = 5.48,
 *p*&nbsp;< .001. In particular, the curves are significantly different
@@ -337,10 +328,7 @@ to the limited advantage of the phonological competitor at age 3.
 
 (ref:semy-vs-unre-fits) With each year of the study, children looked more to the semantic foil (relative to the unrelated image) with peak looking occurring after the target noun. Both figures show means for each year estimated by the generalized additive model. The left panel compares model estimates to observed means and standard errors, and the right panel visualizes estimated means and their 95% confidence intervals.
 
-<div class="figure" style="text-align: center">
-<img src="16-aim1-lexical-competitors_files/figure-html/semy-vs-unre-fits-1.png" alt="(ref:semy-vs-unre-fits)" width="80%" />
-<p class="caption">(\#fig:semy-vs-unre-fits)(ref:semy-vs-unre-fits)</p>
-</div>
+![(\#fig:semy-vs-unre-fits)(ref:semy-vs-unre-fits)](16-aim1-lexical-competitors_files/figure-docx/semy-vs-unre-fits-1.png)
 
 
 
@@ -361,10 +349,7 @@ differences between the smooths from each study.
 
 (ref:semy-diff-curves) Differences in the average looks to the semantic competitor versus the unrelated word between age 4 and the other ages. Plotted line is estimated difference and the shaded region is the 95% confidence interval around that difference. Boxes highlight regions where the 95% interval excludes zero. The flat line on the left reflects how the shape of the growth curves remained the same from age 3 to age 4 and only differed in average height. From age 4 to age 5, the lines quickly diverge and the age-5 curve reaches a higher peak value.
 
-<div class="figure" style="text-align: center">
-<img src="16-aim1-lexical-competitors_files/figure-html/semy-diff-curves-1.png" alt="(ref:semy-diff-curves)" width="80%" />
-<p class="caption">(\#fig:semy-diff-curves)(ref:semy-diff-curves)</p>
-</div>
+![(\#fig:semy-diff-curves)(ref:semy-diff-curves)](16-aim1-lexical-competitors_files/figure-docx/semy-diff-curves-1.png)
 
 The shapes of the age-3 and age-4 curves did not significantly differ,
 EDF = 1.00, *p*&nbsp;= .535. The age-3 curve begins to rise

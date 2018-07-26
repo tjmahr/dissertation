@@ -84,10 +84,7 @@ to 100 model-estimated growth curves.
 
 (ref:aim2-real-nonword-means) Averages of participants' growth curves in each condition and age. The lines represent 100 posterior predictions of the group average. 
 
-<div class="figure" style="text-align: center">
-<img src="22-referent-selection_files/figure-html/aim2-real-nonword-means-1.png" alt="(ref:aim2-real-nonword-means)" width="80%" />
-<p class="caption">(\#fig:aim2-real-nonword-means)(ref:aim2-real-nonword-means)</p>
-</div>
+![(\#fig:aim2-real-nonword-means)(ref:aim2-real-nonword-means)](22-referent-selection_files/figure-docx/aim2-real-nonword-means-1.png)
 
 In [Chapter \@ref(fam-rec)](#fam-rec), I claim that for these growth
 curve models only the intercept and linear time terms are behaviorally
@@ -148,10 +145,7 @@ growth curves peaks for each participant.
 
 (ref:aim2-gca-peaks) Growth curve peaks by child, condition and year of the study. The movement of the medians conveys how the nonword peaks effect increased from age 3 to age 4 and the real word peaks increased from age 4 to age 5. The piling of points near the 1.0 line depicts how children reached ceiling performance on this task.
 
-<div class="figure" style="text-align: center">
-<img src="22-referent-selection_files/figure-html/aim2-gca-peaks-1.png" alt="(ref:aim2-gca-peaks)" width="66%" />
-<p class="caption">(\#fig:aim2-gca-peaks)(ref:aim2-gca-peaks)</p>
-</div>
+![(\#fig:aim2-gca-peaks)(ref:aim2-gca-peaks)](22-referent-selection_files/figure-docx/aim2-gca-peaks-1.png)
 
 
 
@@ -262,12 +256,9 @@ Age 5    Nonword peak      *r*(151) = .13          &nbsp;              &nbsp;
 
 
 
-(ref:peak-concurrent-vocab-cors) Text reference for caption
+(ref:peak-concurrent-vocab-cors) Relationship between expressive vocabulary and growth curve peaks at each age.
 
-<div class="figure" style="text-align: center">
-<img src="22-referent-selection_files/figure-html/peak-concurrent-vocab-cors-1.png" alt="(ref:peak-concurrent-vocab-cors)" width="75%" />
-<p class="caption">(\#fig:peak-concurrent-vocab-cors)(ref:peak-concurrent-vocab-cors)</p>
-</div>
+![(\#fig:peak-concurrent-vocab-cors)(ref:peak-concurrent-vocab-cors)](22-referent-selection_files/figure-docx/peak-concurrent-vocab-cors-1.png)
 
 
 
@@ -322,10 +313,7 @@ condition and small slope for the nonword condition.
 
 (ref:age-5-from-peaks) Marginal effects of age-3 referent selection measures on age-5 expressive vocabulary standard scores. The vocabulary scores were adjusted (residualized) to control for age-3 vocabulary, so these regression lines show the effects of the predictors over and above age-3 vocabulary.
 
-<div class="figure" style="text-align: center">
-<img src="22-referent-selection_files/figure-html/age-5-from-peaks-1.png" alt="(ref:age-5-from-peaks)" width="60%" />
-<p class="caption">(\#fig:age-5-from-peaks)(ref:age-5-from-peaks)</p>
-</div>
+![(\#fig:age-5-from-peaks)(ref:age-5-from-peaks)](22-referent-selection_files/figure-docx/age-5-from-peaks-1.png)
 
 Finally, I tested whether the difference between nonword and real word
 peaks within children predicted vocabulary growth. By themselves,

@@ -14,7 +14,7 @@ A lexical processing account of the results
 Children were sensitive to mispronunciations of familiar words. In terms
 of lexical processing, the mispronounced syllable onset leads a child
 down a phonological garden path. The "d" in *dirl* activates a
-neighborhood a d-inital words. The rest of the syllable, however,
+neighborhood a "d"-initial words. The rest of the syllable, however,
 provides information needed to activate *girl*. Children therefore are
 slower to build up activation of the word because of the onset-mismatch,
 and they show less activation overall because the spoken word only
@@ -26,8 +26,8 @@ candidate rime words.
 
 Children also processed mispronunciations differently based on the image
 they were fixated on. One complication with a simple lexical processing
-interpretation is that this is a two-image task. Children have ample
-time to view each image before the noun onset and build up an
+explanation is that this is a two-image task. Children have ample
+time to view each image before the noun onset and build up 
 expectations about the words they might hear named. This possibility
 leads me to speculate that children might be more uncertain in the
 trials where they hear "shoup" while fixated on *soup* because they
@@ -36,7 +36,7 @@ the mismatch from the mispronunciation more severe leading to greater
 uncertainty. This explanation, however, implies some kind of inhibition
 where *soup* suppresses the activation of "sh"-initial words. The
 results from Specific Aim 1, which do not provide any evidence for changes
-in lexical inhibition, make me skeptical of this explanation. Thus, the
+in inhibition, make me skeptical of this explanation. Thus, the
 effect of children's fixation location on their immediate response to
 speech provides an avenue for further research in this area.
 
@@ -47,79 +47,100 @@ A nonword is just a word you haven't learned yet
 I hypothesized that the nonword condition might be more difficult than
 the real word condition, particularly for younger children as seen in
 @Bion2013. This prediction did not bear out at all, and indeed, there
-was an advantage
-in the nonword condition in later ages. Part of this advantage may be a
-novelty bias. @TRACE_Mispro used the TRACE model of word recognition
-[@TRACE] to simulate these kinds of situations. In one set of
-simulations, the novel object recieves a novelty/salience boost to
-resting activation. During presentation of the nonword, none of the
-child's known words build up enough activation to overtake the novel
-word. In another set of simulations, the novel word is added as to the
-lexicon as a low-frequency word, and the absense of competition of any
-familiar words causes the novel word to win out. In both of these
+was an advantage in the nonword condition in later ages. Part of this
+advantage may be a novelty bias. @TRACE_Mispro used the TRACE model of
+word recognition [@TRACE] to simulate these kinds of situations. In
+one set of simulations, the novel object recieves a novelty/salience
+boost to resting activation. During presentation of the nonword, none of
+the child's known words build up enough activation to overtake the novel
+word. In an alternative set of simulations, the novel word is added as
+to the lexicon as a low-frequency word, and the absense of competition
+of any familiar words causes the novel word to win out. In both of these
 accounts, children can quickly associate the novel object with a nonword
-because there are no familiar words to interfere with the process.
+because there are no familiar words to interfere with the processing.
 
-The data probably supports both processing accounts. During data
+The results here probably support both processing accounts. During data
 reduction, I separated trials based on initial-fixation location because
 children become increasingly likely to start nonword trials on the novel
 object. This bias affected 50% of nonword trials at age 3, 55% at age 4,
-and 59% at age 5. There is a novelty preference that for these trials
-that gets stronger with development. Children are also developing
-inchoate lexical representations of these nonwords, consistent with
-low-frequency lexical item simulations. Children were on average were
-able to recall the unfamiliar image paired with 5/6 nonwords.
+and 59% at age 5. Thus, there is a novelty preference that for these
+trials that gets stronger with development. Plus, children are also
+learning during this task: At age 5, children were on average were able
+to recall the unfamiliar image paired with 5/6 nonwords. This learning
+is consistent with the strategy of simulating a nonword as a
+low-frequency lexical item.
 
-
-The findings of @Swingley2007 can help us understand the mispronunciation retention results.
-In that study, toddlers were better
+The findings of @Swingley2007 can help us understand the
+mispronunciation retention results. In that study, toddlers were better
 able to retain unneighbored nonwords (like *shang* or *meb*) compared to
 neighbored nonwords (mispronunciations like *tog* [*dog*] or *gall*
-[*ball*]). They concluded that part of the fast-referent selection involves a
-probability calculation in which children "evaluat[e] the likelihood that an
-utterance conveys a new word". 
-
-
-
-
-
-@TRACE_Mispro simulated the nonword processing with TRACE in order to 
-
-
-
-
--nonwords and real words
-
-no dissociation.
-
--why the nonword advantage
-
-novelty, plus penalized performance
-
-Why do children prefer nonwords over familiar words? The most obvious answer would be a novelty effect. Another reason would be that these are unambiguous words. Because of the mispronunciation trials, a child hears familiar words or bad versions of familiar words. It could be that cost of processing or recovering from mispronunciations makes children more cautious or less certain for familiar words. Whereas for the nonwords, there is no ambiguity.
-
--mispronunciations
-
-
-
-
-
-<!-- Not sure where I am going here... It's not just the word forms alone but the child's expectations I guess and those expectations might change or become more efficient with age. This is not as big of a concern for the four-image task because the child hears well-formed words. -->
-
-- referential looking predicted retention
-
-
+[*ball*]). They concluded that part of the fast-referent selection
+involves a probability calculation in which children "evaluat[e] the
+likelihood that an utterance conveys a new word". In this experiment, we
+presented an image of the familiar mispronounced object during the
+mispronunciation trials, which further reduces the likelihood that the
+mispronunciation indeed reflects a new, as-yet unlearned word. Thus, the
+children in our retention task averaged around 3--4 mispronunciations
+correct because those words had a low likelihood of conveying a new
+word. In fact, the more children discounted that probability---that is,
+the more they looked to the familiar word on the mispronunciation
+trials---the less likely they were to retain the mispronunciation items.
 
 
 Limitations and implications
 ------------------------------------------------------------------------
 
+The primary limitation for this study is that it applied a procedure
+designed for toddlers [@@WhiteMorgan2008] on preschoolers. That is to
+say, the two-image task was too easy for there to be large
+year-over-year developmental changes in children's performance. Children
+were successful at recognizing real words and fast-selecting referents
+for nonwords at age 3, and by age 4, a quarter of the children performed
+at ceiling on the nonword condition. The most difficult condition, based
+on the absense of ceiling effects, was the mispronunciation condition in
+which children showed much more uncertainty on how to process these
+words. For this condition, a developmental trend was also observed where
+preschoolers at age 5 had a larger preference for the familiar object on
+the trials.
 
+Another limitation here is that the mispronunciations are a particular
+kind of mispronunciation: One-feature onset mismatches. That initial
+segment sets the stage for the processing of a word as it activates a
+word's onset neighbors. Just as it takes longer for a rime to influence
+processing of word---as evidence need to pile up from multiple
+compatible sound in order to overcome an initial mismatch---it should
+also take longer for a child to recover from an onset-mispronunciation.
+Conversely, we might also expect vowel or rime mispronunciation to be
+less disruptive for word recognition because of the useful information
+on the starting segment. By focusing on just onset-mismatches, we miss
+out on categories of mispronunciation that may be more tolerable and
+where that tolerability may itself change over development.
 
+As I note in [Appendix \@ref(aim2-mp-items)](#aim2-mp-items), the small
+repertoirse of mispronunciation is another limitation for this study. It
+is concievable that specific mispronunciations change in severity with
+development, even though the canonical form of the word is a familiar
+and well known word. In this study, for example, the distance between
+the *girl* and *dirl* increased each year, even though *girl* was well
+known to three-year-olds, but this distance was driven by children
+becoming faster and more efficient at recognizing *girl*. Put another
+way, a mispronunciation penalty also reflects children's knowledge of
+the canonical word. In this data, the age-5 *rice* receives as many
+looks as many looks as age-4 *dirl*. Do children know *rice* less or
+accept *dirl* more? With so few items, it is unclear whether these
+differences are accidental or systematic.
 
+One implications for this research is that children's recognition of
+familiar words and referent selection for nonwords improved a modest
+amount over the preschool years. Although these tasks can be done by
+toddlers, full mastery does not begin emerge until age 4. This finding
+agrees with the main finding from my analysis of familiar word
+recognition: Although children can ostensibly know a word very well,
+their recognition and processing of that word can still improve during
+preschool.
 
-
-Limitations. The biggest limitation to this study is that it applied a procedure designed for toddlers on preschoolers. That is to say, it was too easy for there to be large year-over-year developmental changes in their performance. Children were successful at recognizing real words and fast-selecting referents for nonwords at age 3 and improved a litt
-
-
-
+The finding that mispronunciations were harder to retain than nonwords
+also has implications for teaching or intervention. Namely, teaching
+words that are confusable with known or relevant words is more difficult
+because a child's known words can influence whether the child accepts a
+taught word as a novel word.

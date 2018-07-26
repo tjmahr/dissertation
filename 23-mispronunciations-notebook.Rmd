@@ -1984,7 +1984,7 @@ Therefore, preschoolers are unquestionably sensitive to
 mispronunciations of familiar words, as they show more uncertainty when
 hearing a mispronunciation.
 
-(ref:mp-vs-real-peaks) Differences in growth curve peaks for the real words and mispronunciations.
+(ref:mp-vs-real-peaks) Comparison of growth curve peaks for the real words and mispronunciations.
 
 ```{r mp-vs-real-peaks, fig.cap = "(ref:mp-vs-real-peaks)", fig.width=4, fig.height=3, out.width="50%"}
 p_mp_real

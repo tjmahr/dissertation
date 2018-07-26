@@ -367,10 +367,7 @@ are easily enclosed by the prior densities.
 
 (ref:student-t-priors) Prior densities (left) versus posterior densities (right) for the random-effect standard deviations. I changed the prior to be tighter, so that it favor values up to 7.5. This prior still turned out to be very conservative, given that the posterior samples for these values are all less than 3.
 
-<div class="figure" style="text-align: center">
-<img src="96-app-aim2-models_files/figure-html/student-t-priors-1.png" alt="(ref:student-t-priors)" width="100%" />
-<p class="caption">(\#fig:student-t-priors)(ref:student-t-priors)</p>
-</div>
+![(\#fig:student-t-priors)(ref:student-t-priors)](96-app-aim2-models_files/figure-docx/student-t-priors-1.png)
 
 Model summary for unfamiliar-initial mispronunciation trials:
 

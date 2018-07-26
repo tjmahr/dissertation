@@ -39,8 +39,7 @@ for exclusion include: excessive missing data during eyetracking,
 experiment or technology error, developmental concerns not identified
 until later in study, or a failed hearing screening. Final sample sizes
 will depend on the measures needed for an analysis and the results from
-data screening checks. I disclose all data exclusions following
-guidelines by the Center for Open Science [@OSF_Statement].
+data screening checks.
 
                                           Year 1 (Age 3)     Year 2 (Age 4)     Year 3 (Age 5)
 ----------------------------------------- ------------------ ------------------ ------------------
@@ -87,10 +86,7 @@ speech.
 
 (ref:sample-vw-screen-cap2) Example display for the target *bell* with the semantic foil *drum*, the phonological foil *bee*, and the unrelated *swing*.
 
-<div class="figure" style="text-align: center">
-<img src="./misc/rwl-screens/TimePoint1/actual/Block2_17_swing2_bell2_bee2_drum2_UpperRightImage_bell.png" alt="(ref:sample-vw-screen-cap2)" width="100%" />
-<p class="caption">(\#fig:sample-vw-screen)(ref:sample-vw-screen-cap2)</p>
-</div>
+![(\#fig:sample-vw-screen)(ref:sample-vw-screen-cap2)](./misc/rwl-screens/TimePoint1/actual/Block2_17_swing2_bell2_bee2_drum2_UpperRightImage_bell.png)
 
 
 
@@ -104,7 +100,7 @@ experiments. A play break or hearing screening occurred between the two
 eyetracking blocks, depending on the visit.
 
 Each eyetracking experiment was administered as a block of trials (24
-for this experiment and 38 for a two-image task---see Chapter X).
+for this experiment and 38 for a two-image task---see [Chapter \@ref(aim2-method)](#aim2-method)).
 Children received two different blocks of each experiment. The blocks
 for an experiment differed in trial ordering and other features.
 Experiment order and block selection were counterbalanced over children
@@ -162,8 +158,8 @@ a syllable rime (*van*–*pan*). The semantic competitors included words
 from the same category (e.g., *shirt*–*dress*, *horse*–*bear*), words
 that were perceptually similar (*sword*–*pen*, *flag*–*kite*), and words
 with less obvious relationships (*van*–*horse*, *swan*-*bee*). A
-complete list of the items used in the experiment in [Appendix
-\@ref(vw-experiment-items)](#vw-experiment-items).
+complete list of the items used in the experiment in 
+[Appendix \@ref(vw-experiment-items)](#vw-experiment-items).
 
 The stimuli were recorded in both Mainstream American English (MAE) and
 African American English (AAE), so that the experiment could accommodate
@@ -272,7 +268,4 @@ rise as the word unfolds, and they peak and plateau around 1400 ms.
 
 (ref:aim1-spaghetti) Empirical word recognition growth curves from each year of the study. Each line represents an individual child's proportion of looks to the target image over time. The heavy lines are the averages of the lines for each year.
 
-<div class="figure" style="text-align: center">
-<img src="12-aim1-methods_files/figure-html/aim1-spaghetti-1.png" alt="(ref:aim1-spaghetti)" width="100%" />
-<p class="caption">(\#fig:aim1-spaghetti)(ref:aim1-spaghetti)</p>
-</div>
+![(\#fig:aim1-spaghetti)(ref:aim1-spaghetti)](12-aim1-methods_files/figure-docx/aim1-spaghetti-1.png)

@@ -63,11 +63,10 @@ looked more to a target (e.g., *shoe*) compared to a distractor (*door*)
 when primed by an image (*clock*, assumed to activate *sock* which
 primed *shoe*).[^semantic-priming]
 
-
 @AltvaterMackensen2013 demonstrated phonological-semantic priming even
 when the prime is a mispronunciations. German-learning two-year-olds
-heard a prime word, and 200 ms later two images appear on screen (a cow,
-Kuh and a fork, Gabel), one of which was labeled ("Kuh").The prime word
+heard a prime word, and 200 ms later two images appear on screen (a cow,
+*Kuh* and a fork, *Gabel*), one of which was labeled ("Kuh"). The prime word
 was a semantically related word ("Schaf", sheep), an
 onset-mispronunciation of the related word ("Faf" or "Taf"), or an
 unrelated prime ("Buch", book). Children looked to the target about
@@ -79,24 +78,25 @@ this study showed cascading activation where the mispronunciation
 activates the mispronounced word which in term activates a semantically
 related word.
 
-@Chow2017 performed a very similar study to the one I present for Aim 1.
-applied a very similar Visual World Paradigm English-learning 24-
-and 30-month-olds saw a 2 x 2 grid of images which included a
+@Chow2017 performed a very similar study to the one I present in the next chapters.
+They used a Visual World Paradigm with English-learning 24-
+and 30-month-olds. Children saw a 2 x 2 grid of images which included a
 phonological (cohort) competitor and a semantic competitor, and they
-heard a prompt to view one of the images (Look at the bee). On filler
-trials, the target word and an unrelated image onscreen alongside the
-competitors. On test trials, the target word (bee) was not pictured
-onscreen, so the display had two unrelated images (sandwich, dress), a
-phonological competitor (bus), and a semantic competitor (cat). They
-found an early temporary advantage (a growth curve bump) in looks to the
+heard a prompt to view one of the images (*Look at the bee*). On *filler*
+trials, the target word and an unrelated image appear onscreen alongside the
+competitors. On *test* trials, the target word (*bee*) was not pictured
+onscreen, so the display had two unrelated images (*sandwich*, *dress*), a
+phonological competitor (*bus*), and a semantic competitor (*cat*). They found an
+early temporary advantage (a growth curve bump) in looks to the
 phonological competitor, followed by a late, more stable advantage for
-the semantic competitor. They found that increased receptive vocabulary
-predicted more looks to the phonological competitor and fewer looks to
-the semantic competitor. (They interpret the semantic effect as a
-consequence of the early phonological effect causing children to fixate
-on the semantic word later.) Their results support a kind of cascading
-activation: "Toddlers, like adults, extract phonological information
-from the spoken word faster than they extract semantic information." 
+the semantic competitor. Moreover, they found that increased receptive
+vocabulary predicted more looks to the phonological competitor and fewer
+looks to the semantic competitor. (The looks to the semantic competitor
+were decreased because of the early advantage of the phonological
+competitor.) Their results support a kind of cascading activation in
+which phonological information comes online before semantic information:
+"Toddlers, like adults, extract phonological information from the spoken
+word faster than they extract semantic information."
 
 
 [^semantic-priming]: @Arias-Trejo2009 is commonly cited as evidence of
@@ -104,8 +104,8 @@ semantic priming effects. Toddlers heard sentences like "I saw a cat...
 dog". During the word *dog*, two images (dog and door) are presented.
 The idea is that *cat* should prime looks to its semantic neighbor
 *dog*. The unnatural stimulus order (a sentence followed by an isolated
-single word) and a condition effect where 18 month-olds children
-outperformed 21 month-olds make me skeptical that semantic priming is
+single word) and a condition effect where 18-month-olds
+outperformed 21-month-olds make me skeptical that semantic priming is
 the most plausible explanation of those results.
 
 The above studies involved young children of different ages tested under
@@ -119,7 +119,11 @@ fragmented view of how familiar word recognition develops within children.
 
 One open question is how lexical competition develops in young
 listeners. For example, how and when do phonological or semantically
-similar words exert their influence on word recognition? As a guiding
+similar words exert their influence on word recognition? @Chow2017
+provide a promising first step, in which two-year-olds looked to the
+phonological and semantic relatives of a named word. (Yet I am skeptical
+of any word recognition study where a target word is absent and absent
+for many trials.) As a guiding
 hypothesis, we can think of word learning as a gradual process where
 familiarity with a word moves from shallow receptive knowledge to deeper
 expressive knowledge. In adult listeners, words compete and they inhibit
@@ -187,22 +191,26 @@ In this study, I tackle these two lines of research: The development of
 lexical competition effects and individual differences in familiar word
 recognition. I report the results of a longitudinal study of word
 recognition in preschoolers at age 3, age 4, and age 5. The study is
-described in detail in [Chapter \@ref(aim1-method)](#aim1-method).
+described in detail in [Chapter \@ref(aim1-method)](#aim1-method).
 Briefly stated, this experiment tested word recognition by presenting
 prompts like "find the horse" and recording children's looks to an array
 of four images. The array of images included the target, a phonological
 competitor, a semantic competitor, and an unrelated image. In 
-[Chapter \@ref(fam-rec)](#fam-rec), I analyze the development patterns of
+[Chapter \@ref(fam-rec)](#fam-rec), I analyze the development patterns of
 familiar word recognition (looks to the target) and how individual
-differences change over time. In
-[Chapter \@ref(lex-competitors)](#lex-competitors), I study how the
-phonological and semantic competitors influence word recognition and how
-the influence of the competitors changes over time. Finally, in 
-[Chapter \@ref(aim1-discussion)](#aim1-discussion), I link these two
+differences change over time. I hypothesized that children would show
+stable individual differences over time, but the range and magnitude of
+these differences would get smaller as children grew older. I also
+examine which word recognition measures correlate with future vocabulary
+size to test how word recognition behavior predicts later outcomes.
+In [Chapter \@ref(lex-competitors)](#lex-competitors), I study how the
+phonological and semantic competitors influence word recognition where I
+test the prediction that children will become more sensitive to
+competitors as they grow older. Finally, in
+[Chapter \@ref(aim1-discussion)](#aim1-discussion), I link these two
 lines of research together and describe both sets of results in terms of
-lexical processing dynamics. 
-[Chapter \@ref(#aim1-h-check)](#aim1-h-check) reviews the results of my 
-pre-analysis research hypotheses.
+lexical processing dynamics, and [Chapter \@ref(aim1-h-check)](#aim1-h-check)
+reviews the results of my pre-analysis research hypotheses.
 
 
 

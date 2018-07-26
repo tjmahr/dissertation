@@ -846,9 +846,11 @@ peaks_and_vocabs_w %>%
 
 
 
-(ref:peak-concurrent-vocab-cors) Text reference for caption
+(ref:peak-concurrent-vocab-cors) Relationship between expressive vocabulary and growth curve peaks at each age.
 
-```{r peak-concurrent-vocab-cors, fig.cap = "(ref:peak-concurrent-vocab-cors)", out.width = "75%", fig.width = 5, fig.height = 3}
+```{r peak-concurrent-vocab-cors, fig.cap = "(ref:peak-concurrent-vocab-cors)", out.width = "75%", fig.width = 6, fig.height = 3}
+theme_set(theme_teej())
+
 to_plot <- peaks_and_vocabs_l %>% 
   filter(Condition != "diff") %>% 
   group_by(Condition) %>% 
@@ -1125,6 +1127,8 @@ step_by_25 <- function(x) {
   steps <- (x %/% .25)
   seq(from = steps[1] - 1, to = steps[2] + 1) * .25
 }
+
+theme_set(theme_teej())
 
 w_l %>%
   # add dummy point to real word peaks so that panel has the same range and

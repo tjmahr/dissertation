@@ -19,7 +19,7 @@ These models were fit in R [vers. 3.4.3; @R-base] with the RStanARM package
 When I computed the orthogonal polynomial features for Time, they were
 scaled so that the linear feature ranged from −.5 to .5. Under this
 scaling a unit change in Time^1^ was equal to change from the start to
-the end of the analysis window. Table \@ref(tab:poly-feature-range) shows
+the end of the analysis window. Table \@ref(tab:poly-feature-ranges) shows
 the ranges of the time features.
 
 ```{r poly-feature-ranges, echo = FALSE, message = FALSE, warning = FALSE}

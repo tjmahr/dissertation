@@ -251,7 +251,29 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
   \beta_3\text{Time}^3
 \]</span></p>
 <p>That the time terms are <em>orthogonal</em> means that <span class="math inline">\(\text{Time}^1\)</span>, <span class="math inline">\(\text{Time}^2\)</span> and <span class="math inline">\(\text{Time}^3\)</span> are transformed so that they are uncorrelated. Under this formulation, the parameters <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> have a direct interpretation in terms of lexical processing performance. The intercept, <span class="math inline">\(\beta_0\)</span>, measures the area under the growth curve—or the probability of fixating on the target word averaged over the whole window. We can think of <span class="math inline">\(\beta_0\)</span> as a measure of <em>word recognition reliability</em>. The linear time parameter, <span class="math inline">\(\beta_1\)</span>, estimates the steepness of the growth curve—or how the probability of fixating changes from frame to frame. We can think of <span class="math inline">\(\beta_1\)</span> as a measure of <em>processing efficiency</em>, because growth curves with stronger linear features exhibit steeper frame-by-frame increases in looking probability.<a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
-<p>To study how word recognition changes over time, I modeled how the growth curves change over developmental time. This amounted to studying how the growth curve parameters changes year over year. I included dummy-coded indicators for Age 3, Age 4, and Age 5 and allowed these indicators to interact with the growth curve parameters. These year-by-growth-curve-feature terms captured how the shape of the growth curves changed each year. The model also included random effects to represent by-child and by-child-by-year effects to estimate a general growth curve for each child and to estimate how each child’s growth curve changed each year.</p>
+<p>To study how word recognition changes over time, I modeled how the growth curves change over developmental time. This amounted to studying how the growth curve parameters changes year over year. I included dummy-coded indicators for Age 3, Age 4, and Age 5 and allowed these indicators to interact with the growth curve parameters:</p>
+<p><span class="math display">\[
+\small
+\begin{align*}
+   \text{log-odds}(\mathit{looking}) =\
+    &amp;\beta_0 + 
+      \beta_1\text{Time}^1 + 
+      \beta_2\text{Time}^2 + 
+      \beta_3\text{Time}^3\ + 
+      &amp;\text{[age 3 growth curve]} \\
+    (&amp;\gamma_{0} + 
+      \gamma_{1}\text{Time}^1 + 
+      \gamma_{2}\text{Time}^2 +
+      \gamma_{3}\text{Time}^3)*\text{Age}\,\text{4} + \
+      &amp;\text{[adjustments for age 4]} \\
+    (&amp;\delta_{0}\!\ + 
+      \delta_{1}\text{Time}^1\!\ + 
+      \delta_{2}\text{Time}^2\!\ +
+      \delta_{3}\text{Time}^3)*\text{Age}\,\text{5} \
+      &amp;\text{[adjustments for age 5]} \\
+\end{align*}
+\]</span></p>
+<p>These year-by-growth-curve-feature terms captured how the shape of the growth curves changed each year. The model also included random effects to represent by-child and by-child-by-year effects to estimate a general growth curve for each child and to estimate how each child’s growth curve changed each year.</p>
 <p>The models were fit in R (vers. 3.4.3) with the RStanARM package (vers. 2.16.3). <a href="aim1-gca-models.html#aim1-gca-models">Appendix <a href="aim1-gca-models.html#aim1-gca-models">B</a></a> contains the R code used to fit the model along with a description of the model specifications represented in the model syntax.</p>
 <div id="growth-curve-features-as-measures-of-word-recognition-performance" class="section level3">
 <h3><span class="header-section-number">5.1.1</span> Growth curve features as measures of word recognition performance</h3>
@@ -335,7 +357,7 @@ Figure 5.8: Uncertainty intervals for the Kendall’s coefficient of concordance
 </p>
 </div>
 <p>I used the <code>kendall()</code> function in the irr R package <span class="citation">(vers. 0.84; Gamer, Lemon, &amp; Singh, <a href="#ref-irr">2012</a>)</span> to compute concordance statistics. Figure <a href="fam-rec.html#fig:kendall-stats">5.8</a> depicts uncertainty intervals for the Kendall <em>W</em>’s for these growth curve features. The 90% uncertainty interval of <em>W</em> statistics from random ratings, [.28, .39], subsumes the intervals for the Time<sup>2</sup> effect [.30, .35] and the Time<sup>3</sup> effect [.28, .35], indicating that these values do not differentiate children in a longitudinally stable way. Earlier, I claimed that only the intercept, linear time, and peak features have psychologically meaningful interpretations and that the higher-order time features mainly act to capture the curvature of the data. These null concordance statistics support that claim because the Time<sup>2</sup> and Time<sup>3</sup> features differentiate children across studies as well as random numbers.</p>
-<p>Concordance is strongest for the peak feature, <em>W</em> = [] and the intercept term, <em>W</em> = [], followed by the linear time term, <em>W</em> = []. Because these values are far removed from the statistics for random ratings, I conclude that there is a credible degree of correspondence across studies when ranking children using their peak looking probability, average look probability (the intercept) or their growth curve slope (linear time).</p>
+<p>Concordance is strongest for the peak feature, <em>W</em> = .59 [.57, .60] and the intercept term, <em>W</em> = .58 [.57, .60], followed by the linear time term, <em>W</em> = .50 [.48, .52]. Because these values are far removed from the statistics for random ratings, I conclude that there is a credible degree of correspondence across studies when ranking children using their peak looking probability, average look probability (the intercept) or their growth curve slope (linear time).</p>
 <p><strong>Summary</strong>. Growth curve features measured individual differences in word recognition performance. By using Kendall’s <em>W</em> to measure the degree of concordance among growth curve features over time, I tested whether individual differences in lexical processing persisted over development. I found that the peak looking probability, average looking probability and linear time features were stable over time. Children who relatively fast (or reliable) at word recognition at one age were also relatively fast (or reliable) at other ages too.</p>
 </div>
 <div id="predicting-future-vocabulary-size" class="section level2">

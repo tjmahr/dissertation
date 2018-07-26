@@ -253,11 +253,10 @@ experienced at listening to noisy, degraded, or misspoken speech. I also
 report data from age 5 where we tested children's retention of the novel
 images paired with the nonwords and mispronunciations. 
 
-
-In [Appendix \@ref(aim2-mp-items)](#aim2-mp-items), I briefly present
-the results for specific mispronunciations, although item effects are 
-not formally modeled. Finally, in 
+Finally, in 
 [Chapter \@ref(aim2-discussion)](#aim2-discussion), I describe the 
 both sets of analyses together, and
 [Chapter \@ref(aim2-h-check)](#aim2-h-check) reviews the results of 
-my pre-analysis research hypotheses.
+my pre-analysis research hypotheses. In [Appendix \@ref(aim2-mp-items)](#aim2-mp-items), I briefly present
+the results for specific mispronunciations, although item effects are 
+not formally modeled. 

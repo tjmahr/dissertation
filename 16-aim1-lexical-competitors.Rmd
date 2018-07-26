@@ -1063,7 +1063,7 @@ to the limited advantage of the phonological competitor at age 3.
 study_labs <- data.frame(
   Age = c("Age 3", "Age 4", "Age 5"),
   x = c(1400, NA, 1330),
-  y = c(.42, NA, 1.1)
+  y = c(.40, NA, 1.1)
 )
 
 p1 <- semy_d %>%
@@ -1098,7 +1098,11 @@ p2 <- s2r %>%
     geom_hline(size = 2, yintercept = 0, color = "white") +
     geom_ribbon(aes(ymin = fit - CI, ymax = fit + CI), alpha = .2) +
     geom_line(aes(color = Age), size = 1) +
-    geom_text(aes(x = x, y = y, color = Age, label = Age), data = study_labs) +
+    geom_text(
+      aes(x = x, y = y, color = Age, label = Age), 
+      data = study_labs,      
+      family = "Lato Semibold", 
+      size = 5) +
     coord_cartesian(ylim = c(-.25, 1.1)) +
     labs_model_ci +
     theme_teej() + 
@@ -1199,9 +1203,6 @@ p2 <- s2r %>%
       axis.ticks.y = element_blank())
 library(patchwork)
 p1 + p2
-    
-
-tjmisc::ggpreview(height = 5, width = 7.5, dpi = 600)
 ```
 
 

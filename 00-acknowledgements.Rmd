@@ -1,8 +1,6 @@
-```{block, include = identical(knitr:::pandoc_to(), "html")}
+```{block, include = knitr:::pandoc_to() %in% c("docx", "html")}
 Acknowledgements {-}
 ========================================================================
-
-*draft*
 
 Thanks to my advisor and mentor Jan Edwards for recognizing my potential,
 plucking me from the Masters program, and giving me the opportunity to
@@ -21,10 +19,10 @@ A lot of smart and busy people gave me their time and thoughts. Thanks
 to the faculty who were always willing to advise me: Margarita
 Kaushanskaya, Audra Sterling, Jenny Saffran, Courtney Seidel, Katie
 Hustad. Thanks for Susan Ellis Weismer for taking me under her wing and
-helping me through some stressful periods. Thanks to Tim Rogers for
-being on my prelim committee. Thanks to Bob McMurray for giving an
-enthusiastic, eye-opening lecture at ASHA 2013 about how eyetracking
-data works as a measure of word recognition. 
+helping me through some stressful periods. Thanks to Bob McMurray for
+giving an enthusiastic, eye-opening lecture at ASHA 2013 about how
+eyetracking data works as a measure of word recognition. Thanks to Tim
+Rogers for being on my prelim committee.
 
 Thanks to my compatriots at Waisman and elsewhere whom I commiserated
 with often: Pierce Edmiston, Courtney Venker, Ron Pomper, Martin
@@ -57,13 +55,13 @@ some of my early doubts; and Richard McElreath for putting his
 Recognition is due for the community of statisticians, data scientists,
 psychologists, and language scientists whom I spent idle moments with on
 Twitter. There are too many of you to name. Thanks to the fellow
-graduate students, post-docs and others early in their research career
+graduate students, post-docs and others early in their research careers
 for helping me feel a sense of community. I often used the medium as a
 way to think out loud as I worked through modeling, programming or
 plotting problems. Thanks to those who chimed in to answer questions,
-suggest references, give feedback or offer feedback.
+suggest references, or offer feedback.
 
-I finish by thanking the people closest to me. I grew up on dairy farm
+I will finish by thanking the people closest to me. I grew up on dairy farm
 in rural Wisconsin and I was the seventh of ten children. That explains
 about 70% of who I am and whom I've become. My mom is nothing short of a
 superhero. My dad has been a paragon of steadiness and selflessness.

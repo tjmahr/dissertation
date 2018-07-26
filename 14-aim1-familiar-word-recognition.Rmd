@@ -96,8 +96,31 @@ To study how word recognition changes over time, I modeled how the
 growth curves change over developmental time. This amounted to studying
 how the growth curve parameters changes year over year. I included
 dummy-coded indicators for Age 3, Age 4, and Age 5 and allowed these
-indicators to interact with the growth curve parameters. These
-year-by-growth-curve-feature terms captured how the shape of the growth
+indicators to interact with the growth curve parameters:
+
+`r insert_html_math()`
+\small
+\begin{align*}
+   \text{log-odds}(\mathit{looking}) =\
+    &\beta_0 + 
+      \beta_1\text{Time}^1 + 
+      \beta_2\text{Time}^2 + 
+      \beta_3\text{Time}^3\ + 
+      &\text{[age 3 growth curve]} \\
+    (&\gamma_{0} + 
+      \gamma_{1}\text{Time}^1 + 
+      \gamma_{2}\text{Time}^2 +
+      \gamma_{3}\text{Time}^3)*\text{Age}\,\text{4} + \
+      &\text{[adjustments for age 4]} \\
+    (&\delta_{0}\!\ + 
+      \delta_{1}\text{Time}^1\!\ + 
+      \delta_{2}\text{Time}^2\!\ +
+      \delta_{3}\text{Time}^3)*\text{Age}\,\text{5} \
+      &\text{[adjustments for age 5]} \\
+\end{align*}
+`r insert_html_math()`
+
+These year-by-growth-curve-feature terms captured how the shape of the growth
 curves changed each year. The model also included random effects to
 represent by-child and by-child-by-year effects to estimate a general
 growth curve for each child and to estimate how each child's growth
@@ -846,7 +869,7 @@ ggplot(lpred %>% mutate(Study = convert_study_to_age(Study))) +
   geom_hline(yintercept = .25, size = 2, color = "white") +
   geom_line(
     aes(group = interaction(Study, .draw)), 
-    alpha = .1, show.legend = FALSE) +
+    alpha = .07, show.legend = FALSE) +
   geom_line(
     aes(group = interaction(Study, .draw)), 
     data = lpred %>% 
@@ -862,7 +885,6 @@ ggplot(lpred %>% mutate(Study = convert_study_to_age(Study))) +
     title = "Posterior predictions for 1,000 new participants",
     x = constants$x_time,
     y = constants$y_prop_target)
-
 ```
 
 (ref:new-participants-intervals) Uncertainty intervals for the simulated participants. Variability is widest at age 3 and narrowest at age 5, consistent with the prediction that children become less variable as they grow older.
@@ -1161,15 +1183,16 @@ null concordance statistics support that claim because the Time^2^ and
 Time^3^ features differentiate children across studies as well as random
 numbers.
 
-Concordance is strongest for the peak feature, *W* = `r w_pts[["Peak"]]`
-[`r w_uis[["Peak"]]`] and the intercept term, *W* =
-`r w_pts[["Intercept"]]` [`r w_uis[["Intercept"]]`], followed by the
-linear time term, *W* = `r w_pts[["Time"]]` [`r w_uis[["Time"]]`].
-Because these values are far removed from the statistics for random
-ratings, I conclude that there is a credible degree of correspondence
-across studies when ranking children using their peak looking
-probability, average look probability (the intercept) or their growth
-curve slope (linear time).
+Concordance is strongest for the peak feature, *W* =
+`r w_pts[["Peak~Probability"]]` [`r w_uis[["Peak~Probability"]]`] and
+the intercept term, *W* = `r w_pts[["Avg.~Probability"]]`
+[`r w_uis[["Avg.~Probability"]]`], followed by the linear time term,
+*W* = `r w_pts[["Time^1"]]` [`r w_uis[["Time^1"]]`]. Because these
+values are far removed from the statistics for random ratings, I
+conclude that there is a credible degree of correspondence across
+studies when ranking children using their peak looking probability,
+average look probability (the intercept) or their growth curve slope
+(linear time).
 
 **Summary**. Growth curve features measured individual differences in
 word recognition performance. By using Kendall's *W* to measure the

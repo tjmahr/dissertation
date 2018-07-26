@@ -15,7 +15,7 @@ These models were fit in R [vers. 3.4.3; @R-base] with the RStanARM package
 When I computed the orthogonal polynomial features for Time, they were
 scaled so that the linear feature ranged from −.5 to .5. Under this
 scaling a unit change in Time^1^ was equal to change from the start to
-the end of the analysis window. Table \@ref(tab:poly-feature-range) shows
+the end of the analysis window. Table \@ref(tab:poly-feature-ranges) shows
 the ranges of the time features.
 
 
@@ -172,10 +172,7 @@ extreme, degenerate values.
 
 (ref:lkj-prior) Samples of correlation effects drawn from *LKJ*(1) and *LKJ*(2) priors. 
 
-<div class="figure" style="text-align: center">
-<img src="92-app-aim1-models_files/figure-html/lkj-prior-1.png" alt="(ref:lkj-prior)" width="50%" />
-<p class="caption">(\#fig:lkj-prior)(ref:lkj-prior)</p>
-</div>
+![(\#fig:lkj-prior)(ref:lkj-prior)](92-app-aim1-models_files/figure-docx/lkj-prior-1.png)
 
 Summary of the familiar word recognition model with diagnostics and 90%
 uncertainty intervals:
