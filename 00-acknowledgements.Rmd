@@ -1,4 +1,5 @@
-```{block, include = knitr:::pandoc_to() %in% c("docx", "html")}
+<!-- ```{block, include = knitr:::pandoc_to() %in% c("docx", "html")} -->
+```{block}
 Acknowledgements {-}
 ========================================================================
 

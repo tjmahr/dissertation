@@ -34,9 +34,31 @@ bookdown::word_document2:
   ]
 
 huskydown::thesis_pdf:
+  pandoc_args: [
+    "--csl", "./assets/apa.csl",
+    "--bibliography", "./assets/refs.bib",
+    "--bibliography", "./assets/packages.bib",
+    "--filter", "pandoc-citeproc"
+  ]
   latex_engine: xelatex
   includes:
     in_header: assets/preamble3.tex
+  template: assets/old-template.tex
+
+buckydown::thesis_pdf:
+  pandoc_args: [
+    "--csl", "./assets/apa.csl",
+    "--bibliography", "./assets/refs.bib",
+    "--bibliography", "./assets/packages.bib",
+    "--filter", "pandoc-citeproc"
+  ]
+#  latex_engine: xelatex
+  dev: cairo_pdf
+  toc_appendix: true
+  toc_bib: true
+  toc: true
+  toc_depth: 3
+  highlight: default
   template: assets/template.tex
 
 bookdown::html_document2:

@@ -1,68 +1,77 @@
-% From https://github.com/UWIT-IAM/UWThesis
+\documentclass[12pt,oneside,letterpaper]{memoir}
 
-\documentclass [11pt, proquest] {uwthesis}[2015/03/03]
+\usepackage{natbib}
 
+\usepackage{appendix}
+\DisemulatePackage{setspace}
+\usepackage[onehalfspacing]{setspace}
+\usepackage{geometry}
 
-% fix for pandoc 1.14
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage[loadonly]{enumitem}[]
+\newlist{hanglist}{enumerate}{1}
+\setlist[hanglist]{label=\arabic*.}
+\setlist[hanglist,1]{leftmargin=0pt}
 
-\newtheorem{theorem}{Jibberish}
+\usepackage{amssymb,amsmath,amsthm}
+% \usepackage{theorem}
 
-\hyphenation{mar-gin-al-ia}
+\usepackage{mathpartir}
+\usepackage{listings}
+\usepackage{microtype}
 
-$if(watermark)$
-\usepackage[stamp]{draftwatermark}
-% % Use the following to make modification
-\SetWatermarkText{$watermark$}
-\SetWatermarkLightness{0.95}
-$else$
-\usepackage[nostamp]{draftwatermark}
-$endif$
+\usepackage{hyperref}
+\hypersetup{pdfborder = 0 0 0}
 
-\usepackage[nointegrals]{wasysym} %% for the per mil symbol
-\usepackage{textcomp}             %% for copyright symbol
-\usepackage{lscape}               %% to allow to rotate pages to landscape
-\usepackage{tabularx}             %% to adjust table column width
-\usepackage{booktabs}             %% for more attractive tables
+% Surround parts of graphics with box
+\usepackage{boxedminipage}
+
 \usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{ifxetex,ifluatex,ifpdf}
 
-% suppress bottom page numbers on first page of each chapter
-% because they overlap with text
-\usepackage{etoolbox}
-\patchcmd{\chapter}{plain}{empty}{}{}
+%% Avoid ugly "Type 3" fonts
+\usepackage{lmodern}
+\usepackage[LY1]{fontenc}
 
+%% Substitute your favorite serif and sans fonts here....
+\usepackage{tgpagella}
+\usepackage[LY1]{eulervm}
 
+\ifpdf
+  \usepackage[pdftex]{graphicx}
+\else
+  \usepackage{graphicx}
+\fi
 
+% \usepackage{makeidx}
+% \makeindex
 
-% Double spacing, if you want it.
-% \def\dsp{\def\baselinestretch{2.0}\large\normalsize}
-% \dsp
+{\theoremstyle{plain}
+\newtheorem{thm}{Theorem}[chapter]
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{define}[thm]{Definition}
+\newtheorem{exmpl}[thm]{Example}
+}
+{\theoremstyle{remark}
+\newtheorem{rmk}[thm]{Remark}
+}
 
-% If the Grad. Division insists that the first paragraph of a section
-% be indented (like the others), then include this line:
-% \usepackage{indentfirst}
+\newtheoremstyle{customsty1}
+{3pt}%
+{3pt}%
+{}% --- body font
+{}% --- indent amount
+{\bfseries}% --- Theorem head font
+{:}% --- Punctuation after head
+{.5em}% --- space after head
+{}% --- theorem head spec (can be left empty, meaning 'normal')
 
-%%%%%%%%%%%%%%%%%%
-% If you want to use "sections" to partition your thesis
-% un-comment the following:
-% \counterwithout{section}{chapter}
-% \setsecnumdepth{subsubsection}
-% \def\sectionmark#1{\markboth{#1}{#1}}
-% \def\subsectionmark#1{\markboth{#1}{#1}}
-% \renewcommand{\thesection}{\arabic{section}}
-% \renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
-% \makeatletter
-% \let\l@subsection\l@section
-% \let\l@section\l@chapter
-% \makeatother
-%
-% \renewcommand{\thetable}{\arabic{table}}
-% \renewcommand{\thefigure}{\arabic{figure}}
-%%%%%%%%%%%%%%%%%%
+% Define 'newtheorems' that use ``customsty1''
+{\theoremstyle{customsty1}
+}
+
 
 %% This is my infobox class
-\usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage{mdframed}
 \definecolor{infoblue}{RGB}{238, 247, 250}
@@ -88,38 +97,10 @@ $endif$
 \let\End\end
 
 
-
-%% Stuff from https://github.com/suchow/Dissertate
-
-% The following line would print the thesis in a postscript font
-
-% \usepackage{natbib}
-% \def\bibpreamble{\protect\addcontentsline{toc}{chapter}{Bibliography}}
-% \bibliography{references}
-
-\setcounter{tocdepth}{1}  % Print the chapter and sections to the toc
-
-\usepackage{biblatex}
-
-\prelimpages
-
-%% from thesisdown
-% To pass between YAML and LaTeX the dollar signs are added by CII
-\Title{$title$}
-\Author{$author$}
-\Year{$year$}
-\School{$school$}
-\Program{$program$}
-\Chair{$chair$}
-\Signature{$signature1$}
-\Signature{$signature2$}
-
 % commands and environments needed by pandoc snippets
 % extracted from the output of `pandoc -s`
 %% Make R markdown code chunks work
 \usepackage{array}
-\usepackage{amssymb,amsmath}
-\usepackage{ifxetex,ifluatex}
 \ifxetex
   \usepackage{fontspec,xltxtra,xunicode}
   \defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
@@ -163,43 +144,807 @@ $endif$
 \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
 
 
-\ifxetex
-  \usepackage[setpagesize=false, % page size defined by xetex
-              unicode=false, % unicode breaks when used with xetex
-              xetex,
-              colorlinks=true,
-              linkcolor=blue]{hyperref}
-\else
-  \usepackage[unicode=true,
-              colorlinks=true,
-              linkcolor=blue]{hyperref}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%% NB: the ``deposit'' chapter- and page- styles should conform to UW
+%%% requirements.  If you are producing a pretty version of your
+%%% dissertation for web use later, you will certainly want to make
+%%% your own chapter and page styles.
+
+%% Thomas Dye’s southall chapter style
+\newlength{\headindent}
+\newlength{\rightblock}
+\makechapterstyle{deposit}{%
+  \setlength{\headindent}{36pt}
+  \setlength{\rightblock}{\textwidth}
+  \addtolength{\rightblock}{-\headindent}
+  \setlength{\beforechapskip}{2\baselineskip}
+  \setlength{\afterchapskip}{2\baselineskip}
+  \setlength{\midchapskip}{0pt}
+  \renewcommand{\chaptitlefont}{\huge\rmfamily\raggedright}
+  \renewcommand{\chapnumfont}{\chaptitlefont}
+  \renewcommand{\printchaptername}{}
+  \renewcommand{\chapternamenum}{}
+  \renewcommand{\afterchapternum}{}
+  \renewcommand{\printchapternum}{%
+    \begin{minipage}[t][\baselineskip][b]{\headindent}
+      {\vspace{0pt}\chapnumfont%%%\figureversion{lining}
+      \thechapter}
+    \end{minipage}}
+  \renewcommand{\printchaptertitle}[1]{%
+    \hfill\begin{minipage}[t]{\rightblock}
+    {\vspace{0pt}\chaptitlefont ##1\par}\end{minipage}}
+  \renewcommand{\afterchaptertitle}{%
+    \par\vspace{\baselineskip}%
+    \hrulefill \par\nobreak\noindent \vskip\afterchapskip}
+}
+
+% \makechapterstyle{deposit}{%
+%   \renewcommand{\chapterheadstart}{}
+%   \renewcommand{\printchaptername}{}
+%   \renewcommand{\chapternamenum}{}
+%   \renewcommand{\printchapternum}{
+%     \parbox{2em}{\MakeLowercase{\Huge\scshape\thechapter{}}}
+%   }
+%   \renewcommand{\afterchapternum}{}
+%   \renewcommand{\printchaptertitle}[1]{%
+%   \raggedright\MakeLowercase{\Huge\scshape##1}}
+%   \renewcommand{\afterchaptertitle}{%
+%   % \vskip\onelineskip \hrule\vskip\onelineskip}
+% }
+
+\makepagestyle{deposit}
+
+\makeatletter
+
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\renewcommand{\sectionmark}[1]{\markboth{#1}{}}
+
+\makeevenfoot{deposit}{}{}{}
+\makeoddfoot{deposit}{}{}{}
+\makeevenhead{deposit}{\thepage}{}{}
+\makeoddhead{deposit}{}{}{\thepage}
+\makeatother
+
+%%% set up page numbering for chapter pages to satisfy UW requirements
+%%% NB: You will want to delete until the ``SNIP'' mark if you are
+%%% making a ``nice'' copy
+\copypagestyle{chapter}{plain}
+\makeoddfoot{chapter}{}{}{}
+\makeevenhead{chapter}{\thepage}{}{}
+\makeoddhead{chapter}{}{}{\thepage}
+%%% SNIP
+
+%%% bib nonsense
+\makeatletter
+\newenvironment{wb-bib}[1]{%
+  \chapter*{references}
+\ifnobibintoc\else
+\phantomsection
+\addcontentsline{toc}{chapter}{References}
 \fi
-\hypersetup{breaklinks=true, pdfborder={0 0 0}}
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
-\setlength{\emergencystretch}{3em}  % prevent overfull lines
-\setcounter{secnumdepth}{0}
+\prebibhook
+  \begin{bibitemlist}{#1}}{\end{bibitemlist}\postbibhook}
+
+\AtBeginDocument{%
+  \@ifpackageloaded{natbib}{% natbib is loaded
+    \addtodef{\endthebibliography}{}{\vskip-\lastskip\postbibhook}
+    \@ifpackagewith{natbib}{sectionbib}{% with sectionbib option
+      \renewcommand{\bibsection}{\@memb@bsec}}%
+      {\renewcommand{\bibsection}{\@memb@bchap}}}%
+  {}
+  \@ifpackagewith{chapterbib}{sectionbib}{%
+    \renewcommand{\sectionbib}[2]{}
+    \renewcommand{\bibsection}{\@memb@bsec}}{}
+}
+\makeatother
 
 
 
+
+
+% \input{includes/defs}
+%% put lstnewenvironment declarations here, if you're using listings
+
+%% end lstnewenvironment declarations
+
+%% I put convenience definitions that will go in several chapters here
+
+%%%%% begin convenience definitions
+
+\makeatletter
+\newcommand{\wb@episource}{}
+\newenvironment{wbepi}[1]{\begin{quote}\renewcommand{\wb@episource}{#1}\itshape}{\par\upshape \raggedleft --- \textsc{\wb@episource}\\ \end{quote}}
+\makeatother
+
+%%%%% end convenience definitions
+
+
+% \input{includes/thesisdefs}
+% thesisdefs.tex
+
+% This is mostly adapted from withesis.cls.  The original copyright
+% notice for withesis.cls follows, preceded by two percent signs (%%):
+
+%% withesis.cls
+%% LaTeX Style file for the University of Wisconsin-Madison Thesis Format
+%% Adapted from the Purdue University Thesis Format
+%% Originally by Dave Kraynie
+%% Edits by Darrell McCauley
+%% Adapted to UW-Madison format by Eric Benedict  (Noted with <EB>)
+%% Updated to LaTeX2e by Eric Benedict 24 July 00
+%%
+%%=============================================================================
+%% Licensed under the Perl Artistic License.
+%% see: http://www.ctan.org/tex-archive/help/Catalogue/licenses.artistic.html
+%% for more info...
+%%=============================================================================
+
+% withesis.cls is available from CTAN.  The modifications to this file
+% are also licensed under the Perl Artistic License.
+
+% --wb, 2008
+
+\makeatletter
+
+\newcounter {tocpage}
+\newcounter {lofpage}
+\newcounter {lotpage}
+\newcounter {listofheading}
+
+\newcommand\@thesistitlemedskip{0.25in}
+\newcommand\@thesistitlebigskip{0.55in}
+\newcommand{\degree}[1]{\gdef\@degree{#1}}
+\newcommand{\project}{\gdef\@doctype{A masters project report}}
+\newcommand{\prelim}{\gdef\@doctype{A preliminary report}}
+\newcommand{\thesis}{\gdef\@doctype{A thesis}}
+\newcommand{\dissertation}{\gdef\@doctype{A dissertation}}
+\newcommand{\department}[1]{\gdef\@department{(#1)}}
+\newcommand{\oralexamdate}[1]{\gdef\@oralexamdate{#1}}
+\newcommand{\committeeone}[1]{\gdef\@committeeone{#1}}
+\newcommand{\committeetwo}[1]{\gdef\@committeetwo{#1}}
+\newcommand{\committeethree}[1]{\gdef\@committeethree{#1}}
+\newcommand{\committeefour}[1]{\gdef\@committeefour{#1}}
+\newcommand{\committeefive}[1]{\gdef\@committeefive{#1}}
+\newcommand{\committeesix}[1]{\gdef\@committeesix{#1}}
+\newcommand{\committeeseven}[1]{\gdef\@committeeseven{#1}}
+\newcommand{\school}[1]{\gdef\@school{#1}}
+
+\newenvironment{titlepage}
+ {\@restonecolfalse\if@twocolumn\@restonecoltrue\onecolumn
+  \else \newpage \fi \thispagestyle{empty}
+% \c@page\z@ -- deleted: count title page in thesis
+}{\if@restonecol\twocolumn \else \newpage \fi}
+
+\gdef\@degree{Doctor of Philosophy}    %Default is PhD
+\gdef\@doctype{A dissertation}         %Default is dissertation
+
+\gdef\@department{(Electrical Engineering)} % Default is Electical Engineering
+\gdef\@oralexamdate{}
+\gdef\@committeeone{}
+\gdef\@committeetwo{}
+\gdef\@committeethree{}
+\gdef\@committeefour{}
+\gdef\@committeefive{}
+\gdef\@committeesix{}
+\gdef\@committeeseven{}
+\gdef\@school{}
+
+
+\renewcommand{\maketitle}{%
+  \begin{titlepage}
+%-----------------------------------------------------------------------------
+% -- The thesis office doesn't like thanks on title page.  Put it in
+% -- the acknowledgments.  This is here so you don't have to change
+% -- your titlepage when converting from report style. -> from Purdue, but I
+%        left it here since it seems compatible with UW-Madison, Eric
+%-----------------------------------------------------------------------------
+    \def\thanks##1{\typeout{Warning: `thanks' deleted from thesis titlepage.}}
+    \let\footnotesize\small \let\footnoterule\relax \setcounter{page}{1}
+ %sets new margins for title page so that committee members can be placed there
+
+   % \vspace*{0.1in}
+    \begin{center}
+      {\textbf{\expandafter\uppercase\expandafter{\@title}}} \\[\@thesistitlebigskip]
+       by \\[\@thesistitlemedskip]
+      \@author \\[\@thesistitlebigskip]
+      \@doctype\ submitted in partial fulfillment of \\
+      the requirements for the degree of\\[\@thesistitlebigskip]
+      \@degree \\[\@thesistitlemedskip]
+      \@department \\[\@thesistitlebigskip]
+      at the \\[\@thesistitlebigskip]
+      \MakeUppercase{\@school}\\[\@thesistitlebigskip]
+      \@date \\[\@thesistitlebigskip]
+    \end{center}
+% section added by Steven Baumgart on 3/2012
+% adds committee list to the title page
+% add or delete committee members as you need to, these are defined in the dissertation.tex document
+% comment out other things as you need to as well. - SB
+
+\noindent Date of final oral examination: \@oralexamdate \hspace*{\fill} \\[\@thesistitlemedskip]
+\noindent The dissertation is approved by the following members of the Final Oral Committee:\\*
+$for(signature)$\indent $signature$$sep$\\*$endfor$
+\end{titlepage}
+
+  \setcounter{footnote}{0}
+  \setcounter{page}{1} %title page is NOT counted
+  \let\thanks\relax
+  \let\maketitle\relax \let\degree\relax \let\project\relax \let\prelim\relax
+  \let\department\relax
+  \gdef\@thanks{}\gdef\@degree{}\gdef\@doctype{}
+  \gdef\@department{}
+  %\gdef\@author{}\gdef\@title{}
+}
+
+
+%=============================================================================
+% ABSTRACT
+%=============================================================================
+% The abstract should begin with two single-spaced lines describing
+% the author and title in a standard format.  After these lines comes
+% the standard abstract.
+%=============================================================================
+\def\abstract{
+  \chapter*{Abstract}
+  \addcontentsline{toc}{chapter}{Abstract}
+  \relax\markboth{Abstract}{Abstract}}
+\def\endabstract{\par\newpage}
+
+
+%=============================================================================
+% UMI ABSTRACT
+%=============================================================================
+% The UMI abstract should begin with the author and title in a standard format.
+% After the author comes the advisor and university. After these lines comes
+% a bunch of double spaced text to make up the standard abstract.
+% After the abstract, the advisor's approval signature follows.
+% This page is not numbered and is delivered seperately to the thesis office.
+%=============================================================================
+
+% \def\advisortitle#1{\gdef\@advisortitle{#1}}
+\def\abstractadvisor#1{\gdef\@abstractadvisor{#1}}
+\def\abstractschool#1{\gdef\@abstractschool{#1}}
+\def\abstractyear#1{\gdef\@abstractyear{#1}}
+
+\gdef\@abstractadvisor{Professor Advisor}
+\gdef\@abstractschool{The University}
+\gdef\@abstractyear{2000}
+
+\def\umiabstract{
+             % \thispagestyle{empty}
+                  % \addtocounter{page}{-1}
+  \begin{center}
+    {\textbf{\expandafter\uppercase\expandafter{Abstract}}}\\
+    \vspace{6pt}
+    {\@title}\\
+    \vspace{6pt}
+    by \\
+    \vspace{6pt}
+    \@author \\
+    \vspace{12pt}
+    \@abstractschool, \@abstractyear\\
+    Under the supervision of \@abstractadvisor
+  \end{center}
+}
+
+% \def\endumiabstract{\vfill \hfill\@advisorname\par\newpage}
+
+
+%============================================================================
+% VERBATIMFILE
+%============================================================================
+% \verbatimfile{<filename>}    for verbatim inclusion of a file
+% - Note that the precise layout of line breaks in this file is important!
+% - added the \singlespace - EB
+%============================================================================
+\def\verbatimfile#1{\begingroup \singlespace
+                    \@verbatim \frenchspacing \@vobeyspaces
+                    \input#1 \endgroup
+}
+
+
+%=============================================================================
+% SEPARATOR Pages
+%   Creates a blank page with a text centered horizontally and vertically.
+%   The page is neither counted nor numbered.
+%   These pages are required in the thesis format before sections such
+%   as appendices, vita, bibliography, etc.
+%=============================================================================
+\def\separatorpage#1{
+  \newpage
+  \thispagestyle{empty}
+  \addtocounter{page}{-1}
+  \null
+  \vfil\vfil
+  \begin{center}
+    {\textbf{#1}}
+  \end{center}
+  \vfil\vfil
+  \newpage}
+
+
+%=============================================================================
+% COPYRIGHTPAGE
+%=============================================================================
+% The copyright must do the following:
+% - start a new page with no number
+% - place the copyright text centered at the bottom.
+%=============================================================================
+\def\copyrightpage{
+  \newpage
+  \thispagestyle{empty}    % No page number
+  \addtocounter{page}{-1}
+  \chapter*{}            % Required for \vfill to work
+  \begin{center}
+   \vfill
+   \copyright\ Copyright by \@author\ \@date\\
+   All Rights Reserved
+  \end{center}}
+
+
+%=============================================================================
+% GLOSSARY
+%=============================================================================
+% The glossary environment must do the following:
+% - produce the table of contents entry for the glossary
+% - start a new page with GLOSSARY centered two inches from the top
+%=============================================================================
+\def\glossary{
+  \chapter*{GLOSSARY}
+  \addcontentsline{toc}{chapter}{Glossary}}
+\def\endglossary{\par\newpage}
+
+%=============================================================================
+% NOMENCLATURE
+%=============================================================================
+% The nomenclature environment must do the following:
+% - produce the table of contents entry for the nomenclature section
+% - start a new page with NOMENCLATURE centered two inches from the top
+%=============================================================================
+\def\nomenclature{\separatorpage{DISCARD THIS PAGE}
+  \chapter*{Nomenclature}
+  \addcontentsline{toc}{chapter}{NOMENCLATURE}}
+\def\endnomenclature{\par\newpage}
+
+%=============================================================================
+% CONVENTIONS
+%=============================================================================
+% The conventions environment must do the following:
+% - produce the table of contents entry for the nomenclature section
+% - start a new page with CONVENTIONS centered two inches from the top
+%=============================================================================
+\def\conventions{\separatorpage{DISCARD THIS PAGE}
+  \chapter*{Conventions}
+  \addcontentsline{toc}{chapter}{CONVENTIONS}}
+\def\endconventions{\par\newpage}
+
+
+%=============================================================================
+% COLOPHON
+%=============================================================================
+% The colophon environment must do the following:
+% - produce the table of contents entry for the nomenclature section
+% - start a new page with COLOPHON centered two inches from the top
+%=============================================================================
+\def\colophon{\separatorpage{DISCARD THIS PAGE}
+  \chapter*{Colophon}
+  \addcontentsline{toc}{chapter}{Colophon}}
+\def\endcolophon{\par\newpage}
+
+%=============================================================================
+% LIST OF SYMBOLS
+%=============================================================================
+% The list of symbols environment must do the following:
+% - produce the table of contents entry for the list of symbols section
+% - start a new page with LIST OF SYMBOLS centered two inches from the top
+%=============================================================================
+\def\listofsymbols{\separatorpage{DISCARD THIS PAGE}
+  \eject
+  \chapter*{LIST OF SYMBOLS}
+  \addcontentsline{toc}{chapter}{LIST OF SYMBOLS}}
+\def\endlistofsymbols{\par\newpage}
+
+%=============================================================================
+% VITA
+%=============================================================================
+% The vita environment must do the following:
+% - produce a separator page with the word vita centered
+% - produce the table of contents entry for the vita
+% - start a new page with VITA centered two inches from the top
+%=============================================================================
+\def\vita{
+%  \separatorpage{VITA}         % UW doesn't require this EB
+  \chapter*{VITA}
+  \addcontentsline{toc}{chapter}{VITA}}
+\def\endvita{\par\newpage}
+
+%=============================================================================
+% ACKNOWLEDGMENTS
+%=============================================================================
+% The acknowledgments environment must do the following:
+% - start a new page with ACKNOWLEDGMENTS centered two inches from the top
+%=============================================================================
+\def\acks{
+  \chapter*{Acknowledgments}
+}
+\def\endacks{\par\newpage}
+
+%=============================================================================
+% DEDICATION
+%=============================================================================
+% The dedication environment must do the following:
+% - start a new page
+% - center the text vertically
+% - include the text in a center environment
+%=============================================================================
+\def\dedication{
+  \newpage
+  \null\vfil
+  \begin{center}\Large}
+\def\enddedication{\end{center}\par\vfil\newpage}
+
+%=============================================================================
+% DATE
+%=============================================================================
+%\def\today{\ifcase\month\or
+  %January\or February\or March\or April\or May\or June\or
+  %July\or August\or September\or October\or November\or December\fi
+  %\space\number\day, \number\year}
+\newcount\@testday
+\def\today{\@testday=\day
+  \ifnum\@testday>30 \advance\@testday by -30
+  \else\ifnum\@testday>20 \advance\@testday by -20
+  \fi\fi
+  \number\day\ \
+  \ifcase\month\or
+    January \or February \or March \or April \or May \or June \or
+    July \or August \or September \or October \or November \or December
+    \fi\ \number\year
+}
+
+
+%  Single counter for theorems and theorem-like environments:
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{assertion}[theorem]{Assertion}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{figger}[theorem]{Figure}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{prop}[theorem]{Proposition}
+\newtheorem{remark}[theorem]{Remark}
+
+%=============================================================================
+% TABLE OF CONTENTS; LIST OF FIGURES; LIST OF TABLES
+%=============================================================================
+% In report style, \tableofcontents, \listoffigures, etc. are always
+% set in single-column style.  @restonecol is used to keep track of
+% whether we need to switch back to double column style after the toc.
+%
+% The only known problem now is that the first page with the new
+% layout is too long.  The problem seems to be that the change to
+% textheight doesn't take place on the first page.  Even if it's the
+% first line in the table of contents macro.  Presumably the same
+% problem also occurs in the lof and lot.
+%
+% I'm taking a shot at fixing the problem by dropping in a throw-away
+% page between the change to the height parameters and the start of
+% the chapter.  Isn't elegance wonderful?
+%
+%=============================================================================
+
+% \def\@tableof#1#2#3#4#5{
+% { % limit scope of following declarations!!
+%   \@restonecolfalse\if@twocolumn\@restonecoltrue\onecolumn\fi
+%   \addtolength{\textheight}{-40pt}       % -24-16
+%   \addtolength{\majorheadskip}{-40pt}    % -24-16
+%   \addtolength{\headheight}{52pt}        %  36+16
+%   \addtolength{\headsep}{-12pt}          % -12
+%   \separatorpage{DISCARD THIS PAGE}
+%   \chapter*{#1}
+%   #5
+%   \relax\markboth{#1}{#1}
+%   \hbox to \hsize{#2 \hfil Page}
+%   \singlespace
+%   \setcounter{#3}{0}
+%   \setcounter{listofheading}{1}  % change from 0 to 1 by mccauley, 14may93
+%   \def\@oddhead{\vbox to \headheight{\vspace{4pt}
+%     \hbox to \hsize{\hfil\textrm{\thepage}} \vfil
+%     \ifnum\value{#3}=1
+%       \ifnum\value{listofheading}=2
+%         \hbox to \hsize{Appendix\hfil} \vspace{4pt} \fi
+%       \ifnum\value{listofheading}=1
+%         \stepcounter{listofheading} \fi
+%       \hbox to \hsize{#2 \hfil Page}
+%     \else
+%       \setcounter{#3}{1}
+%     \fi}}
+%   \def\@evenhead{\vbox to \headheight{\vspace{4pt}
+%     \hbox to \hsize{\textrm{\thepage}\hfil} \vfil
+%     \ifnum\value{#3}=1
+%       \ifnum\value{listofheading}=2
+%         \hbox to \hsize{Appendix\hfil} \vspace{4pt} \fi
+%       \ifnum\value{listofheading}=1
+%         \stepcounter{listofheading} \fi
+%       \hbox to \hsize{#2 \hfil Page}
+%     \else
+%       \setcounter{#3}{1}
+%     \fi}}
+%   \@starttoc{#4}  \if@restonecol\twocolumn\fi
+%   \newpage
+% }}
+%
+% \def\tableofcontents{\@tableof{TABLE OF CONTENTS}{}{tocpage}{toc}{}}
+%
+% \def\listoffigures{
+%   \@tableof{LIST OF FIGURES}{Figure}{lofpage}{lof}
+%   {\protect\addcontentsline{toc}{chapter}{LIST OF FIGURES}}}
+%
+% \def\listoftables{
+%   \@tableof{LIST OF TABLES}{Table}{lotpage}{lot}
+%   {\protect\addcontentsline{toc}{chapter}{LIST OF TABLES}}}
+
+%=============================================================================
+% BIBLIOGRAPHY
+%=============================================================================
+% The thebibliography environment executes the following commands:
+%
+%  o start a new 'chapter' with BIBLIOGRAPHY as the heading
+%  o produce a separator page for the bibliography
+%
+%  \def\newblock{\hskip .11em plus .33em minus -.07em} --
+%      Defines the `closed' format, where the blocks (major units of
+%      information) of an entry run together.
+%
+%  \sloppy  -- Used because it's rather hard to do line breaks in
+%      bibliographies,
+%
+%  \sfcode`\.=1000\relax --
+%      Causes a `.' (period) not to produce an end-of-sentence space.
+%=============================================================================
+% \altbibtitle
+%   The default title for the References chapter is ``LIST OF REFERENCES''
+%   Since some people prefer ``BIBLIOGRAPHY'', the command
+%   \altbibtitle has been added to change the chapter title.
+%   This command does nothing more than change REFERENCES to BIBLIOGRAPHY
+%============================================================================
+\def\@bibchaptitle{Bibliography}
+\def\altbibtitle{\def\@bibchaptitle{Bibliography}}
+\def\thebibliography#1{
+  %\separatorpage{\@bibchaptitle}
+  \global\@bibpresenttrue
+  \chapter*{\@bibchaptitle\markboth{\@bibchaptitle}{\@bibchaptitle}}
+  \addcontentsline{toc}{chapter}{\@bibchaptitle}
+  \vspace{0.375in}    % added to match 4 line requirement
+  \interlinepenalty=10000 % added to prevent breaking of bib entries
+  \singlespace\list
+  {[\arabic{enumi}]}{\settowidth\labelwidth{[#1]}\leftmargin\labelwidth
+    \advance\leftmargin\labelsep \usecounter{enumi}}
+  \def\newblock{\hskip .11em plus .33em minus -.07em}
+  \sloppy
+  \sfcode`\.=1000\relax}
+\let\endthebibliography=\endlist
+
+\makeatother
+
+
+
+
+
+
+
+\title{$title$}
+\author{$author$}
+\department{$program$}
+\school{$school$}
+\oralexamdate{$oral-date$}
+\date{$year$}
+\abstractadvisor{$abstract-advisor$}
+\abstractschool{$abstract-school$}
+\abstractyear{$abstract-year$}
+
+
+
+
+
+
+
+
+% \committeeone{Iam A. Professor, Professor, Geography}
+% \committeetwo{Iam A. Professor, Professor, Geography}
+% \committeethree{Iam A. Professor, Assistant Professor, Geography}
+% \committeefour{Iam A. Professor, Associate Professor, Geography}
+% \committeefive{Iam A. Professor, Associate Professor, History}
+% \committeesix{Iam A. Professor, Associate Professor, History}
+
+% if you use any additional committe members you will need to uncomment
+% the corresponding lines 107 and/or 108 in thesisdef.tex You may also need
+% to adjust the value for \newcommand\@thesistitlemedskip{0.25in} and
+% \newcommand\@thesistitlebigskip{0.55in} in line 32 to get it to all fit
+%\committeesix{Iam A. Professor, Associate Professor, Geography}
+%\committeeseven{Iam A. Professor, Professor, Computer Sciences}
+
+
+\clearpage\pagenumbering{roman}  % This makes the page numbers Roman (i, ii, etc)
 
 \begin{document}
+
+% \ifpdf
+%   \DeclareGraphicsExtensions{.pdf, .jpg, .tif}
+% \else
+%   \DeclareGraphicsExtensions{.eps, .jpg}
+% \fi
+
+\newgeometry{left=1in,right=1in,bottom=1in,top=1in}
+\maketitle
+\restoregeometry %sets the margins back to normal
+
+\begin{umiabstract}
+  $abstract$
+\end{umiabstract}
+
 \copyrightpage
 
-\titlepage
+\begin{dedication}
+	\emph{$dedication$}
+\end{dedication}
 
-\setcounter{page}{-1}
-\abstract{$abstract$}
+
+%% BEGIN PAGESTYLE
+
+%%% You can pick a pagestyle if you want; see the memoir class
+%%% documentation for more info.  The default ``deposit'' option meets
+%%% the UW thesis typesetting requirements but is probably
+%%% unsatisfactory for making a version of your dissertation that
+%%% won't be deposited to the graduate school (e.g. for web or a nice
+%%% printed copy)
+
+\chapterstyle{deposit}
+\pagestyle{deposit}
+
+
+% ACKNOWLEDGMENTS
+\begin{acks}
+
+\begin{wbepi}{David C.~Makinson (1965)}
+It is customary for authors of academic books to include in their prefaces statements such as this: ``I am indebted to ... for their invaluable help; however, any errors which remain are my sole responsibility.'' Occasionally an author will go further. Rather than say that if there are any mistakes then he is responsible for them, he will say that there will inevitably be some mistakes and he is responsible for them....
+
+Although the shouldering of all responsibility is usually a social ritual, the admission that errors exist is not --- it is often a sincere avowal of belief. But this appears to present a living and everyday example of a situation which philosophers have commonly dismissed as absurd; that it is sometimes rational to hold logically incompatible beliefs.
+\end{wbepi}
+
+Above is the famous ``preface paradox,'' which illustrates how to use the \texttt{wbepi} environment for epigraphs at the beginning of chapters.  You probably also want to thank the Academy.
+
+\end{acks}
+
+% CONTENTS, TABLES, FIGURES
+\renewcommand{\printtoctitle}[1]{\chapter*{#1}}
+\renewcommand{\printloftitle}[1]{\chapter*{#1}}
+\renewcommand{\printlottitle}[1]{\chapter*{#1}}
+
+\renewcommand{\tocmark}{}
+\renewcommand{\lofmark}{}
+\renewcommand{\lotmark}{}
+
+\renewcommand{\tocheadstart}{}
+\renewcommand{\lofheadstart}{}
+\renewcommand{\lotheadstart}{}
+
+\renewcommand{\aftertoctitle}{}
+\renewcommand{\afterloftitle}{}
+\renewcommand{\afterlottitle}{}
+
+\renewcommand{\cftchapterfont}{\normalfont}
+\renewcommand{\cftsectionfont}{\itshape}
+\renewcommand{\cftchapterpagefont}{\normalfont}
+\renewcommand{\cftchapterpresnum}{\bfseries}
+\renewcommand{\cftchapterleader}{}
+\renewcommand{\cftsectionleader}{}
+\renewcommand{\cftchapterafterpnum}{\cftparfillskip}
+\renewcommand{\cftsectionafterpnum}{\cftparfillskip}
+
+% \captionnamefont{\small\sffamily}
+% \captiontitlefont{\small\sffamily}
+
+% \renewcommand{\contentsname}{contents}
+% \renewcommand{\listfigurename}{list of figures}
+% \renewcommand{\listtablename}{list of tables}
 
 \tableofcontents
-\listoffigures
+
+\clearpage
 \listoftables
 
-\acknowledgments{$acknowledgments$}
+\clearpage
+\listoffigures
 
-\dedication{\begin{center}$dedication$\end{center}}
+\clearpage
+% NOMENCLATURE
+% \begin{conventions}
+% % \begin{description}
+% % \item{\makebox[0.75in][l]{term}
+% %        \parbox[t]{5in}{definition\\}}
+% % \end{description}
+% \input{conventions}
+% \end{conventions}
 
-\textpages
+% \advisorname{Gottlob Frege}
+% \advisortitle{Professor}
+% ABSTRACT
+
+
+% \begin{abstract}
+
+% \end{abstract}
+
+\clearpage\pagenumbering{arabic}
+
+%%% END STUFF TAKEN FROM WITHESIS EXAMPLE FILE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 $body$
+
+
+
+
+
+
+
+
+
+
+
+
+%% Now include the tex files for each chapter, like so (I put these in separate dirs):
+% \include{intro/intro}
+% \include{motivation/motivation}
+% \include{related/related}
+
+%% etc, etc.
+
+%% Do you have appendices?  If so, add them here, just like chapters.
+% \begin{appendices}
+% \include{backmatter/appendix1}
+% \end{appendices}
+
+
+%% McBride is a very nice style (some version is included in this distribution)
+% \bibliographystyle{mcbride}
+% \bibliography{your-bib-file}
+
+%% Want an index?  Neither did I.
+%\printindex
+
 \end{document}

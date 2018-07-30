@@ -64,13 +64,6 @@ levels: *Low*: less than high school, or high school; *Middle*: trade
 school, technical or associates degree, some college, or college degree;
 and *High*: graduate degree.
 
-<!-- ### Special case data screening -->
-
-<!-- (_Skip for now._ This is where I review the participant notes and will remove  -->
-<!-- children who have to be excluded for other reasons, like being diagnosed with a  -->
-<!-- language disorder at TimePoint 3.) -->
-
-
 
 Visual World Paradigm {#aim1-procedure}
 -----------------------------------------------------------------------
@@ -93,7 +86,9 @@ speech.
 (ref:sample-vw-screen-cap2) Example display for the target *bell* with the semantic foil *drum*, the phonological foil *bee*, and the unrelated *swing*.
 
 ```{r sample-vw-screen, echo = FALSE, fig.cap = "(ref:sample-vw-screen-cap2)", out.width = "100%"}
-knitr::include_graphics("./misc/rwl-screens/TimePoint1/actual/Block2_17_swing2_bell2_bee2_drum2_UpperRightImage_bell.png")
+knitr::include_graphics(
+  "./misc/rwl-screens/TimePoint1/actual/Block2_17_swing2_bell2_bee2_drum2_UpperRightImage_bell.png",
+  auto_pdf = TRUE)
 ```
 
 
