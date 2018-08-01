@@ -1,29 +1,202 @@
 Items used in the mispronunciation experiment {#mp-experiment-items}
 ========================================================================
 
-The stimuli changed between Year 1 and Year 2 so that *dog*/*tog* was
+```{r, include = FALSE}
+knitr::read_chunk("./helpers.R")
+if (interactive()) source("./helpers.R")
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+```{r helpers, message = FALSE, warning = FALSE}
+```
+
+
+Table \@ref(tab:aim2-items) shows the stimuli design from year to
+year. The word list changed between Age 3 and Age 4 where *dog*/*tog* was
 replaced with *rice*/*wice*.
 
-  **Age**           **Word Group**   **Condition**        **Audio (IPA)**                          **Familiar**          **Unfamiliar**
-  ----------------- ---------------- -------------------- -------------------------------          --------------------- -----------------------
-  3                 dog              Real word            \unicodefont/dɔg/\normalfont             dog                   wombat
-                                     Mispronunciation     \unicodefont/tɔg/\normalfont             dog                   wombat
-                                     Nonword              \unicodefont/vef/\normalfont             ball                  sextant
-  3, 4, 5           cake             Real word            \unicodefont/kek/\normalfont             cake                  horned melon
-                                     Mispronunciation     \unicodefont/gek/\normalfont             cake                  horned melon
-                                     Nonword              \unicodefont/pʌm/\normalfont             book                  churn
-  3, 4, 5           duck             Real word            \unicodefont/dʌk/\normalfont             duck                  toy creature
-                                     Mispronunciation     \unicodefont/gʌk/\normalfont             duck                  toy creature
-                                     Nonword              \unicodefont/ʃæn/\normalfont             cup                   reed
-  3, 4, 5           girl             Real word            \unicodefont/gɜ˞l/\normalfont            girl                  marmoset
-                                     Mispronunciation     \unicodefont/dɜ˞l/\normalfont            girl                  marmoset
-                                     Nonword              \unicodefont/nedʒ/\normalfont            car                   work holder
-  3, 4, 5           shoes            Real word            \unicodefont/ʃuz/\normalfont             shoes                 flasks
-                                     Mispronunciation     \unicodefont/suz/\normalfont             shoes                 flasks
-                                     Nonword              \unicodefont/giv/\normalfont             sock                  trolley
-  3, 4, 5           soup             Real word            \unicodefont/sup/\normalfont             soup                  steamer
-                                     Mispronunciation     \unicodefont/ʃup/\normalfont             soup                  steamer
-                                     Nonword              \unicodefont/tʃim/\normalfont            bed                   pastry mixer
-  4, 5              rice             Real word            \unicodefont/ɹaɪs/\normalfont            rice                  anise
-                                     Mispronunciation     \unicodefont/waɪs/\normalfont            rice                  anise
-                                     Nonword              \unicodefont/bep/\normalfont             ball                  sextant
+```{r aim2-items}
+library(readr)
+proj_dir <- rprojroot::find_root(rprojroot::is_rstudio_project)
+t1 <- "./data-raw/mp_timepoint1_trials.csv.gz"
+t2 <- "./data-raw/mp_timepoint2_trials.csv.gz"
+t3 <- "./data-raw/mp_timepoint3_trials.csv.gz"
+
+cols <- cols_only(
+  Study = col_character(),
+  Basename = col_character(),
+  Version = col_character(),
+  TrialNo = col_integer(),
+  WordGroup = col_character(),
+  StimType = col_character(),
+  TargetWord = col_character(),
+  FamiliarImage = col_character(),
+  UnfamiliarImage = col_character())
+  
+df_attributes <- 
+  bind_rows(
+    readr::read_csv(t1, col_types = cols), 
+    readr::read_csv(t2, col_types = cols), 
+    readr::read_csv(t3, col_types = cols)) %>% 
+  filter(Version == "Standard") %>% 
+  mutate(Block = stringr::str_extract(Basename, "Block\\d")) %>% 
+  select(-Basename) %>% 
+  distinct()
+
+# Long name of experiment condition
+condition <- tibble::tribble(
+  ~StimType, ~Condition,
+  "real", "Correct Production",
+  "MP", "Mispronunciation",
+  "nonsense", "Nonword"
+)
+
+ipa <- c(
+  "cake" = "kek",
+  "gek" = "&#x261;ek",
+  "dog" = "d&#x254;&#x261;",
+  "tag" = "t&#x254;&#x261;",
+  "vef" = "vef",
+  "pum" = "p&#x28C;m",
+  "soup" = "sup",
+  "Sup" = "&#x283;up",
+  "duck" = "d&#x28C;k",
+  "guk" = "&#x261;&#x28C;k",
+  "girl" = "&#x261;&#x025D;l",
+  "dRl" = "d&#x025D;l",
+  "shoes" = "&#x283;uz",
+  "suz" = "suz",
+  "San" = "&#x283;æn",
+  "Cim" = "&#x2A7;im",
+  "giv" = "&#x261;iv",
+  "neJ" = "ne&#x2A4;",
+  "rice" = "&#x279;a&#x26A;s",
+  "waisD" = "wa&#x26A;s",
+  "waisC" = "wa&#x26A;s",
+  "wais" = "wa&#x26A;s",
+  "bep" = "bep"
+)
+
+english <- c(
+  "cake" = "cake",
+  "gek" = "gake",
+  "dog" = "dog",
+  "tag" = "tog",
+  "vef" = "vafe",
+  "pum" = "pumm",
+  "soup" = "soup",
+  "Sup" = "shoup",
+  "duck" = "duck",
+  "guk" = "guck",
+  "girl" = "girl",
+  "dRl" = "dirl",
+  "shoes" = "shoes",
+  "suz" = "suze",
+  "San" = "shann",
+  "Cim" = "cheem",
+  "giv" = "geeve",
+  "neJ" = "naydge",
+  "rice" = "rice",
+  "waisD" = "wice",
+  "waisC" = "wice",
+  "wais" = "wice",
+  "bep" = "bape"
+)
+
+remove_numbers <- . %>% 
+  stringr::str_replace_all("\\d", "")
+
+# Make a table of the stimuli by year, word group, condition
+mp_design <- df_attributes %>% 
+  distinct(Study, WordGroup, StimType, TargetWord, 
+           FamiliarImage, UnfamiliarImage) %>% 
+  # Convert from filenames to object words.
+  mutate(FamiliarImage = remove_numbers(FamiliarImage), 
+         UnfamiliarImage = remove_numbers(UnfamiliarImage),
+         TargetWord = TargetWord %>% 
+           stringr::str_replace_all("pumA", "pum") %>% 
+           stringr::str_replace_all("wais(D|C)", "wais")) %>% 
+  distinct() %>% 
+  left_join(condition) %>% 
+  select(-StimType) %>% 
+  arrange(Study, WordGroup, Condition)
+
+# We don't want to repeat rows when the stimuli are the same across different
+# years, so make a list of years that featured each stimulus
+stim_by_year <- mp_design %>% 
+  group_by(WordGroup, Condition) %>% 
+  mutate(
+    Year = stringr::str_extract(Study, "\\d") %>% as.numeric(),
+    Year = Year + 2) %>% 
+  summarise(Age = Year %>% unique %>% sort %>% paste0(collapse = ", ")) %>% 
+  arrange(Age) %>% 
+  ungroup()
+stim_by_year
+
+mp_design_table <- mp_design %>% 
+  left_join(stim_by_year) %>% 
+  select(-Study) %>%
+  distinct() %>% 
+  # left_join(ipa) %>% 
+  mutate(
+    IPA = ipa[TargetWord],
+    `/IPA/` = paste0("\\unicodefont/", IPA, "/\\normalfont"),
+    Word = english[TargetWord]) %>% 
+  arrange(Age, WordGroup, Condition) %>% 
+  select(
+    Age, `Word Group` = WordGroup, Condition, 
+    `Word`, `/IPA/`, 
+    `Familiar` = FamiliarImage, 
+    `Unfamiliar` = UnfamiliarImage)
+
+mp_design_table[["Unfamiliar"]] <- 
+  mp_design_table[["Unfamiliar"]] %>% 
+  stringr::str_replace("bull", "toy creature") %>% 
+  stringr::str_replace("holder", "work holder") %>% 
+  stringr::str_replace("mixer", "pastry mixer") %>% 
+  stringr::str_replace("melon", "horned melon")
+
+mp_design_table <- mp_design_table %>% 
+  group_by(`Word Group`) %>% 
+  mutate(
+    Age = Age %>% tjmisc::replace_if_same_as_last("")) %>% 
+  ungroup() %>% 
+  mutate(
+    `Word Group` = `Word Group` %>% tjmisc::replace_if_same_as_last("")) 
+
+knitr::kable(
+  mp_design_table,
+  caption = glue::glue(
+    "Items used for the mispronunciation experiment."),
+  align = "rclccc",
+  linesep = c("", "", "\\addlinespace"),
+  caption.short = "Items used for the mispronunciation experiment.", 
+  booktabs = TRUE,
+  escape = FALSE)
+```
+
+
+
+**Age**           **Word Group**   **Condition**        **Audio (IPA)**                          **Familiar**          **Unfamiliar**
+----------------- ---------------- -------------------- -------------------------------          --------------------- -----------------------
+3                 dog              Real word            \unicodefont/dɔg/\normalfont             dog                   wombat
+                                   Mispronunciation     \unicodefont/tɔg/\normalfont             dog                   wombat
+                                   Nonword              \unicodefont/vef/\normalfont             ball                  sextant
+3, 4, 5           cake             Real word            \unicodefont/kek/\normalfont             cake                  horned melon
+                                   Mispronunciation     \unicodefont/gek/\normalfont             cake                  horned melon
+                                   Nonword              \unicodefont/pʌm/\normalfont             book                  churn
+3, 4, 5           duck             Real word            \unicodefont/dʌk/\normalfont             duck                  toy creature
+                                   Mispronunciation     \unicodefont/gʌk/\normalfont             duck                  toy creature
+                                   Nonword              \unicodefont/ʃæn/\normalfont             cup                   reed
+3, 4, 5           girl             Real word            \unicodefont/gɜ˞l/\normalfont            girl                  marmoset
+                                   Mispronunciation     \unicodefont/dɜ˞l/\normalfont            girl                  marmoset
+                                   Nonword              \unicodefont/nedʒ/\normalfont            car                   work holder
+3, 4, 5           shoes            Real word            \unicodefont/ʃuz/\normalfont             shoes                 flasks
+                                   Mispronunciation     \unicodefont/suz/\normalfont             shoes                 flasks
+                                   Nonword              \unicodefont/giv/\normalfont             sock                  trolley
+3, 4, 5           soup             Real word            \unicodefont/sup/\normalfont             soup                  steamer
+                                   Mispronunciation     \unicodefont/ʃup/\normalfont             soup                  steamer
+                                   Nonword              \unicodefont/tʃim/\normalfont            bed                   pastry mixer
+4, 5              rice             Real word            \unicodefont/ɹaɪs/\normalfont            rice                  anise
+                                   Mispronunciation     \unicodefont/waɪs/\normalfont            rice                  anise
+                                   Nonword              \unicodefont/bep/\normalfont             ball                  sextant

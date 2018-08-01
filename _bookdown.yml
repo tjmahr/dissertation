@@ -15,8 +15,8 @@ rmd_files:
   - 10-part-aim1.Rmd
   - 11-aim1-introduction.Rmd
   - 12-aim1-methods.Rmd
-#  - 14-aim1-familiar-word-recognition.Rmd
-#  - 16-aim1-lexical-competitors.Rmd
+  - 14-aim1-familiar-word-recognition.Rmd
+  - 16-aim1-lexical-competitors.Rmd
   - 18-aim1-general-discussion.Rmd
   - 19-h-check.Rmd
   - 20-part-aim2.Rmd
