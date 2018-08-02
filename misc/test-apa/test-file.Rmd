@@ -40,3 +40,20 @@ associated novel words to novel objects in the moment. A similar pattern
 of effects was observed in the mispronunciation study by @MPPaper with
 preschoolers mapping real words to familiar objects, nonwords to novel
 objects, and equivocating about mispronunciations of familiar words.
+
+# References {-}
+
+<!-- This manually sets the header for this unnumbered chapter. -->
+\markboth{References}{References}
+
+\sloppy
+
+<!--To remove the indentation of the first entry.-->
+\noindent
+
+<!-- To create a hanging indent and spacing between entries. These 
+three lines may need to be removed for styles that don't require the 
+hanging indent. -->
+\setlength{\parindent}{-0.20in}
+\setlength{\leftskip}{0.20in}
+\setlength{\parskip}{8pt}

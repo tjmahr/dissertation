@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 A related complication is the apparent predictive validity of word
 recognition measures. Marchman and Fernald (2008) found that vocabulary
 size and lexical processing efficiency at age 2 jointly predicted
@@ -31,6 +36,9 @@ of effects was observed in the mispronunciation study by Law and Edwards
 (2015) with preschoolers mapping real words to familiar objects,
 nonwords to novel objects, and equivocating about mispronunciations of
 familiar words.
+
+References
+----------
 
 Fernald, A., & Marchman, V. A. (2012). Individual differences in lexical
 processing at 18 months predict vocabulary growth in typically

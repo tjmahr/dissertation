@@ -32,6 +32,9 @@ of effects was observed in the mispronunciation study by Law and Edwards
 nonwords to novel objects, and equivocating about mispronunciations of
 familiar words.
 
+References
+----------
+
 Fernald, A., & Marchman, V. A. (2012). Individual differences in lexical
 processing at 18 months predict vocabulary growth in typically
 developing and late-talking toddlers. *Child Development*, *83*(1),
