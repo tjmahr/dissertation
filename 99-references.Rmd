@@ -14,6 +14,8 @@ cat("
 <!-- This manually sets the header for this unnumbered chapter. -->
 \markboth{References}{References}
 
+\sloppy
+
 <!--To remove the indentation of the first entry.-->
 \noindent
 
