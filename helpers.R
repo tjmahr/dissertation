@@ -29,8 +29,8 @@ constants <- list(
   y_pred_elog_phon = "Predicted emp. log-odds [Phon.]",
   y_elog_phon = "Emp. log-odds(Phon. vs. Unrelated)",
   y_elog_semy = "Emp. log-odds(Sem. vs. Unrelated)",
-  y_elog_diff_phon = "Difference in emp. log-odds [Phon.]",
-  y_elog_diff_semy = "Difference in emp. log-odds [Sem.]",
+  y_elog_diff_phon = "Diff. in emp. log-odds",
+  y_elog_diff_semy = "Diff. in emp. log-odds",
   lab_study = "Study",
   col_blue_highlight = "#0074D9",
   col_off_black = "#111111",
@@ -51,6 +51,20 @@ constants <- list(
   col_nonword = "#f7882f",
   col_mispronunciation = "#cyan4"
 )
+
+if (knitr::is_latex_output()) {
+  out_tex100_else80 <- "100%"
+  out_tex100_else60 <- "100%"
+  out_tex80_else66 <- "80%"
+  out_tex80_else50 <- "80%"
+
+} else {
+  out_tex100_else80 <- "80%"
+  out_tex100_else60 <- "60%"
+  out_tex80_else66 <- "66%"
+  out_tex80_else50 <- "50%"
+
+}
 
 library(extrafont)
 extrafont::loadfonts(quiet = TRUE)
@@ -79,6 +93,10 @@ theme_teej <- function(base_size = 11, base_family = "Lato Medium",
       strip.background = element_rect(fill = NA, colour = NA))
 }
 theme_set(theme_teej())
+
+if (knitr::is_latex_output()) {
+  theme_set(theme_teej(base_size = 12))
+}
 
 aim1_stim <- list(
   good_phon = c(

@@ -255,7 +255,9 @@ phonological competitor affected word recognition most significantly.
 
 (ref:declining-phon-props) Because children looked more to the target as they grew older, they numerically looked less the foils too. This effect is why I evaluated the phonological and semantic foils by comparing them against the unrelated image.
 
-```{r declining-phon-props, fig.cap = "(ref:declining-phon-props)", echo = FALSE, message = FALSE, out.width = "60%", fig.width = 5, fig.height = 3.5}
+(ref:declining-phon-props-scap) Because children looked more to the target as they grew older, they numerically looked less the foils too.
+
+```{r declining-phon-props, fig.cap = "(ref:declining-phon-props)", fig.scap = "(ref:declining-phon-props-scap)", echo = FALSE, message = FALSE, out.width = out_tex80_else50, fig.width = 5, fig.height = 3.5}
 data_labs <- tibble::tribble(
   ~Focus, ~Time, ~Prop, ~Study,
   "Target", 1400, .8, "Age 5",
@@ -312,7 +314,7 @@ log(4.5/1.5) = 1.10. This transformation fills in bins with 0 looks with
 .5/.5 (avoiding 0/0 problems), and it dampens the extremeness of
 some probabilities that arise in sparse count data.
 
-```{r load-phon-model, echo = FALSE, message = FALSE, include = FALSE, out.width = "80%", fig.width = 6}
+```{r load-phon-model, echo = FALSE, message = FALSE, include = FALSE, out.width = out_tex100_else80, fig.width = 6}
 library(mgcv)
 library(itsadug)
 
@@ -385,7 +387,7 @@ adding simple functions together. The figures below show 9 basis
 functions from a "thin-plate spline" and how they can be weighted and
 summed to fit a growth curve.
 
-```{r infobox-1-figs, message = FALSE, echo = FALSE, out.width = "66%", fig.width = 6, fig.height = 3, fig.align = "center"}
+```{r infobox-1-figs, message = FALSE, echo = FALSE, out.width = out_tex80_else66, fig.width = 6, fig.height = 3, fig.align = "center"}
 t1_fam <- structure(
   list(
     Time = c(
@@ -654,7 +656,9 @@ phonological competitor versus the unrelated word were
 
 (ref:phon-vs-unre-fits) With each year of the study, children looked more to the phonological competitor (relative to the unrelated image) during and after the target noun. Both figures show means for each year estimated by the generalized additive model. The left panel compares model estimates to observed means and standard errors, and the right panel visualizes estimated means and their 95% confidence intervals.
 
-```{r phon-vs-unre-fits, fig.cap = "(ref:phon-vs-unre-fits)", warning = FALSE, message = FALSE, out.width = "80%", fig.width = 6, fig.height = 4, results = "hide"}
+(ref:phon-vs-unre-fits-scap) With each year of the study, children looked more to the phonological competitor (relative to the unrelated image) during and after the target noun.
+
+```{r phon-vs-unre-fits, fig.cap = "(ref:phon-vs-unre-fits)", fig.scap = "(ref:phon-vs-unre-fits-scap)", warning = FALSE, message = FALSE, out.width = out_tex100_else80, fig.width = 6, fig.height = 4, results = "hide"}
 labs_fit_obs <- labs(
   color = constants$lab_study,
   fill = constants$lab_study,
@@ -826,7 +830,10 @@ from other studies differed from the age-4 smooth.
 
 (ref:phon-diff-curves) Differences in the average looks to the phonological competitor versus the unrelated image between age 4 and the other ages. Plotted line is estimated difference and the shaded region is the 95% confidence interval around that difference. Boxes highlight regions where the 95% interval excludes zero. From age 3 to age 4, children become more sensitive to the phonological foil during and after the target noun. The linear difference curve for age 4 versus age 5 indicates that the two years largely have the same curvature, but they steadily diverge over the course of the trial.
 
-```{r phon-diff-curves, fig.cap = "(ref:phon-diff-curves)", message = FALSE, out.width = "80%", fig.width = 5, fig.height = 3, results = "hide"}
+(ref:phon-diff-curves-scap) Differences in average looks to the phonological competitor versus the unrelated image between age 4 and the other ages.
+
+
+```{r phon-diff-curves, fig.cap = "(ref:phon-diff-curves)", fig.scap = "(ref:phon-diff-curves-scap)", message = FALSE, out.width = out_tex100_else80, fig.width = 5, fig.height = 3.5, results = "hide"}
 age5_age4 <- b2r %>%
   get_difference(
     comp = list(S2 = c("TimePoint3", "TimePoint2")),
@@ -887,7 +894,8 @@ ggplot(differences) +
     fill = constants$lab_study,
     x = constants$x_time,
     y = constants$y_elog_diff_phon,
-    caption = constants$cap_diff_95) +
+    caption = constants$cap_diff_95,
+    title = "Changes in phonological competitor effect") +
   facet_wrap("comparison")
 ```
 
@@ -1058,7 +1066,9 @@ to the limited advantage of the phonological competitor at age 3.
 
 (ref:semy-vs-unre-fits) With each year of the study, children looked more to the semantic foil (relative to the unrelated image) with peak looking occurring after the target noun. Both figures show means for each year estimated by the generalized additive model. The left panel compares model estimates to observed means and standard errors, and the right panel visualizes estimated means and their 95% confidence intervals.
 
-```{r semy-vs-unre-fits, fig.cap = "(ref:semy-vs-unre-fits)", warning = FALSE, message = FALSE, out.width = "80%", fig.width = 6, fig.height = 4, results = "hide"}
+(ref:semy-vs-unre-fits-scap) With each year of the study, children looked more to the semantic foil (relative to the unrelated image) with peak looking occurring after the target noun.
+
+```{r semy-vs-unre-fits, fig.cap = "(ref:semy-vs-unre-fits)", fig.scap = "(ref:semy-vs-unre-fits-scap)", warning = FALSE, message = FALSE, out.width = out_tex100_else80, fig.width = 6, fig.height = 4, results = "hide"}
 # Data for direct labeling of lines
 study_labs <- data.frame(
   Age = c("Age 3", "Age 4", "Age 5"),
@@ -1222,7 +1232,9 @@ differences between the smooths from each study.
 
 (ref:semy-diff-curves) Differences in the average looks to the semantic competitor versus the unrelated word between age 4 and the other ages. Plotted line is estimated difference and the shaded region is the 95% confidence interval around that difference. Boxes highlight regions where the 95% interval excludes zero. The flat line on the left reflects how the shape of the growth curves remained the same from age 3 to age 4 and only differed in average height. From age 4 to age 5, the lines quickly diverge and the age-5 curve reaches a higher peak value.
 
-```{r semy-diff-curves, fig.cap = "(ref:semy-diff-curves)", out.width = "80%", fig.width = 5, fig.height = 3}
+(ref:semy-diff-curves-scap) Differences in average looks to the semantic competitor versus the unrelated word between age 4 and the other ages. 
+
+```{r semy-diff-curves, fig.cap = "(ref:semy-diff-curves)", fig.scap = "(ref:semy-diff-curves-scap)", out.width = out_tex100_else80, fig.width = 5, fig.height = 3.5}
 age5_age4 <- s2r %>%
   get_difference(
     comp = list(S2 = c("TimePoint3", "TimePoint2")),
@@ -1283,7 +1295,8 @@ ggplot(differences) +
     fill = constants$lab_study,
     x = constants$x_time,
     y = constants$y_elog_diff_semy,
-    caption = constants$cap_diff_95) +
+    caption = constants$cap_diff_95,
+    title = "Changes in semantic competitor effect") +
   facet_wrap("comparison")
 ```
 
@@ -1351,14 +1364,14 @@ vocabulary.
 `r insert_html_math()`
 \small
 \begin{align*}
-   \text{log-odds}(\mathit{choosing\ correct\ word}) =\
-   & \alpha\ +                  &\text{[average participant ability]} \\
-   & \alpha_i\ +                &\text{[difference of participant}\ i
+   \text{log-odds}(\mathit{choosing\ target}) =\
+   & \alpha\ +                  &\text{[average child ability]} \\
+   & \alpha_i\ +                &\text{[difference of child}\ i
                                        \text{'s ability from average]} \\
    & \alpha_j\ +                &\text{[word}\ j\text{'s difficulty]} \\
    & \alpha_{j,k}\ +            &\text{[word}\ j
                                        \text{'s difficulty in word-pair}\ k] \\
-   & \beta_{1}\text{Age}\ +     &\text{[participant-level predictors]} \\
+   & \beta_{1}\text{Age}\ +     &\text{[child-level predictors]} \\
    & \beta_{2}\text{Vocabulary} & \\
 \end{align*}
 `r insert_html_math()`
