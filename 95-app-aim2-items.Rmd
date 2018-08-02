@@ -5,6 +5,7 @@ Items used in the mispronunciation experiment {#mp-experiment-items}
 knitr::read_chunk("./helpers.R")
 if (interactive()) source("./helpers.R")
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+library(readr)
 ```
 
 ```{r helpers, message = FALSE, warning = FALSE}

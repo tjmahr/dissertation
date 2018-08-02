@@ -94,9 +94,9 @@ theme_teej <- function(base_size = 11, base_family = "Lato Medium",
 }
 theme_set(theme_teej())
 
-if (knitr::is_latex_output()) {
-  theme_set(theme_teej(base_size = 12))
-}
+# if (knitr::is_latex_output()) {
+#   theme_set(theme_teej(base_size = 12))
+# }
 
 aim1_stim <- list(
   good_phon = c(

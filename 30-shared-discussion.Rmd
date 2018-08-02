@@ -1,10 +1,110 @@
-(PART\*) Afterword  {#part-end .unnumbered}
+(PART\*) Synthesis  {#part-end .unnumbered}
 =======================================================================
+
+
+General discussion
+=======================================================================
+
+In this chapter, I tie together results from the two studies.
+
+
+Mechanisms of word recognition
+-----------------------------------------------------------------------
+
+How do children recognize words? That is, what cognitive mechanisms
+would explain the data observed from these two studies. As a baseline
+description of word recognition mechanisms, I would start with a
+continuous activation model with different levels of representation---in
+other words, TRACE [@TRACE]. In my preceding interpretations of hte
+data from Aim 1 and Aim 2 I have loosely followed a TRACE-like
+archecture, so it is helpful to briefly review what this model does.
+
+TRACE interprets an input pattern by spreading energy (activation)
+through a network of processing units. The pattern of activation over
+the network is its interpretation of the input signal, so that more
+active units represent more likely interpretations. Over many processing
+cycles, the network propagates energy among its connections until it
+settles into a stable pattern of activation. (Activation also decays
+over cycles so that the model can start and return a resting state.)
+This activation process is
+*continuous*; the model's interpretation evolves continuously. We can ask
+at any point during (or after) presentation of a word what the model's
+interpretation of that word is. Thus, it does not need to hear a whole
+word to generate a plausible guess for that word.
+
+The model involves three levels of representation: perceptual/phonetic
+features, phoneme units and lexical units. The input for TRACE is a
+mock-speech signal that activates the perceptual feature-detectors.
+These units respond to phonetic features like voicing or vocalic
+resonance. The perceptual units activate phoneme units, and the phoneme
+units activate lexical word units. 
+
+The bundle of features representing a /b/ would activate /b/ but to a
+lesser extent also activate the phonetically similar /d/ (different
+place), /p/ (voice), /v/ (manner), /m/ (nasality). The initial /b/ sound
+activates a neighborhood of words containing /b/, and the phonetically
+similar words also activate their similar words, albeit to a weaker
+extent. Then the next sound arrives, /i/, activates a set of phoneme
+units, and in turn activating words with /i/. The sequence of /bi/
+favors a particular neighborhood of cohorts: be, bee, beam, beak, beat,
+beetle, etc. At this point, the signal is ambiguous however. Any of the
+words in the cohort are plausible interpretations and more information
+is needed to refine the interpretation.
+
+This is the baseline. Now the question is how the results from the two
+studies fit inside this model.
+
+
+There are two implications from this set up. The first is the cohort effect. And the second is the mispronunciation penalty.
+
+The combination of continuous activation and levels of representation
+has a few implications. For example
+
+
+
+In order to account for the mispronunciation penalty, we need the phonetic features.
+
+
+This is a *continuous activation* model.
+
+
+I would start
+with a continuous activation model of word recognition with different levels of representation. 
+
+
+
+
+
+
+The input for TRACE is a mock-speech signal that activates perceptual feature-detectors. These units respond to phonetic features like voicing or vocalic resonance. The perceptual units activate phoneme units, and the phoneme units activate lexical word units, as shown below.
+
+
+<!-- Units within a level (phonetic, phonemic, lexical) compete through lateral inhibition, so that more active units can suppress less active units. This inhibition allows the network to rule out possible units and narrow its interpretations over time. There are also top-down connections so that word units in the lexical layer can reinforce the sound units that make up those words. One consequence of this feature is that the network can resolve ambiguous phonemes, as in Xift where X is a sound between /k/ and /g/ and top-down influence supports gift rather than kift¬. Lastly, activation in units gradually decays over time, and the network will eventually “forget” it input pattern to return to a resting state. -->
+
+<!-- The model parameters that govern how activation propagates through the network map onto psychological processing constructs. For instance, the phoneme inhibition strength parameter controls how decisively (or categorically) the network interprets speech sounds. Phoneme-to-word activation strength reflects how quickly speech sounds begin to activate words. Decay parameters control the model’s temporary memory for different kinds of representations.  -->
+
+The TRACE model of speech perception and word recognition [@TRACE] is well suited for this kind of simulation work. TRACE can simulate a dozen or so empirical results from speech perception literature (Strauss, Harris, & Magnuson, 2007, Table 1), and it has been used to simulate word-recognition data from adults (Allopenna, Magnuson, & Tanenhaus, 1998), and adults with aphasia (Mirman, Yee, Blumstein, & Magnuson, 2011), and toddlers (Mayor & Plunkett, 2014). 
+
+@jTRACE
+
+McMurray, Samelson, Lee, and Bruce Tomblin (2010) used TRACE to simulate word recognition results from adolescents with specific language impairment (SLI). They mapped certain theories about SLI onto different model parameters. For example, to test the theory that listeners with SLI have impairments in acoustic perception, they varied three of the model’s parameters: amount of noise added to the model’s mock-speech input, temporal spread of acoustic features in the input (temporal resolution), and rate of decay in the model’s acoustic feature detectors (perceptual memory). Other theories of SLI (and other model parameters) provided a closer fit to the observed data than the perceptual deficit theory. Specifically, lexical decay—“the ability to maintain words in memory” (p. 23)—was the most important model parameter, implying that individual differences in word recognition for listeners with SLI are rooted in lexical processes (and not perceptual or phonological ones). 
+
+This example shows how simulations with TRACE recast word recognition performance in terms of psychological processes. For this project, I will use TRACE to describe how cognitive processes and representations need to change to simulate the development of word recognition in preschoolers.
+
+
+Contributions
+----------------------------------------------------------------------
+
+What has this project established?
+
+
+
+
 
 A needle in a self-organizing haystack
 =======================================================================
 
-When I give my "elevator pitch"" for word recognition research, I
+When I give my "elevator pitch" for word recognition research, I
 sometimes employ a cheeky analogy of a needle in a haystack. Imagine,
 for the sake of discussion, that the information processing mechanism
 behind word recognition were just a naïve table search. Think of
