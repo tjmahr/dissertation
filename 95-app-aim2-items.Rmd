@@ -16,7 +16,6 @@ year. The word list changed between Age 3 and Age 4 where *dog*/*tog* was
 replaced with *rice*/*wice*.
 
 ```{r aim2-items}
-library(readr)
 proj_dir <- rprojroot::find_root(rprojroot::is_rstudio_project)
 t1 <- "./data-raw/mp_timepoint1_trials.csv.gz"
 t2 <- "./data-raw/mp_timepoint2_trials.csv.gz"
@@ -51,6 +50,7 @@ condition <- tibble::tribble(
   "nonsense", "Nonword"
 )
 
+# IPA characters with html entities
 ipa <- c(
   "cake" = "kek",
   "gek" = "&#x261;ek",
@@ -76,6 +76,20 @@ ipa <- c(
   "wais" = "wa&#x26A;s",
   "bep" = "bep"
 )
+
+if (knitr:::is_latex_output()) {
+  library(kableExtra)
+  
+  # Convert the HTML entities into symbol calls
+  # thanks to 
+  # https://tex.stackexchange.com/a/32514/55985
+  ipa_names <- names(ipa)
+  ipa <- ipa %>% 
+    stringr::str_replace_all(
+      "&#x(...|....);", 
+      "\\\\symbol{\"0\\1}") %>% 
+    setNames(ipa_names)
+}
 
 english <- c(
   "cake" = "cake",
@@ -131,7 +145,6 @@ stim_by_year <- mp_design %>%
   summarise(Age = Year %>% unique %>% sort %>% paste0(collapse = ", ")) %>% 
   arrange(Age) %>% 
   ungroup()
-stim_by_year
 
 mp_design_table <- mp_design %>% 
   left_join(stim_by_year) %>% 
@@ -156,6 +169,10 @@ mp_design_table[["Unfamiliar"]] <-
   stringr::str_replace("mixer", "pastry mixer") %>% 
   stringr::str_replace("melon", "horned melon")
 
+mp_design_table[["Condition"]] <- 
+  mp_design_table[["Condition"]] %>% 
+  stringr::str_replace("Correct Production", "Real word") 
+
 mp_design_table <- mp_design_table %>% 
   group_by(`Word Group`) %>% 
   mutate(
@@ -168,35 +185,9 @@ knitr::kable(
   mp_design_table,
   caption = glue::glue(
     "Items used for the mispronunciation experiment."),
-  align = "rclccc",
+  align = "rclcccc",
   linesep = c("", "", "\\addlinespace"),
   caption.short = "Items used for the mispronunciation experiment.", 
   booktabs = TRUE,
   escape = FALSE)
 ```
-
-
-
-**Age**           **Word Group**   **Condition**        **Audio (IPA)**                          **Familiar**          **Unfamiliar**
------------------ ---------------- -------------------- -------------------------------          --------------------- -----------------------
-3                 dog              Real word            \unicodefont/dɔg/\normalfont             dog                   wombat
-                                   Mispronunciation     \unicodefont/tɔg/\normalfont             dog                   wombat
-                                   Nonword              \unicodefont/vef/\normalfont             ball                  sextant
-3, 4, 5           cake             Real word            \unicodefont/kek/\normalfont             cake                  horned melon
-                                   Mispronunciation     \unicodefont/gek/\normalfont             cake                  horned melon
-                                   Nonword              \unicodefont/pʌm/\normalfont             book                  churn
-3, 4, 5           duck             Real word            \unicodefont/dʌk/\normalfont             duck                  toy creature
-                                   Mispronunciation     \unicodefont/gʌk/\normalfont             duck                  toy creature
-                                   Nonword              \unicodefont/ʃæn/\normalfont             cup                   reed
-3, 4, 5           girl             Real word            \unicodefont/gɜ˞l/\normalfont            girl                  marmoset
-                                   Mispronunciation     \unicodefont/dɜ˞l/\normalfont            girl                  marmoset
-                                   Nonword              \unicodefont/nedʒ/\normalfont            car                   work holder
-3, 4, 5           shoes            Real word            \unicodefont/ʃuz/\normalfont             shoes                 flasks
-                                   Mispronunciation     \unicodefont/suz/\normalfont             shoes                 flasks
-                                   Nonword              \unicodefont/giv/\normalfont             sock                  trolley
-3, 4, 5           soup             Real word            \unicodefont/sup/\normalfont             soup                  steamer
-                                   Mispronunciation     \unicodefont/ʃup/\normalfont             soup                  steamer
-                                   Nonword              \unicodefont/tʃim/\normalfont            bed                   pastry mixer
-4, 5              rice             Real word            \unicodefont/ɹaɪs/\normalfont            rice                  anise
-                                   Mispronunciation     \unicodefont/waɪs/\normalfont            rice                  anise
-                                   Nonword              \unicodefont/bep/\normalfont             ball                  sextant
