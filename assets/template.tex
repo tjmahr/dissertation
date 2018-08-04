@@ -74,6 +74,7 @@
 %% This is my infobox class
 \usepackage{xcolor}
 \usepackage{mdframed}
+% \mdfsetup{skipabove=5pt,skipbelow=0pt}
 \definecolor{infoblue}{RGB}{238, 247, 250}
 
 % Helpful demo of using mdframded
@@ -95,18 +96,17 @@
 % # https://github.com/jgm/pandoc/issues/3145#issuecomment-302787889
 \let\Begin\begin
 \let\End\end
-
-\usepackage{url}
-
-% \urlstyle{same}
-% Add - to url's default breaks
-\def\UrlBreaks{\do\.\do\@\do\\\do\/\do\!\do\_\do\|\do\;\do\>\do\]%
-    \do\)\do\,\do\?\do\&\do\'\do+\do\=\do\#\do-}
-
-\DeclareUrlCommand\doi{%
-  \urlstyle{rm}\renewcommand\UrlLeft{doi:\ }%
-  \renewcommand\UrlRight{}}
-
+%
+% \usepackage{url}
+%
+% % \urlstyle{same}
+% % Add - to url's default breaks
+% \def\UrlBreaks{\do\.\do\@\do\\\do\/\do\!\do\_\do\|\do\;\do\>\do\]%
+%     \do\)\do\,\do\?\do\&\do\'\do+\do\=\do\#\do-}
+%
+% \DeclareUrlCommand\doi{%
+%   \urlstyle{rm}\renewcommand\UrlLeft{doi:\ }%
+%   \renewcommand\UrlRight{}}
 % % UrlRight{\href{http://dx.doi.org/##1}{\uri@doipre##1\uri@doipost}}}%
 %
 % % % via: https://tex.stackexchange.com/a/68532/55985
@@ -134,32 +134,129 @@
 \usepackage{fancyvrb}
 \DefineShortVerb[commandchars=\\\{\}]{\|}
 \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+
+
 % Add ',fontsize=\small' for more characters per line
-\newenvironment{Shaded}
-   {
-    \begin{spacing}{0.9}
-     % \raggedright
-     % \textbf{Example: }%
-   }{
-   \end{spacing}
-   }
-\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
-\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
-\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
-\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
-\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
-\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
-\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
-\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
-\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
-\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
-\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
-\newcommand{\RegionMarkerTok}[1]{{#1}}
-\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
-\newcommand{\NormalTok}[1]{{#1}}
-\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
-\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
-\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+% \newenvironment{Shaded}
+%    {
+%     \begin{spacing}{0.9}
+%      % \raggedright
+%      % \textbf{Example: }%
+%    }{
+%    \end{spacing}
+%    }
+
+% https://github.com/nightsense/snow/blob/master/colors/snow.vim
+\definecolor{gry0}{HTML}{f2f3f5}
+\definecolor{gry1}{HTML}{dfe3ea}
+\definecolor{gry2}{HTML}{768294}
+\definecolor{gry3}{HTML}{525d6e}
+\definecolor{gryc}{HTML}{303842}
+\definecolor{srch}{HTML}{e8bc4a}
+\definecolor{gryp}{HTML}{a0adc0}
+\definecolor{sprd}{HTML}{ff0000}
+\definecolor{spbl}{HTML}{0087ff}
+\definecolor{spcy}{HTML}{008787}
+\definecolor{spmg}{HTML}{d700d7}
+\definecolor{red_}{HTML}{c34853}
+\definecolor{gold}{HTML}{8e6e08}
+\definecolor{gren}{HTML}{2a843c}
+\definecolor{cyan}{HTML}{008895}
+\definecolor{blue}{HTML}{0779c5}
+\definecolor{mgnt}{HTML}{a158a8}
+
+\usepackage{framed}
+\definecolor{shadecolor}{HTML}{f2f3f5}
+\newenvironment{Shaded}{\begin{snugshade}\begin{singlespace}\small}{\end{singlespace}\end{snugshade}}
+
+\newcommand{\KeywordTok}[1]{\textcolor{cyan}{#1}}
+
+\newcommand{\DataTypeTok}[1]{\textcolor{mgnt}{#1}}
+
+\newcommand{\CharTok}[1]{\textcolor{blue}{#1}}
+\newcommand{\StringTok}[1]{\textcolor{blue}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor{blue}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor{blue}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor{blue}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor{blue}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor{blue}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor{blue}{#1}}
+
+\newcommand{\DocumentationTok}[1]{\textcolor{gry2}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor{gry2}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor{gry2}{\textbf{\textit{#1}}}}
+
+\newcommand{\ControlFlowTok}[1]{\textcolor{gren}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor{gren}{#1}}
+
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\RegionMarkerTok}[1]{#1}
+
+\newcommand{\CommentTok}[1]{\textcolor{gry3}{\textit{#1}}}
+\newcommand{\PreprocessorTok}[1]{\textcolor{gry3}{\textit{#1}}}
+\newcommand{\InformationTok}[1]{\textcolor{gry3}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor{gry3}{\textbf{\textit{#1}}}}
+
+\newcommand{\NormalTok}[1]{\textcolor{gryc}{{#1}}}
+\newcommand{\FunctionTok}[1]{\textcolor{gryc}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor{gryc}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor{gryc}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor{gryc}{#1}}
+
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+
+% \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+% \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+% \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+% \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+% \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+% \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+% \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+% \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+% \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+% \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+% \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+% \newcommand{\RegionMarkerTok}[1]{{#1}}
+% \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+% \newcommand{\NormalTok}[1]{{#1}}
+% \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+% \newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+% \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+%
+
+
+% https://github.com/nightsense/snow
+% \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+%
+% \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+% \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+% \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+%
+% \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+% \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+%
+% \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+%
+% \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{{#1}}}
+% \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{{#1}}}
+%
+% \newcommand{\RegionMarkerTok}[1]{{#1}}
+%
+% % done
+% \newcommand{\NormalTok}[1]{\textcolor[rgb]{0.322,0.365,0.431}{{#1}}}
+%
+% \newcommand{\OtherTok}[1]{\textcolor{gren}{{#1}}}
+% \newcommand{\KeywordTok}[1]{\textcolor{gren}{{#1}}}
+% \newcommand{\OperatorTok}[1]{\textcolor{gren}{{#1}}}
+% \newcommand{\BuiltInTok}[1]{\textcolor{gren}{{#1}}}
+% \newcommand{\ControlFlowTok}[1]{\textcolor{gren}{{#1}}}
+%
+%
+% \newcommand{\CommentTok}[1]{\textcolor{gry2}{\textit{{#1}}}}
 
 
 
@@ -248,6 +345,11 @@
 \makeoddfoot{chapter}{}{}{}
 \makeevenhead{chapter}{\thepage}{}{}
 \makeoddhead{chapter}{}{}{\thepage}
+
+\copypagestyle{part}{plain}
+\makeoddfoot{part}{}{}{}
+\makeevenhead{part}{\thepage}{}{}
+\makeoddhead{part}{}{}{\thepage}
 %%% SNIP
 
 % %%% bib nonsense
@@ -322,10 +424,10 @@
 
 \makeatletter
 
-\newcounter {tocpage}
-\newcounter {lofpage}
-\newcounter {lotpage}
-\newcounter {listofheading}
+\newcounter{tocpage}
+\newcounter{lofpage}
+\newcounter{lotpage}
+\newcounter{listofheading}
 
 \newcommand\@thesistitlemedskip{0.25in}
 \newcommand\@thesistitlebigskip{0.55in}
@@ -351,10 +453,9 @@
 % \c@page\z@ -- deleted: count title page in thesis
 }{\if@restonecol\twocolumn \else \newpage \fi}
 
-\gdef\@degree{Doctor of Philosophy}    %Default is PhD
-\gdef\@doctype{A dissertation}         %Default is dissertation
-
-\gdef\@department{(Electrical Engineering)} % Default is Electical Engineering
+\gdef\@degree{Doctor of Philosophy}
+\gdef\@doctype{A dissertation}
+\gdef\@department{(Electrical Engineering)}
 \gdef\@oralexamdate{}
 \gdef\@committeeone{}
 \gdef\@committeetwo{}
@@ -593,15 +694,10 @@ $for(signature)$\indent $signature$$sep$\\*$endfor$
   \addcontentsline{toc}{chapter}{VITA}}
 \def\endvita{\par\newpage}
 
-%=============================================================================
 % ACKNOWLEDGMENTS
-%=============================================================================
-% The acknowledgments environment must do the following:
-% - start a new page with ACKNOWLEDGMENTS centered two inches from the top
-%=============================================================================
 \def\acks{
   \chapter*{Acknowledgments}
-}
+  \addcontentsline{toc}{chapter}{Acknowledgments}}
 \def\endacks{\par\newpage}
 
 %=============================================================================
