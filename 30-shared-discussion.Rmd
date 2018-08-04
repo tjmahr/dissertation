@@ -5,19 +5,29 @@
 General discussion
 =======================================================================
 
-In this chapter, I tie together results from the two studies.
+In this chapter, I integrate results from the two studies. First, I describe the mechanisms underlying children's word recognition. Next, I review some clinical implications of this research.
 
 
 Mechanisms of word recognition
 -----------------------------------------------------------------------
 
-How do children recognize words? That is, what cognitive mechanisms
-would explain the data observed from these two studies. As a baseline
-description of word recognition mechanisms, I would start with a
-continuous activation model with different levels of representation---in
-other words, TRACE [@TRACE]. In my preceding interpretations of hte
-data from Aim 1 and Aim 2 I have loosely followed a TRACE-like
-archecture, so it is helpful to briefly review what this model does.
+What cognitive or word-recognitions mechanisms can account for the data
+observed from these two studies? These are the essential findings that
+the model needs to account for:
+
+* Developmental improvement in familiar word recognition
+* Early advantage of phonologically similar words (over unrelated words)
+* Late advantage of semantically similar words (over unrelated words)
+* Developmental changes in the advantage of these similar words
+* Disrupted processing of onset-mispronunciations
+* Easy processing of unambiguous nonwords
+
+As a baseline for word recognition mechanisms, I would start with 1) a
+continuous activation model 2) that uses different levels of
+representation---in other words, TRACE [@TRACE]. In my preceding
+interpretations of the data from Aim 1 and Aim 2 I have assumed a
+TRACE-like archecture, so it is helpful to briefly review what this
+model does.
 
 TRACE interprets an input pattern by spreading energy (activation)
 through a network of processing units. The pattern of activation over
@@ -26,30 +36,137 @@ active units represent more likely interpretations. Over many processing
 cycles, the network propagates energy among its connections until it
 settles into a stable pattern of activation. (Activation also decays
 over cycles so that the model can start and return a resting state.)
-This activation process is
-*continuous*; the model's interpretation evolves continuously. We can ask
-at any point during (or after) presentation of a word what the model's
-interpretation of that word is. Thus, it does not need to hear a whole
-word to generate a plausible guess for that word.
+This activation process is *continuous*; the model's interpretation
+evolves continuously. We can ask at any point during (or after)
+presentation of a word what the model's interpretation of that word is.
+Thus, the listener does not need to hear a whole word to generate a
+plausible guess for that word [e.g., @Fernald2001].
 
 The model involves three levels of representation: perceptual/phonetic
 features, phoneme units and lexical units. The input for TRACE is a
 mock-speech signal that activates the perceptual feature-detectors.
 These units respond to phonetic features like voicing or vocalic
 resonance. The perceptual units activate phoneme units, and the phoneme
-units activate lexical word units. 
+units activate lexical word units. For example, the bundle of features
+representing a /b/ would activate /b/ but to a lesser extent also
+activate the phonetically similar /d/ (different place), /p/ (voice),
+/v/ (manner), or /m/ (nasality). The initial /b/ sound activates a
+neighborhood of words containing /b/, and the phonetically similar sound
+also activate matching similar words, albeit to a weaker extent. 
 
-The bundle of features representing a /b/ would activate /b/ but to a
-lesser extent also activate the phonetically similar /d/ (different
-place), /p/ (voice), /v/ (manner), /m/ (nasality). The initial /b/ sound
-activates a neighborhood of words containing /b/, and the phonetically
-similar words also activate their similar words, albeit to a weaker
-extent. Then the next sound arrives, /i/, activates a set of phoneme
-units, and in turn activating words with /i/. The sequence of /bi/
-favors a particular neighborhood of cohorts: be, bee, beam, beak, beat,
-beetle, etc. At this point, the signal is ambiguous however. Any of the
-words in the cohort are plausible interpretations and more information
-is needed to refine the interpretation.
+The combination of continuous processing and levels of representation
+means that ambiguities can arise during word recognition. After /b/, the
+sound /i/ arrives, activating a set of phoneme units and in turn
+activating words containing /i/. The sequence of /bi/ favors a
+particular neighborhood of cohorts: *be*, *bee*, *beam*, *beak*, *beat*,
+*beetle*, etc. At this point, however, the signal is ambiguous. Any of
+the words in the cohort are plausible interpretations and more
+information is needed to refine the interpretation.
+In @Swingley1999, 24-month-olds were slower to respond to trials of
+*doggie* versus *doll*, compared to *doggie*--*tree* or *doll*--*truck*
+trials, where the delay reflected the brief ambiguity from the words
+sharing an onset and vowel.
+
+<!-- --phonological effect -->
+
+The mechanisms described thus far can account for the advantage of the
+phonological competitors over unrelated words from the first study. The
+initial phoneme in a word activates a cohort of words that share that
+sound, so that the cohorts briefly represent more plausible
+interpretations of the target than words that are not phonologically
+related. A child can act on that early information and shift their gaze
+to the phonological competitor.
+
+Words in TRACE compete with each other through lateral inhibition, so
+that an active word will dampen the activation of other competitors.
+Inhibition allows the model to reinforce or revise an interpretation. In
+the earlier example, the arrival of /m/ after /bi/ would strongly favor
+*beam* as the most plausible interpretation of the word, and *beam* will
+inhibit the other candidates like *beak* or *beat* so that it can be the
+decisive interpreation of the word. The transient effect of the
+phonological competitor suggests lateral inhibition: The advantage of
+the phonological competitor over the unrelated word is short-lived
+because the target word builds up activation and inhibits the
+phonological competitor. 
+
+<!-- --semantic effect and cascading activation -->
+
+To account for the effect of the semantic competitor, we need to make a
+few more assumptions. Semantic information is not explicitly included as
+a part of TRACE but we can stipulate that semantic information is part
+of a word's lexical representation. We also need a way for semantically
+related words to co-activate, so that hearing *bee* will generate some
+spurious looks to *fly*. In this case, we can assume that there are
+excitatory connections between semantically related words, so that
+hearing a word also activates its semantic relatives. In my earlier
+discussions, I used the term *cascading activation* to describe this
+arrangement. For children to generate looks to the semantic competitor,
+they first to need to build up activation of the word and that
+activation would cascade over to semantic relatives. The time course of
+activation here is consistent with the late effects of the semantic
+competitor. The semantic competitor can exerts an advantage over the
+unrelated word after semantic information comes online.
+
+The relative advantage of the phonological and semantic competitors
+increased each year, as did children's overall recognition of the
+familiar word. In other words, children became better at activating the
+target and the words related to the target. In Chapter XX, I argued that
+these developmental changes in the first study reflected stronger
+phoneme--word connections (for greater activation of the target and
+phonological competitors) and stronger semantic connections between
+words. I did not observe any developmental changes in inhibition, so I 
+favored an interpretation that focused on stronger connections.
+
+
+--mispronunciation
+
+Continuous activation and lateral inhibition explain the mispronunciation effects. 
+
+--nonwords
+
+
+Early in the processing of a word, all of the action is in the bottom-up connections from the phonetic features to the phonological units onto the words. Thus, cohorts show an early advantage in word recognition.
+
+Cohorts exhibit a strong effect on word recognition because they
+
+
+so that an early cohort competitor is suppressed
+
+Other word recognition models, say Cohort xxx, emphasize the importance of initial sounds activating a 
+
+
+My reasoning was that 
+
+To recognize the target word more quickly, children need to build up activation to the target more quickly.
+
+
+<!-- Alternatively, we could assume there is a layer of semantic representations outside of lexical representations, so that word form and word meaning are separated. -->
+
+
+
+This arrangement predicts that semantic information will enter into word recognition relatively late, as it requires activation of the word. 
+
+
+
+
+
+and this mechanism accounts for the phonological competitors
+
+The immediate activation of phonologically similar words provides the mechanism
+
+
+
+
+These mechanisms are enough to account for the mispronunciation effect from the second study.
+
+
+
+
+The results from the first study are consistent with a continuous activation model with different levels of representation. 
+
+
+
+(yes, ham / hamster)
 
 This is the baseline. Now the question is how the results from the two
 studies fit inside this model.
@@ -90,6 +207,31 @@ The TRACE model of speech perception and word recognition [@TRACE] is well suite
 McMurray, Samelson, Lee, and Bruce Tomblin (2010) used TRACE to simulate word recognition results from adolescents with specific language impairment (SLI). They mapped certain theories about SLI onto different model parameters. For example, to test the theory that listeners with SLI have impairments in acoustic perception, they varied three of the model’s parameters: amount of noise added to the model’s mock-speech input, temporal spread of acoustic features in the input (temporal resolution), and rate of decay in the model’s acoustic feature detectors (perceptual memory). Other theories of SLI (and other model parameters) provided a closer fit to the observed data than the perceptual deficit theory. Specifically, lexical decay—“the ability to maintain words in memory” (p. 23)—was the most important model parameter, implying that individual differences in word recognition for listeners with SLI are rooted in lexical processes (and not perceptual or phonological ones). 
 
 This example shows how simulations with TRACE recast word recognition performance in terms of psychological processes. For this project, I will use TRACE to describe how cognitive processes and representations need to change to simulate the development of word recognition in preschoolers.
+
+
+Clinical implications
+----------------------------------------------------------------------
+
+The results of the first study remind us that words
+are not simply acquired---they are learned and *integrated.* In the first
+study, children's recognition of very familiar words improved each year.
+Children's representations of familiar words continue to develop, even
+if they ostenisbly *know* the word. One might attribute this development
+change to improvements in visual processing and sensory processing or
+some other nonlinguistic factor. This study cannot rule out those
+explanations. The increasing effect of the phonological and semantic
+competitors, however, suggests that changes in lexical representations
+can explain these results.
+
+
+
+Future directions
+----------------------------------------------------------------------
+
+When does inhibition come online?
+
+When does a new word begin to participate in lexical competition?
+When would a cohort nonword start to affect processing of a known word?
 
 
 Contributions
@@ -141,4 +283,41 @@ and what turns an increase in words into an advantage is lexical
 engagement. The development of word recognition for preschoolers is
 about engagement, children learning the connections among related words
 and harnessing those similarities to their advantage.
+
+
+
+Mechanisms
+	- Start with a baseline of lexical processing: Continuous, incremental activation of candidates and cascading activation to related words.
+	- Become more sensitive to similar words
+		○ More lexical engagement
+	- Referent selection
+	- Known words
+	- Why does early differences matter?
+		○ Differences in associative representations (later learning is refinement) are greatest early on.
+		○ Specify that we are talkinga bout familiarity with these words
+
+Implications
+
+	- Aim 1
+		○ Children do not stop learning words.
+			§ It's linguistic because of the foils.
+			§ Representations of highly familiar words continue to develop.
+		○ Continue to develop during preschool years.
+		○ Everyone gets faster.
+		○ Early differences matter more than later ones.
+	- Aim 2
+		○ Mastery of referent selection in a two-image format by age 4
+		○ Still sensitive to mispronunciations
+			§ Early penalty from mismatching information
+			§ This si like a rime effect or the inverse of cohort effect
+			§ Age 5 more like to treat the mispronunciation as a real word.
+			§ Take advantage of rest of syllable, better at using rest of word.
+			
+		○ Poorer retention of mispronunciations as new words than nonwords
+		○ New words that sound like known words and are presented in contexts with the known word are really hard to passively learn.
+			§ Known words interfere.
+
+Next steps
+CI users and SLI users
+
 
