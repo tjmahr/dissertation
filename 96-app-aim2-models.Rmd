@@ -123,13 +123,13 @@ summary(m3, priors = TRUE, prob = .9)
 
 
 
-Mispronunication growth curves
+Mispronunciation growth curves
 ------------------------------------------------------------------------
 
 
 Like the models above, these ones are Bayesian mixed-effects logistic
 regression growth curve models fit with brms. I used two separate
-models, one for unfamilar-initial trials and familiar-initial trials.
+models, one for unfamiliar-initial trials and familiar-initial trials.
 Each model included data from all three years of the study. The code is
 essentially the same syntax with a `Study` variable replacing the
 `Condition` variable.
@@ -190,7 +190,7 @@ the problem. By using a tighter prior, the model had a smaller search
 space meaning it could obtain samples more efficiently. 
 
 The revised prior was still weakly informative. Figure
-\@ref(fig:student-t-priors) llustrates the differences in the prior
+\@ref(fig:student-t-priors) illustrates the differences in the prior
 densities---that is, which values are plausible before seeing the data.
 It also shows posterior densities from the model and how those values
 are easily enclosed by the prior densities.

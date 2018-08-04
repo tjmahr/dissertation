@@ -1187,7 +1187,7 @@ age 5. One reason for these limited improvements is that the two-image
 word recognition task was too easy. At age 4, approximately 25% of
 children had nonword growth curve peaks of .99 or greater.
 
-Despite the presense of ceiling effects, vocabulary size had a
+Despite the presence of ceiling effects, vocabulary size had a
 small-to-medium positive correlation with nonword growth curve peaks at
 all three ages. Children who knew more words had a higher probability of
 looking to the novel object when presented with a nonword. This
@@ -1215,7 +1215,7 @@ unexpected result.
 Why might children perform better on the nonword trials than the real
 words? The results are consistent with a novelty bias in referent
 selection [@Horst2011; @Mather2012]. An additional factor may be the
-presense of the mispronunciation trials---reported in [Chapter
+presence of the mispronunciation trials---reported in [Chapter
 \@ref(sensitivity-to-mispronunciations)](#sensitivity-to-mispronunciations).
 The mispronunciations may undermine familiar word recognition. For
 one-third of the trials, children hear an imperfect version of a

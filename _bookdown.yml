@@ -30,7 +30,7 @@ rmd_files:
 #  - 80-scratch.Rmd
   - 90-part-appendices.Rmd
   - 91-app-aim1-items.Rmd
-#  - 92-app-aim1-models.Rmd
+  - 92-app-aim1-models.Rmd
   - 95-app-aim2-items.Rmd
 #  - 96-app-aim2-models.Rmd
   - 96-mp-items.Rmd

@@ -1,4 +1,4 @@
-Hypothesis check (Specific Aim 1) {#aim1-h-check}
+Hypothesis check {#aim1-h-check}
 ========================================================================
 
 \setlength{\parindent}{0in}
@@ -40,8 +40,8 @@ variable each year.
 age 3, for example, will be more discriminating and predictive of
 age 5 language outcomes than differences at age 4 or age 5.**
 
-Yes. Correlations between growth curve features with future vocabulary measures
-were strongest for the age 3 growth curve features.
+Yes. Correlations between growth curve features with future vocabulary
+measures were strongest for the age-3 growth curve features.
 
 \bigskip\smallskip
 

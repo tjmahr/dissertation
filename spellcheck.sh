@@ -12,6 +12,8 @@ PATH=$PATH:node_modules/.bin
 
 mdspell -r -n --en-us README.md
 mdspell -r -n --en-us index.Rmd
+mdspell -r -n --en-us 00-text-of-acknowledgements.md
+mdspell -r -n --en-us abstract.md
 mdspell -r -n --en-us 00-acknowledgements.Rmd
 mdspell -r -n --en-us 00-dedication.Rmd
 mdspell -r -n --en-us 02-specific-aims.Rmd

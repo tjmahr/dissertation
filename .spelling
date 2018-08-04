@@ -82,6 +82,23 @@ sextiles
 jittered
 overplotting
 pre-naming
+setlength
+parindent
+0in
+bigskip
+smallskip
+1.5em
+downweight
+dirl
+shoup
+unneighbored
+wice
+brms
+noindent
+0.20in
+leftskip
+parskip
+8pt
  - index.Rmd
 documentclass
 bookdown
@@ -135,6 +152,8 @@ vw-experiment-items
 aim1-spaghetti
 aim1-participants
 aim1-procedure
+aim2-method
+aim1-spaghetti-scap
  - 14-aim1-familiar-word-recognition.Rmd
 GelmanHill
 RethinkingBook
@@ -164,6 +183,9 @@ RStanARM's
 _Here
 irr
 aim1-gca-models
+mathit
+gamma_
+delta_
  - 16-aim1-lexical-competitors.Rmd
 RWLPaper
 Barr2008
@@ -197,6 +219,11 @@ gca-fail
 age3-phon-by-minp
 Winter2016
 aim1-gca-models
+declining-phon-props-scap
+phon-vs-unre-fits-scap
+phon-diff-curves-scap
+semy-vs-unre-fits-scap
+semy-diff-curves-scap
  - 92-app-aim1-models.Rmd
 aim1-gca-models
 lkj-prior
@@ -204,6 +231,7 @@ Wood2017
 itsadug
 Winter2016
 Baayen2016
+R-rstanarm
  - 91-app-aim1-items.Rmd
 vw-experiment-items
 aim1-all-items
@@ -229,6 +257,7 @@ tʃim
 ɹaɪs
 waɪs
 bep
+aim2-items
  - 03-significance.Rmd
 Morgan2015
 Marslen-Wilson1989
@@ -327,6 +356,7 @@ Buch
 Chow2017
 aim1-h-check
 pre-analysis
+21-month-olds
  - 18-aim1-general-discussion.Rmd
 aim1-discussion
 McMurray2010
@@ -441,3 +471,71 @@ suze
 5-years-olds
 aim2-real-word-spaghetti
 aim2-nonword-spaghetti
+ - abstract.md
+suze
+geeve
+ - 00-text-of-acknowledgements.md
+Munson
+Beckman
+Franzo
+Winn
+Reidy
+Thonesavanh
+Schneeberg
+Kristensen
+Wermuth
+Seidel
+Hustad
+ASHA
+Waisman
+Edmiston
+Venker
+Pomper
+Zettersten
+Premo
+Mathee
+Natzke
+Lolo
+NICHD
+2-T32-HD049899
+NIDCD
+R01
+DC012513
+T32
+DC05359-10
+Garity
+Talbert
+Hadley
+Wickham
+Yihui
+Xie
+Ushey
+Averick
+ve
+Gabry
+Bürkner
+McElreath
+nerdery
+Kiki
+Choutae
+Nooper
+ - 28-aim2-general-discussion.Rmd
+aim2-discussion
+Bion2013
+TRACE_Mispro
+Swingley2007
+shang
+meb
+evaluat
+WhiteMorgan2008
+aim2-mp-items
+three-year-olds
+ - 29-h-check.Rmd
+aim2-h-check
+aim2-mp-items
+ - 96-app-aim2-models.Rmd
+aim2-gca-models
+aim1-gca-models
+df
+ - 96-mp-items.Rmd
+aim2-mp-items
