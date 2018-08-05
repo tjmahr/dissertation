@@ -241,7 +241,6 @@ performance at age 3 correlated with vocabulary scores at later ages.
 
 
 ### Open questions about word recognition mechanisms
-----------------------------------------------------------------------
 
 There are three open questions from this research. First, how does lexical
 inhibition change over this developmental window? The results from the
@@ -256,7 +255,7 @@ Based on other work, we could expect older children to show greater
 inhibition. @Rigler2015 showed that 9-year-old children were more
 sensitive to phonological cohorts and rimes than 16-year-old children,
 suggesting children need to develop inhibitory connections that suppress
-the interference from these words. Blomquist and McMurray (in prep.)
+the interference from these words. @Blomquist2017
 used a cross-splicing paradigm to test lexical inhibition in 7--8-
 versus 12--13-year-old children. In this paradigm, a target like *cap*
 is created by splicing initial *ca* onset with a different tokne
@@ -340,17 +339,6 @@ the encoding of the nonword.
 
 
 
-<!-- The TRACE model of speech perception and word recognition [@TRACE] is well suited for this kind of simulation work. TRACE can simulate a dozen or so empirical results from speech perception literature (Strauss, Harris, & Magnuson, 2007, Table 1), and it has been used to simulate word-recognition data from adults (Allopenna, Magnuson, & Tanenhaus, 1998), and adults with aphasia (Mirman, Yee, Blumstein, & Magnuson, 2011), and toddlers (Mayor & Plunkett, 2014).  -->
-
-<!-- @jTRACE -->
-
-<!-- McMurray, Samelson, Lee, and Bruce Tomblin (2010) used TRACE to simulate word recognition results from adolescents with specific language impairment (SLI). They mapped certain theories about SLI onto different model parameters. For example, to test the theory that listeners with SLI have impairments in acoustic perception, they varied three of the model’s parameters: amount of noise added to the model’s mock-speech input, temporal spread of acoustic features in the input (temporal resolution), and rate of decay in the model’s acoustic feature detectors (perceptual memory). Other theories of SLI (and other model parameters) provided a closer fit to the observed data than the perceptual deficit theory. Specifically, lexical decay—“the ability to maintain words in memory” (p. 23)—was the most important model parameter, implying that individual differences in word recognition for listeners with SLI are rooted in lexical processes (and not perceptual or phonological ones).  -->
-
-<!-- This example shows how simulations with TRACE recast word recognition performance in terms of psychological processes. For this project, I will use TRACE to describe how cognitive processes and representations need to change to simulate the development of word recognition in preschoolers. -->
-
-
-<!-- For a recent example, XXX found that reaction time on a 2-AFC word recognition task at 18-months predicted vocabulary and non-verbal language outcomes at 54 months in children born preterm.  -->
-
 
 
 
@@ -382,104 +370,4 @@ mutual-exclusivity-type referent selection by age 4. Children can
 effortless map nonwords to novel objects, provided that the nonword is
 not under competition from any known words, as was observed for the
 mispronunciations.
-
-
-<!-- Part of the puzzle of word recognition is that children improve in word -->
-<!-- recognition despite learning more and more words, thus having more -->
-<!-- possibilities to consider during word recognition. How might learning -->
-<!-- more words make word recognition search problem even easier? On the -->
-<!-- basis of the two studies in this project, I think the distinction by -->
-<!-- @Leach2007 between *lexical configuration* and *lexical engagement* is -->
-<!-- crucial. If we adopt the analogy that the lexicon is a mental -->
-<!-- dictionary, a word's configuration is the information found in its -->
-<!-- dictionary entry: sound, meaning, syntactic roles, and orthography. A -->
-<!-- word's engagement is its connection to other words, like competitors or -->
-<!-- cohorts or semantic relatives.  -->
-
-<!-- This work argues that what children develop and what turns an increase -->
-<!-- in words into an advantage is lexical engagement. Children become more -->
-<!-- sensitive to phonological and semantic competitors as they grow older, -->
-<!-- and  -->
-
-
-
-
-
-<!-- A needle in a self-organizing haystack -->
-<!-- ======================================================================= -->
-
-<!-- When I give my "elevator pitch" for word recognition research, I -->
-<!-- sometimes employ a cheeky analogy of a needle in a haystack. Imagine, -->
-<!-- for the sake of discussion, that the information processing mechanism -->
-<!-- behind word recognition were just a naïve table search. Think of -->
-<!-- autocomplete on a phone or a spellchecker. Over the course of -->
-<!-- development, children's lexicons grow larger in size and yet they get -->
-<!-- *better* at recognizing words. Children with larger lexicons have to -->
-<!-- find a needle in a larger haystack—yet this apparent liability is an -->
-<!-- advantage. That is why the search analogy is naïve. Children become -->
-<!-- better at recognizing words as they learn more words because they -->
-<!-- extract regularities and discover similarities among words and develop -->
-<!-- more efficient lexical representations. The haystack develops regularity -->
-<!-- and becomes easier to search. In fact, try to pull out a single needle -->
-<!-- and a tangle of other very similar needles come with it. -->
-
-<!-- The vagueness of the phrase "more efficient lexical representations" is -->
-<!-- something of a trap. For example, we might think like the one efficient -->
-<!-- way to store lexical items is to posit that children lazily encode -->
-<!-- lexical information on demand. That *underspecification* hypothesis has -->
-<!-- been discredited by children's sensitivities to mispronunciations and -->
-<!-- with their ability to use part-word information during word recognition. -->
-
-<!-- <!-- Let us take for granted that children know the words they know in full --> -->
-<!-- <!-- phonetic detail. How might learning more words make word recognition --> -->
-<!-- <!-- search problem even easier? On the basis of the two studies in this --> -->
-<!-- <!-- project, I think the distinction by @Leach2007 between *lexical --> -->
-<!-- <!-- configuration* and *lexical engagement* is crucial. If we adopt the --> -->
-<!-- <!-- analogy that the lexicon is a mental dictionary, a word's configuration --> -->
-<!-- <!-- is the information found in its dictionary entry: sound, meaning, --> -->
-<!-- <!-- syntactic roles, and orthography. A word's engagement is its connection --> -->
-<!-- <!-- to other words, like competitors or cohorts or semantic relatives. We --> -->
-<!-- <!-- know from the research into representations that a word's phonetic --> -->
-<!-- <!-- configuration should be generally well-specified. What children develop --> -->
-<!-- <!-- and what turns an increase in words into an advantage is lexical --> -->
-<!-- <!-- engagement. The development of word recognition for preschoolers is --> -->
-<!-- <!-- about engagement, children learning the connections among related words --> -->
-<!-- <!-- and harnessing those similarities to their advantage. --> -->
-
-
-
-<!-- <!-- Mechanisms --> -->
-<!-- <!-- 	- Start with a baseline of lexical processing: Continuous, incremental activation of candidates and cascading activation to related words. --> -->
-<!-- <!-- 	- Become more sensitive to similar words --> -->
-<!-- <!-- 		○ More lexical engagement --> -->
-<!-- <!-- 	- Referent selection --> -->
-<!-- <!-- 	- Known words --> -->
-<!-- <!-- 	- Why does early differences matter? --> -->
-<!-- <!-- 		○ Differences in associative representations (later learning is refinement) are greatest early on. --> -->
-<!-- <!-- 		○ Specify that we are talkinga bout familiarity with these words --> -->
-
-<!-- <!-- Implications --> -->
-
-<!-- <!-- 	- Aim 1 --> -->
-<!-- <!-- 		○ Children do not stop learning words. --> -->
-<!-- <!-- 			§ It's linguistic because of the foils. --> -->
-<!-- <!-- 			§ Representations of highly familiar words continue to develop. --> -->
-<!-- <!-- 		○ Continue to develop during preschool years. --> -->
-<!-- <!-- 		○ Everyone gets faster. --> -->
-<!-- <!-- 		○ Early differences matter more than later ones. --> -->
-<!-- <!-- 	- Aim 2 --> -->
-<!-- <!-- 		○ Mastery of referent selection in a two-image format by age 4 --> -->
-<!-- <!-- 		○ Still sensitive to mispronunciations --> -->
-<!-- <!-- 			§ Early penalty from mismatching information --> -->
-<!-- <!-- 			§ This si like a rime effect or the inverse of cohort effect --> -->
-<!-- <!-- 			§ Age 5 more like to treat the mispronunciation as a real word. --> -->
-<!-- <!-- 			§ Take advantage of rest of syllable, better at using rest of word. --> -->
-
-<!-- <!-- 		○ Poorer retention of mispronunciations as new words than nonwords --> -->
-<!-- <!-- 		○ New words that sound like known words and are presented in contexts with the known word are really hard to passively learn. --> -->
-<!-- <!-- 			§ Known words interfere. --> -->
-
-<!-- <!-- Next steps --> -->
-<!-- <!-- CI users and SLI users --> -->
-
 
