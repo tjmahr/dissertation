@@ -15,12 +15,13 @@ What cognitive or word-recognitions mechanisms can account for the data
 observed from these two studies? These are the essential findings that
 the model needs to account for:
 
-* Developmental improvement in familiar word recognition
+* Developmental improvements in familiar word recognition
 * Early advantage of phonologically similar words (over unrelated words)
 * Late advantage of semantically similar words (over unrelated words)
 * Developmental changes in the advantage of these similar words
 * Disrupted processing of onset-mispronunciations
 * Easy processing of unambiguous nonwords
+* Individual differences in familiar word recognition
 
 As a baseline for word recognition mechanisms, I would start with 1) a
 continuous activation model 2) that uses different levels of
@@ -67,7 +68,7 @@ In @Swingley1999, 24-month-olds were slower to respond to trials of
 trials, where the delay reflected the brief ambiguity from the words
 sharing an onset and vowel.
 
-<!-- --phonological effect -->
+<!-- phonological effect -->
 
 The mechanisms described thus far can account for the advantage of the
 phonological competitors over unrelated words from the first study. The
@@ -89,7 +90,7 @@ the phonological competitor over the unrelated word is short-lived
 because the target word builds up activation and inhibits the
 phonological competitor. 
 
-<!-- --semantic effect and cascading activation -->
+<!-- semantic effect and cascading activation -->
 
 To account for the effect of the semantic competitor, we need to make a
 few more assumptions. Semantic information is not explicitly included as
@@ -118,7 +119,7 @@ words. I did not observe any developmental changes in inhibition, so I
 favored an interpretation that focused on stronger connections.
 
 
---mispronunciation
+<!-- mispronunciations -->
 
 One prediction of TRACE is that rhymes and rimes (one-syllable rhymes)
 can affect word recognition. But these rhymes are at a disadvantage. Early
@@ -158,29 +159,128 @@ longer like a *beaker*--*speaker* rhyme, we would predict more segments
 would overlap, leading to greater activation of the mispronounced
 target. 
 
---nonwords
+<!-- nonwords -->
 
 What about the effortless processing of the unambiguous nonwords?
 Surely, children do not have a lexical item *geeve* to activate the
-first time they hear the word. (That is probably a dubious assumption
-because when would a lexical item appear?) On these trials, however, the
-children did know *sock* and that *geeve* was not the name for the sock,
+first time they hear the word. (Perhaps not.) On these trials, however, the
+children did know *sock* and know that *geeve* was not the name for the sock,
 so they looked to the trolley instead. For @McMurray2012, the problem
-here is of reference selection: Children have to select a visual
-referent for a word. In that model, all words can refer to all visual
+facing a child is reference selection: Children have to select a visual
+referent for a spoken word. In that model, all words can refer to all visual
 referents initially and the model has to prune away unnecessary
-connections to have selective word recognition. In this case, the strong
-connection of the *sock*-sock pairing plus the viability of the
-*geeve*-trolley pairing allow the child to select the correct referent
-for the nonword. In TRACE simulations, @TRACE\_Mispro simulated this
-situation by treating the nonword as a low-frequency word. In both
-cases, the nonword is recognized because it is not affected by lexical
-competition from any other relevant alternatives.
+connections to build up selective word recognition. Development of the
+*sock*-sock pairing pruned away other visual referents or words from
+activating *sock*. Thus, "geeve" is not likely to activate *sock* so
+the viability of the *geeve*-trolley pairing allow the child to select
+the correct referent for the nonword. In TRACE simulations,
+@TRACE_Mispro simulated this situation by treating the nonword as a
+low-frequency word. In both of these situations, the novel nonword is
+recognized because it is not affected by lexical competition from any
+other plausible alternatives. 
+
+This framework also allows us to account for the differences in
+retention for the nonwords and mispronunciations at age 5. In
+@McMurray2012, learning was associative. Developed connections between
+spoken words, lexical items, and visual referents when spoken words and
+visual referents occurred together, and each co-occurence build up the
+connections. On the mispronunciation trial from the second study, a
+child heard a mispronunciation of a familiar word and also saw an image
+of mispronounced word. On average, they tended to interpret the
+mispronunciation as the familiar word. Thus, the familar word competed
+with the mispronunciation, leading the child to develop a weaker
+association between the novel object and mispronunciation. The effect of
+looking behavior, where children who looked more to the familiar image
+on mispronunciation trials showed poor retention, shows how the familiar
+image could impede the association of the mispronunciation and the novel
+objet. In contrast, for unambiguous nonword trials, children could
+associate the novel object and novel word more strongly. This difference
+in lexical competition manifested in the retention performance where
+children demonstrated that children were better able to retain nonwords
+than mispronunciations. 
+
+<!-- individual differences -->
+
+So far, I have described a general framework of word recognition and I
+claimed children's developmental changes in word recognition reflect
+more efficient representations and activation pathways. I now describe
+task differences and individual differences under this framework.
+
+Word learning is a matter of degree. I like to draw a distinction
+between "shallow" receptive knowledge and "deeper" expressive knowledge,
+based on the idea that recognition is easier than generation. But we can
+imagine an even finer continuum with degrees of recognition ability. For
+example, a word can be recognized in one situation but may not be
+recognized in a more challenging situation. For example, @McMurray2012
+tested a word-learning model's comprehension by simulating
+alternative-forced choice (AFC) tasks where a target was pitted against
+competitors. The model showed graded performance, with better
+comprehension on a 3-AFC (2 competitor) tests than 5-AFC tests, and
+better performance on 5-AFC tests than 10-AFC tests. Thus, the 4-AFC
+task in my first study provided a more challenging word-recognition than
+the 2-AFC task in the second study. For example, children demonstrated
+ceiling performance on the nonword condition at age 4, whereas children
+had room to develop each year in the 4-AFC task.
+
+Individual differences in word recognition reflect differences in
+children's lexicons and their representations. Although all the words on
+the 4-AFC were familiar to children, children differed in their peak
+looking probabilities and rate of fixating on the target. In lexical
+processing terms, children differed in their peak activation and the
+rate at which activation reached the target word. Differences in word
+recognition were stable from year to year. Even though all of the
+children became faster, more reliable and more certain during word
+recognition with age, the children who faster and more reliable at age 3
+were also faster and more reliable at age 5. The children who performed
+better at age 3 had more experience and more reliable representations of
+the words---thus, they had a head start and they built on top of that
+advantage. This interpretation can also account for how word recognition
+performance at age 3 correlated with vocabulary scores at later ages.
 
 
 
 
 
+
+
+
+
+and this suggests that children improved on their representations
+
+
+
+
+The mapping between fixation probabilities and word activations in @Allopenna1998 allow us to interpret differences in fixation probabilities as differences in word activations.
+
+
+
+
+
+
+Given this backdrop, how do we account for individual differences in word recognition? Vocabulary size is a reliably predictor of word recognition performance [@MPPaper], so that suggest differences in lexical processing are the result of differences in lexical representation.
+
+
+
+
+
+We know that children can recognize words before they can name them, and this principles makes sense from a computational perspective: 
+
+
+The ability quickly associate a novel word to a novel object reveals a disconnect between lexical knowledge and lexical performance. 
+My first study with four-images is a 4-AFC task, and the second study is a 2-AFC task. 
+
+
+
+
+
+
+"a dissociation between what a model 'knows' (the associative connections), and what it 'does' (performance on comprehension tasks"
+
+
+
+
+So far I have suggested that word recognition in preschoolers draws on mechanisms of 
+continuous activation, multiple levels of representation, cascading activation, and lexical competition through bottom-up activation and lateral inhibition. I have taken for granted that children learn words by developing lexical representations. These representations are phonetically well detailed so that children are sensitive to mispronunciations and phonological competitors. 
 
 
 
@@ -278,7 +378,7 @@ Clinical implications
 ----------------------------------------------------------------------
 
 The results of the first study remind us that words
-are not simply acquired---they are learned and *integrated.* In the first
+are not simply acquired---they are learned and *integrated*. In the first
 study, children's recognition of very familiar words improved each year.
 Children's representations of familiar words continue to develop, even
 if they ostenisbly *know* the word. One might attribute this development
@@ -288,10 +388,15 @@ explanations. The increasing effect of the phonological and semantic
 competitors, however, suggests that changes in lexical representations
 can explain these results.
 
+Word recognition predicts later outcomes, and one common conclusion from this research is that word recognition may provide an early screening tool: "[t]ime-course measures of comprehension in very young language learners could ultimately prove useful in improving early identification of children at risk for persistent language disorders" [@Fernald2012, p. 219]. The developmental results here stress that such a tool has to be developmentally appropriate. Children's processing of real words on the two-image task did not predict language outcomes, but the slightly more challenging nonword condition did yield a small predictive effect. For the more difficult four-image task, individual differences were greatest and most predictive at age 3 and the range of variability decreased with age.
 
+
+For a recent example, XXX found that reaction time on a 2-AFC word recognition task at 18-months predicted vocabulary and non-verbal language outcomes at 54 months in children born preterm. 
 
 Future directions
 ----------------------------------------------------------------------
+
+There are two open questions from this research. First, how does lexical inhibition change over this developmental window? The results from the first study show that phonologically and semantically similar words become more relevant during word recognition as children grow older, but I did not observe any clear changes in how quickly those words are *rejected* as possible interpretations of the input.
 
 When does inhibition come online?
 
