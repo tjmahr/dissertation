@@ -120,12 +120,77 @@ favored an interpretation that focused on stronger connections.
 
 --mispronunciation
 
-Continuous activation and lateral inhibition explain the mispronunciation effects. 
+One prediction of TRACE is that rhymes and rimes (one-syllable rhymes)
+can affect word recognition. But these rhymes are at a disadvantage. Early
+in the processing of a word, all of the action is in the bottom-up
+connections from the phonetic features to the phonological units onto
+the words. Cohorts show an early advantage in word recognition because
+they receive activation before lexical units start to inhibit each
+other. The rhyme mismatch the input from the start of the word, so they
+undergo inhibition early on. But as the word unfolds, subsequent
+phonemes can build up activation of the rhyme word and the word can
+overcome the initial disadvantage. @Allopenna1998 found similarity
+between TRACE activation patterns and adult listeners' looking pattern.
+Namely, adults hear *beaker* and look to the word, but they also
+generate spurious early looks to a cohort *beetle* and late looks to a 
+rhyme *speaker*. (Anecdotally, my name is Tristan, but in grade school,
+I always snapped to attention whenever Kristen's name was called.)
+
+The mechanisms that predict how rhymes can engage in the lexical
+competition also explain the disruptive mispronunciation effects. An
+initial *s* in *suze* sends the listener down a lexical garden path,
+activating /s/-initial words. The arrival of the rest of the word,
+*shoes*, plus the image of the shoes onscreen, supports *shoes* as an
+interpretation of the word. But there is much less certainty in this
+situation. At age 3, we observed 50% looking for *suze* and 80% looking
+for *shoes*. There was a small developmental improvement for
+mispronunciation conditions and the real word condition. For example, at
+age 5, *suze* reaches 60% looking and *shoes* reaches 87% looking.
+Developmentally, children became more likely to activation the target
+when given a mispronunciation, and this change reflects like general
+improvements in activation efficiency.
+
+
+Footnote? It should be noted that these mispronunciations were all
+one-syllable words, so they did not have phonological substance that
+could overlap with the target. If the mispronunciation-target pairs were
+longer like a *beaker*--*speaker* rhyme, we would predict more segments
+would overlap, leading to greater activation of the mispronounced
+target. 
 
 --nonwords
 
+What about the effortless processing of the unambiguous nonwords?
+Surely, children do not have a lexical item *geeve* to activate the
+first time they hear the word. (That is probably a dubious assumption
+because when would a lexical item appear?) On these trials, however, the
+children did know *sock* and that *geeve* was not the name for the sock,
+so they looked to the trolley instead. For @McMurray2012, the problem
+here is of reference selection: Children have to select a visual
+referent for a word. In that model, all words can refer to all visual
+referents initially and the model has to prune away unnecessary
+connections to have selective word recognition. In this case, the strong
+connection of the *sock*-sock pairing plus the viability of the
+*geeve*-trolley pairing allow the child to select the correct referent
+for the nonword. In TRACE simulations, @TRACE\_Mispro simulated this
+situation by treating the nonword as a low-frequency word. In both
+cases, the nonword is recognized because it is not affected by lexical
+competition from any other relevant alternatives.
 
-Early in the processing of a word, all of the action is in the bottom-up connections from the phonetic features to the phonological units onto the words. Thus, cohorts show an early advantage in word recognition.
+
+
+
+
+
+
+
+
+
+
+"Crucially, the suppression or pruning of the irrelevant weights is the dominant factor—the bulk of word learning may consist of learning which objects and words do not go together"
+
+When a child knows
+answer is  argues that children do not need one in the moment either. 
 
 Cohorts exhibit a strong effect on word recognition because they
 
