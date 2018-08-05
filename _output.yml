@@ -62,7 +62,7 @@ buckydown::thesis_pdf:
   highlight: default
   template: assets/template.tex
   includes:
-    in_header: "assets/hyphenation.tex"
+    in_header: "./assets/hyphenation.tex"
 
 bookdown::html_document2:
   pandoc_args: [

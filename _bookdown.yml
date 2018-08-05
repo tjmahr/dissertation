@@ -22,8 +22,8 @@ rmd_files:
   - 20-part-aim2.Rmd
   - 21-aim2-introduction.Rmd
   - 22-aim2-methods.Rmd
-#  - 22-referent-selection.Rmd
-#  - 23-mispronunciations-notebook.Rmd
+  - 22-referent-selection.Rmd
+  - 23-mispronunciations-notebook.Rmd
   - 28-aim2-general-discussion.Rmd
   - 29-h-check.Rmd
   - 30-shared-discussion.Rmd
@@ -32,7 +32,7 @@ rmd_files:
   - 91-app-aim1-items.Rmd
   - 92-app-aim1-models.Rmd
   - 95-app-aim2-items.Rmd
-#  - 96-app-aim2-models.Rmd
+  - 96-app-aim2-models.Rmd
   - 96-mp-items.Rmd
   - 97-app-related-work.Rmd
   - 99-references.Rmd

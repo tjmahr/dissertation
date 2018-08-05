@@ -216,18 +216,19 @@ with these features. The linear model was:
 `r insert_html_math()`
 \small
 \begin{align*}
-   \text{log-odds}(\mathit{looking\,}) =\
+   \text{log-odds}(\mathit{looking}) =\
     &\beta_0 + 
       \beta_1\text{Time}^1 + 
       \beta_2\text{Time}^2 + 
       \beta_3\text{Time}^3\ + 
-      &\text{[nonword growth curve]} \\
+      &\text{[nonword curve]} \\
     (&\gamma_0 + 
       \gamma_1\text{Time}^1 + 
       \gamma_2\text{Time}^2 +
       \gamma_3\text{Time}^3)*\text{Condition} \
-      &\text{[adjustments for real words]} \\
+      &\text{[real words]} \\
 \end{align*}
+\normalsize
 `r insert_html_math()`
 
 I fit a separate model for each year of the study.
@@ -255,7 +256,7 @@ to 100 model-estimated growth curves.
 
 (ref:aim2-real-nonword-means) Averages of participants' growth curves in each condition and age. The lines represent 100 posterior predictions of the group average. 
 
-```{r aim2-real-nonword-means, fig.cap = "(ref:aim2-real-nonword-means)", out.width = "80%", fig.height = 4, fig.width = 6}
+```{r aim2-real-nonword-means, fig.cap = "(ref:aim2-real-nonword-means)", out.width = out_tex100_else80, fig.height = 4, fig.width = 6}
 theme_set(theme_teej())
 # m_tp1
 # m_tp2
@@ -359,8 +360,9 @@ ggplot(some_fits) +
       Study = "Age 3",
       Time = 600, 
       Prop = .15, 
-      label = constants$note_unfam %>% 
-        strwrap(width = 20) %>% paste0(collapse = "\n")),
+      label = "Trials starting on distractor" %>% 
+        strwrap(width = 20) %>% 
+        paste0(collapse = "\n")),
     size = 3, 
     hjust = 0,
     color = constants$col_off_black,

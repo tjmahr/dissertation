@@ -541,6 +541,7 @@ Altogether, the model contained the following terms:
    & f_3(\text{Time}, \text{Age4} - \text{Age5})\ +      & \\
    & f_i(\text{Time}, \text{Child}_i)                    &\text{[by-child random smooths]} \\
 \end{align*}
+\normalsize
 `r insert_html_math()`
 
 ```{r stats-from-phon-gamms}
@@ -1340,6 +1341,7 @@ vocabulary.
    & \beta_{1}\text{Age}\ +     &\text{[child-level predictors]} \\
    & \beta_{2}\text{Vocabulary} & \\
 \end{align*}
+\normalsize
 `r insert_html_math()`
 
 I tested whether phonemic discrimination ability at age 3 predicted
@@ -1362,6 +1364,7 @@ therefore:
    & f_3(\text{Time} * \text{Ability})\ +   &\text{[interaction smooth]} \\
    & f_i(\text{Time}, \text{Child}_i)       &\text{[by-child random smooths]} \\
 \end{align*}
+\normalsize
 `r insert_html_math()`
 
 ```{r load-test-scores, include = FALSE}

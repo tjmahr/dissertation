@@ -118,6 +118,7 @@ indicators to interact with the growth curve parameters:
       \delta_{3}\text{Time}^3)*\text{Age}\,\text{5} \
       &\text{[adjustments for age 5]} \\
 \end{align*}
+\normalsize
 `r insert_html_math()`
 
 These year-by-growth-curve-feature terms captured how the shape of the growth

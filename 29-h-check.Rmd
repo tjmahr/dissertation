@@ -70,3 +70,5 @@ making it too difficult to generalize about different kinds of
 mispronunciations. Plus, children seemed to not know *rice* as well as
 the other familiar words which makes the problem of measuring a
 mispronunciation penalty more difficult.
+
+\setlength{\parindent}{1.5em}
