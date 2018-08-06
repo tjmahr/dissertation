@@ -165,3 +165,14 @@ Some text for this block.
 Test a citation. 
 This experiment is an adaptation of the mispronunciation detection task
 by @WhiteMorgan2008 and @MPPaper. 
+
+```markdown
+I want to demo a footnote.[^hey-hey]
+
+[^hey-hey]: How are you?!
+```
+
+I want to demo a footnote.[^hey-hey]
+
+[^hey-hey]: How are you?!
+

@@ -99,6 +99,11 @@ noindent
 leftskip
 parskip
 8pt
+excitatory
+suze
+geeve
+nonlinguistic
+sublexical
  - index.Rmd
 documentclass
 bookdown
@@ -539,3 +544,24 @@ aim1-gca-models
 df
  - 96-mp-items.Rmd
 aim2-mp-items
+ - 30-shared-discussion.Rmd
+Fernald2001
+Swingley1999
+Allopenna1998
+mispro-substance
+McMurray2012
+TRACE_Mispro
+10-AFC
+Rigler2015
+16-year-old
+Blomquist2017
+12--13-year-old
+Kapnoula2015
+Magnuson2003
+Mirman2011
+McMurray2010
+ime-course
+Fernald2012
+WhiteMorgan2008
+aim1-discussion
+Leach2007

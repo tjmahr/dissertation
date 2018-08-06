@@ -29,7 +29,7 @@ As a baseline for word recognition mechanisms, I would start with 1) a
 continuous activation model 2) that uses different levels of
 representation---in other words, TRACE [@TRACE]. In my preceding
 interpretations of the data from Aim 1 and Aim 2 I have assumed a
-TRACE-like archecture, so it is helpful to briefly review what this
+TRACE-like architecture, so it is helpful to briefly review what this
 model does.
 
 TRACE interprets an input pattern by spreading energy (activation)
@@ -77,7 +77,7 @@ phonological competitors over unrelated words from the first study. The
 initial phoneme in a word activates a cohort of words that share that
 sound, so that the cohorts briefly represent more plausible
 interpretations of the target than words that are not phonologically
-related. A child can act on that early information and shift their gaze
+related. A child acts on that early information and shifts their gaze
 to the phonological competitor.
 
 Words in TRACE compete with each other through lateral inhibition, so
@@ -86,7 +86,7 @@ Inhibition allows the model to reinforce or revise an interpretation. In
 the earlier example, the arrival of /m/ after /bi/ would strongly favor
 *beam* as the most plausible interpretation of the word, and *beam* will
 inhibit the other candidates like *beak* or *beat* so that it can be the
-decisive interpreation of the word. The transient effect of the
+decisive interpretation of the word. The transient effect of the
 phonological competitor suggests lateral inhibition: The advantage of
 the phonological competitor over the unrelated word is short-lived
 because the target word builds up activation and inhibits the
@@ -96,7 +96,7 @@ phonological competitor.
 
 To account for the effect of the semantic competitor, we need to make a
 few more assumptions. Semantic information is not explicitly included as
-a part of TRACE but we can stipulate that semantic information is part
+a part of TRACE, but we can stipulate that semantic information is part
 of a word's lexical representation. We also need a way for semantically
 related words to co-activate, so that hearing *bee* will generate some
 spurious looks to *fly*. In this case, we can assume that there are
@@ -107,30 +107,41 @@ arrangement. For children to generate looks to the semantic competitor,
 they first to need to build up activation of the word and that
 activation would cascade over to semantic relatives. The time course of
 activation here is consistent with the late effects of the semantic
-competitor. The semantic competitor can exerts an advantage over the
+competitor. The semantic competitor exerts an advantage over the
 unrelated word after semantic information comes online.
 
 The relative advantage of the phonological and semantic competitors
 increased each year, as did children's overall recognition of the
 familiar word. In other words, children became better at activating the
-target and the words related to the target. In Chapter XX, I argued that
-these developmental changes in the first study reflected stronger
+target *and* the words related to the target. In
+[Chapter \@ref(aim1-discussion)](#aim1-discussion), I argue that these
+developmental changes in the first study reflected stronger bottom-up
 phoneme--word connections (for greater activation of the target and
 phonological competitors) and stronger semantic connections between
-words. I did not observe any developmental changes in inhibition, so I 
-favored an interpretation that focused on stronger connections.
+words. Alternatively, one might assume that phonologically similar words
+coactivate in a similar way as the semantically related words activate
+each other. The problem with this interpretation is that it would not
+resolve lexical ambiguity to have similar sounding words supporting each
+other. The phonological similarity between words lives not in the
+connections between them but in the phonemes that the words share and
+which mutually activate them. The phonologically related words compete
+with each other, and they may inhibit each other so that the most
+plausible interpretation can quickly suppress competing interpretations.
+For these data, I did not observe any developmental changes in
+inhibition, so I favored an interpretation that focused on stronger
+bottom-up connections.
 
 
 <!-- mispronunciations -->
 
 One prediction of TRACE is that rhymes and rimes (one-syllable rhymes)
 can affect word recognition. But these rhymes are at a disadvantage. Early
-in the processing of a word, all of the action is in the bottom-up
+in the processing of a word, all the action is in the bottom-up
 connections from the phonetic features to the phonological units onto
 the words. Cohorts show an early advantage in word recognition because
 they receive activation before lexical units start to inhibit each
-other. The rhyme mismatch the input from the start of the word, so they
-undergo inhibition early on. But as the word unfolds, subsequent
+other. The rhyme mismatches the input from the start of the word, so it
+undergoes inhibition early on. But as the word unfolds, subsequent
 phonemes can build up activation of the rhyme word and the word can
 overcome the initial disadvantage. @Allopenna1998 found similarity
 between TRACE activation patterns and adult listeners' looking pattern.
@@ -145,27 +156,31 @@ initial *s* in *suze* sends the listener down a lexical garden path,
 activating /s/-initial words. The arrival of the rest of the word,
 *shoes*, plus the image of the shoes onscreen, supports *shoes* as an
 interpretation of the word. But there is much less certainty in this
-situation. At age 3, we observed 50% looking for *suze* and 80% looking
-for *shoes*. There was a small developmental improvement for
-mispronunciation conditions and the real word condition. For example, at
-age 5, *suze* reaches 60% looking and *shoes* reaches 87% looking.
-Developmentally, children became more likely to activation the target
-when given a mispronunciation, and this change reflects like general
-improvements in activation efficiency.
+situation. At age 3, we observed 80% looking to the image of the shoes
+for the real word *shoes* compared to 50% looking (to the shoes) for
+*suze*.[^mispro-substance] There was a small developmental improvement
+for mispronunciation conditions and the real word condition. For
+example, at age 5, *suze* reaches 60% looking to the familiar image and
+*shoes* reaches 87% looking. Developmentally, children became more
+likely to activate the target when given a mispronunciation, and this
+change likely reflects the general improvements in activation
+efficiency. Gains in activation efficiency are consistent with the
+results familiar word recognition where children showed increases in
+overall looking probability and in how quickly looking probabilities
+changed in a trial.
 
 
-Footnote? It should be noted that these mispronunciations were all
-one-syllable words, so they did not have phonological substance that
-could overlap with the target. If the mispronunciation-target pairs were
-longer like a *beaker*--*speaker* rhyme, we would predict more segments
-would overlap, leading to greater activation of the mispronounced
-target. 
+[^mispro-substance]: It should be noted that these mispronunciations
+were all one-syllable words, so they did not have phonological substance
+that could overlap with the target. If the mispronunciation-target pairs
+were longer like a *beaker*--*speaker* rhyme, more segments would
+overlap, leading to greater activation of the mispronounced target.
 
 <!-- nonwords -->
 
 What about the effortless processing of the unambiguous nonwords?
 Surely, children do not have a lexical item *geeve* to activate the
-first time they hear the word. (Perhaps not.) On these trials, however, the
+first time they hear the word. On these trials, however, the
 children did know *sock* and know that *geeve* was not the name for the sock,
 so they looked to the trolley instead. For @McMurray2012, the problem
 facing a child is reference selection: Children have to select a visual
@@ -174,10 +189,10 @@ referents initially and the model has to prune away unnecessary
 connections to build up selective word recognition. Development of the
 *sock*-sock pairing pruned away other visual referents or words from
 activating *sock*. Thus, "geeve" is not likely to activate *sock* so
-the viability of the *geeve*-trolley pairing allow the child to select
+the viability of the *geeve*-trolley pairing allows the child to select
 the correct referent for the nonword. In TRACE simulations,
 @TRACE_Mispro simulated this situation by treating the nonword as a
-low-frequency word. In both of these situations, the novel nonword is
+low-frequency word. In both situations, the novel nonword is
 recognized because it is not affected by lexical competition from any
 other plausible alternatives. 
 
@@ -185,17 +200,17 @@ This framework also allows us to account for the differences in
 retention for the nonwords and mispronunciations at age 5. In
 @McMurray2012, learning was associative. Developed connections between
 spoken words, lexical items, and visual referents when spoken words and
-visual referents occurred together, and each co-occurence build up the
+visual referents occurred together, and each co-occurrence build up the
 connections. On the mispronunciation trial from the second study, a
 child heard a mispronunciation of a familiar word and also saw an image
-of mispronounced word. On average, they tended to interpret the
-mispronunciation as the familiar word. Thus, the familar word competed
+of the familiar (mispronounced) word. On average, they tended to interpret the
+mispronunciation as the familiar word. Thus, the familiar word competed
 with the mispronunciation, leading the child to develop a weaker
 association between the novel object and mispronunciation. The effect of
 looking behavior, where children who looked more to the familiar image
 on mispronunciation trials showed poor retention, shows how the familiar
 image could impede the association of the mispronunciation and the novel
-objet. In contrast, for unambiguous nonword trials, children could
+object. In contrast, for unambiguous nonword trials, children could
 associate the novel object and novel word more strongly. This difference
 in lexical competition manifested in the retention performance where
 children demonstrated that children were better able to retain nonwords
@@ -230,7 +245,7 @@ the 4-AFC were familiar to children, children differed in their peak
 looking probabilities and rate of fixating on the target. In lexical
 processing terms, children differed in their peak activation and the
 rate at which activation reached the target word. Differences in word
-recognition were stable from year to year. Even though all of the
+recognition were stable from year to year. Even though all the
 children became faster, more reliable and more certain during word
 recognition with age, the children who faster and more reliable at age 3
 were also faster and more reliable at age 5. The children who performed
@@ -242,45 +257,62 @@ performance at age 3 correlated with vocabulary scores at later ages.
 
 ### Open questions about word recognition mechanisms
 
-There are three open questions from this research. First, how does lexical
-inhibition change over this developmental window? The results from the
-first study show that phonologically and semantically similar words
-become more relevant during word recognition as children grow older.
-Thus, the words became more active, compared to the unrelated word. I
-did not observe any clear changes in how quickly those words are
+There are three open questions from this research. First, how does
+lexical inhibition change over this developmental window? The results
+from the first study show that phonologically and semantically similar
+words become more relevant during word recognition as children grow
+older. Thus, the words became more active, compared to the unrelated
+word. I did not observe any clear changes in how quickly those words are
 *rejected* as possible interpretations of the input, and thus, I could
-not make any claims about the development of inhibition. 
+not make any claims about the development of inhibition. In principle,
+these developmental changes could have been observed in this experiment.
+Lexical inhibition would affect how quickly the phonological
+competitor's advantage decays as the target word becomes the favored
+interpretation. A developmental change in lexical inhibition would cause
+the advantage to decay more quickly at older ages. But the growth curves
+observed here parallel; they decayed at the same rate. Changes in
+lexical inhibition are detectable by an experiment like this, with a
+target, competitor and an unrelated word, but in the present case, I did
+not detect these changes. Thus, developmental changes in lexical
+inhibition during the preschool years remains an open question.
 
-Based on other work, we could expect older children to show greater
+Based on other work, I expect older children to show greater
 inhibition. @Rigler2015 showed that 9-year-old children were more
-sensitive to phonological cohorts and rimes than 16-year-old children,
+sensitive to phonological cohorts and rimes than 16-year-old listeners,
 suggesting children need to develop inhibitory connections that suppress
 the interference from these words. @Blomquist2017
-used a cross-splicing paradigm to test lexical inhibition in 7--8-
+used a cross-splicing paradigm to test lexical inhibition in 7--8-year-old
 versus 12--13-year-old children. In this paradigm, a target like *cap*
-is created by splicing initial *ca* onset with a different tokne
-(ca(p)p), with a cohort competitor (ca(t)p) and a nonword (ca(k)p), the
-idea being that the cohort splice will favor *cat* and inhibit *cap*
-whereas a nonword splice cannot inhibit *cap*. This manipulation held in
-both groups but the older children were more disrupted by the cohort
-splice. It would revealing to see both paradigms applied to this age
-range. For the preschool years, however, the trajectory seems to be the
-development of connections so that the phonological competitors can
-participate in word recognition with later childhood being a time to
-develop inhibitory connections. In other words, a child has to develop
-sensitivity to cohorts first in order to demonstrate the ability to
-quickly inhibit them.
+is created by splicing an initial *ca* onset with a different token
+(*ca(p)p*), with a cohort competitor (*ca(t)p*) and a nonword (*ca(k)p*), the
+idea being that the sublexical information in the cohort splice will
+favor *cat* and inhibit *cap* whereas a nonword splice cannot inhibit
+*cap*. This manipulation held in both groups, but the older children
+were more disrupted by the cohort splice. It would be revealing to see both
+paradigms applied to this age range. For the preschool years, however,
+the trajectory seems to be the development of connections so that the
+phonological competitors can participate in word recognition with later
+childhood being a time to develop inhibitory connections. In other
+words, a child has to develop sensitivity to cohorts first in order to
+demonstrate the ability to quickly inhibit them.
 
-A second open question is when does a nonword start to interfere with
-word recognition in children at this age. For adults, nonwords can
-affect processing very quickly. @Kapnoula2015 used a cross-splicing
-paradigm and observed that in adults, newly learned words compete with
-familiar ones immediately. @Magnuson2003 trained adult participants with
-artificial lexicons and observed that after one day of training, cohort
-and rimes effects *within the artificial lexicon* were comparable, but
-after a second day, the cohort showed an early advantage. For
-preschool-age children, I would expect children to learn show cohort and
-rime effects, but sensitivity to cross-splicing is an open question.
+A second open question is when does a nonword engage in lexical
+competition and interfere with word recognition in children at this age.
+For adults, nonwords can affect processing very quickly. @Kapnoula2015
+used a cross-splicing paradigm and observed that in adults, newly
+learned words compete with familiar ones immediately. @Magnuson2003
+trained adult participants with artificial lexicons and observed that
+after one day of training, cohort and rimes effects *within the
+artificial lexicon* were comparable, but after a second day, the cohort
+showed an early advantage. For preschoolers, I would expect
+them to show cohort and rime effects with enough training. The
+prediction is based on the competitor effects observed in the first
+study where age-5 children showed the early advantage of the
+phonological competitor over the unrelated word. Sensitivity to lexical
+inhibition via cross-splicing is an open question for preschoolers in
+general, even for familiar words. If lexical inhibition develops over
+later childhood, it is conceivable that preschoolers could show equal
+sensitivity to cross-splicing from cohorts and nonwords. 
 
 A third open question, given the previous discussion of models and
 mechanisms, is whether a word recognition model like TRACE can replicate
@@ -289,11 +321,31 @@ that it would not be able to simulate the results from each year, given
 that it has been used to simulate word-recognition data from adults
 [@Allopenna1998], adults with aphasia [@Mirman2011], toddlers
 [@TRACE_Mispro], and adolescents with specific language impairment
-[@McMurray2010]. Of interest will be the developmental story: Which
-parameters would need to change each year to have the model match the
-empirical data? I would posit that the model would to use some
-combination of changing the rate of lexical activation and changing the
-strength of lexical inhibition to match these developmental changes.
+[@McMurray2010]. These simulations shed light on their respective
+listener populations. For the toddler data, @TRACE_Mispro had to use
+reduced lexical inhibition parameters in order to replicate graded
+mispronunciation effects of @WhiteMorgan2008, suggesting that lexical
+inhibition is not a crucial feature of toddler word recognition.
+@McMurray2010 used TRACE simulations with different modeling parameters
+to test different theories of specific language impairment. Ultimately,
+they found that lexical decay—“the ability to maintain words in memory”
+(p. 23)—was the most important model parameter, implying that individual
+differences in word recognition for listeners with specific language
+impairment are rooted in lexical processes (and not perceptual or
+phonological ones). 
+
+For the current data, the goal of the simulations would be the
+developmental story: Which parameters would need to change each year to
+have the model match the empirical data? I would posit that the changes
+would involve some manipulation of the rate of lexical activation so
+that bottom-up information can activate relevant words the more quickly.
+I would also expect changes in the degree of lexical inhibition to play
+a role, based on the simulations in @McMurray2010 in which cohort
+effects increased as lexical inhibition decreased. Even though I did not
+observe any changes in lexical inhibition in terms of how quickly the
+competitor advantages decayed in the first study, it is still plausible
+that lexical inhibition changes are needed to accommodate increased
+bottom-up activation.
 
 
 
@@ -302,14 +354,14 @@ Clinical implications
 
 The results of the first study remind us that words
 are not simply acquired---they are learned and *integrated*. In the first
-study, children's recognition of very familiar words improved each year.
-Children's representations of familiar words continue to develop, even
-if they ostensibly *know* the word. One might attribute this development
-change to improvements in visual processing and sensory processing or
-some other nonlinguistic factor. This study cannot rule out those
-explanations. The increasing effect of the phonological and semantic
-competitors, however, suggests that changes in lexical representations
-can explain these results.
+study, children's recognition of highly familiar words improved each year.
+Children's representations of familiar words continue to develop,
+even if they ostensibly *know* the word. One might attribute this
+development change to improvements in visual processing and sensory
+processing or some other nonlinguistic factor. This study cannot rule
+out those explanations. The increasing effect of the phonological and
+semantic competitors, however, suggests that changes in lexical
+representations can explain these results.
 
 Part of the promise of early eyetracking based research is that word
 recognition can predict later outcomes. One common conclusion in
@@ -323,9 +375,9 @@ the two-image task did not predict language outcomes, but the slightly
 more challenging nonword condition did yield a small predictive effect.
 For the more difficult four-image task, individual differences were
 greatest and most predictive at age 3 and the range of variability
-decreased with age. Thus, word recognition is perhaps best understood as
-a lexical measure so it needs to be scaled with children's vocabulary
-norms.
+decreased with age. Thus, word recognition of familiar words is perhaps
+best understood as a lexical measure that it needs to be scaled with
+children's vocabulary norms.
 
 Finally, the observed difficulty of retaining mispronunciations
 emphasizes that children will err on the side of known words during
@@ -365,9 +417,13 @@ held over the preschool years. The results here indicate that the
 differences are task-specific: A more age-appropriate four-image task
 could better differentiate children than a simpler two-image one.
 
-A final contribution is that children generally master
-mutual-exclusivity-type referent selection by age 4. Children can
-effortless map nonwords to novel objects, provided that the nonword is
-not under competition from any known words, as was observed for the
-mispronunciations.
+A final contribution comes from the second study. This study is limited
+by how apparently easy it was for preschoolers. After all, it was
+a 2-AFC task where one of the images is always a familiar object and the
+other is an unfamiliar object. Those limitations were revealing, showing
+that this design does not scale up for preschoolers developmentally.
+Children mastered mutual-exclusivity-type referent selection on this
+task by age 4. Children could effortlessly associate nonwords to novel
+objects, provided that the nonword is not under competition from any
+known words, as was observed for the mispronunciations.
 
