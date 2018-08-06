@@ -1,4 +1,5 @@
 \documentclass[12pt,oneside,letterpaper]{memoir}
+\usepackage[american]{babel}
 
 \usepackage{natbib}
 
@@ -43,49 +44,20 @@
   \usepackage{graphicx}
 \fi
 
-% \usepackage{makeidx}
-% \makeindex
-
-{\theoremstyle{plain}
-\newtheorem{thm}{Theorem}[chapter]
-\newtheorem{cor}[thm]{Corollary}
-\newtheorem{define}[thm]{Definition}
-\newtheorem{exmpl}[thm]{Example}
-}
-{\theoremstyle{remark}
-\newtheorem{rmk}[thm]{Remark}
-}
-
-\newtheoremstyle{customsty1}
-{3pt}%
-{3pt}%
-{}% --- body font
-{}% --- indent amount
-{\bfseries}% --- Theorem head font
-{:}% --- Punctuation after head
-{.5em}% --- space after head
-{}% --- theorem head spec (can be left empty, meaning 'normal')
-
-% Define 'newtheorems' that use ``customsty1''
-{\theoremstyle{customsty1}
-}
-
-
 %% This is my infobox class
 \usepackage{xcolor}
 \usepackage{mdframed}
-% \mdfsetup{skipabove=5pt,skipbelow=0pt}
 \definecolor{infoblue}{RGB}{238, 247, 250}
 
 % Helpful demo of using mdframded
 % https://latex.org/forum/viewtopic.php?p=80700&sid=e0de1d6e3f5658d0778166a187b2a7ec#p80700
 \newenvironment{infobox}
    {
-    \begin{spacing}{0.95}\small
+    \begin{singlespace}\begin{small}
      % \raggedright
      % \textbf{Example: }%
    }{
-   \end{spacing}
+   \end{small}\end{singlespace}
    }
 \surroundwithmdframed[
    hidealllines=true,
@@ -121,6 +93,8 @@
   \usepackage{fontspec,xltxtra,xunicode}
   \defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
   \newfontfamily\unicodefont{Junicode}
+  % \usepackage{polyglossia}
+  % \setdefaultlanguage[variant=american]{english}
 \else
   \ifluatex
     \usepackage{fontspec}
@@ -167,7 +141,7 @@
 
 \usepackage{framed}
 \definecolor{shadecolor}{HTML}{f2f3f5}
-\newenvironment{Shaded}{\begin{snugshade}\begin{singlespace}\small}{\end{singlespace}\end{snugshade}}
+\newenvironment{Shaded}{\begin{snugshade}\begin{singlespace}\begin{small}}{\end{small}\end{singlespace}\end{snugshade}}
 
 \newcommand{\KeywordTok}[1]{\textcolor{cyan}{#1}}
 
@@ -563,7 +537,6 @@ $for(signature)$\indent $signature$$sep$\\*$endfor$
   \end{center}
 }
 
-% \def\endumiabstract{\vfill \hfill\@advisorname\par\newpage}
 
 
 %============================================================================
@@ -662,7 +635,7 @@ $for(signature)$\indent $signature$$sep$\\*$endfor$
 % - produce the table of contents entry for the nomenclature section
 % - start a new page with COLOPHON centered two inches from the top
 %=============================================================================
-\def\colophon{\separatorpage{DISCARD THIS PAGE}
+\def\colophon{
   \chapter*{Colophon}
   \addcontentsline{toc}{chapter}{Colophon}}
 \def\endcolophon{\par\newpage}
@@ -674,7 +647,7 @@ $for(signature)$\indent $signature$$sep$\\*$endfor$
 % - produce the table of contents entry for the list of symbols section
 % - start a new page with LIST OF SYMBOLS centered two inches from the top
 %=============================================================================
-\def\listofsymbols{\separatorpage{DISCARD THIS PAGE}
+\def\listofsymbols{
   \eject
   \chapter*{LIST OF SYMBOLS}
   \addcontentsline{toc}{chapter}{LIST OF SYMBOLS}}
@@ -689,7 +662,6 @@ $for(signature)$\indent $signature$$sep$\\*$endfor$
 % - start a new page with VITA centered two inches from the top
 %=============================================================================
 \def\vita{
-%  \separatorpage{VITA}         % UW doesn't require this EB
   \chapter*{VITA}
   \addcontentsline{toc}{chapter}{VITA}}
 \def\endvita{\par\newpage}
@@ -898,7 +870,8 @@ $for(signature)$\indent $signature$$sep$\\*$endfor$
 %\committeeseven{Iam A. Professor, Professor, Computer Sciences}
 
 
-\clearpage\pagenumbering{roman}  % This makes the page numbers Roman (i, ii, etc)
+% This makes the page numbers Roman (i, ii, etc)
+\clearpage\pagenumbering{roman}
 
 \begin{document}
 
@@ -935,10 +908,7 @@ $for(signature)$\indent $signature$$sep$\\*$endfor$
 \chapterstyle{deposit}
 \pagestyle{deposit}
 
-
-
-
-% CONTENTS, TABLES, FIGURES
+%% CONTENTS, TABLES, FIGURES
 \renewcommand{\printtoctitle}[1]{\chapter*{#1}}
 \renewcommand{\printloftitle}[1]{\chapter*{#1}}
 \renewcommand{\printlottitle}[1]{\chapter*{#1}}
@@ -980,87 +950,44 @@ $for(signature)$\indent $signature$$sep$\\*$endfor$
 \listoffigures
 
 \clearpage
-% NOMENCLATURE
-% \begin{conventions}
-% % \begin{description}
-% % \item{\makebox[0.75in][l]{term}
-% %        \parbox[t]{5in}{definition\\}}
-% % \end{description}
-% \input{conventions}
-% \end{conventions}
 
-% \advisorname{Gottlob Frege}
-% \advisortitle{Professor}
-% ABSTRACT
-% ACKNOWLEDGMENTS
 
+%% ACKNOWLEDGMENTS are part of front matter
 \begin{acks}
 
-% \begin{wbepi}{David C.~Makinson (1965)}
-% It is customary for authors of academic books to include in their prefaces statements such as this: ``I am indebted to ... for their invaluable help; however, any errors which remain are my sole responsibility.'' Occasionally an author will go further. Rather than say that if there are any mistakes then he is responsible for them, he will say that there will inevitably be some mistakes and he is responsible for them....
+%% This template had support for a fancy epigraph at the start of the
+%% acknowledgements.
 %
-% Although the shouldering of all responsibility is usually a social ritual, the admission that errors exist is not --- it is often a sincere avowal of belief. But this appears to present a living and everyday example of a situation which philosophers have commonly dismissed as absurd; that it is sometimes rational to hold logically incompatible beliefs.
+% \begin{wbepi}{David C.~Makinson (1965)}
+% It is customary for authors of academic books to include in their prefaces
+% statements such as this: ``I am indebted to ... for their invaluable help;
+% however, any errors which remain are my sole responsibility.'' Occasionally an
+% author will go further. Rather than say that if there are any mistakes then he
+% is responsible for them, he will say that there will inevitably be some mistakes
+% and he is responsible for them....
+%
+% Although the shouldering of all responsibility is usually a social ritual, the
+% admission that errors exist is not --- it is often a sincere avowal of belief.
+% But this appears to present a living and everyday example of a situation which
+% philosophers have commonly dismissed as absurd; that it is sometimes rational to
+% hold logically incompatible beliefs.
 % \end{wbepi}
 
-$acknowledgements$
-
+% I sometimes am inconsistent
+$if(acknowledgments)$
+  $acknowledgments$
+$else$
+  $acknowledgements$
+$endif$
 
 \end{acks}
 
-% \begin{abstract}
 
-% \end{abstract}
-
+% switch to arabic page numbers
 \clearpage\pagenumbering{arabic}
-
-%%% END STUFF TAKEN FROM WITHESIS EXAMPLE FILE
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 $body$
 
-
-
-
-
-
-
-
-
-
-
-
-%% Now include the tex files for each chapter, like so (I put these in separate dirs):
-% \include{intro/intro}
-% \include{motivation/motivation}
-% \include{related/related}
-
-%% etc, etc.
-
-%% Do you have appendices?  If so, add them here, just like chapters.
-% \begin{appendices}
-% \include{backmatter/appendix1}
-% \end{appendices}
-
-
-%% McBride is a very nice style (some version is included in this distribution)
-% \bibliographystyle{mcbride}
-% \bibliography{your-bib-file}
-
-%% Want an index?  Neither did I.
-%\printindex
+% I removed any bibliography and appendix stuff because Pandoc will do it.
 
 \end{document}
