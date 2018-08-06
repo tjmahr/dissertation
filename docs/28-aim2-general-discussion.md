@@ -51,11 +51,11 @@ the real word condition, particularly for younger children as seen in
 was an advantage in the nonword condition in later ages. Part of this
 advantage may be a novelty bias. @TRACE_Mispro used the TRACE model of
 word recognition [@TRACE] to simulate these kinds of situations. In
-one set of simulations, the novel object recieves a novelty/salience
+one set of simulations, the novel object receives a novelty/salience
 boost to resting activation. During presentation of the nonword, none of
 the child's known words build up enough activation to overtake the novel
 word. In an alternative set of simulations, the novel word is added as
-to the lexicon as a low-frequency word, and the absense of competition
+to the lexicon as a low-frequency word, and the absence of competition
 of any familiar words causes the novel word to win out. In both of these
 accounts, children can quickly associate the novel object with a nonword
 because there are no familiar words to interfere with the processing.
@@ -98,7 +98,7 @@ year-over-year developmental changes in children's performance. Children
 were successful at recognizing real words and fast-selecting referents
 for nonwords at age 3, and by age 4, a quarter of the children performed
 at ceiling on the nonword condition. The most difficult condition, based
-on the absense of ceiling effects, was the mispronunciation condition in
+on the absence of ceiling effects, was the mispronunciation condition in
 which children showed much more uncertainty on how to process these
 words. For this condition, a developmental trend was also observed where
 preschoolers at age 5 had a larger preference for the familiar object on
@@ -118,8 +118,8 @@ out on categories of mispronunciation that may be more tolerable and
 where that tolerability may itself change over development.
 
 As I note in [Appendix \@ref(aim2-mp-items)](#aim2-mp-items), the small
-repertoirse of mispronunciation is another limitation for this study. It
-is concievable that specific mispronunciations change in severity with
+repertoire of mispronunciation is another limitation for this study. It
+is conceivable that specific mispronunciations change in severity with
 development, even though the canonical form of the word is a familiar
 and well known word. In this study, for example, the distance between
 the *girl* and *dirl* increased each year, even though *girl* was well
@@ -131,10 +131,10 @@ looks as many looks as age-4 *dirl*. Do children know *rice* less or
 accept *dirl* more? With so few items, it is unclear whether these
 differences are accidental or systematic.
 
-One implications for this research is that children's recognition of
+One implication for this research is that children's recognition of
 familiar words and referent selection for nonwords improved a modest
 amount over the preschool years. Although these tasks can be done by
-toddlers, full mastery does not begin emerge until age 4. This finding
+toddlers, full mastery does not begin to emerge until age 4. This finding
 agrees with the main finding from my analysis of familiar word
 recognition: Although children can ostensibly know a word very well,
 their recognition and processing of that word can still improve during

@@ -36,7 +36,10 @@ mispronunciations.
 
 (ref:mp-vs-real) Average proportion of looks to the familiar object for real words and mispronunciations. A *dog*/*tog* pair was administered at age 3 but it was replaced by *rice*/*wice* at age 4.
 
-![(\#fig:mp-vs-real)(ref:mp-vs-real)](96-mp-items_files/figure-docx/mp-vs-real-1.png)
+<div class="figure" style="text-align: center">
+<img src="96-mp-items_files/figure-html/mp-vs-real-1.png" alt="(ref:mp-vs-real)" width="100%" />
+<p class="caption">(\#fig:mp-vs-real)(ref:mp-vs-real)</p>
+</div>
 
 *Rice* and *wice*
 are indeed very similar, but children do not know *rice* very well it
@@ -58,4 +61,7 @@ happens with *shoup* for *soup*.
 
 (ref:mp-real-diffs) Difference between the average proportion of looks to real words and mispronunciations.
 
-![(\#fig:mp-real-diffs)(ref:mp-real-diffs)](96-mp-items_files/figure-docx/mp-real-diffs-1.png)
+<div class="figure" style="text-align: center">
+<img src="96-mp-items_files/figure-html/mp-real-diffs-1.png" alt="(ref:mp-real-diffs)" width="100%" />
+<p class="caption">(\#fig:mp-real-diffs)(ref:mp-real-diffs)</p>
+</div>

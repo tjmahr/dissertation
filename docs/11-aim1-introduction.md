@@ -65,8 +65,8 @@ when primed by an image (*clock*, assumed to activate *sock* which
 primed *shoe*).[^semantic-priming]
 
 @AltvaterMackensen2013 demonstrated phonological-semantic priming even
-when the prime is a mispronunciations. German-learning two-year-olds
-heard a prime word, and 200 ms later two images appear on screen (a cow,
+when the prime is a mispronunciation. German-learning two-year-olds
+heard a prime word, and 200 ms later two images appeared onscreen (a cow,
 *Kuh* and a fork, *Gabel*), one of which was labeled ("Kuh"). The prime word
 was a semantically related word ("Schaf", sheep), an
 onset-mispronunciation of the related word ("Faf" or "Taf"), or an

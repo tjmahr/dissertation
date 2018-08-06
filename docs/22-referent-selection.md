@@ -45,18 +45,19 @@ with these features. The linear model was:
 $$
 \small
 \begin{align*}
-   \text{log-odds}(\mathit{looking\,}) =\
+   \text{log-odds}(\mathit{looking}) =\
     &\beta_0 + 
       \beta_1\text{Time}^1 + 
       \beta_2\text{Time}^2 + 
       \beta_3\text{Time}^3\ + 
-      &\text{[nonword growth curve]} \\
+      &\text{[nonword curve]} \\
     (&\gamma_0 + 
       \gamma_1\text{Time}^1 + 
       \gamma_2\text{Time}^2 +
       \gamma_3\text{Time}^3)*\text{Condition} \
-      &\text{[adjustments for real words]} \\
+      &\text{[real words]} \\
 \end{align*}
+\normalsize
 $$
 
 I fit a separate model for each year of the study.
@@ -84,7 +85,10 @@ to 100 model-estimated growth curves.
 
 (ref:aim2-real-nonword-means) Averages of participants' growth curves in each condition and age. The lines represent 100 posterior predictions of the group average. 
 
-![(\#fig:aim2-real-nonword-means)(ref:aim2-real-nonword-means)](22-referent-selection_files/figure-docx/aim2-real-nonword-means-1.png)
+<div class="figure" style="text-align: center">
+<img src="22-referent-selection_files/figure-html/aim2-real-nonword-means-1.png" alt="(ref:aim2-real-nonword-means)" width="80%" />
+<p class="caption">(\#fig:aim2-real-nonword-means)(ref:aim2-real-nonword-means)</p>
+</div>
 
 In [Chapter \@ref(fam-rec)](#fam-rec), I claim that for these growth
 curve models only the intercept and linear time terms are behaviorally
@@ -145,7 +149,10 @@ growth curves peaks for each participant.
 
 (ref:aim2-gca-peaks) Growth curve peaks by child, condition and year of the study. The movement of the medians conveys how the nonword peaks effect increased from age 3 to age 4 and the real word peaks increased from age 4 to age 5. The piling of points near the 1.0 line depicts how children reached ceiling performance on this task.
 
-![(\#fig:aim2-gca-peaks)(ref:aim2-gca-peaks)](22-referent-selection_files/figure-docx/aim2-gca-peaks-1.png)
+<div class="figure" style="text-align: center">
+<img src="22-referent-selection_files/figure-html/aim2-gca-peaks-1.png" alt="(ref:aim2-gca-peaks)" width="66%" />
+<p class="caption">(\#fig:aim2-gca-peaks)(ref:aim2-gca-peaks)</p>
+</div>
 
 
 
@@ -186,10 +193,10 @@ comparisons, I decided that an effect was significant when the *t*
 statistic for a population-level ("fixed") effect had an absolute value
 of 2 or greater. In practical terms, this convention interprets an
 effect as "significant" when its estimate is at least 2 standard errors
-away from 0. (@GelmanHill use this approach when with mixed models.)
+away from 0. (@GelmanHill use this approach with mixed models.)
 
 At age 3, the two conditions did not significantly differ,
-B<sub>real-nonword</sub> = .01, *t* = 0.95. At age 4,
+*B*<sub>real-nonword</sub> = .01, *t* = 0.95. At age 4,
 nonword peaks were on average .09 proportion units greater
 than the real word peaks, *t* = 5.79, and at age 5, the nonword
 peaks were .04 proportion units greater than the real word
@@ -258,7 +265,10 @@ Age 5    Nonword peak      *r*(151) = .13          &nbsp;              &nbsp;
 
 (ref:peak-concurrent-vocab-cors) Relationship between expressive vocabulary and growth curve peaks at each age.
 
-![(\#fig:peak-concurrent-vocab-cors)(ref:peak-concurrent-vocab-cors)](22-referent-selection_files/figure-docx/peak-concurrent-vocab-cors-1.png)
+<div class="figure" style="text-align: center">
+<img src="22-referent-selection_files/figure-html/peak-concurrent-vocab-cors-1.png" alt="(ref:peak-concurrent-vocab-cors)" width="75%" />
+<p class="caption">(\#fig:peak-concurrent-vocab-cors)(ref:peak-concurrent-vocab-cors)</p>
+</div>
 
 
 
@@ -313,7 +323,10 @@ condition and small slope for the nonword condition.
 
 (ref:age-5-from-peaks) Marginal effects of age-3 referent selection measures on age-5 expressive vocabulary standard scores. The vocabulary scores were adjusted (residualized) to control for age-3 vocabulary, so these regression lines show the effects of the predictors over and above age-3 vocabulary.
 
-![(\#fig:age-5-from-peaks)(ref:age-5-from-peaks)](22-referent-selection_files/figure-docx/age-5-from-peaks-1.png)
+<div class="figure" style="text-align: center">
+<img src="22-referent-selection_files/figure-html/age-5-from-peaks-1.png" alt="(ref:age-5-from-peaks)" width="60%" />
+<p class="caption">(\#fig:age-5-from-peaks)(ref:age-5-from-peaks)</p>
+</div>
 
 Finally, I tested whether the difference between nonword and real word
 peaks within children predicted vocabulary growth. By themselves,
@@ -352,7 +365,7 @@ age 5. One reason for these limited improvements is that the two-image
 word recognition task was too easy. At age 4, approximately 25% of
 children had nonword growth curve peaks of .99 or greater.
 
-Despite the presense of ceiling effects, vocabulary size had a
+Despite the presence of ceiling effects, vocabulary size had a
 small-to-medium positive correlation with nonword growth curve peaks at
 all three ages. Children who knew more words had a higher probability of
 looking to the novel object when presented with a nonword. This
@@ -374,13 +387,13 @@ For these two conditions, I hypothesized were word recognition in the real word
 condition would be easier than in the nonword condition, or failing
 that, the two conditions would not reliably differ. I had discounted a
 third possibility of any overall advantage for nonwords over real words.
-The advantage of nonwords at age 4 and age 5 over real words was an therefore
-unexpected result.
+The advantage of nonwords at age 4 and age 5 over real words was therefore
+an unexpected result.
 
 Why might children perform better on the nonword trials than the real
 words? The results are consistent with a novelty bias in referent
 selection [@Horst2011; @Mather2012]. An additional factor may be the
-presense of the mispronunciation trials---reported in [Chapter
+presence of the mispronunciation trials---reported in [Chapter
 \@ref(sensitivity-to-mispronunciations)](#sensitivity-to-mispronunciations).
 The mispronunciations may undermine familiar word recognition. For
 one-third of the trials, children hear an imperfect version of a

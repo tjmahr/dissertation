@@ -172,7 +172,10 @@ extreme, degenerate values.
 
 (ref:lkj-prior) Samples of correlation effects drawn from *LKJ*(1) and *LKJ*(2) priors. 
 
-![(\#fig:lkj-prior)(ref:lkj-prior)](92-app-aim1-models_files/figure-docx/lkj-prior-1.png)
+<div class="figure" style="text-align: center">
+<img src="92-app-aim1-models_files/figure-html/lkj-prior-1.png" alt="(ref:lkj-prior)" width="50%" />
+<p class="caption">(\#fig:lkj-prior)(ref:lkj-prior)</p>
+</div>
 
 Summary of the familiar word recognition model with diagnostics and 90%
 uncertainty intervals:

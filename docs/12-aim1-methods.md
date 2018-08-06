@@ -41,29 +41,22 @@ until later in study, or a failed hearing screening. Final sample sizes
 will depend on the measures needed for an analysis and the results from
 data screening checks.
 
-                                          Year 1 (Age 3)     Year 2 (Age 4)     Year 3 (Age 5)
------------------------------------------ ------------------ ------------------ ------------------
-N                                         184                175                160
-Boys, Girls                               94, 90             89, 86             82, 78
-Maternal education: Low, Middle, High     15, 98, 71         12, 92, 71         6, 90, 64
-Dialect: MAE, AAE                         171, 13            163, 12            153, 7
-Parent-identified late talkers            20                 19                 16
-Age (months): Mean (SD) [Range]           33 (3) [28–39]     45 (4) [39–52]     57 (4) [51–66]
-EVT-2 standard score: Mean (SD)           115 (18)           118 (16)           118 (14)
-PPVT-4 standard score: Mean (SD)          113 (17)           120 (16)           —
-GFTA-2 standard score: Mean (SD)          92 (13)            —                  91 (13)
 
-Table: (\#tab:participant-info) Participant characteristics. Education
-levels: *Low*: less than high school, or high school; *Middle*: trade
-school, technical or associates degree, some college, or college degree;
-and *High*: graduate degree.
+Table: (\#tab:participant-info)Participant characteristics. Education levels: *Low*: less than high 
+school, or high school; *Middle*: trade school, technical or associates 
+degree, some college, or college degree; and *High*: graduate degree.
 
-<!-- ### Special case data screening -->
-
-<!-- (_Skip for now._ This is where I review the participant notes and will remove  -->
-<!-- children who have to be excluded for other reasons, like being diagnosed with a  -->
-<!-- language disorder at TimePoint 3.) -->
-
+                                  Year 1 (Age 3)   Year 2 (Age 4)   Year 3 (Age 5) 
+--------------------------------  ---------------  ---------------  ---------------
+N                                 184              175              160            
+Boys, Girls                       94, 90           89, 86           82, 78         
+Maternal ed.: Low, Middle, High   15, 98, 71       12, 92, 71       6, 90, 64      
+Dialect: MAE, AAE                 171, 13          163, 12          153, 7         
+Parent-identified late talkers    20               19               16             
+Age (months): Mean (SD) [Range]   33 (3) [28–39]   45 (4) [39–52]   57 (4) [51–66] 
+EVT-2 standard: Mean (SD)         115 (18)         118 (16)         118 (14)       
+PPVT-4 standard: Mean (SD)        113 (17)         120 (16)         —              
+GFTA-2 standard: Mean (SD)        92 (13)          —                91 (13)        
 
 
 Visual World Paradigm {#aim1-procedure}
@@ -86,7 +79,10 @@ speech.
 
 (ref:sample-vw-screen-cap2) Example display for the target *bell* with the semantic foil *drum*, the phonological foil *bee*, and the unrelated *swing*.
 
-![(\#fig:sample-vw-screen)(ref:sample-vw-screen-cap2)](./misc/rwl-screens/TimePoint1/actual/Block2_17_swing2_bell2_bee2_drum2_UpperRightImage_bell.png)
+<div class="figure" style="text-align: center">
+<img src="./misc/rwl-screens/TimePoint1/actual/Block2_17_swing2_bell2_bee2_drum2_UpperRightImage_bell.png" alt="(ref:sample-vw-screen-cap2)" width="100%" />
+<p class="caption">(\#fig:sample-vw-screen)(ref:sample-vw-screen-cap2)</p>
+</div>
 
 
 
@@ -100,7 +96,7 @@ experiments. A play break or hearing screening occurred between the two
 eyetracking blocks, depending on the visit.
 
 Each eyetracking experiment was administered as a block of trials (24
-for this experiment and 38 for a two-image task---see [Chapter \@ref(aim2-method)](#aim2-method)).
+for this experiment and 36 for a two-image task---see [Chapter \@ref(aim2-method)](#aim2-method)).
 Children received two different blocks of each experiment. The blocks
 for an experiment differed in trial ordering and other features.
 Experiment order and block selection were counterbalanced over children
@@ -226,17 +222,17 @@ initial version of this experiment, leading to the exclusion of
 
 Table: (\#tab:screening-counts)Eyetracking data before and after data screening. For convenience, the number of exclusions is included as Raw - Screened.
 
-Dataset                Study    N Children   N Blocks   N Trials
----------------------  ------  -----------  ---------  ---------
-Raw                    Age 3           178        332       7967
-                       Age 4           180        347       8327
-                       Age 5           163        322       7724
-Screened               Age 3           163        291       5951
-                       Age 4           165        305       6421
-                       Age 5           156        295       6483
-Raw &minus; Screened   Age 3            15         41       2016
-                       Age 4            15         42       1906
-                       Age 5             7         27       1241
+Dataset          Study    N Children   N Blocks   N Trials
+---------------  ------  -----------  ---------  ---------
+Raw              Age 3           178        332       7967
+                 Age 4           180        347       8327
+                 Age 5           163        322       7724
+Screened         Age 3           163        291       5951
+                 Age 4           165        305       6421
+                 Age 5           156        295       6483
+Raw - Screened   Age 3            15         41       2016
+                 Age 4            15         42       1906
+                 Age 5             7         27       1241
 
 
 
@@ -268,4 +264,9 @@ rise as the word unfolds, and they peak and plateau around 1400 ms.
 
 (ref:aim1-spaghetti) Empirical word recognition growth curves from each year of the study. Each line represents an individual child's proportion of looks to the target image over time. The heavy lines are the averages of the lines for each year.
 
-![(\#fig:aim1-spaghetti)(ref:aim1-spaghetti)](12-aim1-methods_files/figure-docx/aim1-spaghetti-1.png)
+(ref:aim1-spaghetti-scap) Empirical word recognition growth curves from each year of the study.
+
+<div class="figure" style="text-align: center">
+<img src="12-aim1-methods_files/figure-html/aim1-spaghetti-1.png" alt="(ref:aim1-spaghetti)" width="100%" />
+<p class="caption">(\#fig:aim1-spaghetti)(ref:aim1-spaghetti)</p>
+</div>

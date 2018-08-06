@@ -290,13 +290,13 @@ summary(m3, priors = TRUE, prob = .9)
 
 
 
-Mispronunication growth curves
+Mispronunciation growth curves
 ------------------------------------------------------------------------
 
 
 Like the models above, these ones are Bayesian mixed-effects logistic
 regression growth curve models fit with brms. I used two separate
-models, one for unfamilar-initial trials and familiar-initial trials.
+models, one for unfamiliar-initial trials and familiar-initial trials.
 Each model included data from all three years of the study. The code is
 essentially the same syntax with a `Study` variable replacing the
 `Condition` variable.
@@ -358,7 +358,7 @@ the problem. By using a tighter prior, the model had a smaller search
 space meaning it could obtain samples more efficiently. 
 
 The revised prior was still weakly informative. Figure
-\@ref(fig:student-t-priors) llustrates the differences in the prior
+\@ref(fig:student-t-priors) illustrates the differences in the prior
 densities---that is, which values are plausible before seeing the data.
 It also shows posterior densities from the model and how those values
 are easily enclosed by the prior densities.
@@ -367,7 +367,10 @@ are easily enclosed by the prior densities.
 
 (ref:student-t-priors) Prior densities (left) versus posterior densities (right) for the random-effect standard deviations. I changed the prior to be tighter, so that it favor values up to 7.5. This prior still turned out to be very conservative, given that the posterior samples for these values are all less than 3.
 
-![(\#fig:student-t-priors)(ref:student-t-priors)](96-app-aim2-models_files/figure-docx/student-t-priors-1.png)
+<div class="figure" style="text-align: center">
+<img src="96-app-aim2-models_files/figure-html/student-t-priors-1.png" alt="(ref:student-t-priors)" width="100%" />
+<p class="caption">(\#fig:student-t-priors)(ref:student-t-priors)</p>
+</div>
 
 Model summary for unfamiliar-initial mispronunciation trials:
 
