@@ -9,7 +9,7 @@ fast-associating nonwords will improve each year.**
 Yes and no. There were obvious gains for nonwords from 3 to 4 and from 4
 to 5 for real words. There are gains, but not "each year". One
 complication here is that many children started to hit ceiling
-performance by age 4, so there was not much of developmental gradient
+performance by age 4, so there was not much of a developmental gradient
 for these conditions.
 
 \bigskip\smallskip
@@ -28,7 +28,7 @@ developmental trajectories. Thus, if there is any dissociation
 between recognition of real words and nonwords, it will be observed
 in younger children.**
     
-No---not at all. I observed an dissociation between the two conditions,
+No---not at all. I observed a dissociation between the two conditions,
 but it worked *in the opposite direction* and *at the older ages*. That
 is, children at age 4 and age 5 demonstrated an apparent nonword
 advantage.

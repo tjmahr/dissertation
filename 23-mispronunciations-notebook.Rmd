@@ -945,7 +945,7 @@ valleys below .4 indicate children who favor the unfamiliar image.
 To explore individual listening behaviors, I visualized children's
 individual growth curves based on their growth curve valleys. Within
 each year, I grouped children into sextiles based on the posterior mean
-of the their valley and plotted their individual growth
+of their valleys and plotted their individual growth
 curves. Figure \@ref(fig:age3-valley-curves) shows the results from
 age 3. The final two bins show children who stayed with the
 familiar image throughout the mispronunciation trials. The first two bins
@@ -956,7 +956,7 @@ the first three bins highlight children with u-shaped trajectories. In
 these curves, the probability of fixating on the familiar image briefly
 decreases, as the child considers the other image.
 
-(ref:age3-valley-curves) Growth curves for mispronunciations trials starting on the unfamiliar object at age 3. Children were grouped into sextiles based on the posterior mean of the growth curve valley---that is, the lowest point on the growth curve. Ten lines are drawn per child to visualize uncertainty. Children were assigned colors arbitrarily. On the right side of each panel are "rugs" which mark the valleys in that panel.
+(ref:age3-valley-curves) Growth curves for mispronunciations trials starting on the unfamiliar object at age 3. Children were grouped into sextiles based on the posterior mean of their growth curve valleys---that is, the lowest point on the growth curve. Ten lines are drawn per child to visualize uncertainty. Children were assigned colors arbitrarily. On the right side of each panel are "rugs" which mark the valleys in that panel.
 
 ```{r age3-valley-curves, fig.cap = "(ref:age3-valley-curves)", width = 6, height = 6, out.width="80%"}
 feature_means <- fam_peaks %>% 
@@ -1873,7 +1873,7 @@ aaa %>%
 
 **Summary**. When 5-years-olds were tested on their retention of the
 unfamiliar images used on the mispronunciations and nonword trials,
-child were much more accurate for the nonwords than the
+children were much more accurate for the nonwords than the
 mispronunciations. Children's accuracy on the mispronunciations was
 related to their looking behaviors: Children looked more to the familiar
 image during mispronunciation trials had a lower accuracy on the
@@ -2024,7 +2024,7 @@ One strategy to resolve the uncertainty in this situation would be to
 verify and reject the other image. Therefore, I also defined a weighted
 quadratic growth curve feature that measured how u-shaped the curves
 were. Such curves would reflect a child temporarily decreasing looks to
-the familiar image as a confirmatory looking behaviors. The u-shaped
+the familiar image as a confirmatory looking behavior. The u-shaped
 curve features were not reliably related to any child-level factors,
 outside of negligibly small effect of expressive vocabulary at age 5.
 

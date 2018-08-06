@@ -24,7 +24,7 @@ relatively fast later in childhood? Or, is such a question ill-posed
 because the magnitude of the differences among children shrink with age?
 I plan to address this gap in knowledge by analyzing three years of word
 recognition data collected in a recently completed longitudinal study of
-180 children.
+160 children.
 
 In particular, I will examine the development of *familiar word
 recognition*, *lexical competition,* and *fast referent selection* (the

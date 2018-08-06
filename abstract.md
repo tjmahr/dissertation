@@ -31,4 +31,4 @@ fast-selected novel-object referents for nonwords equally well and even
 performed better in the nonword condition. Children became more likely
 to associate the familiar object with the mispronunciations as they grew
 older. At age 5, children showed better retention for novel objects
-labeled during with nonwords than with mispronunciations.<p>
+labeled with nonwords than with mispronunciations.<p>

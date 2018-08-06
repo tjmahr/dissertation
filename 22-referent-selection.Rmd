@@ -678,10 +678,10 @@ comparisons, I decided that an effect was significant when the *t*
 statistic for a population-level ("fixed") effect had an absolute value
 of 2 or greater. In practical terms, this convention interprets an
 effect as "significant" when its estimate is at least 2 standard errors
-away from 0. (@GelmanHill use this approach when with mixed models.)
+away from 0. (@GelmanHill use this approach with mixed models.)
 
 At age 3, the two conditions did not significantly differ,
-B<sub>real-nonword</sub> = `r t1_real$b`, *t* = `r t1_real$t`. At age 4,
+*B*<sub>real-nonword</sub> = `r t1_real$b`, *t* = `r t1_real$t`. At age 4,
 nonword peaks were on average `r t2_real$b` proportion units greater
 than the real word peaks, *t* = `r t2_real$t`, and at age 5, the nonword
 peaks were `r t3_real$b` proportion units greater than the real word
@@ -1211,8 +1211,8 @@ For these two conditions, I hypothesized were word recognition in the real word
 condition would be easier than in the nonword condition, or failing
 that, the two conditions would not reliably differ. I had discounted a
 third possibility of any overall advantage for nonwords over real words.
-The advantage of nonwords at age 4 and age 5 over real words was an therefore
-unexpected result.
+The advantage of nonwords at age 4 and age 5 over real words was therefore
+an unexpected result.
 
 Why might children perform better on the nonword trials than the real
 words? The results are consistent with a novelty bias in referent
