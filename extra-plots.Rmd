@@ -50,7 +50,7 @@ raw_data2 %>%
   
 f_levels <- c("Unrelated", "PhonologicalFoil", "SemanticFoil", "Target")
 levels <- c(NA, f_levels)
-labels <- c("[elsewhere]", "Unrelated", "Phonological", "Semantic", "Target")
+labels <- c("(elsewhere)", "Unrelated\nword", "Phonological\ncompetitor", "Semantic\ncompetitor", "Target")
 
 t_raw <- raw_data %>% 
   filter(ResearchID == "081L") 
@@ -60,28 +60,23 @@ t <- t_raw %>%
     GazeByImageAOI = factor(
       GazeByImageAOI, f_levels, exclude = c(NA, "tracked")))
   
-levels <- c(NA, "Unrelated", "PhonologicalFoil", "SemanticFoil", "Target")
-labels <- c("(elsewhere)", "Unrelated\nword", "Phonological\ncompetitor", "Semantic\ncompetitor", "Target")
-
-plot_set <- function(df, alpha, title) {
+plot_set <- function(df, alpha = 1, title = NULL) {
   df %>%   
-  ggplot() + 
-    aes(x = Time, y = GazeByImageAOI) + 
-    geom_point(
-      size = 3,
-      aes(color = is.na(GazeByImageAOI)),
-      position = position_jitter(height = .2),
-      alpha = alpha) + 
-    scale_y_discrete(
-      limits = levels, 
-      labels = labels) + 
-    theme_teej(base_size = 20) + 
-    guides(color = FALSE) +
-    scale_color_manual(values = c("black", "grey60")) +
-    labs(
-      y = NULL, 
-      x = constants$x_time,
-      title = title)
+    ggplot() + 
+      aes(x = Time, y = GazeByImageAOI) + 
+      geom_point(
+        aes(color = is.na(GazeByImageAOI)),
+        size = 3,
+        position = position_jitter(height = .2),
+        alpha = alpha) + 
+      scale_y_discrete(limits = levels, labels = labels) + 
+      theme_teej(base_size = 20) + 
+      guides(color = FALSE) +
+      scale_color_manual(values = c("black", "grey60")) +
+      labs(
+        x = constants$x_time,
+        y = NULL, 
+        title = title)
 }
 
 one_trial <- t %>%   
@@ -169,27 +164,6 @@ t %>%
       x = constants$x_time)
   
 ggpreview(width = 16, height = 9, scale = .6, dpi = 600)
-
-  
-  scale_y_discrete(
-    name = "Gaze location",
-    limits = levels, 
-    labels = labels) + 
-  theme_teej(base_size = 20) + 
-  labs(
-    y = NULL, 
-    x = constants$x_time,
-    title = "48 trials (both blocks)")
-
-
-discrete_scale)
-%>%
-  aggregate_looks(resp_def, Study + ResearchID + Time ~ GazeByImageAOI)
-
-raw_data <- looks %>%
-  filter(between(Time, times_to_keep[1], times_to_keep[2])) %>%
-  aggregate_looks(resp_def, Study + ResearchID + Time ~ GazeByImageAOI)
-
 
 ```
 
