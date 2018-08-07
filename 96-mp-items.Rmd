@@ -84,6 +84,88 @@ pairs <- items %>%
 ```
 
 
+```{r, eval = FALSE}
+d_trim <- d %>%
+  distinct(Time) %>%
+  littlelisteners::trim_to_bin_width(3, time_var = Time, 0, 1) %>%
+  littlelisteners::assign_bins(3, Time) %>%
+  group_by(.bin) %>%
+  mutate(BinTime = round(min(Time), -1)) %>%
+  ungroup() %>%
+  inner_join(d, .) %>%
+  aggregate_looks(
+    resp_def, Study + Age + Bias_Fam + Condition + BinTime ~ GazeByImageAOI)
+
+d_trim <- d_trim %>%
+  rename(Time = BinTime)
+
+d_trim %>%
+  filter(Condition != "nonsense", Bias_Fam == "Unfamiliar") %>%
+  filter(Time >= 0,  Time <= 1505) %>%
+  mutate(
+    AgeNum = stringr::str_extract(Age, "\\d"),
+    SuperCondition = paste0(Study, Condition)) %>%
+  group_by(SuperCondition, Condition, Age) %>%
+  ggplot() +
+    aes(x = Time, y = Prop, color = SuperCondition) +
+    geom_hline(yintercept = .5, color = "white", size = 2) +
+    # geom_text(aes(group = .group, label = AgeNum)) +
+    geom_line(aes(group = .group), size = 1) +
+    scale_color_manual(
+      values = c("#440154FF", "#44015433", "#35608DFF",  "#35608D44", "#22A884FF",  "#22A88444")) + 
+    guides(color = FALSE) + 
+   geom_text(
+    aes(label = label),
+    data_frame(
+      SuperCondition = "TimePoint1MP",
+      Age = c("Age 3"),
+      Time = c(1000),
+      Prop = c(.4),
+      label = Age),
+    family = "Lato Semibold", 
+    size = 4) + 
+  # geom_text(
+  #   aes(label = label),
+  #   data_frame(
+  #     SuperCondition = "TimePoint2MP",
+  #     Age = c("Age 4"),
+  #     Time = c(1200),
+  #     Prop = c(.38),
+  #     label = Age),
+  #   family = "Lato Semibold", 
+  #   size = 4) + 
+  geom_text(
+    aes(label = label),
+    data_frame(
+      SuperCondition = "TimePoint3MP",
+      Age = c("Age 5"),
+      Time = c(1300),
+      Prop = c(.70),
+      label = Age),
+    family = "Lato Semibold", 
+    size = 4) + 
+    labs(
+      title = "Mispronunciations versus real words",
+      x = constants$x_time,
+      y = constants$y_prop_fam,
+      caption = "Heavy lines: Mispronunciations. Light lines: Real words.",
+      subtitle = "Trials starting on the unfamiliar image") + 
+    theme(plot.subtitle = element_text(size = rel(.9)))
+
+ggpreview(width = 5, height = 4, dpi = 600)
+
+both_d_trim <- d %>%
+  distinct(Time) %>%
+  littlelisteners::trim_to_bin_width(3, time_var = Time, 0, 1) %>%
+  littlelisteners::assign_bins(3, Time) %>%
+  group_by(.bin) %>%
+  mutate(BinTime = round(min(Time), -1)) %>%
+  ungroup() %>%
+  inner_join(d, .) %>%
+  aggregate_looks(
+    resp_def, Study + Age + WordGroup + Condition + BinTime ~ GazeByImageAOI)
+
+```
 
 
 In this section, I briefly discuss item-level differences for the

@@ -167,3 +167,115 @@ ggpreview(width = 16, height = 9, scale = .6, dpi = 600)
 
 ```
 
+
+```{r}
+d <- t %>% 
+  mutate(GazeT = if_else(GazeByImageAOI == "Target", 1, 0, NA_real_))  
+
+m_d <-  t_raw %>% 
+  filter(300 <= Time, Time <= 1500) %>% 
+  aggregate_looks(resp_def, Time ~ GazeByImageAOI) %>% 
+  polypoly::poly_add_columns(Time, 3, "ot", scale_width = 1)
+
+library(rstanarm)
+theme_set(theme_teej())
+m <- stan_glm(
+  cbind(Target, Others) ~ ot1 + ot2 + ot3,
+  family = binomial,
+  prior = normal(0, 1),
+  data = m_d)
+
+draws <- posterior_linpred(m, draws = 50, transform = TRUE)
+  
+draws <- augment_linpred(m, m_d, draws = 200, transform = TRUE)
+
+ggplot(d) + 
+    aes(x = Time, y = GazeT) + 
+    geom_hline(size = 3, color = "white", yintercept = .25) +
+  stat_summary(color = "grey70") +
+  stat_smooth(
+    method = "glm", 
+    color = constants$col_blue_highlight,
+    size = 1,
+    formula = y ~ poly(x, 3), 
+    se = FALSE,
+    method.args = list(family = binomial()),
+    data = . %>% filter(300 <= Time, Time <= 1500)) +
+  # expand_limits(y = 0:1) +
+  labs(
+    title = "Logistic regression: Probabilities",
+    y = "Probability looking to target", 
+    x = constants$x_time)
+
+ggpreview(width = 4, height = 4, dpi = 600)
+
+ggplot(d) + 
+    aes(x = Time, y = GazeT) + 
+    geom_hline(size = 3, color = "white", yintercept = .25) +
+  stat_summary(color = "grey70") +
+  geom_line(
+    aes(y = .posterior_value, group = .draw), 
+    data = draws, 
+    color = constants$col_blue_highlight,
+    alpha = .2) + 
+    labs(
+    title = "Bayesian: Quantify uncertainty",
+    y = "Probability looking to target", 
+    x = constants$x_time)
+ggpreview(width = 4, height = 4, dpi = 600)
+
+  
+ggplot(d) + 
+    aes(x = Time, y = GazeT) + 
+    geom_hline(size = 3, color = "white", yintercept = .25) +
+  stat_summary(color = "grey70") +
+  geom_line(
+    aes(y = .posterior_value, group = .draw), 
+    data = draws, 
+    color = constants$col_blue_highlight,
+    alpha = .2) + 
+    labs(
+    title = "Bayesian: Quantify uncertainty",
+    y = "Probability looking to target", 
+    x = constants$x_time)
+
+eleven <- raw_data2 %>%
+  sample_n_of(7, ResearchID) %>%
+  bind_rows(t_raw %>% aggregate_looks(resp_def, ResearchID + Time ~ GazeByImageAOI)) 
+
+avg <- eleven %>% 
+  group_by(Time) %>% 
+  summarise(
+    Target = sum(Target), 
+    Others = sum(Others),
+    Looks  = Others + Target) %>% 
+  mutate(
+    Prop = Target / Looks, 
+    PropSE = littlelisteners::se_prop(Prop, Looks),
+    ResearchID = "Average")
+
+bind_rows(avg, eleven) %>% 
+  ggplot() + 
+  aes(x = Time, y = Prop) +
+      geom_hline(size = 2, color = "white", yintercept = .25) +
+  geom_pointrange(
+    aes(y = Prop, ymin = Prop - PropSE, ymax = Prop + PropSE), 
+    color = "grey70") +
+  facet_wrap("ResearchID") + 
+  stat_smooth(
+    method = "lm", 
+    color = constants$col_blue_highlight,
+    size = 1,
+    formula = y ~ poly(x, 3), 
+    se = FALSE,
+    data = . %>% filter(300 <= Time, Time <= 1500)) +
+      labs(
+  title = "Mixed effects: Pool information",
+    y = "Probability looking to target", 
+    x = constants$x_time) + 
+  theme(strip.text = element_text(size = rel(.7)))
+ggpreview(width = 4, height = 4, dpi = 600)
+
+
+```
+

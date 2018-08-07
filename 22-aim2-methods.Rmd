@@ -690,3 +690,172 @@ nw_super
 mp_super
 ```
 
+```{r, eval = FALSE, include = FALSE}
+constants$cap_mean_se <- "Empirical mean ± SE"
+
+d2 <- binned %>% 
+  filter(Condition == "nonsense") %>% 
+  aggregate_looks(
+    resp_def, Study + ResearchID + Condition + Time ~ GazeByImageAOI) %>% 
+  mutate(PropTarget = 1 - Prop) %>% 
+  filter(-100 <= Time, Time <= opts_model$end_time) %>%
+  mutate(
+    Study = convert_study_to_age(Study),
+    Condition = factor(
+      Condition, 
+      levels = c("real", "nonsense", "MP"), 
+      labels = c("Real word", "Nonword", "Mispronunciation"))) 
+
+
+nw_age_labs <- tibble::tribble(
+  ~Bias_Fam, ~Study, ~Time, ~PropTarget,
+  "Unfamiliar", "Age 3", 300, .52,
+  # "Unfamiliar", "Age 4", 250, .90,
+  "Unfamiliar", "Age 5", 100, .68)
+
+
+nw_age_labs2 <- tibble::tribble(
+  ~Bias_Fam, ~Study, ~Time, ~Prop,
+  "Unfamiliar", "Age 3", 450, .85,
+  # "Unfamiliar", "Age 4", 250, .90,
+  "Unfamiliar", "Age 5", 1200, .05)
+
+
+ggplot(d2) + 
+  aes(x = Time, y = PropTarget) + 
+  geom_hline(yintercept = .5, color = "white", size = 2) + 
+  # geom_line(
+  #   aes(group = ResearchID), 
+  #   color = constants$col_off_black, 
+  #   alpha = .10, 
+  #   position = position_jitter(height = .015)) +
+  stat_summary(
+    aes(color = Study), 
+    fun.data = mean_se) +
+  geom_text(
+    aes(color = Study, label = Study),
+    data = nw_age_labs,
+    size = 6.5, 
+    hjust = 0,
+    family = "Lato Semibold") +
+  labs(
+    x = constants$x_time,
+    y = constants$y_prop_target,
+    title = "Growing novelty preference for nonword trials",
+    caption = constants$cap_mean_se) + 
+  guides(color = FALSE, linetype = FALSE) + 
+  theme_teej(base_size = 18) +
+  theme(
+    strip.background.y = element_blank(), 
+    strip.text.y = element_blank(),
+    strip.background.x = element_blank(), 
+    strip.text.x = element_blank()) + 
+  scale_color_study()
+
+# ggpreview(width = 7.7, height = 5, dpi = 600)
+
+p2_nw + 
+  scale_y_reverse(
+    breaks = c(0, .25, .5, .75, 1), 
+    labels = rev(c("0.00", "0.25", "0.5", "0.75", "1.0"))) + 
+  labs(
+    y = constants$y_prop_target, 
+    caption = NULL,
+    title = "Looks to nonword by starting location") + 
+  theme_teej(base_size = 14) +   
+  geom_text(
+    aes(color = Study, label = Study),
+    data = nw_age_labs2,
+    size = 5.5, 
+    hjust = 0,
+    family = "Lato Semibold")
+ggpreview(width = 6, height = 4, dpi = 600)
+
+
+```
+
+
+```{r, eval = FALSE, include = FALSE}
+
+
+d_plot <- d %>% 
+  filter(250 <= Time, Time <= opts_model$end_time) %>%
+  mutate(
+    Study = convert_study_to_age(Study),
+    Condition = factor(
+      Condition, 
+      levels = c("real", "nonsense", "MP"), 
+      labels = c("Real word", "Nonword", "Mispronunciation"))) %>% 
+  filter(!is.na(Bias_Fam)) 
+
+nw_age_labs <- tibble::tribble(
+  ~Bias_Fam, ~Study, ~Time, ~Prop,
+  "Unfamiliar", "Age 3", 250, 1 - .90,
+  "Unfamiliar", "Age 4", 250, 1 - .90,
+  "Unfamiliar", "Age 5", 250, 1 - .90)
+
+p1_nw <- d_plot %>%
+  filter(Condition == "Nonword") %>% 
+  ggplot() + 
+    aes(x = Time, y = Prop) + 
+    geom_hline(yintercept = .5, color = "white", size = 2) + 
+    geom_line(
+      aes(group = ResearchID), 
+      color = constants$col_off_black, 
+      alpha = .10, 
+      position = position_jitter(height = .015)) +
+    stat_summary(
+      aes(color = Study,  linetype = Bias_Fam), 
+      fun.y = mean, geom = "line", size = 1.25) +
+    geom_text(
+      aes(color = Study, label = Study),
+      data = nw_age_labs,
+      size = 4.5, 
+      hjust = 0,
+      family = "Lato Semibold") +
+    facet_grid(Bias_Fam ~ Study) +
+    labs(
+      x = constants$x_time,
+      y = NULL,
+      caption = "One line per child. Heavy line: Average of lines.") + 
+    guides(color = FALSE, linetype = FALSE) + 
+    theme(
+      strip.background.y = element_blank(), 
+      strip.text.y = element_blank(),
+      strip.background.x = element_blank(), 
+      strip.text.x = element_blank()) + 
+  scale_color_study()
+
+
+p2 <- d_plot %>%
+  filter(Condition == "Real word") %>% 
+  ggplot() + 
+    aes(x = Time, y = Prop) + 
+    geom_hline(yintercept = .5, color = "white", size = 2) + 
+    stat_summary(
+      aes(color = Study, linetype = Bias_Fam),
+      fun.y = mean, geom = "line", size = 1.25) + 
+    labs(
+      x = constants$x_time,
+      y = constants$y_prop_fam, 
+      caption = " ") + 
+    guides(color = FALSE, linetype = FALSE) + 
+    annotate(
+      geom = "text", x = 350, y = .97, hjust = 0, color = "grey20",
+      label = "trials starting on familiar image", size = 3.25,
+      family = "Lato Medium") +
+    annotate(
+      "text", x = 350, y = .05, hjust = 0, color = "grey20",
+      label = "trials starting on unfamiliar image", size = 3.25,
+      family = "Lato Medium") + 
+  scale_color_study()
+
+p2_nw <- p2 %+% (d_plot %>% filter(Condition == "Nonword"))
+nw_super <- p2_nw + p1_nw + 
+  plot_layout(widths = c(4, 6)) + 
+  plot_annotation("\"Find the cheem\": Child hears a nonword")
+
+rw_super
+```
+
+
