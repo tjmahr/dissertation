@@ -1,4 +1,4 @@
-Computational details for Specific Aim 1 {#aim1-gca-models}
+Computational details for Aim 1 {#aim1-gca-models}
 ========================================================================
 
 ```{r setup, include = FALSE}

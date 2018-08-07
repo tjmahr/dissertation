@@ -1,4 +1,4 @@
-Effects of specific mispronunciations {#aim2-mp-items}
+Effects of specific mispronunciations in Aim 2 {#aim2-mp-items}
 ========================================================================
 
 ```{r, include = FALSE}

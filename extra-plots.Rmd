@@ -1,0 +1,195 @@
+Extras {#aim1-method}
+=======================================================================
+
+```{r include = FALSE}
+knitr::read_chunk("./helpers.R")
+if (interactive()) source("./helpers.R")
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+```{r helpers, message = FALSE, warning = FALSE}
+```
+
+```{r include = FALSE}
+knitr::opts_chunk$set(cache = TRUE)
+```
+
+
+```{r}
+looks1 <- readr::read_csv("./data-raw/rwl_timepoint1_looks.csv.gz")
+looks <- looks1 %>%
+  filter(Version == "Standard")
+
+resp_def <- create_response_def(
+  primary = "Target",
+  others = c("PhonologicalFoil", "SemanticFoil", "Unrelated"),
+  elsewhere = "tracked",
+  missing = NA)
+
+# Keep only frames from -500 to 2000 plus or minus any frames to make the
+# number of frames divisible by 3 (for binning)
+times_to_keep <- looks %>%
+  distinct(Time) %>%
+  trim_to_bin_width(
+    bin_width = 3, time_var = Time, key_time = 0, key_position = 2,
+    min_time = 0, max_time = 2000) %>%
+  pull(Time) %>%
+  range()
+
+raw_data <- looks %>%
+  filter(between(Time, times_to_keep[1], times_to_keep[2])) 
+
+raw_data2 <- looks %>%
+  filter(between(Time, times_to_keep[1], times_to_keep[2])) %>%
+    aggregate_looks(resp_def, Study + ResearchID + Time ~ GazeByImageAOI)
+
+raw_data2 %>%
+  sample_n_of(10, ResearchID) %>%
+  ggplot() + aes(x = Time, y = Prop) + facet_wrap("ResearchID") + geom_point()
+
+  
+f_levels <- c("Unrelated", "PhonologicalFoil", "SemanticFoil", "Target")
+levels <- c(NA, f_levels)
+labels <- c("[elsewhere]", "Unrelated", "Phonological", "Semantic", "Target")
+
+t_raw <- raw_data %>% 
+  filter(ResearchID == "081L") 
+
+t <- t_raw %>% 
+  mutate(
+    GazeByImageAOI = factor(
+      GazeByImageAOI, f_levels, exclude = c(NA, "tracked")))
+  
+levels <- c(NA, "Unrelated", "PhonologicalFoil", "SemanticFoil", "Target")
+labels <- c("(elsewhere)", "Unrelated\nword", "Phonological\ncompetitor", "Semantic\ncompetitor", "Target")
+
+plot_set <- function(df, alpha, title) {
+  df %>%   
+  ggplot() + 
+    aes(x = Time, y = GazeByImageAOI) + 
+    geom_point(
+      size = 3,
+      aes(color = is.na(GazeByImageAOI)),
+      position = position_jitter(height = .2),
+      alpha = alpha) + 
+    scale_y_discrete(
+      limits = levels, 
+      labels = labels) + 
+    theme_teej(base_size = 20) + 
+    guides(color = FALSE) +
+    scale_color_manual(values = c("black", "grey60")) +
+    labs(
+      y = NULL, 
+      x = constants$x_time,
+      title = title)
+}
+
+one_trial <- t %>%   
+  # filter(BlockID == 215, TrialNo == 10) 
+  filter(BlockID == 286, TrialNo == 10) 
+
+plot_set(one_trial, .5, "1 trial from 1 child")
+ggpreview(width = 16, height = 9, scale = .6, dpi = 600)
+
+four_trials <- t %>%   
+  filter(BlockID == 286, TrialNo %in% c(9:12)) 
+
+plot_set(four_trials, .5, "4 trials from same child")
+ggpreview(width = 16, height = 9, scale = .6, dpi = 600)
+
+twenty_four_trials <- t %>%   
+  filter(BlockID == 286) 
+
+plot_set(twenty_four_trials, .15, "24 trials (first block)")
+ggpreview(width = 16, height = 9, scale = .6, dpi = 600)
+
+plot_set(t, .1, "48 trials (both blocks)")
+ggpreview(width = 16, height = 9, scale = .6, dpi = 600)
+
+t %>% 
+  mutate(GazeT = if_else(GazeByImageAOI == "Target", 1, 0, NA_real_)) %>% 
+  ggplot() + 
+    aes(x = Time, y = GazeT) + 
+    geom_hline(size = 3, color = "white", yintercept = .25) +
+    geom_point(
+      position = position_jitter(height = .05),
+      alpha = .1, size = 3) + 
+  stat_summary() + 
+  theme_teej(base_size = 20) + 
+  labs(
+      y = "Probability looking to target", 
+      x = constants$x_time)
+  
+t %>% 
+  mutate(GazeT = if_else(GazeByImageAOI == "Target", 1, 0, NA_real_)) %>% 
+  ggplot() + 
+    aes(x = Time, y = GazeT) + 
+    geom_hline(size = 3, color = "white", yintercept = .25) +
+    stat_summary(geom = "area", fill = "skyblue3", color = "skyblue3") + 
+  stat_summary(color = "grey30") +
+  expand_limits(y = 1) +
+  theme_teej(base_size = 20) + 
+  labs(
+      y = "Probability looking to target", 
+      x = constants$x_time)
+  
+ggpreview(width = 16, height = 9, scale = .6, dpi = 600)
+
+t %>% 
+  mutate(GazeT = if_else(GazeByImageAOI == "Target", 1, 0, NA_real_)) %>% 
+  ggplot() + 
+    aes(x = Time, y = GazeT) + 
+    geom_hline(size = 3, color = "white", yintercept = .25) +
+  stat_summary(color = "grey30") +
+  stat_smooth(
+    method = "lm", se = FALSE, size = 3, color = "skyblue3",
+    data = . %>% filter(Time >= 500, Time <= 1500)) +
+  expand_limits(y = 1) +
+  theme_teej(base_size = 20) + 
+  labs(
+      y = "Probability looking to target", 
+      x = constants$x_time)
+  
+ggpreview(width = 16, height = 9, scale = .6, dpi = 600)
+
+  
+t %>% 
+  mutate(GazeT = if_else(GazeByImageAOI == "Target", 1, 0, NA_real_)) %>% 
+  ggplot() + 
+    aes(x = Time, y = GazeT) + 
+    geom_hline(size = 3, color = "white", yintercept = .25) +
+  stat_summary(color = "grey30") +
+  geom_segment(
+    aes(x = 1000, xend = 2000, y = .72, yend = .72),
+    size = 3, color = "skyblue3") +
+  expand_limits(y = 1) +
+  theme_teej(base_size = 20) + 
+  labs(
+      y = "Probability looking to target", 
+      x = constants$x_time)
+  
+ggpreview(width = 16, height = 9, scale = .6, dpi = 600)
+
+  
+  scale_y_discrete(
+    name = "Gaze location",
+    limits = levels, 
+    labels = labels) + 
+  theme_teej(base_size = 20) + 
+  labs(
+    y = NULL, 
+    x = constants$x_time,
+    title = "48 trials (both blocks)")
+
+
+discrete_scale)
+%>%
+  aggregate_looks(resp_def, Study + ResearchID + Time ~ GazeByImageAOI)
+
+raw_data <- looks %>%
+  filter(between(Time, times_to_keep[1], times_to_keep[2])) %>%
+  aggregate_looks(resp_def, Study + ResearchID + Time ~ GazeByImageAOI)
+
+
+```
+

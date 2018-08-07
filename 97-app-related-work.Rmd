@@ -41,7 +41,7 @@ my preliminary examinations. The paper analyzes the same kinds of
 relations as @Weisleder2013 which showed that lexical processing
 efficiency mediated the effect of language input on future vocabulary
 size. Specifically, I asked whether word recognition performance on the
-four-image task of Specific Aim 1, vocabulary size, and home language
+four-image task of Aim 1, vocabulary size, and home language
 input data from year 1 (age 3) predicted vocabulary size at year 2
 (age 4). The paper only examined looks to the familiar image from one
 year of the study, so it did not analyze any lexical competition effects

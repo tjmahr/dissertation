@@ -34,10 +34,10 @@ child. Recruitment and data collection occurred at two Learning to Talk
 lab sites—one at the University of Wisconsin–Madison and the other at
 the University of Minnesota.
 
-[^1]: [Appendix \@ref(related-work)](#related-work) describes how this
+[^1]: [Appendix \@ref(related-work)](#related-work) describes how this
       dissertation relates to other work from our lab.
 
-Table \@ref(tab:participant-info) summarizes the cohort of children in
+Table \@ref(tab:participant-info) summarizes the cohort of children in
 each year of testing. The numbers and summary statistics here are
 general, describing children who participated at each year, but whose
 data may have been excluded from the analyses. Some potential reasons

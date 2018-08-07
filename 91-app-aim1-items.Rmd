@@ -1,4 +1,4 @@
-Items used in the visual world experiment {#vw-experiment-items}
+Items used in Aim 1 {#vw-experiment-items}
 ========================================================================
 
 ```{r include = FALSE, warning = FALSE}
@@ -51,7 +51,7 @@ semy_foils <- split(words, words$Target %in% aim1_stim$good_semy) %>%
 ```
 
 Table \@ref(tab:aim1-all-items) lists the items used for the visual world
-experiment. Each row of the table represents a set of four images used
+experiment in Aim 1. Each row of the table represents a set of four images used
 in a trial. There were two blocks of trials with different images and
 trial orderings. For the two unrelated foils with more than one word
 listed, the two foils were used in different blocks.
