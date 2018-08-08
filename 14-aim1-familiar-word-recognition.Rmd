@@ -29,20 +29,20 @@ nsamples <- nrow(as.data.frame(b))
 Growth curve analysis
 ------------------------------------------------------------------------
 
-Looks to the familiar image were analyzed using Bayesian mixed
-effects logistic regression. I used *logistic* regression because
-the outcome measurement is a probability (the log-odds of looking to the
-target image versus a distractor). I used *mixed-effects* models
-to estimate a separate growth curve for each child (to
-measure individual differences in word recognition) but also treat each
-child's individual growth curve as a draw from a distribution of related
-curves. I used *Bayesian* techniques to study a generative model of the
-data. Instead of reporting and describing a single, best-fitting model
-of some data, Bayesian methods consider an entire distribution of
-plausible models that are consistent with the data and any prior
-information we have about the models. By using this approach, one can
-explicitly quantify uncertainty about statistical effects and draw
-inferences using estimates of uncertainty (instead of using statistical
+Looks to the familiar image were analyzed using Bayesian mixed effects
+logistic regression. I used *logistic* regression because the outcome
+measurement is a probability (the log-odds of looking to the target
+image versus a distractor). I used *mixed-effects* models to estimate a
+separate growth curve for each child (to measure individual differences
+in word recognition) but also treat each child's individual growth curve
+as a draw from a distribution of related curves. I used *Bayesian*
+techniques to study a generative model of the data. Instead of reporting
+and describing a single, best fit of some data, Bayesian methods
+consider an entire distribution of plausible fits that are consistent
+with the data and any prior information we have about the model
+parameters. By using this approach, one can explicitly quantify
+uncertainty about statistical effects and draw inferences using
+estimates of uncertainty (instead of using statistical
 significance—which is not a straightforward matter for mixed-effects
 models).[^2]
 
@@ -66,7 +66,7 @@ $$
 
 That the time terms are *orthogonal* means that $\text{Time}^1$,
 $\text{Time}^2$ and $\text{Time}^3$ are transformed so that they
-are uncorrelated. Under this formulation, the parameters $\beta_0$ and
+are uncorrelated. See Box 1. Under this formulation, the parameters $\beta_0$ and
 $\beta_1$ have a direct interpretation in terms of lexical processing
 performance. The intercept, $\beta_0$, measures the area under the
 growth curve—or the probability of fixating on the target word averaged
@@ -76,21 +76,172 @@ estimates the steepness of the growth curve—or how the probability of
 fixating changes from frame to frame. We can think of $\beta_1$ as a
 measure of *processing efficiency*, because growth curves with stronger
 linear features exhibit steeper frame-by-frame increases in looking
-probability.[^3]
+probability.
 
 
-[^3]: The polynomial other terms are less important—or rather, they 
-    do not map as neatly onto behavioral descriptions as the accuracy
-    and efficiency parameters. The primary purpose of quadratic and
-    cubic terms is to ensure that the estimated growth curve adequately
-    fits the data. In this kind of data, there is a steady baseline at
-    chance probability before the child hears the word, followed a
-    window of increasing probability of fixating on the target as the
-    child recognizes the word, followed by a period of plateauing and
-    then diminishing looks to target. The cubic polynomial allows the
-    growth curve to be fit with two inflection points: the point when
-    the looks to target start to increase from baseline and the point
-    when the looks to target stops increasing.
+\Begin{infobox}
+<div class = "infobox">
+
+**Box 1: Orthogonal time**.
+
+I used orthogonal polynomial features of Time for these growth curve
+models. Unlike natural polynomials, these features are uncorrelated.
+This aspect makes these models more flexible: I do not have to worry
+about any collinearity of Time^1^ between Time^2^. Moreover, adding an
+orthogonal cubic Time^3^ term to a quadratic model will not change any
+of the estimates for Time^1^ or Time^2^ because the added predictor is
+not correlated with the others. One disadvantage of this approach is
+that the features are not as straightforward to interpret. 
+
+The figure below shows the orthogonal polynomials used by the model and
+how they can be weighted and summed to fit a growth curve.
+
+```{r infobox-ot-figs, message = FALSE, echo = FALSE, out.width = out_tex80_else66, fig.width = 6, fig.height = 3, fig.align = "center"}
+t1_fam <- structure(
+  list(
+    Time = c(
+      250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900,
+      950, 1000, 1050, 1100, 1150, 1200, 1250, 1300, 1350, 1400, 1450, 1500),
+    Prop = c(
+      0.252, 0.255, 0.257, 0.261, 0.265, 0.275, 0.286, 0.298, 0.311, 0.315,
+      0.329, 0.342, 0.365, 0.392, 0.407, 0.422, 0.446, 0.464, 0.479, 0.497,
+      0.514, 0.524, 0.532, 0.545, 0.549, 0.555)),
+  .Names = c("Time", "Prop"),
+  class = c("tbl_df", "tbl", "data.frame"),
+  row.names = c(NA, -26L))
+
+times <- t1_fam$Time %>% modelr::seq_range(80) 
+
+t1_fam <- t1_fam %>% 
+  polypoly::poly_add_columns(Time, 3, "ot", scale_width = 1)
+t1_poly <- lm(Prop ~ ot1 + ot2 + ot3, data = t1_fam)
+
+poly_basis <- times %>% 
+  poly(3) %>% 
+  polypoly::poly_rescale(scale_width = 1) %>% 
+  polypoly::poly_melt() %>%
+  mutate(Time = rep(times, 3))
+
+p1 <- ggplot(poly_basis) +
+  aes(x = Time, y = value) +
+  geom_line(aes(color = degree)) +
+  # ylim(c(-2, 2)) +
+  guides(color = FALSE) +
+  ggtitle("Basis functions (time features)") +
+  labs(
+    x = constants$x_time,
+    y = NULL) +
+  geom_text(
+    aes(label = label, color = factor(degree)),
+    data = data_frame(
+      Time = c(1100, 850, 600),
+      value = c(.32, -.42, .43),
+      label = c("Time^1", "Time^2", "Time^3"),
+      degree = c(1, 2, 3)),
+    parse = TRUE,
+    size = 4,
+    family = "Lato Semibold") +
+  theme_teej(base_size = 9)  +
+  scale_y_continuous(breaks = c(-.5,  0,  .5)) +
+  theme(
+    plot.background = element_rect(
+      fill = constants$col_infobox_blue,
+      colour = constants$col_infobox_blue),
+    panel.background = element_rect(fill = constants$col_infobox_plot_bg))
+
+scaled <- t1_fam$Time %>% 
+  modelr::seq_range(80) %>% 
+  poly(3) %>% 
+  polypoly::poly_rescale(scale_width = 1) 
+  
+poly_weighted <- (scaled %*% diag(coef(t1_poly)[-1])) %>%
+  polypoly::poly_melt() %>%
+  mutate(Time = rep(times, 3))
+
+p2 <- ggplot(poly_weighted) +
+  aes(x = Time, y = value) +
+  geom_line(aes(color = factor(degree))) +
+  stat_summary(
+    fun.y = sum,
+    color = constants$col_blue_highlight,
+    geom = "line",
+    size = 1.25) +
+  geom_text(
+    aes(label = label, color = factor(degree)),
+    data = data_frame(
+      Time = c(550, 500, 1200),
+      value = c(-.05, .03, .04),
+      label = c("Time^1", "Time^2", "Time^3"),
+      degree = c(1, 2, 3)),
+    parse = TRUE,
+    size = 4,
+    family = "Lato Semibold"
+  ) +
+  annotate("text",
+           label = "sum", 
+           x = 1340, 
+           y = .175, 
+           color = constants$col_blue_highlight,
+           size = 4,
+           family = "Lato Semibold") +
+  ylim(c(-.2, .2)) +
+  guides(color = FALSE) +
+  ggtitle("Weighted basis functions") +
+  labs(
+    x = constants$x_time,
+    y = NULL) +
+  theme_teej(base_size = 9)  +
+  theme(
+    plot.background = element_rect(
+      fill = constants$col_infobox_blue,
+      colour = constants$col_infobox_blue),
+    panel.background = element_rect(fill = constants$col_infobox_plot_bg))
+
+p3 <- cowplot::plot_grid(p1, p2)
+print(p3)
+```
+
+Note that the time features and weighted features are vertically
+centered around 0. The curves adjusted up and down to their correct
+position by the model's intercept term. This is why in these models, the
+intercept is not the value at some time 0 but instead the average value
+of the fitted growth curve. For these word recognition models, the
+intercept is the average probability of the curve.
+
+For all the polynomial growth curves models I used in this project, I
+scaled the features so that Time^1^ ranges from −.5 to .5. In other
+words, a 1-unit change on Time^1^ marks the whole traversal across the
+analysis window. After scaling, Time^2^ ranges from −.33 to .60 and
+Time^3^ ranges from −.63 to .63.
+
+In my experience, only the intercept terms and linear time trends of an
+orthogonal polynomial model have a behaviorally straightforward
+interpretation. The polynomial other terms are less important—or rather,
+they do not map as neatly onto behavioral descriptions as the accuracy
+and efficiency parameters. The primary purpose of quadratic and cubic
+terms is to ensure that the estimated growth curve adequately fits the
+data. In this kind of data, there is a steady baseline at chance
+probability before the child hears the word, followed a window of
+increasing probability of fixating on the target as the child recognizes
+the word, followed by a period of plateauing and then diminishing looks
+to target. The cubic polynomial allows the growth curve to be fit with
+two inflection points: the point when the looks to target start to
+increase from baseline and the point when the looks to target stops
+increasing.
+</div>
+\End{infobox}
+
+
+
+
+
+
+
+
+
+
+
+
 
 To study how word recognition changes over time, I modeled how the
 growth curves change over developmental time. This amounted to studying

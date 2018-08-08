@@ -53,7 +53,7 @@ comprises 4000 samples from the posterior distribution.
 The code used to fit the model with RStanARM is printed below. The
 variables `ot1`, `ot2`, and `ot3` are the polynomial time features,
 `ResearchID` identifies children, and `Study` identifies the age/year of
-the study. `Primary` counts the number of looks to the target image at
+the longitudinal project. `Primary` counts the number of looks to the target image at
 each time bin; `Others` counts looks to the other three images.
 `cbind(Primary, Others)` is used to package both counts together for a
 logistic regression.
@@ -87,14 +87,16 @@ and `ot3`.
 
 The line `(ot1 + ot2 + ot3 | ResearchID/Study)` describes the
 random-effect structure of the model with the `/` indicating that data
-from each `Study` is nested within each `ResearchID`. Thus, for each
-child, we have a general intercept and general effects for Time^1^,
-Time^2^, and Time^3^. These child-level effects are further adjusted
-using `Study:ResearchID` effects. The effects in each level are allowed
-to correlate. For example, I would expect that participants with low
-average looking probabilities (low intercepts) to have flatter growth
-curves (low Time^1^ effects), and this relationship would be captured by
-one of the random-effect correlation terms. 
+from each `Study` is nested within each `ResearchID`. Put another way,
+`... | ResearchID/Study` expands into `... | ResearchID` and 
+`... | ResearchID:Study`. Thus, for each child, we have general `ResearchID`
+effects for the intercept, Time^1^, Time^2^, and Time^3^. These
+child-level effects are further adjusted using `Study:ResearchID`
+effects. The effects in each level are allowed to correlate. For
+example, I would expect that participants with low average looking
+probabilities (low intercepts) to have flatter growth curves (low
+Time^1^ effects), and this relationship would be captured by one of the
+random-effect correlation terms.
 
 Printing the model object reports the point estimates of the model fixed
 effects and point-estimate correlation matrices for the random effects.
