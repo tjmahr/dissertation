@@ -18,7 +18,7 @@ These models were fit in R [vers. 3.5.0; @R-base] with the brms package
 [vers. 2.3.1; @brms].
 
 The orthogonal polynomial features for Time, they were scaled as in
-Specific Aim 1, so that the linear feature ranged from −.5 to .5. Under
+Study 1, so that the linear feature ranged from −.5 to .5. Under
 this scaling a unit change in Time^1^ was equal to change from the start
 to the end of the analysis window.
 

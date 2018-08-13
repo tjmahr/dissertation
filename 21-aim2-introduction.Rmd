@@ -228,9 +228,9 @@ experiment here was a mispronunciation study following the paradigms of
 @WhiteMorgan2008 and @MPPaper. Children saw a familiar object and
 unfamiliar object and heard either a real word (*shoes*), a one-feature
 mispronunciation of the word (*suze*), or a nonword (*geeve*).
-The study is described in detail in [Chapter \@ref(aim2-method)](#aim2-method).
+The study is described in detail in [Chapter \@ref(aim2-method)](#aim2-method).
 
-In [Chapter \@ref(real-nonword-selection)](#real-nonword-selection), I examine
+In [Chapter \@ref(real-nonword-selection)](#real-nonword-selection), I examine
 children's development of referent selection in unambiguous contexts by
 comparing their performance in the real word and nonword conditions. Of
 interest is whether real word and nonword processing follow similar
@@ -243,7 +243,7 @@ Under this assumption, I predict that nonword referent selection will be
 a better measure of later vocabulary growth than familiar word
 recognition.
 
-In [Chapter \@ref(sensitivity-to-mispronunciations)](#sensitivity-to-mispronunciations), I
+In [Chapter \@ref(sensitivity-to-mispronunciations)](#sensitivity-to-mispronunciations), I
 study how children's responses to mispronunciations changed with age. 
 From the literature review above, I expect preschoolers to treat the
 mispronunciations as passable but still flawed productions of known
@@ -254,9 +254,9 @@ report data from age 5 where we tested children's retention of the novel
 images paired with the nonwords and mispronunciations. 
 
 Finally, in 
-[Chapter \@ref(aim2-discussion)](#aim2-discussion), I describe the 
+[Chapter \@ref(aim2-discussion)](#aim2-discussion), I describe the 
 both sets of analyses together, and
-[Chapter \@ref(aim2-h-check)](#aim2-h-check) reviews the results of 
-my pre-analysis research hypotheses. In [Appendix \@ref(aim2-mp-items)](#aim2-mp-items), I briefly present
+[Chapter \@ref(aim2-h-check)](#aim2-h-check) reviews the results of 
+my pre-analysis research hypotheses. In [Appendix \@ref(aim2-mp-items)](#aim2-mp-items), I briefly present
 the results for specific mispronunciations, although item effects are 
 not formally modeled. 

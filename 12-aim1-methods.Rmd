@@ -134,13 +134,16 @@ if (knitr:::is_latex_output()) {
     "Participant characteristics. Education levels: \\textit{Low}: less than 
      high school, or high school; \\textit{Middle}: trade school, technical or 
      associates degree, some college, or college degree; and \\textit{High}: 
-     graduate degree.", 
+     graduate degree. Dialects: \\textit{MAE}: Mainstream American English; 
+     \\textit{AAE}: African-American English.", 
     .open = "<<", .close = ">>")
 } else {
   caption <- glue::glue(
     "Participant characteristics. Education levels: *Low*: less than high 
-    school, or high school; *Middle*: trade school, technical or associates 
-    degree, some college, or college degree; and *High*: graduate degree.")
+     school, or high school; *Middle*: trade school, technical or associates 
+     degree, some college, or college degree; and *High*: graduate degree.
+     Dialects: *MAE*: Mainstream American English; *AAE*: African-American 
+     English.")
 }
 
 df_summary %>% 

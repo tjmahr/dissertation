@@ -74,10 +74,10 @@ raw_data <- looks %>%
 
 
 Data collection for this experiment occurred during the same
-longitudinal study as the familiar word recognition experiment of Aim 1.
+longitudinal study as the familiar word recognition experiment of Study 1.
 Thus, this experiment used the same participants, the same stimulus
 preparation and style, and the same general experimental procedure as
-those reported in detail in [Chapter \@ref(aim1-method)](#aim1-method).
+those reported in detail in [Chapter \@ref(aim1-method)](#aim1-method).
 
 
 Mispronunciation task
@@ -88,7 +88,7 @@ by @WhiteMorgan2008 and @MPPaper. In the experiment, two images are
 presented onscreen—a familiar object and an unfamiliar object—and the
 child hears a prompt to view one of the images. In the *correct
 pronunciation* (or *real word*) and *mispronunciation* conditions, the
-child hears either the familiar word (e.g., *soup*) or a one-feature
+child hears either the familiar word (e.g., *soup*) or a one-feature
 mispronunciation of the first consonant of the target word (*shoup*).
 These conditions are designed to test whether children associate
 mispronunciations with novel objects. To encourage fast referent selection,

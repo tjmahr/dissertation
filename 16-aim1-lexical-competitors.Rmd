@@ -300,7 +300,7 @@ if (file.exists(phon_by_year)) {
 
 To model these data, I fit a generalized additive model with fast
 restricted maximum likelihood estimation [@Wood2017; @Winter2016;
-see @Soskuthy2017 for a tutorial for linguists]. Box 1 provides a brief
+see @Soskuthy2017 for a tutorial for linguists]. Box 2 provides a brief
 overview of these models. I used the mgcv R package
 [vers. `r packageVersion("mgcv")`; @Wood2017] with support from the
 tools in the itsadug R package [vers. `r packageVersion("itsadug")`;
@@ -322,7 +322,7 @@ the specifications represented by the model syntax.
 \Begin{infobox}
 <div class = "infobox">
 
-**Box 1: Intuition behind generalized additive models**.
+**Box 2: Intuition behind generalized additive models**.
 
 In these analyses, the outcome of interest is a value that changes over
 time in a nonlinear way. We model these time series by building a set of

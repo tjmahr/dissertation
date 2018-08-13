@@ -35,7 +35,7 @@ build up the activation of *soup*. This prepotent activation would make
 the mismatch from the mispronunciation more severe leading to greater
 uncertainty. This explanation, however, implies some kind of inhibition
 where *soup* suppresses the activation of "sh"-initial words. The
-results from Specific Aim 1, which do not provide any evidence for changes
+results from Study 1, which do not provide any evidence for changes
 in inhibition, make me skeptical of this explanation. Thus, the
 effect of children's fixation location on their immediate response to
 speech provides an avenue for further research in this area.
@@ -91,7 +91,7 @@ Limitations and implications
 ------------------------------------------------------------------------
 
 The primary limitation for this study is that it applied a procedure
-designed for toddlers [@@WhiteMorgan2008] on preschoolers. That is to
+designed for toddlers [@WhiteMorgan2008] on preschoolers. That is to
 say, the two-image task was too easy for there to be large
 year-over-year developmental changes in children's performance. Children
 were successful at recognizing real words and fast-selecting referents

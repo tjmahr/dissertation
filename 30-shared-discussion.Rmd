@@ -1,7 +1,7 @@
 (PART\*) Afterword  {#part-end-matter .unnumbered}
 =======================================================================
 
-General discussion of both studies
+General discussion of both studies {#both-studies-discussion}
 =======================================================================
 
 In this chapter, I integrate results from the two studies. First, I
@@ -28,7 +28,7 @@ the model of word recognition needs to account for:
 As a baseline for word recognition mechanisms, I will start with 1) a
 continuous activation model 2) that uses different levels of
 representation---in other words, TRACE [@TRACE]. In my preceding
-interpretations of the data from Aim 1 and Aim 2, I assumed a
+interpretations of the data from Study 1 and Study 2, I assumed a
 TRACE-like architecture, so it is helpful to briefly review what this
 model does.
 
@@ -154,7 +154,7 @@ rhyme (*speaker*). (Anecdotally, my name is Tristan, but in grade school,
 I always snapped to attention whenever Kristen's name was called.)
 
 The mechanisms that predict how rhymes can engage in lexical
-competition also explain the disruptive mispronunciation effects observed in Aim 2. The
+competition also explain the disruptive mispronunciation effects observed in Study 2. The
 initial /s/ in *suze* sends the listener down a lexical garden path,
 activating /s/-initial words. The arrival of the rest of the word---plus the presentation of an image shoes onscreen---supports *shoes* as an
 interpretation of the word. But there is much less certainty in this
@@ -167,7 +167,7 @@ example, at age 5, *suze* reached 60% looking to the familiar image and
 likely to activate the familiar word when given a mispronunciation, and this
 change likely reflects general improvements in activation
 efficiency. Gains in activation efficiency are consistent with the
-results for familiar word recognition in Aim 1 where children showed increases in
+results for familiar word recognition in Study 1 where children showed increases in
 overall looking probability and in how quickly looking probabilities
 changed during a trial.
 
@@ -204,7 +204,7 @@ retention for the nonwords and mispronunciations at age 5. In
 @McMurray2012, learning was associative. The model developed connections between
 spoken words, lexical items, and visual referents when spoken words and
 visual referents occurred together, and each co-occurrence built up the
-connections. On the mispronunciation trials from Aim 2, a
+connections. On the mispronunciation trials from Study 2, a
 child heard a mispronunciation of a familiar word and also saw an image
 of the familiar (mispronounced) word. On average, they tended to interpret the
 mispronunciation as the familiar word. Thus, the familiar word competed
@@ -264,7 +264,7 @@ correlated with vocabulary scores at later ages.
 
 There are three immediate open questions from this research. First, how does
 lexical inhibition change over this developmental window? The results
-from Aim 1 show that phonologically and semantically similar
+from Study 1 show that phonologically and semantically similar
 words become more relevant during word recognition as children grow
 older. (The words became more active, compared to the unrelated
 word.) I did not observe any clear changes in how quickly those words were
@@ -360,7 +360,7 @@ bottom-up activation.
 Clinical implications
 ----------------------------------------------------------------------
 
-The results of Aim 1 remind us that words
+The results of Study 1 remind us that words
 are not simply acquired---they are recognized, learned, and *integrated*. In the first
 study, children's recognition of highly familiar words improved each year.
 Children's representations of familiar words will continue to develop,
@@ -425,7 +425,7 @@ held over the preschool years. The results here indicate that the
 differences are task-specific: A more age-appropriate four-image task
 can better differentiate preschoolers than a simpler two-image one.
 
-A final contribution comes from Aim 2. This study was limited
+A final contribution comes from Study 2. This study was limited
 by how apparently easy it was for preschoolers. After all, it was
 a 2-AFC task where one of the images was always a familiar object and the
 other was an unfamiliar object. That limitation was revealing, showing
