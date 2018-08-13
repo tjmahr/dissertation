@@ -1,4 +1,4 @@
-Computational details for Aim 1 {#aim1-gca-models}
+Computational details for Study 1 {#aim1-gca-models}
 ========================================================================
 
 ```{r setup, include = FALSE}
@@ -46,17 +46,17 @@ d_m %>%
 ```
 
 It took approximately 24 hours to run the model on four Monte Carlo
-sampling chains with 1000 warm-up iterations and 1000 sampling
+sampling chains with 1,000 warm-up iterations and 1,000 sampling
 iterations. Warm-up iterations are discarded, so the model
-comprises 4000 samples from the posterior distribution.
+comprises 4,000 samples from the posterior distribution.
 
 The code used to fit the model with RStanARM is printed below. The
 variables `ot1`, `ot2`, and `ot3` are the polynomial time features,
 `ResearchID` identifies children, and `Study` identifies the age/year of
-the longitudinal project. `Primary` counts the number of looks to the target image at
-each time bin; `Others` counts looks to the other three images.
-`cbind(Primary, Others)` is used to package both counts together for a
-logistic regression.
+the longitudinal project. `Primary` counts the number of looks to the
+target image at each time bin; `Others` counts looks to the other three
+images. `cbind(Primary, Others)` is used to package both counts together
+for a logistic regression.
 
 ```{r, eval = FALSE, echo = TRUE}
 library(rstanarm)
@@ -72,6 +72,9 @@ m <- stan_glmer(
   prior = normal(0, 1),
   prior_intercept = normal(0, 5),
   prior_covariance = decov(2, 1, 1),
+  control = list(
+    adapt_delta = .95, 
+    max_treedepth = 15),
   data = d_m)
 
 # Save the output
@@ -117,14 +120,31 @@ The model used the following priors:
 prior_summary(m)
 ```
 
-The priors for the intercept and regression coefficients are wide, very
+The priors for the intercept and regression coefficients are wide, 
 weakly informative normal distributions. These distributions are
 centered at 0, so negative and positive effects are equally likely. The
 intercept distribution as a standard deviation of 5, and the
 coefficients have a standard deviation of around 3. On the log-odds
 scale, 95% looking to target would be 2.94, so effects of this magnitude
 are easily accommodated by distributions like 
-Normal(0 [mean], 3 [SD]) and Normal(0, 5).
+Normal(0 [mean], 3 [SD]) and Normal(0, 5). 
+
+These priors are very conservative, including information about the size
+of an effect but not its direction. @Gelman2014 describe two types of
+errors that can arise when estimating an effect or model parameter: Type
+S errors where the *sign* of the estimated effect is wrong and Type M
+errors where the magnitude of the estimated effect is wrong. From this
+perspective, the priors here are uninformative in terms of the sign:
+Both positive and negative effects are equally likely before seeing the
+data. Future work on these models should incorporate sign information
+into the priors: For example, it is
+a safe bet that the linear time effect will be positive---the curves
+goes up---so that prior can be adjusted to have a positive, non-zero
+mean. For this model, I incorporated weak information regarding the
+magnitude of the effects (an SD of 3 for all effects). On the basis of
+the estimates here, I employed more informative priors in Study 2
+with an SD of 2 for the linear time effect and an SD of 1 for other
+effects.
 
 For the random-effect part of the model, I used RStanARM's `decov()`
 prior which simultaneously sets a prior on the variances and
@@ -139,7 +159,7 @@ center. The motivation for this kind of prior was *regularization*: I
 give the model a small amount of information to nudge it away from
 extreme, degenerate values.
 
-(ref:lkj-prior) Samples of correlation effects drawn from *LKJ*(1) and *LKJ*(2) priors. 
+(ref:lkj-prior) Samples of correlation effects drawn from LKJ(1) and LKJ(2) priors. 
 
 ```{r lkj-prior, fig.cap = "(ref:lkj-prior)", echo = FALSE, out.width = "50%", fig.height = 3, fig.width = 4, message = FALSE}
 correlations <- readr::read_csv("./data/aim1-lkj-prior-demo.csv.gz")
@@ -168,6 +188,57 @@ summary(
   digits = 3)
 ```
 
+
+### Convergence diagnostics for Bayesian models
+
+For the Bayesian models estimated in Study 1 and Study 2, I assessed
+model convergence by checking software warnings and checking sampling
+diagnostics. Stan programs emit warnings when the Hamiltonian Monte
+Carlo sampler runs into problems like divergent transitions or a low
+Bayesian Fraction of Missing Information statistic. When I encountered
+these warnings, I handled them by adjusting the sampling controls, as
+documented in &lt;<http://mc-stan.org/misc/warnings.html>&gt;, or incorporating
+more information into the model's priors. In the above model, for
+example, the `adapt_delta` and `max_treedepth` controls were increased
+to help the model more carefully explore the posterior distribution.
+
+```{r, message = TRUE, echo = TRUE}
+rstan::check_hmc_diagnostics(m$stanfit)
+```
+
+Additionally, I also checked for convergence by using Markov Chain Monte
+Carlo diagnostics. The models consisted of four sampling chains which
+explore the posterior distribution from random starting locations. The
+split $\hat{R}$ ("*R*-hat") diagnostic checks how well the sampling
+chains mix together [@StanManual, p. 371; @BDA3, p. 285]. If the
+chains are stuck in their own
+neighborhoods of the parameter space, then the values sampled in each
+chain will not mix very well. The *split* designation means that each
+chain is first split in
+half so that the also diagnostic checks for within-chain mixing. At
+convergence $\hat{R}$ equals 1, so a rule of thumb is that $\hat{R}$
+should be less than 1.1 [e.g., @BDA3, p. 285]. In the bayesplot
+package [@bayesplot], we use the convention that values below 1.05 are
+*good* and values above 1.05 but below than 1.1 are *okay*.
+
+The other diagnostic I monitored was the number of effective samples. If
+we think of a sampling chain as exploring a parameter space, then the
+samples form a random walk with each step being a movement from an
+earlier location. This situation raises the risk of *autocorrelation*
+where neighboring sampling steps within a chain are correlated with each
+other. The number of effective samples ("*n* eff.") diagnostic estimates
+the number of posterior samples, taking into account sampling
+autocorrelation [@StanManual, p. 373; @BDA3, p. 285]. The square root
+of this number is used to calculate Monte Carlo standard error
+statistics [e.g., @BDA3, p. 267], so I think of the number of
+effective samples as the amount of precision available for a parameter
+estimate. Interpreting this statistic depends on the quantity being
+estimated and the amount of precision desired. As a rule of thumb, @BDA3
+mentions 10 effective samples per chain as a baseline for diagnosing
+non-convergence: "Having an effective sample size of 10 per sequence
+should typically correspond to stability of all the simulated sequences.
+For some purposes, more precision will be desired, and then a higher
+effective sample size threshold can be used. [p. 287]"
 
 
 

@@ -1,4 +1,4 @@
-Computational details for Aim 2 {#aim2-gca-models}
+Computational details for Study 2 {#aim2-gca-models}
 ========================================================================
 
 ```{r, include = FALSE}
@@ -48,17 +48,19 @@ formula <- bf(
   family = binomial)
 ```
 
-The priors for the model are described below. The regression effects
-(`class = "b"`) have a moderately informative prior of Normal(0, 1).
-Because most of the action in the growth curves is a sharp rise, the
-linear time effect `ot1` has a slightly wider prior of Normal(0, 2). A
-weakly informative LKJ(2) prior is put on the random-effect
-correlations. I review the role of the LKJ prior in  
+The priors for the model are specified below. The regression effects
+(`class = "b"`) have a prior of Normal(0, 1). Because most of the action
+in the growth curves is a sharp rise, the linear time effect `ot1` has a
+slightly wider prior of Normal(0, 2). These priors are uninformative in
+terms of direction--both positive and negative effects are equally
+likely--but they are informative in terms of magnitude. A weakly
+informative LKJ(2) prior is put on the random-effect correlations. I
+review the role of the LKJ prior in 
 [Appendix \@ref(aim1-gca-models)](#aim1-gca-models). A weakly informative
 prior is put on the random-effect standard deviations
-Student-*t*([df] 7, [mean] 0, [sd] 3). The Student-*t* distribution
-is like the normal distribution but it provides slightly thicker
-tails which allow extreme or outlying values.
+Student-*t*([df] 7, [mean] 0, [sd] 3). The Student-*t*
+distribution is like the normal distribution but it provides slightly
+thicker tails which allow extreme or outlying values.
 
 ```{r, eval = FALSE, echo = TRUE}
 priors <- c(
@@ -125,7 +127,6 @@ summary(m3, priors = TRUE, prob = .9)
 
 Mispronunciation growth curves
 ------------------------------------------------------------------------
-
 
 Like the models above, these ones are Bayesian mixed-effects logistic
 regression growth curve models fit with brms. I used two separate

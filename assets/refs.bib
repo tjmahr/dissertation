@@ -43,13 +43,6 @@
 }
 
 
-@book {Mirman2014,
-  author    = {Mirman, Daniel},
-  title     = {Growth Curve Analysis and Visualization Using {R}},
-  address   = {Boca Raton, FL},
-  publisher = {Chapman \& Hall/CRC},
-  year      = {2014},
-}
 
 @article {Weisleder2013,
   author   = {Weisleder, Adriana and Fernald, Anne},
@@ -691,6 +684,60 @@ year = {2015}
   url    = {http://www.eyetracking-R.com},
 }
 
+@Manual {StanManual,
+  title   = {{Stan} Modeling Language: User’s Guide and Reference Manual},
+  author  = {{Stan Development Team}},
+  year    = {2017},
+  month   = {September},
+  note    = {Version 2.17.0},
+}
+
+@book {BDA3,
+  title     = {{Bayesian} Data Analysis},
+  author    = {Andrew Gelman and John B. Carlin and Hal S. Stern and David B. Dunson and Aki Vehtari and Donald B. Rubin},
+  year      = {2014},
+  edition   = {3},
+  publisher = {CRC Press/Taylor \& Francis Group},
+  address   = {Boca Raton, FL},
+  series    = {Chapman \& Hall/CRC Texts in Statistical Science},
+  url={https://books.google.com/books?id=ZXL6AQAAQBAJ},
+}
+
+@book {Wood2017,
+  title     = {Generalized Additive Models: An Introduction with {R}},
+  author    = {Wood, Simon N.},
+  edition   = {2},
+  series    = {Chapman \& Hall/CRC Texts in Statistical Science},
+  year      = {2017},
+  publisher = {CRC Press/Taylor \& Francis Group},
+  address   = {Boca Raton, FL},
+}
+
+@Manual{bayesplot,
+  title = {bayesplot: Plotting for {Bayesian} Models},
+  author = {Jonah Gabry and Tristan Mahr},
+  year = {2018},
+  note = {R package version 1.6.0},
+  url = {https://CRAN.R-project.org/package=bayesplot},
+}
+
+@book {Mirman2014,
+  author    = {Mirman, Daniel},
+  title     = {Growth Curve Analysis and Visualization Using {R}},
+  address   = {Boca Raton, FL},
+  publisher = {CRC Press/Taylor \& Francis Group},
+  year      = {2014},
+  series    = {Chapman \& Hall/CRC The {R} Series},
+}
+
+@book {RethinkingBook,
+  title     = {Statistical Rethinking: A {Bayesian} Course with Examples in {R} and {Stan}},
+  author    = {Richard McElreath},
+  year      = {2016},
+  publisher = {CRC Press/Taylor \& Francis Group},
+  address   = {Boca Raton, FL},
+  series    = {Chapman \& Hall/CRC Texts in Statistical Science},
+}
 
 
 @article {Oleson2015,
@@ -760,13 +807,6 @@ year = {2015}
   address   = {Minneapolis, MN},
 }
 
-@book{RethinkingBook,
-  title={Statistical Rethinking: A {Bayesian} Course with Examples in {R} and {Stan}},
-  author    = {Richard McElreath},
-  year      = {2016},
-  publisher = {CRC Press/Taylor \& Francis Group},
-  address   = {Boca Raton, FL},
-}
 
 @book {GelmanHill,
   title={Data Analysis Using Regression and Multilevel/Hierarchical Models},
@@ -816,14 +856,7 @@ url = {http://arxiv.org/abs/1703.05339},
 year = {2017}
 }
 
-@book {Wood2017,
-  title     = {Generalized Additive Models: An Introduction with {R}},
-  author    = {Wood, Simon N.},
-  edition   = {2},
-  series    = {Chapman \& Hall/CRC Texts in Statistical Science},
-  year={2017},
-  publisher={CRC Press}
-}
+
 
 @misc {itsadug,
   title  = {{itsadug}: Interpreting Time Series and Autocorrelated
@@ -1021,18 +1054,18 @@ volume = {118},
 year = {2011}
 }
 
- @article{brms,
-    title    = {{brms}: An {R} Package for {Bayesian} Multilevel
-                Models Using {Stan}},
-    author   = {Paul-Christian Bürkner},
-    journal  = {Journal of Statistical Software},
-    year     = {2017},
-    volume   = {80},
-    number   = {1},
-    pages    = {1--28},
-    doi      = {10.18637/jss.v080.i01},
-    encoding = {UTF-8},
-  }
+@article{brms,
+  title    = {{brms}: An {R} Package for {Bayesian} Multilevel
+              Models Using {Stan}},
+  author   = {Paul-Christian Bürkner},
+  journal  = {Journal of Statistical Software},
+  year     = {2017},
+  volume   = {80},
+  number   = {1},
+  pages    = {1--28},
+  doi      = {10.18637/jss.v080.i01},
+  encoding = {UTF-8},
+}
 
 @article{Bion2013,
 abstract = {When hearing a novel name, children tend to select a novel object rather than a familiar one, a bias known as disambiguation. Using online processing measures with 18-, 24-, and 30-month-olds, we investigate how the development of this bias relates to word learning. Children's proportion of looking time to a novel object after hearing a novel name related to their success in retention of the novel word, and also to their vocabulary size. However, skill in disambiguation and retention of novel words developed gradually: 18-month-olds did not show a reliable preference for the novel object after labeling; 24-month-olds reliably looked at a novel object on Disambiguation trials but showed no evidence of retention; and 30-month-olds succeeded on Disambiguation trials and showed only fragile evidence of retention. We conclude that the ability to find the referent of a novel word in ambiguous contexts is a skill that improves from 18 to 30months of age. Word learning is characterized as an incremental process that is related to - but not dependent on - the emergence of disambiguation biases.},
@@ -1231,4 +1264,18 @@ title = {War of the Words: Development of Inter-Lexical Inhibition in Typical Ch
 year = {2017},
 url = {https://ir.uiowa.edu/honors_theses/31}
 }
+
+
+@article{Gelman2014,
+abstract = {Statistical power analysis provides the conventional approach to assess error rates when designing a research study. However, power analysis is flawed in that a narrow emphasis on statistical significance is placed as the primary focus of study design. In noisy, small-sample settings, statistically significant results can often be misleading. To help researchers address this problem in the context of their own studies, we recommend design calculations in which (a) the probability of an estimate being in the wrong direction (Type S [sign] error) and (b) the factor by which the magnitude of an effect might be overestimated (Type M [magnitude] error or exaggeration ratio) are estimated. We illustrate with examples from recent published research and discuss the largest challenge in a design calculation: coming up with reasonable estimates of plausible effect sizes based on external information.},
+author = {Gelman, Andrew and Carlin, John},
+doi = {10.1177/1745691614551642},
+journal = {Perspectives on Psychological Science},
+number = {6},
+pages = {641--651},
+title = {Beyond Power Calculations: Assessing {Type S} (Sign) and {Type M} (Magnitude) Errors},
+volume = {9},
+year = {2014}
+}
+
 
