@@ -202,11 +202,14 @@ print(p3)
 ```
 
 Note that the time features and weighted features are vertically
-centered around 0. The curves adjusted up and down to their correct
-position by the model's intercept term. This is why in these models, the
-intercept is not the value at some time 0 but instead the average value
-of the fitted growth curve. For these word recognition models, the
-intercept is the average probability of the curve.
+centered around 0. The curves are adjusted up or down to their correct
+position by the model's intercept term. Conceptually, one can also think
+of the intercept as a Time^0^ feature---that is, a horizontal line at
+*y* = 1 which is weighted to move the whole curve vertically. This is
+why in these models, the intercept is not the value at some time 0 but
+rather the average value of the fitted growth curve. To reiterate, for
+these word recognition models, the intercept is the average probability
+of the curve. 
 
 For all the polynomial growth curves models I used in this project, I
 scaled the features so that Time^1^ ranges from −.5 to .5. In other
