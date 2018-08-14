@@ -483,7 +483,7 @@ growth curves peaks for each participant.
 
 (ref:aim2-gca-peaks) Growth curve peaks by child, condition and year of the study. The movement of the medians conveys how the nonword peaks effect increased from age 3 to age 4 and the real word peaks increased from age 4 to age 5. The piling of points near the 1.0 line depicts how children reached ceiling performance on this task.
 
-```{r aim2-gca-peaks, fig.cap = "(ref:aim2-gca-peaks)", out.width = "66%", fig.height = 3, fig.width = 4.5}
+```{r aim2-gca-peaks, fig.cap = "(ref:aim2-gca-peaks)", out.width = out_tex80_else66, fig.height = 3, fig.width = 4.5}
 # Count up participants in each study for the x axis
 study_peak_counts <- peaks %>%
   distinct(Study, ResearchID) %>%
@@ -712,7 +712,7 @@ only a significant improvement from age 4 to age 5, *B*<sub>5-4</sub> =
 <!-- for a child. The figure below visualizes the condition advantages. -->
 
 
-```{r aim2-gca-diffs, out.width = "50%", fig.height = 3, fig.width = 4, eval = FALSE}
+```{r aim2-gca-diffs, out.width = out_tex80_else50, fig.height = 3, fig.width = 4, eval = FALSE}
 ant <- data_frame(
   diff = -.6, 
   Study = "Age 3", 
@@ -850,7 +850,7 @@ peaks_and_vocabs_w %>%
 
 (ref:peak-concurrent-vocab-cors) Relationship between expressive vocabulary and growth curve peaks at each age.
 
-```{r peak-concurrent-vocab-cors, fig.cap = "(ref:peak-concurrent-vocab-cors)", out.width = "75%", fig.width = 6, fig.height = 3}
+```{r peak-concurrent-vocab-cors, fig.cap = "(ref:peak-concurrent-vocab-cors)", out.width = out_tex100_else80, fig.width = 6, fig.height = 3}
 theme_set(theme_teej())
 
 to_plot <- peaks_and_vocabs_l %>% 
@@ -1105,7 +1105,7 @@ condition and small slope for the nonword condition.
 
 (ref:age-5-from-peaks) Marginal effects of age-3 referent selection measures on age-5 expressive vocabulary standard scores. The vocabulary scores were adjusted (residualized) to control for age-3 vocabulary, so these regression lines show the effects of the predictors over and above age-3 vocabulary.
 
-```{r age-5-from-peaks, fig.cap = "(ref:age-5-from-peaks)", out.width = "60%", fig.height = 5, fig.width = 5}
+```{r age-5-from-peaks, fig.cap = "(ref:age-5-from-peaks)", out.width = out_tex100_else60, fig.height = 5, fig.width = 5}
 w_l <- w_evt %>% 
   select(ResearchID, EVT_Residualized, nonsense, real, diff, both) %>% 
   rename(

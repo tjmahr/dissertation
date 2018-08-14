@@ -582,9 +582,11 @@ posterior samples of the average growth curves for each study. On
 average, the growth curves become steeper and achieve higher looking
 probabilities with each year of the study.
 
-(ref:average-growth-curves) The model estimated an average word recognition growth for each study, and the colored lines represent 200 posterior samples of these growth curves. The thick dark lines represent the observed average growth curve in each study.
+(ref:average-growth-curves) Population-average ("fixed effects") word recognition growth curves at each age. Colored lines represent 200 posterior samples of these growth curves; these are included to visualize the uncertainty about the population averages. The thick light lines represent the observed average growth curve in each study.
 
-```{r average-growth-curves, fig.cap = "(ref:average-growth-curves)", echo = FALSE, out.width = "50%", fig.height = 3, fig.width = 4}
+(ref:average-growth-curves-scap) Population-average ("fixed effects") word recognition growth curves at each age.
+
+```{r average-growth-curves, fig.cap = "(ref:average-growth-curves)", fig.scap = "(ref:average-growth-curves-scap)", echo = FALSE, out.width = out_tex80_else50, fig.height = 3, fig.width = 4}
 dummy_data <- d_m %>% 
   distinct(Study, Time, ot1, ot2, ot3) %>% 
   mutate(
@@ -625,8 +627,12 @@ lpred %>%
         mutate(Study = convert_study_to_age(Study)), 
       fun.y = "mean", 
       geom = "line", 
-      color = constants$col_off_black, 
-      size = 1) + 
+      color = 
+        scales::viridis_pal(end = 1)(3)[3],
+        # "#F8F1FF",
+        # constants$col_off_black, 
+      size = 1,
+      ) + 
     geom_text(
       aes(label = Study, y = y), 
       data = data_frame(Time = 1390, y = .83, Study = "Age 5"),
@@ -644,7 +650,6 @@ lpred %>%
       title = "Observed means and 200 posterior fits",
       x = constants$x_time,
       y = constants$y_prop_target)
-  
 ```
 
 
@@ -712,9 +717,11 @@ For each effect, the change from age 3 to age 4 is approximately the
 same as the change from age 4 to age 5, as illustrated in
 Figure \@ref(fig:pairwise-effects).
 
-(ref:effects2) Uncertainty intervals for the effects of study years on growth curve features. The intercept and peak features were converted from log-odds to proportions to ease interpretation.
+(ref:effects2) Uncertainty intervals for growth curve features at each age. The intercept and peak features were converted from log-odds to proportions to ease interpretation.
 
-```{r effects2, fig.cap = "(ref:effects2)", echo = FALSE, out.width = "100%", fig.height=4, fig.width=8}
+(ref:effects2-scap) Uncertainty intervals for growth curve features at each age.
+
+```{r effects2, fig.cap = "(ref:effects2)", fig.scap = "(ref:effects2-scap)", echo = FALSE, out.width = "100%", fig.height=4, fig.width=8}
 # Column names will have mathematical formatting too
 draws <- as.data.frame(b) %>% 
   as_tibble() %>% 
@@ -780,9 +787,11 @@ p23 <- cowplot::plot_grid(p2, p3, ncol = 1, rel_heights = c(.66, .33))
 cowplot::plot_grid(p1, p23, ncol = 2)
 ```
 
-(ref:pairwise-effects) Uncertainty intervals for the differences between study timepoints. Again, the intercept and peak features were converted to proportions.
+(ref:pairwise-effects) Uncertainty intervals for the differences in growth curve features between ages. Again, the intercept and peak features were converted to proportions.
 
-```{r pairwise-effects, fig.cap = "(ref:pairwise-effects)", fig.show = 'hold', echo = FALSE, out.width = "100%", fig.height = c(4), fig.width = c(8)}
+(ref:pairwise-effects-scap)  Uncertainty intervals for the differences in growth curve features between ages.
+
+```{r pairwise-effects, fig.cap = "(ref:pairwise-effects)", fig.scap = "(ref:pairwise-effects-scap)",  fig.show = 'hold', echo = FALSE, out.width = "100%", fig.height = c(4), fig.width = c(8)}
 clean_names <- . %>% 
   stringr::str_replace_all("[()]", "") %>% 
   stringr::str_replace("Age~~", "Age ") %>% 
@@ -1017,10 +1026,11 @@ for these simulations. The model learned to predict less accurate and
 more variable performance at age 3 with improving accuracy and narrowing
 variability at age 4 and age 5.
 
-(ref:new-participants) Posterior predictions for hypothetical *unobserved* participants. Each line represents the predicted performance for a new participant. The three dark lines highlight predictions from one single simulated participant. The simulated participant shows both longitudinal improvement in word recognition and similar relative performance compared to other simulations each year, indicating that the model would predict new children to improve year over year and show stable individual differences over time.
+(ref:new-participants) Posterior predictions for hypothetical *unobserved* participants. Each line represents the predicted performance for a new participant. The three light lines highlight predictions from one single simulated participant. The simulated participant shows both longitudinal improvement in word recognition and similar relative performance compared to other simulations each year, indicating that the model would predict new children to improve year over year and show stable individual differences over time.
 
+(ref:new-participants-scap) Posterior predictions for hypothetical *unobserved* participants. 
 
-```{r new-participants, echo = FALSE, fig.cap = "(ref:new-participants)", fig.width = 6, fig.height = 3, out.width = "80%"}
+```{r new-participants, echo = FALSE, fig.cap = "(ref:new-participants)", fig.scap = "(ref:new-participants-scap)", fig.width = 6, fig.height = 3, out.width = out_tex100_else80}
 ggplot(lpred %>% mutate(Study = convert_study_to_age(Study))) + 
   aes(x = Time, y = plogis(.posterior_value), color = Study) +
   geom_hline(yintercept = .25, size = 2, color = "white") +
@@ -1032,7 +1042,7 @@ ggplot(lpred %>% mutate(Study = convert_study_to_age(Study))) +
     data = lpred %>% 
       sample_n_of(1, .draw) %>% 
       mutate(Study = convert_study_to_age(Study)), 
-    color = "grey20",
+    color = scales::viridis_pal(end = 1)(3)[3],
     size = 1,
     show.legend = FALSE) +
   facet_wrap("Study") + 
@@ -1046,7 +1056,9 @@ ggplot(lpred %>% mutate(Study = convert_study_to_age(Study))) +
 
 (ref:new-participants-intervals) Uncertainty intervals for the simulated participants. Variability is widest at age 3 and narrowest at age 5, consistent with the prediction that children become less variable as they grow older.
 
-```{r new-participants-intervals, echo = FALSE, fig.cap = "(ref:new-participants-intervals)", fig.width = 6, fig.height = 3, out.width = "80%"}
+(ref:new-participants-intervals-scap) Uncertainty intervals for the simulated participants. 
+
+```{r new-participants-intervals, echo = FALSE, fig.cap = "(ref:new-participants-intervals)", fig.scap = "(ref:new-participants-intervals-scap)", fig.width = 6, fig.height = 3, out.width = out_tex100_else80}
 ggplot(lpred %>% mutate(Study = convert_study_to_age(Study))) + 
   aes(x = Time, y = plogis(.posterior_value), color = Study) +
   geom_hline(yintercept = .25, size = 2, color = "white") +
@@ -1076,15 +1088,17 @@ question, I inspected the ranges of predictions for the simulated
 participants. The claim that children become less variable would imply
 that the range of predictions should be narrower for age 5 than for age 4
 and narrower for age 4 than for age 3. Figure \@ref(fig:new-ranges)
-depicts the range of the predictions, both in terms of the 90 percentile
+depicts the range of the predictions, both in terms of the 90-percentile
 range (i.e., the range of the middle 90% of the data) and in terms of
-the 50 percentile (interquartile) range. The ranges of performance
+the 50-percentile (interquartile) range. The ranges of performance
 decrease from age 3 to age 4 to age 5, consistent with the hypothesized
 reduction in variability.
 
 (ref:new-ranges) Ranges of predictions for simulated participants over the course of a trial. The ranges are most similar during the first half of the trial when participants are at chance performance, and the ranges are most different at the end of the trial as children reliably fixate on the target image. The ranges of performance decreases with each year of the study as children show less variability.
 
-```{r new-ranges, echo = FALSE, fig.cap = "(ref:new-ranges)", fig.width = 6, fig.height = 3, out.width = "80%"}
+(ref:new-ranges-scap) Ranges of predictions for simulated participants over the course of a trial.
+
+```{r new-ranges, echo = FALSE, fig.cap = "(ref:new-ranges)", fig.scap = "(ref:new-ranges-scap)", fig.width = 6, fig.height = 3, out.width = out_tex100_else80}
 by_draw <- lpred %>%
   group_by(Study, Time) %>%
   summarise(
@@ -1259,7 +1273,7 @@ meaningfully from chance.
 
 (ref:kendall-stats) Uncertainty intervals for the Kendall's coefficient of concordance. Random ratings provide a baseline of null *W* statistics. The peak, intercept and linear time features are decisively non-null, indicating a significant degree of correspondence in children's relative word recognition reliability and efficiency over the three years of the study.
 
-```{r kendall-stats, fig.cap = "(ref:kendall-stats)", echo = FALSE, out.width = "80%", fig.height = 3, fig.width = 6}
+```{r kendall-stats, fig.cap = "(ref:kendall-stats)", echo = FALSE, out.width = out_tex100_else80, fig.height = 3, fig.width = 6}
 subtitle <- glue::glue(
   "Kendall's W. Raters: 3 timepoints. Items: {n_rated} children.")
 
@@ -1531,7 +1545,7 @@ concurrent correlation at age 5, *r*<sub>3−5</sub> =
 
 (ref:evt2-gca-cors) Uncertainty intervals for the correlations of growth curve features at each timepoint with age-5 expressive vocabulary (EVT-2 standard scores). The bottom rows provide intervals for the pairwise differences in correlations between timepoints. For example, the top row of the left panel is the correlation between age-3 peak probability and age-5 expressive vocabulary.
 
-```{r evt2-gca-cors, fig.cap = "(ref:evt2-gca-cors)", out.width = "80%", fig.height = 3, fig.width = 6, echo = FALSE}
+```{r evt2-gca-cors, fig.cap = "(ref:evt2-gca-cors)", out.width = out_tex100_else80, fig.height = 3, fig.width = 6, echo = FALSE}
 study_map <- c(
   "TimePoint1" = "paste(Age, phantom(l), 3)", 
   "TimePoint2" = "paste(Age, phantom(l), 4)", 
@@ -1595,7 +1609,7 @@ linear time features, *r* = `r ot1_ppvt_tp2_pts$TimePoint1`
 
 (ref:ppvt4-gca-cors) Uncertainty intervals for the correlations of growth curve features from age 43 and age 44 with age-4 receptive vocabulary (PPVT-4 standard scores). The bottom row shows pairwise differences between the age-3 and age-4 correlations.
 
-```{r ppvt4-gca-cors, fig.cap = "(ref:ppvt4-gca-cors)", out.width = "80%", fig.height = 2, fig.width = 6, echo = FALSE}
+```{r ppvt4-gca-cors, fig.cap = "(ref:ppvt4-gca-cors)", out.width = out_tex100_else80, fig.height = 2, fig.width = 6, echo = FALSE}
 main_diffs %>% 
   filter(variable == "r_TimePoint2_PPVT_Standard") %>% 
   filter(Study %in% c("TimePoint1", "TimePoint2", "TP1 - TP2")) %>% 

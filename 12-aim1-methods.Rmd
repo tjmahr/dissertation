@@ -357,7 +357,6 @@ screening_times <- looks %>%
     max_time = rules$screening_window[2] + 20) %>% 
   pull(Time) %>% 
   range()
-screening_times
 
 missing_data_by_trial <- looks %>% 
   filter(screening_times[1] <= Time, Time <= screening_times[2]) %>% 
@@ -418,15 +417,23 @@ screening_results <- list(Screened = clean_looks, Raw = looks) %>%
   distinct(Dataset, Study, ResearchID, Basename, TrialID) %>% 
   group_by(Dataset, Study) %>% 
   summarise(
-    `N Children` = n_distinct(ResearchID),
-    `N Blocks` = n_distinct(Basename),
-    `N Trials` = n_distinct(TrialID)) %>% 
+    `Children` = n_distinct(ResearchID),
+    `Blocks` = n_distinct(Basename),
+    `Trials` = n_distinct(TrialID)) %>% 
   ungroup()
 
+na_results <- list(Screened = clean_looks, Raw = looks) %>% 
+  bind_rows(.id = "Dataset") %>% 
+  filter(screening_times[1] <= Time, Time <= screening_times[2]) %>% 
+  aggregate_looks(
+    resp_def, 
+    Study + Dataset ~ GazeByImageAOI) %>% 
+  select(Dataset, Study, PropNA)
 
 
 # Add an extra set of rows computing difference
 screening_results2 <- screening_results %>% 
+  left_join(na_results) %>% 
   tidyr::gather("Stat", "Value", -Study, -Dataset) %>% 
   tidyr::spread(Dataset, Value) %>% 
   mutate(`Raw - Screened` = Raw - Screened) %>% 
@@ -434,8 +441,9 @@ screening_results2 <- screening_results %>%
   tidyr::spread(Stat, Count) %>% 
   mutate(
     Dataset = Dataset %>% 
-      factor(c("Raw", "Screened", "Raw - Screened"))) %>% 
-  select(Dataset, Study, `N Children`, `N Blocks`, `N Trials`) %>% 
+      factor(c("Raw", "Screened", "Raw - Screened")),
+    PropNA = scales::percent(PropNA)) %>% 
+  select(Dataset, Study, Children, Blocks, Trials, `Percent Missing` = PropNA) %>% 
   arrange(Dataset, Study) %>% 
   mutate(
     Dataset = Dataset %>% as.character() %>% replace_if_same_as_last(""),
@@ -443,9 +451,11 @@ screening_results2 <- screening_results %>%
 
 knitr::kable(
   screening_results2,
+  align = "llrrrr",
   caption = glue::glue(
     "Eyetracking data before and after data screening. For convenience, the \\
-     number of exclusions is included as Raw − Screened."),
+     number of exclusions is included as Raw − Screened. Percent Missing: \\
+     Percentage of looks offscreen during 0--2000 ms after target onset."),
   linesep = c("", "", "\\addlinespace"),
   caption.short = "Eyetracking data before and after data screening.", 
   booktabs = TRUE)

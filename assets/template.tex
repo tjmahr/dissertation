@@ -183,57 +183,6 @@
 \newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
 \newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
 
-% \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
-% \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
-% \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
-% \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
-% \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
-% \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
-% \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
-% \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
-% \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
-% \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
-% \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
-% \newcommand{\RegionMarkerTok}[1]{{#1}}
-% \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
-% \newcommand{\NormalTok}[1]{{#1}}
-% \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
-% \newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
-% \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
-%
-
-
-% https://github.com/nightsense/snow
-% \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
-%
-% \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
-% \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
-% \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
-%
-% \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
-% \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
-%
-% \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
-%
-% \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{{#1}}}
-% \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{{#1}}}
-%
-% \newcommand{\RegionMarkerTok}[1]{{#1}}
-%
-% % done
-% \newcommand{\NormalTok}[1]{\textcolor[rgb]{0.322,0.365,0.431}{{#1}}}
-%
-% \newcommand{\OtherTok}[1]{\textcolor{gren}{{#1}}}
-% \newcommand{\KeywordTok}[1]{\textcolor{gren}{{#1}}}
-% \newcommand{\OperatorTok}[1]{\textcolor{gren}{{#1}}}
-% \newcommand{\BuiltInTok}[1]{\textcolor{gren}{{#1}}}
-% \newcommand{\ControlFlowTok}[1]{\textcolor{gren}{{#1}}}
-%
-%
-% \newcommand{\CommentTok}[1]{\textcolor{gry2}{\textit{{#1}}}}
-
-
-
 
 
 
@@ -285,19 +234,6 @@
     \hrulefill \par\nobreak\noindent \vskip\afterchapskip}
 }
 
-% \makechapterstyle{deposit}{%
-%   \renewcommand{\chapterheadstart}{}
-%   \renewcommand{\printchaptername}{}
-%   \renewcommand{\chapternamenum}{}
-%   \renewcommand{\printchapternum}{
-%     \parbox{2em}{\MakeLowercase{\Huge\scshape\thechapter{}}}
-%   }
-%   \renewcommand{\afterchapternum}{}
-%   \renewcommand{\printchaptertitle}[1]{%
-%   \raggedright\MakeLowercase{\Huge\scshape##1}}
-%   \renewcommand{\afterchaptertitle}{%
-%   % \vskip\onelineskip \hrule\vskip\onelineskip}
-% }
 
 \makepagestyle{deposit}
 
@@ -325,33 +261,6 @@
 \makeevenhead{part}{\thepage}{}{}
 \makeoddhead{part}{}{}{\thepage}
 %%% SNIP
-
-% %%% bib nonsense
-% \makeatletter
-% \newenvironment{wb-bib}[1]{%
-%   \chapter*{references}
-% \ifnobibintoc\else
-% \phantomsection
-% \addcontentsline{toc}{chapter}{References}
-% \fi
-% \prebibhook
-%   \begin{bibitemlist}{#1}}{\end{bibitemlist}\postbibhook}
-%
-% \AtBeginDocument{%
-%   \@ifpackageloaded{natbib}{% natbib is loaded
-%     \addtodef{\endthebibliography}{}{\vskip-\lastskip\postbibhook}
-%     \@ifpackagewith{natbib}{sectionbib}{% with sectionbib option
-%       \renewcommand{\bibsection}{\@memb@bsec}}%
-%       {\renewcommand{\bibsection}{\@memb@bchap}}}%
-%   {}
-%   \@ifpackagewith{chapterbib}{sectionbib}{%
-%     \renewcommand{\sectionbib}[2]{}
-%     \renewcommand{\bibsection}{\@memb@bsec}}{}
-% }
-% \makeatother
-
-
-
 
 
 % \input{includes/defs}
@@ -523,6 +432,8 @@ $for(signature)$\indent $signature$$sep$\\*$endfor$
 \def\umiabstract{
              % \thispagestyle{empty}
                   % \addtocounter{page}{-1}
+  \addcontentsline{toc}{chapter}{Abstract}
+  % \relax\markboth{Abstract}{Abstract}}
   \begin{center}
     {\textbf{\expandafter\uppercase\expandafter{Abstract}}}\\
     \vspace{6pt}
@@ -572,13 +483,11 @@ $for(signature)$\indent $signature$$sep$\\*$endfor$
   \newpage}
 
 
-%=============================================================================
+
 % COPYRIGHTPAGE
-%=============================================================================
 % The copyright must do the following:
 % - start a new page with no number
 % - place the copyright text centered at the bottom.
-%=============================================================================
 \def\copyrightpage{
   \newpage
   \thispagestyle{empty}    % No page number
@@ -588,83 +497,70 @@ $for(signature)$\indent $signature$$sep$\\*$endfor$
    \vfill
    \copyright\ Copyright by \@author\ \@date\\
    All Rights Reserved
-  \end{center}}
+  \end{center}
+  \par\newpage}
 
 
-%=============================================================================
+
+
 % GLOSSARY
-%=============================================================================
 % The glossary environment must do the following:
 % - produce the table of contents entry for the glossary
 % - start a new page with GLOSSARY centered two inches from the top
-%=============================================================================
 \def\glossary{
   \chapter*{GLOSSARY}
   \addcontentsline{toc}{chapter}{Glossary}}
 \def\endglossary{\par\newpage}
 
-%=============================================================================
+
 % NOMENCLATURE
-%=============================================================================
 % The nomenclature environment must do the following:
 % - produce the table of contents entry for the nomenclature section
 % - start a new page with NOMENCLATURE centered two inches from the top
-%=============================================================================
 \def\nomenclature{\separatorpage{DISCARD THIS PAGE}
   \chapter*{Nomenclature}
   \addcontentsline{toc}{chapter}{NOMENCLATURE}}
 \def\endnomenclature{\par\newpage}
 
-%=============================================================================
 % CONVENTIONS
-%=============================================================================
 % The conventions environment must do the following:
 % - produce the table of contents entry for the nomenclature section
 % - start a new page with CONVENTIONS centered two inches from the top
-%=============================================================================
 \def\conventions{\separatorpage{DISCARD THIS PAGE}
   \chapter*{Conventions}
   \addcontentsline{toc}{chapter}{CONVENTIONS}}
 \def\endconventions{\par\newpage}
 
 
-%=============================================================================
 % COLOPHON
-%=============================================================================
 % The colophon environment must do the following:
 % - produce the table of contents entry for the nomenclature section
 % - start a new page with COLOPHON centered two inches from the top
-%=============================================================================
 \def\colophon{
   \chapter*{Colophon}
   \addcontentsline{toc}{chapter}{Colophon}}
 \def\endcolophon{\par\newpage}
 
-%=============================================================================
 % LIST OF SYMBOLS
-%=============================================================================
 % The list of symbols environment must do the following:
 % - produce the table of contents entry for the list of symbols section
 % - start a new page with LIST OF SYMBOLS centered two inches from the top
-%=============================================================================
 \def\listofsymbols{
   \eject
   \chapter*{LIST OF SYMBOLS}
   \addcontentsline{toc}{chapter}{LIST OF SYMBOLS}}
 \def\endlistofsymbols{\par\newpage}
 
-%=============================================================================
 % VITA
-%=============================================================================
 % The vita environment must do the following:
 % - produce a separator page with the word vita centered
 % - produce the table of contents entry for the vita
 % - start a new page with VITA centered two inches from the top
-%=============================================================================
 \def\vita{
   \chapter*{VITA}
   \addcontentsline{toc}{chapter}{VITA}}
 \def\endvita{\par\newpage}
+
 
 % ACKNOWLEDGMENTS
 \def\acks{
@@ -672,14 +568,11 @@ $for(signature)$\indent $signature$$sep$\\*$endfor$
   \addcontentsline{toc}{chapter}{Acknowledgments}}
 \def\endacks{\par\newpage}
 
-%=============================================================================
 % DEDICATION
-%=============================================================================
 % The dedication environment must do the following:
 % - start a new page
 % - center the text vertically
 % - include the text in a center environment
-%=============================================================================
 \def\dedication{
   \newpage
   \null\vfil
@@ -719,75 +612,6 @@ $for(signature)$\indent $signature$$sep$\\*$endfor$
 \newtheorem{prop}[theorem]{Proposition}
 \newtheorem{remark}[theorem]{Remark}
 
-%=============================================================================
-% TABLE OF CONTENTS; LIST OF FIGURES; LIST OF TABLES
-%=============================================================================
-% In report style, \tableofcontents, \listoffigures, etc. are always
-% set in single-column style.  @restonecol is used to keep track of
-% whether we need to switch back to double column style after the toc.
-%
-% The only known problem now is that the first page with the new
-% layout is too long.  The problem seems to be that the change to
-% textheight doesn't take place on the first page.  Even if it's the
-% first line in the table of contents macro.  Presumably the same
-% problem also occurs in the lof and lot.
-%
-% I'm taking a shot at fixing the problem by dropping in a throw-away
-% page between the change to the height parameters and the start of
-% the chapter.  Isn't elegance wonderful?
-%
-%=============================================================================
-
-% \def\@tableof#1#2#3#4#5{
-% { % limit scope of following declarations!!
-%   \@restonecolfalse\if@twocolumn\@restonecoltrue\onecolumn\fi
-%   \addtolength{\textheight}{-40pt}       % -24-16
-%   \addtolength{\majorheadskip}{-40pt}    % -24-16
-%   \addtolength{\headheight}{52pt}        %  36+16
-%   \addtolength{\headsep}{-12pt}          % -12
-%   \separatorpage{DISCARD THIS PAGE}
-%   \chapter*{#1}
-%   #5
-%   \relax\markboth{#1}{#1}
-%   \hbox to \hsize{#2 \hfil Page}
-%   \singlespace
-%   \setcounter{#3}{0}
-%   \setcounter{listofheading}{1}  % change from 0 to 1 by mccauley, 14may93
-%   \def\@oddhead{\vbox to \headheight{\vspace{4pt}
-%     \hbox to \hsize{\hfil\textrm{\thepage}} \vfil
-%     \ifnum\value{#3}=1
-%       \ifnum\value{listofheading}=2
-%         \hbox to \hsize{Appendix\hfil} \vspace{4pt} \fi
-%       \ifnum\value{listofheading}=1
-%         \stepcounter{listofheading} \fi
-%       \hbox to \hsize{#2 \hfil Page}
-%     \else
-%       \setcounter{#3}{1}
-%     \fi}}
-%   \def\@evenhead{\vbox to \headheight{\vspace{4pt}
-%     \hbox to \hsize{\textrm{\thepage}\hfil} \vfil
-%     \ifnum\value{#3}=1
-%       \ifnum\value{listofheading}=2
-%         \hbox to \hsize{Appendix\hfil} \vspace{4pt} \fi
-%       \ifnum\value{listofheading}=1
-%         \stepcounter{listofheading} \fi
-%       \hbox to \hsize{#2 \hfil Page}
-%     \else
-%       \setcounter{#3}{1}
-%     \fi}}
-%   \@starttoc{#4}  \if@restonecol\twocolumn\fi
-%   \newpage
-% }}
-%
-% \def\tableofcontents{\@tableof{TABLE OF CONTENTS}{}{tocpage}{toc}{}}
-%
-% \def\listoffigures{
-%   \@tableof{LIST OF FIGURES}{Figure}{lofpage}{lof}
-%   {\protect\addcontentsline{toc}{chapter}{LIST OF FIGURES}}}
-%
-% \def\listoftables{
-%   \@tableof{LIST OF TABLES}{Table}{lotpage}{lot}
-%   {\protect\addcontentsline{toc}{chapter}{LIST OF TABLES}}}
 
 %=============================================================================
 % BIBLIOGRAPHY
@@ -885,11 +709,12 @@ $for(signature)$\indent $signature$$sep$\\*$endfor$
 \maketitle
 \restoregeometry %sets the margins back to normal
 
+\copyrightpage
+
 \begin{umiabstract}
   $abstract$
 \end{umiabstract}
 
-\copyrightpage
 
 \begin{dedication}
 	\emph{$dedication$}
@@ -926,7 +751,7 @@ $for(signature)$\indent $signature$$sep$\\*$endfor$
 \renewcommand{\afterlottitle}{}
 
 \renewcommand{\cftchapterfont}{\normalfont}
-\renewcommand{\cftsectionfont}{\itshape}
+\renewcommand{\cftsectionfont}{\normalfont}
 \renewcommand{\cftchapterpagefont}{\normalfont}
 \renewcommand{\cftchapterpresnum}{\bfseries}
 \renewcommand{\cftchapterleader}{}
@@ -934,12 +759,34 @@ $for(signature)$\indent $signature$$sep$\\*$endfor$
 \renewcommand{\cftchapterafterpnum}{\cftparfillskip}
 \renewcommand{\cftsectionafterpnum}{\cftparfillskip}
 
-% \captionnamefont{\small\sffamily}
-% \captiontitlefont{\small\sffamily}
+% Sets width of page number in table of contents so that
+% 3-digit page numbers don't touch the section title
+\setpnumwidth{2em}
 
-% \renewcommand{\contentsname}{contents}
-% \renewcommand{\listfigurename}{list of figures}
-% \renewcommand{\listtablename}{list of tables}
+% Sets spacing for list of figures/tables
+% so that e.g. "12.10" doesn't touch the caption.
+%
+% \cftsetindents{<kind>}{indent}{numwidth}.
+\cftsetindents{figure}{0em}{2.5em}
+\cftsetindents{table}{0em}{2.5em}
+
+$if(contents-title)$
+  \renewcommand{\contentsname}{$contents-title$}
+$else$
+  \renewcommand{\contentsname}{Contents}
+$endif$
+
+$if(lof-title)$
+  \renewcommand{\listfigurename}{$lof-title$}
+$else$
+  \renewcommand{\listfigurename}{List of Figures}
+$endif$
+
+$if(lot-title)$
+  \renewcommand{\listtablename}{$lot-title$}
+$else$
+  \renewcommand{\listtablename}{List of Tables}
+$endif$
 
 \tableofcontents
 

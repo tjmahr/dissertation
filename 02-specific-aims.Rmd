@@ -34,7 +34,7 @@ dynamics of word recognition change year over year, and I document how
 differences in word recognition performance relate to other child-level
 measures (such as vocabulary and speech perception). 
 
-Specific Aim for Study 1 (Familiar Word Recognition and Lexical Competition)
+Specific Aim for Study 1 (Familiar Word Recognition and Lexical Competition) {-}
 ------------------------------------------------------------------------
 
 **To characterize the development of familiar word recognition and
@@ -59,7 +59,7 @@ phonological and lexical representations. As I argue in
 
 
 
-Specific Aim for Study 2 (Referent Selection and Mispronunciations)
+Specific Aim for Study 2 (Referent Selection and Mispronunciations) {-}
 -----------------------------------------------------------------------
 
 **To characterize how fast referent selection develops longitudinally, I
@@ -102,7 +102,7 @@ mispronunciations.
 
 
 
-Summary
+Summary {-}
 ------------------------------------------------------------------------
 
 This project investigates how word recognition develops during the

@@ -5,7 +5,7 @@ In this section, I outline the main hypotheses I plan to study for each
 study. This section is intended to preregister the main analyses
 for this project.
 
-Study 1 (Familiar Word Recognition and Lexical Competition)
+Study 1 (Familiar Word Recognition and Lexical Competition) {-}
 ------------------------------------------------------------------------
 
   - Children’s accuracy and efficiency of recognizing words will improve
@@ -33,7 +33,7 @@ Study 1 (Familiar Word Recognition and Lexical Competition)
 
 
 
-Study 2 (Referent Selection and Mispronunciations)
+Study 2 (Referent Selection and Mispronunciations) {-}
 ------------------------------------------------------------------------
 
   - Children’s accuracy and efficiency of recognizing real words and
