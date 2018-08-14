@@ -51,8 +51,9 @@ models).[^2]
     estimation-based approach of Bayesian statistics is illustrated in texts 
     by @GelmanHill and @RethinkingBook.
 
-The eyetracking growth curves were fit using an orthogonal cubic
-polynomial function of time [a now-conventional approach; see
+Word recognition growth curves—that is, looks to the target versus the
+distractors at 250 ms, 300 ms, etc.—were fit using an orthogonal
+cubic polynomial function of time [a now-conventional approach; see
 @Mirman2014]. Put differently, I modeled the probability of looking to
 the target during an eyetracking task as:
 
@@ -175,8 +176,7 @@ p2 <- ggplot(poly_weighted) +
       degree = c(1, 2, 3)),
     parse = TRUE,
     size = 4,
-    family = "Lato Semibold"
-  ) +
+    family = "Lato Semibold") +
   annotate("text",
            label = "sum", 
            x = 1340, 
@@ -295,13 +295,15 @@ window, and the linear time parameter corresponds to slope of the growth
 curve or lexical processing efficiency. I also was interested in *peak*
 proportion of looks to the target. I derived this value by computing the
 growth curves from the model and taking the median of the five highest
-points on the curve. Figure \@ref(fig:curve-features) shows three
+points on the curve. Figure \@ref(fig:curve-features) shows three
 simulated growth curves and how each of these growth curve features
 relate to word recognition performance.
 
 (ref:curve-features) Illustration of the three growth curve features and how they describe lexical processing performance. The three curves used are simulations of new participants at Age 4.
 
-```{r curve-features, fig.cap = "(ref:curve-features)", echo = FALSE, out.width = "80%", fig.height = 5, fig.width = 5}
+(ref:curve-features-scap) Illustration of the three growth curve features and how they describe lexical processing performance.
+
+```{r curve-features, fig.cap = "(ref:curve-features)", fig.scap="(ref:curve-features-scap)", echo = FALSE, out.width = out_tex100_else80, fig.height = 5, fig.width = 5}
 dummy_data <- d_m %>% 
   filter(Study == "TimePoint2") %>% 
   distinct(Study, Time, ot1, ot2, ot3) %>% 

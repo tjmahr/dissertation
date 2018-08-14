@@ -233,7 +233,7 @@ procedure guaranteed that for most trials, the child was looking to the
 display before presenting the carrier phrase and that the experiment was
 ready to record the child's response to the carrier. During year 1
 (age 3) and year 2 (age 4), an attention-getter (e.g., *check it
-out*!) played 1 s following the end of the target noun. These
+out!*) played 1 s following the end of the target noun. These
 reinforcers were dropped in year 3 (age 5) to streamline the experiment
 for older listeners.
 
@@ -337,7 +337,11 @@ from `r rules$screening_window[1]` to `r rules$screening_window[2]` ms
 after target noun onset. I identified a trial as *unreliable* if at
 least `r rules$missing_data_limit * 100`% of the looks were missing
 during the time window. I excluded an entire block of trials if it had
-fewer than `r rules$min_trials` reliable trials.
+fewer than `r rules$min_trials` reliable trials. The rationale for
+blockwise exclusion was that if the majority of trials were unreliable,
+then there was probably a problem during the session, such as a
+technical difficulty with the eyetracker or the child not complying with
+the task. As a result, all of the trials would be of questionable quality.
 
 ```{r apply-data-screening-rules, echo = FALSE, results = 'hide'}
 # The first and last times are offset by 20 ms because we downsample our data
@@ -512,10 +516,13 @@ d_m <- d %>%
 readr::write_csv(d_m, "./data/aim1-model-ready.csv.gz")
 ```
 
-Figure \@ref(fig:aim1-spaghetti) depicts the dataset following the data
-screening and model preparation steps. The lines start around .25 which is
-chance performance on four-alternative forced choice task. The lines
-rise as the word unfolds, and they peak and plateau around 1400 ms.
+Figure \@ref(fig:aim1-spaghetti) depicts each child's proportion of looks
+to the target image following the data screening and model preparation
+steps. These are the observed or empirical growth curves; these are the
+probabilities that will be modeled with growth curve analysis. The
+lines start around .25 which is chance performance on four-alternative
+forced choice task. The lines rise as the word unfolds, and they peak
+and plateau around 1400 ms.
 
 (ref:aim1-spaghetti) Empirical word recognition growth curves from each year of the study. Each line represents an individual child's proportion of looks to the target image over time. The heavy lines are the averages of the lines for each year.
 

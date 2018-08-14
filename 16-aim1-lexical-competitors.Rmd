@@ -203,7 +203,7 @@ complete list of trials used.
 The outcome measure for these analyses was the log-odds of fixating on
 the phonological competitor versus the unrelated word. Because children
 looked more to the target word with each year of the study, they
-necessarily looked less to the distractors each year. 
+necessarily looked less to the three distractors each year. 
 Figure \@ref(fig:declining-phon-props) illustrates how the proportions
 of looks to the phonological foils declined each year. Therefore, I
 examined the effect of the phonological foil in comparison to the

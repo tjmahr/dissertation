@@ -53,10 +53,16 @@ comprises 4,000 samples from the posterior distribution.
 The code used to fit the model with RStanARM is printed below. The
 variables `ot1`, `ot2`, and `ot3` are the polynomial time features,
 `ResearchID` identifies children, and `Study` identifies the age/year of
-the longitudinal project. `Primary` counts the number of looks to the
-target image at each time bin; `Others` counts looks to the other three
-images. `cbind(Primary, Others)` is used to package both counts together
-for a logistic regression.
+the longitudinal project. Mnemonically, `ot` stands for *orthogonal
+time* and the number is the degree of the polynomial. This convention is
+used by @Mirman2014. `Study` refers to the timepoint (year) of the
+larger longitudinal investigation. Conceptually, I use *study* to mean a
+data-collection unit, and I think of each wave of testing with their
+somewhat different tasks and protocols as separate studies. `Primary`
+counts the number of looks to the target image at each time bin;
+`Others` counts looks to the other three images. 
+`cbind(Primary, Others)` is used to package both counts together for a
+logistic regression.
 
 ```{r, eval = FALSE, echo = TRUE}
 library(rstanarm)
@@ -82,11 +88,11 @@ readr::write_rds(m, "./data/stan_aim1_cubic_model.rds.gz")
 ```
 
 The code `cbind(Primary, Others) ~ (ot1 + ot2 + ot3) * Study` fits a
-cubic growth curve for each year of the study. It uses R's
+cubic growth curve for each age. This code uses R's
 formula syntax to regress the looking counts onto an intercept term
 (implicitly included by default), `ot1`, `ot2`, `ot3` along with the
 interactions of the `Study` variable with the intercept, `ot1`, `ot2`,
-and `ot3`. 
+and `ot3`.
 
 The line `(ot1 + ot2 + ot3 | ResearchID/Study)` describes the
 random-effect structure of the model with the `/` indicating that data
