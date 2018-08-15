@@ -46,7 +46,8 @@ also showed that young children do indeed have dense neighborhoods in
 their lexicons. @coadyaslin2003 elaborated this claim, observing that
 children's lexicons would be comparatively denser early on in
 development if a child's first words are made up of more common sounds
-and word shapes.
+and word shapes. That is, words are more likely to be neighbors if the
+early lexicon favors more frequent sounds and word shapes.
 
 Structural studies of lexicons of this sort are rather limited. They
 describe the knowledge to be learned instead of the content of the
@@ -60,7 +61,7 @@ the words, then they were less successful at differentiating them
 learned words are underspecified.
 
 The Switch Task, studied extensively by Werker and colleagues, also
-presented evidence where young children were unable to learn a minimal
+yielded evidence where young children were unable to learn a minimal
 pair in the lab. In the classic switch paradigm, a child is habituated
 to the ostensive naming of two novel-object/novel-word associations. In
 other words, they see a novel object and hear a paired novel word
@@ -70,9 +71,9 @@ where the *liff*-object is displayed but labeled with the other nonword
 *neem*. If the child looks longer on the switch, then we infer that they
 detected the change and pay more attention because their
 expectations were violated. This paradigm fits into the debate about
-representations because 14-month-olds could detect the *liff*-*neem*
-switch [@werker1998acquisition] but *not* a minimal pair *bih*-*dih*
-switch [@stager1997infants]. 
+early phonological representations because 14-month-olds could detect
+the *liff*-*neem* switch [@werker1998acquisition] but *not* a minimal
+pair *bih*-*dih* switch [@stager1997infants]. 
 
 One interpretation of these results is that children may have
 underspecified representations for recently learned words. That reading
@@ -92,8 +93,9 @@ Against that backdrop of lexicon design strategies and minimal-pair
 training studies, mispronunciation studies provide a rather direct way
 to study the phonetic representations of the words that children know.
 @Swingley2000 presented 18--23-month-olds two familiar images onscreen,
-like baby and dog, and heard a correct production (*where's the baby*)
-or a mispronunciation (*where's the vaby*). Children looked to the
+like baby and dog, and the children heard a correct production (*where's
+the baby*) or a mispronunciation (*where's the vaby*). Children looked
+to the
 correct productions about 73% of the time and mispronunciations 61% of
 the time. They looked more than chance but less than the correct
 production, indicating they were sensitive to the mispronunciation.
@@ -130,7 +132,7 @@ associated novel words to novel objects in the moment. In this case,
 mispronunciations can vary in severity and children's responses to them
 will vary in turn.
 
-@MPPaper applied this study to preschool-age children, observing a
+@MPPaper applied this approach to preschool-age children, observing a
 similar pattern of effects: Preschoolers mapped real words to familiar
 objects, mapped nonwords to novel objects, and equivocated about
 mispronunciations of familiar words. They also found that the child's
@@ -144,7 +146,7 @@ How to handle nonwords
 -----------------------------------------------------------------------
 
 Mispronunciations are not the only nonwords a young child might hear. In
-fact, if a child knows very few words, we expect them to bombarded by
+fact, if a child knows very few words, we expect them to be bombarded by
 new and novel words. There has been a great deal of research on how
 children handle nonwords, especially when paired with a novel object as
 its referent [mutual exclusivity principle, @Markman1988; Novel
@@ -158,9 +160,9 @@ later tested with a prompt to select a novel object (*Can you get the
 fode?*) from three choices: two familiarized novel objects and one new
 unfamiliarized *super-novel* object. They demonstrated a clear
 preference for the super-novel object. @Mather2012 replicated the
-preference a super-novel during a word recognition eyetracking task. In
+preference for a super-novel object during a word recognition eyetracking task. In
 this case, 22-month-old English-learning toddlers were pre-exposed to
-images of novel objects. Late, during a test trial, a familiar object, a
+images of novel objects. Later, during a test trial, a familiar object, a
 familiarized novel object, and new unseen super-novel object appeared
 onscreen with a prompt to view a nonword (*Look at the gub! Look!
 Gub!*). Children looked to the novel object more than the other two
@@ -169,8 +171,8 @@ leaving just the familiarized and super-novel objects. The advantage of
 the super-novel object was replicated but it only emerged after the
 third repetition of the trial.
 
-A robust novelty bias raises the question of whether listener's
-comprehension of familiar words and interpretation nonwords reflect
+A robust novelty bias raises the question of whether listeners'
+comprehension of familiar words and interpretation of nonwords reflect
 different processes. @McMurray2012 propose that the same basic process
 is at play in both recognition of familiar words and fast association of
 nonwords. After all, in the lab, the observed behaviors are the same:
@@ -185,13 +187,13 @@ comprehending known words, and even determining referents for new words"
 in 18-, 24-, and 30-month-olds. In the article's second experiment,
 toddlers were trained on two novel words on disambiguation trials. They
 would see a familiar object and an unfamiliar object and heard a prompt
-with a nonword (*Where's the dofa?*). Later retention trials presented
+with a nonword (*Where's the dofa?*). During later retention trials,
 the two unfamiliar objects were presented and prompted (*Where's the
 dofa?*). Mixed in with these trials were familiar-object trials in which
 a familiar object was labeled (*Where's the car?*). In that experiment,
 children looked more to the target on the familiar word trials than on
-the nonword disambiguation trials. For the 30-month-olds: 82% versus 68%
-percentage of looks to the target. 
+the nonword disambiguation trials (82% versus 68%
+looks to the target for the 30-month-olds).
 
 For @Bion2013, toddlers performed better on the familiar-word
 trials than the novel-word trials. But if we think of the nonwords as
@@ -237,7 +239,7 @@ interest is whether real word and nonword processing follow similar
 developmental trajectories. I expect the two to be highly related, but
 if they ever dissociate, it should happen with younger children. 
 At face value, one might expect a child’s ability to associate
-new words with unfamiliar objects to be more direct measure of
+new words with unfamiliar objects to be a more direct measure of
 word-learning capacity than a child’s ability to process known words.
 Under this assumption, I predict that nonword referent selection will be
 a better measure of later vocabulary growth than familiar word

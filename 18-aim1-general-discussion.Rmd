@@ -210,6 +210,31 @@ address directly whether the predictive power of word recognition
 performance reflects a more developed lexicon, a general
 reaction-time-like speed advantage, or both.
 
+The lack of an explicit selection behavior, such as a mouse click, also
+means that word recognition accuracy was never directly measured but
+rather inferred. As a result, the interpretation of peak looking
+probability as a measure of word recognition certainty comes with a
+caveat: It reflects certainty averaging over many familiar words *and
+maybe a few unfamilar words*. The idea is as follows: Suppose at age 3 a
+child does not know four of words very well. If they had to click or tap
+an image, they would have to guess on these trials. We could exclude
+those trials where they guessed incorrectly, leaving just the trials
+where the child correctly recognized the word. In this scenario, we
+would be more justified in interpreting a growth curve peak as a measure
+of certainty during familiar word recognition because trials involving
+incorrectly identified words would be excluded. As it stands now, there
+is no clear way to tease apart whether the lower growth curve peaks at
+age 3 reflected greater uncertainty during lexical processing or a
+greater number of words being unfamiliar to the children. I favor the
+former interpretation because these were highly familiar words. We
+piloted the images/words at least 80% recognizable to children in two
+preschool classrooms, so these words should be familiar to children.
+
+<!-- But even if some words were unfamiliar at age 3, the number -->
+<!-- of unfamilar words at age 4 is likely to be very small and therefore they would exert a -->
+<!-- minimal effect on the lexical processing measures. Children's peak looking probabilities increased  -->
+<!-- by about .13 at age 4 (from .55 to .68) and by about .09 (to .77) at age 5. Because children also showed improvements from age 4 to age 5, when the effect of unknown words would be very small, it seems likely that the change -->
+
 The experimental design included semantic and phonological competitors
 on every trial, so isolating out the semantic and phonological
 competition effects required some subtlety. A more direct design would

@@ -409,7 +409,7 @@ There was an advantage for the nonword condition at age 4 and age 5. The
 population-level average proportion of looks for the nonwords was
 `r props4$b_Nonword`, compared to `r props4$b_Real` for real words. On
 average, children looked less to target for the real words than the
-nonwords. There was a suggestive effect linear time effect where the
+nonwords. There was a suggestive linear time effect where the
 nonword curve was `r time1_4$per_d_NonwordvReal_ot1` steeper than the real word
 one. The curve for real words was probably less steep at age 4 but small
 values near 0 remain plausible. At age 5, only the average probability
@@ -478,7 +478,7 @@ I analyzed the children's model-estimated growth curve peaks. Each
 posterior sample of the model represents a plausible set of growth curve
 parameters for the data, so for each of these samples, I calculated the
 growth curves for each child and the peaks of the growth curves.
-Figure \@ref(fig:aim2-gca-peaks) shows the the posterior averages of the
+Figure \@ref(fig:aim2-gca-peaks) shows the posterior averages of the
 growth curves peaks for each participant.
 
 (ref:aim2-gca-peaks) Growth curve peaks by child, condition and year of the study. The movement of the medians conveys how the nonword peaks effect increased from age 3 to age 4 and the real word peaks increased from age 4 to age 5. The piling of points near the 1.0 line depicts how children reached ceiling performance on this task.
@@ -678,7 +678,7 @@ comparisons, I decided that an effect was significant when the *t*
 statistic for a population-level ("fixed") effect had an absolute value
 of 2 or greater. In practical terms, this convention interprets an
 effect as "significant" when its estimate is at least 2 standard errors
-away from 0. (@GelmanHill use this approach with mixed models.)
+away from 0. [@GelmanHill use this approach with mixed models.]
 
 At age 3, the two conditions did not significantly differ,
 *B*<sub>real-nonword</sub> = `r t1_real$b`, *t* = `r t1_real$t`. At age 4,
@@ -1199,15 +1199,19 @@ larger vocabularies making fast referent selection easier, and fast
 referent selection being a crucial mechanism for word-learning. To
 further examine the direction of effect, I tested whether nonword
 performance at age 3 predicted expressive vocabulary size at age 5.
-There was a small effect predictive effective where children with high
+There was a small predictive effect where children with high
 nonword peaks had a larger vocabulary size two years later. Although
 real word and nonword performance had a small-to-medium positive
 correlation, children's processing of the real words had no predictive
 value. Real word peaks did not predict vocabulary, nor did the average
-of real word and nonword peaks did not have an effect over and above the
-difference of the peaks.
+of real word and nonword peaks have an effect over and above the
+difference of the peaks. This result was unexpected, given how lexical
+processing can predict future language outcomes as in
+[Chapter \@ref(fam-rec)](#fam-rec). On the other hand, familiar word
+recognition with a familiar object and novel object is probably not
+demanding enough for individual differences to predict future vocabulary size
 
-For these two conditions, I hypothesized were word recognition in the real word
+For these two conditions, I hypothesized that word recognition in the real word
 condition would be easier than in the nonword condition, or failing
 that, the two conditions would not reliably differ. I had discounted a
 third possibility of any overall advantage for nonwords over real words.
@@ -1222,8 +1226,11 @@ presence of the mispronunciation trials---reported in [Chapter
 The mispronunciations may undermine familiar word recognition. For
 one-third of the trials, children hear an imperfect version of a
 familiar word, and they show more uncertain responses to them. This
-environment cause children to downweight the syllable-initial sounds.
+environment may cause children to downweight the syllable-initial sounds.
 Such an adaptation would lead to lower overall activation of the real
-words. Alternatively, the novelty bias could interfere with processing
-of familiar words. For some amount of trials, children could have
-ignored the familiar word and focused attention on the novel object.
+words. This possibility is a limitation of this study: A design with
+just real words and nonwords would provide a better comparison of the
+two kinds of words. Alternatively, the novelty bias could interfere with
+processing of familiar words. For some trials, children could have
+ignored the familiar word and focused attention on the novel object due
+to a novelty bias.

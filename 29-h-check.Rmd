@@ -44,7 +44,7 @@ recognition of known words.**
 
 Yes, peak looking probabilities for the nonword condition at age 3
 predicted expressive vocabulary at age 5, and the real word looking
-probabilities did not. This size of this effect was rather small,
+probabilities did not. The size of this effect was rather small,
 however.
 
 \bigskip\smallskip

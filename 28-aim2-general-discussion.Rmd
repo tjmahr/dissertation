@@ -20,7 +20,7 @@ slower to build up activation of the word because of the onset-mismatch,
 and they show less activation overall because the spoken word only
 matches the rime of the word. Put differently, they get a late start and
 have to work with a poor-fitting form of the word. The finding that
-children are better at processing mispronunciations at age 5 suggests
+children are better at processing mispronunciations at age 5 suggests
 that older children are better able to build up more activation to these
 candidate rime words.
 
@@ -62,10 +62,10 @@ because there are no familiar words to interfere with the processing.
 The results here probably support both processing accounts. During data
 reduction, I separated trials based on initial-fixation location because
 children become increasingly likely to start nonword trials on the novel
-object. This bias affected 50% of nonword trials at age 3, 55% at age 4,
-and 59% at age 5. Thus, there is a novelty preference that for these
-trials that gets stronger with development. Plus, children are also
-learning during this task: At age 5, children were on average were able
+object. This bias affected 50% of nonword trials at age 3, 55% at age 4,
+and 59% at age 5. Thus, there is a novelty preference that for these
+trials gets stronger with development. Plus, children are also
+learning during this task: At age 5, children were on average were able
 to recall the unfamiliar image paired with 5/6 nonwords. This learning
 is consistent with the strategy of simulating a nonword as a
 low-frequency lexical item.
@@ -95,12 +95,12 @@ designed for toddlers [@WhiteMorgan2008] on preschoolers. That is to
 say, the two-image task was too easy for there to be large
 year-over-year developmental changes in children's performance. Children
 were successful at recognizing real words and fast-selecting referents
-for nonwords at age 3, and by age 4, a quarter of the children performed
+for nonwords at age 3, and by age 4, a quarter of the children performed
 at ceiling on the nonword condition. The most difficult condition, based
 on the absence of ceiling effects, was the mispronunciation condition in
 which children showed much more uncertainty on how to process these
 words. For this condition, a developmental trend was also observed where
-preschoolers at age 5 had a larger preference for the familiar object on
+preschoolers at age 5 had a larger preference for the familiar object on
 the trials.
 
 Another limitation here is that the mispronunciations are a particular
@@ -116,8 +116,8 @@ on the starting segment. By focusing on just onset-mismatches, we miss
 out on categories of mispronunciation that may be more tolerable and
 where that tolerability may itself change over development.
 
-As I note in [Appendix \@ref(aim2-mp-items)](#aim2-mp-items), the small
-repertoire of mispronunciation is another limitation for this study. It
+As I note in [Appendix \@ref(aim2-mp-items)](#aim2-mp-items), the small
+repertoire of mispronunciations is another limitation for this study. It
 is conceivable that specific mispronunciations change in severity with
 development, even though the canonical form of the word is a familiar
 and well known word. In this study, for example, the distance between
@@ -126,14 +126,14 @@ known to three-year-olds, but this distance was driven by children
 becoming faster and more efficient at recognizing *girl*. Put another
 way, a mispronunciation penalty also reflects children's knowledge of
 the canonical word. In this data, the age-5 *rice* receives as many
-looks as many looks as age-4 *dirl*. Do children know *rice* less or
+looks as the age-4 *dirl*. Do children know *rice* less or
 accept *dirl* more? With so few items, it is unclear whether these
 differences are accidental or systematic.
 
 One implication for this research is that children's recognition of
 familiar words and referent selection for nonwords improved a modest
 amount over the preschool years. Although these tasks can be done by
-toddlers, full mastery does not begin to emerge until age 4. This finding
+toddlers, full mastery does not begin to emerge until age 4. This finding
 agrees with the main finding from my analysis of familiar word
 recognition: Although children can ostensibly know a word very well,
 their recognition and processing of that word can still improve during

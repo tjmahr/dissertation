@@ -106,7 +106,9 @@ from the design of @MPPaper.
 
 (ref:sample-mp-screen-cap) Example displays for a trial in which *duck* is mispronounced as "guck" (*left*) and a trial in which the nonword "cheem" is presented (*right*).
 
-```{r sample-mp-screen, fig.cap = "(ref:sample-mp-screen-cap)", echo = FALSE, out.width = "100%"}
+(ref:sample-mp-screen-scap) Example displays for a trial in which *duck* is mispronounced as "guck" and a trial in which the nonword "cheem" is presented.
+
+```{r sample-mp-screen, fig.cap = "(ref:sample-mp-screen-cap)", fig.scap = "(ref:sample-mp-screen-scap)", echo = FALSE, out.width = "100%"}
 library(magick)
 dir_screens <- "./misc/mp-screens/TimePoint1/actual/"
 
@@ -352,13 +354,15 @@ unfamiliar object during the first 250 ms after target noun onset
 (specifically, 0 ≤ *time* \< 250 ms). If the majority of the looks
 landed on the familiar object, then the trial was a *familiar-initial*
 trial. An analogous rule labeled trials as *unfamiliar-initial* trials.
-Ties were broken by favoring the earlier fixated image. For example, a
-tie might be a trial with 7 frames of looking to the unfamiliar image,
-followed by 1 frame between the two images, followed by 7 frames to the
-familiar image. In this case, the unfamiliar image was viewed first, so
-the trial is classified as unfamiliar-initial. If there were no looks to
-either image during that window, the trial was not classified for either
-image and it was excluded.
+Ties were broken by favoring the earlier fixated image on the assumption
+that the earlier image better reflected the child's fixation location at
+the onset of the target word. For example, a tie might be a trial
+with 7 frames of looking to the unfamiliar image, followed by 1 frame
+between the two images, followed by 7 frames to the familiar image. In
+this case, the unfamiliar image was viewed first, so the trial is
+classified as unfamiliar-initial. If there were no looks to either image
+during that window, the trial was not classified for either image and it
+was excluded.
 
 Table \@ref(tab:mp-initial-looks-counts) shows the counts and percentages of 
 trial classification. About 5% of trials were

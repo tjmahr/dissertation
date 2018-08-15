@@ -106,7 +106,7 @@ excitatory connections between semantically related words so that
 hearing a word also activates its semantic relatives. In my earlier
 discussions, I used the term *cascading activation* to describe this
 arrangement. For children to generate looks to the semantic competitor,
-they first to need to build up activation of the word and that
+they first need to build up activation of the word and that
 activation would cascade over to semantic relatives. The time course of
 cascading activation here is consistent with the late effects of the
 semantic competitor. The semantic competitor exerts an advantage over
