@@ -225,15 +225,15 @@ necessary before resuming the experiment.
 
 We used a gaze-contingent stimulus presentation. First, the images
 appeared in silence on screen for 2 s as a familiarization period. The
-experiment then checked whether the child's gaze was being recorded. If
-the experiment could continuously track the child's gaze for 300 ms, the
-child's gaze was verified and the trial continued. If the experiment
-could not verify the gaze after 10 s, the trial continued. This
-procedure guaranteed that for most trials, the child was looking to the
-display before presenting the carrier phrase and that the experiment was
-ready to record the child's response to the carrier. During year 1
-(age 3) and year 2 (age 4), an attention-getter (e.g., *check it
-out!*) played 1 s following the end of the target noun. These
+experiment's software procedure then checked whether the child's gaze
+was being recorded. If the procedure could continuously track the
+child's gaze for 300 ms, the child's gaze was verified and the trial
+continued. If the procedure could not verify the gaze after 10 s, the
+trial continued. This step guaranteed that for most trials, the child
+was looking to the display before presenting the carrier phrase and that
+the experiment was ready to record the child's response to the carrier.
+During year 1 (age 3) and year 2 (age 4), an attention-getter (e.g.,
+*check it out!*) played 1 s following the end of the target noun. These
 reinforcers were dropped in year 3 (age 5) to streamline the experiment
 for older listeners.
 
@@ -250,15 +250,25 @@ similar phonetically similar consonant onset (*kite*–*gift*), or shared
 a syllable rime (*van*–*pan*). The semantic competitors included words
 from the same category (e.g., *shirt*–*dress*, *horse*–*bear*), words
 that were perceptually similar (*sword*–*pen*, *flag*–*kite*), and words
-with less obvious relationships (*van*–*horse*, *swan*-*bee*). A
-complete list of the items used in the experiment in 
-[Appendix \@ref(vw-experiment-items)](#vw-experiment-items).
+with less obvious relationships (*van*–*horse*, *swan*-*bee*). 
+These
+different competitor types (phonological vs. semantic) and
+subtypes (e.g., shared syllable onset vs. rimes, shared category vs.
+perceptually similar) likely participate in word recognition to varying
+degrees and at different stages during lexical processing. For the analysis
+of familiar word recognition, I include all the competitors (they are
+aggregated together as *distractors*), but for the analysis of
+phonological and semantic competitor I focus on subsets of competitors:
+the shared syllable onsets for the phonological competitors and the
+category neighbors for semantic competitors.
+[Appendix \@ref(vw-experiment-items)](#vw-experiment-items) provides a
+complete list of the items used in the experiment and in the analyses of competitor effects.
 
 The stimuli were recorded in both Mainstream American English (MAE) and
 African American English (AAE), so that the experiment could accommodate
 the child's home dialect. Prior to the lab visit, we made a preliminary
-guess about the child's home dialect, based on the recruitment channel,
-address, among other factors. If we expected the dialect to be AAE, then
+guess about the child's home dialect based on recruitment channel,
+address, and other factors. If we expected the dialect to be AAE, then
 the lab visit was led by an examiner who natively spoke AAE and could
 fluently dialect-shift between AAE and MAE. At the beginning of the lab
 visit, the examiner listened to the interactions between the child and
@@ -280,7 +290,7 @@ higher-SES families, and the other classroom (17 piloting students) was
 part of Head Start center which predominantly serves lower-SES families.
 The images were tested by presenting four images (a target, a
 phonological foil, a semantic foil and an unrelated word) and having the
-student point to the named image. The pictures had to be recognized by
+student point to the named image. The pictures were recognized by
 at least 80% of students in each classroom.
 
 Data screening
@@ -486,9 +496,11 @@ order of 100 or 200 ms, so capturing data every 16.67 ms oversamples eye
 movements and can introduce high-frequency noise into the signal.
 Binning together data from neighboring frames can smooth out this noise.
 I modeled the looks from `r opts_model$start_time`
-to `r opts_model$end_time` ms. Lastly, I aggregated looks by child,
-study and time, and created orthogonal polynomials to use as time
-features for the model.
+to `r opts_model$end_time` ms. I chose this window after visualizing the
+observed fixation probabilities and identifying when during a trial the
+probabilities started to rise and later plateaued. Lastly, I aggregated
+looks by child, study and time, and created orthogonal polynomials to
+use as time features for the model.
 
 ```{r, echo = FALSE, message = FALSE, warnings = FALSE}
 m_data <- data %>% 

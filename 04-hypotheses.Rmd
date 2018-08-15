@@ -50,7 +50,7 @@ Study 2 (Referent Selection and Mispronunciations) {-}
     in younger children.
 
   - Although these two measures will be correlated, I predict
-    performance in the nonword condition will be a better predict of
+    performance in the nonword condition will be a better predictor of
     future vocabulary growth than performance in the real word
     condition. This hypothesis is based on the idea that fast referent
     selection is a more relevant skill for learning new words than

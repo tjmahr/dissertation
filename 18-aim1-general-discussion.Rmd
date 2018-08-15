@@ -213,13 +213,13 @@ reaction-time-like speed advantage, or both.
 The experimental design included semantic and phonological competitors
 on every trial, so isolating out the semantic and phonological
 competition effects required some subtlety. A more direct design would
-compare different types of a trials: for example, trials with a target
+compare different types of trials: for example, trials with a target
 vs. three unrelated images intermixed with trials with a target vs. a
 competitor vs. two unrelated images. The trials also used different
 kinds of phonological and semantic competitors. For example, two of the
 phonological competitors rhymed with the target, so they could not be
-included the analysis of phonological competitors (which focused on just
-competitors with the same onset as the target). The current design
+included in the analysis of phonological competitors (which focused on just
+competitors with the same syllable onset as the target). The current design
 limited the number of trials that could be used in the analyses of the
 competitors and weakened the power of the analyses.
 

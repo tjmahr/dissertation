@@ -32,7 +32,7 @@ Growth curve analysis
 Looks to the familiar image were analyzed using Bayesian mixed effects
 logistic regression. I used *logistic* regression because the outcome
 measurement is a probability (the log-odds of looking to the target
-image versus a distractor). I used *mixed-effects* models to estimate a
+image versus the distractors). I used *mixed-effects* models to estimate a
 separate growth curve for each child (to measure individual differences
 in word recognition) but also treat each child's individual growth curve
 as a draw from a distribution of related curves. I used *Bayesian*
@@ -627,12 +627,8 @@ lpred %>%
         mutate(Study = convert_study_to_age(Study)), 
       fun.y = "mean", 
       geom = "line", 
-      color = 
-        scales::viridis_pal(end = 1)(3)[3],
-        # "#F8F1FF",
-        # constants$col_off_black, 
-      size = 1,
-      ) + 
+      color = scales::viridis_pal(end = 1)(3)[3],
+      size = 1) + 
     geom_text(
       aes(label = Study, y = y), 
       data = data_frame(Time = 1390, y = .83, Study = "Age 5"),
@@ -675,27 +671,43 @@ d_m %>%
     aes(x = Time, y = Prop) + 
     geom_hline(yintercept = .25, color = "white", size = 2) + 
     geom_line(
-      aes(group = ResearchID), alpha = .16, 
+      aes(group = ResearchID), 
+      alpha = .16, 
       color = constants$col_off_black) + 
     stat_summary(
-      fun.y = mean, geom = "line", size = 1.25, 
+      fun.y = mean, 
+      geom = "line", 
+      size = 1.25, 
       color = constants$col_blue_highlight) +
     geom_ribbon(
       aes(y = NULL, ymin = ll, ymax = hh, group = Study), 
-      data = lpred_intervals, alpha = .2) +
+      data = lpred_intervals, 
+      alpha = .2) +
     geom_line(
-      aes(y = m, group = Study), data = lpred_intervals, size = 1.25, 
+      aes(y = m, group = Study), 
+      data = lpred_intervals, 
+      size = 1.25, 
       color = constants$col_blue_highlight) +
     geom_text(
-      aes(label = "Age 5"), x = 1360, y = .835, family = "Lato", size = 5,
+      aes(label = "Age 5"), 
+      x = 1360, 
+      y = .835, 
+      family = "Lato", 
+      size = 5,
       data = data.frame(Facet = "Averages from model")) +
     geom_text(
-      aes(label = "Age 3"), x = 1340, y = .42, family = "Lato", size = 5,
+      aes(label = "Age 3"), 
+      x = 1340, 
+      y = .42, 
+      family = "Lato", 
+      size = 5,
       data = data.frame(Facet = "Averages from model")) +
     facet_grid(. ~ Facet) + 
-    labs(x = constants$x_time,
-         y = constants$y_prop_target,
-         caption = "One line: One child's raw data. Heavy lines: Study averages.") + 
+    labs(
+      x = constants$x_time,
+      y = constants$y_prop_target,
+      caption = 
+        "One line: One child's raw data. Heavy lines: Study averages.") + 
     theme_grey(base_size = 18, base_family = "Lato") + 
     theme(
       axis.title.x = element_text(hjust = 1), 
@@ -703,7 +715,8 @@ d_m %>%
       strip.background = element_blank(),
       strip.text = element_text(
         size = 18,
-        hjust = 0, margin = margin(0, 0, 7.2, 0, "pt")))
+        hjust = 0, 
+        margin = margin(0, 0, 7.2, 0, "pt")))
 
 tjmisc::ggpreview(width = 12, height = 5, dpi = 600)
 ```
@@ -1371,7 +1384,7 @@ degree of concordance among growth curve features over time, I tested
 whether individual differences in lexical processing persisted over
 development. I found that the peak looking probability, average looking
 probability and linear time features were stable over time. Children who
-relatively fast (or reliable) at word recognition at one age were also
+were relatively fast (or reliable) at word recognition at one age were also
 relatively fast (or reliable) at other ages too.
 
 
@@ -1664,7 +1677,7 @@ predictive inference to have the model simulate samples of data, and in
 particular, to simulate new participants. The range of performance
 narrowed each year, so that children were most variable at age 3 and
 least variable at age 5. This result is consistent with a model of
-development children vary widely early on and converge on a more mature
+development where children vary widely early on and converge on a more mature
 level of performance. From this perspective, word recognition is a skill
 where children "grow out" of immature and highly variable performance
 patterns. An alternative outcome would have been concerning: Word
