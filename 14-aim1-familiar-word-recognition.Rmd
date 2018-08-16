@@ -35,34 +35,35 @@ many possible techniques one can employ for modeling time series data.
 In this chapter, I used growth curve analysis which uses polynomial
 functions of time (a linear trend, a quadratic trend, etc.) to estimate
 a time series. @Barr2008 and @Mirman2008 are important early tutorials
-about this technique of modeling looking probabilities. (Incidentally,
+for this technique of modeling looking probabilities. (Incidentally,
 the two articles were published together in a special issue of *Journal
 of Memory and Language* about "emerging" statistical techniques.)
-@Mirman2014 provides a textbook treatment of growth curve analysis for
-eyetracking data. This approach is well suited for growth curves where
+@Mirman2014 also provides a textbook treatment of growth curve analysis for
+eyetracking data. This approach is well suited for time series where
 the trajectory is relatively simple with one or two inflection points.
-One can forgo polynomial trends and use additive models to fit a more
-general nonlinear shape. I apply this technique in
-[Chapter \@ref(lex-competitors)](#lex-competitors) to handle wigglier
-growth curve shapes. A third possibility is to use a nonlinear,
-functional growth curve. For the polynomials and additive models,
+Alternatively, one can forgo polynomial trends and use generalized
+additive (mixed) models to fit a more general nonlinear shape. I apply
+this now-emerging technique in
+[Chapter \@ref(lex-competitors)](#lex-competitors) to model wigglier
+growth curve shapes. A third possibility is to use nonlinear,
+functional growth curves. For the polynomial and additive models,
 underlying time features are weighted and summed to fit a nonlinear
 shape. For the functional growth curve, the nonlinear shape is fixed in
-advance and the model finds a set of parameters so the shape
+advance and the model estimates a set of curve parameters so the shape
 approximates the data. For example, @bdots17 and @bdots18 model
-eyetracking data by assuming an s-shaped curve (logistic function) and
-then estimating the left and right asymptotes, slope at the steepest
-point, and when the steepest point occurs. These parameters are directly
-interpretable in terms of looking behaviors, but I have found that the
-technique is not flexible enough to handle the noisier shapes of
-children's eyetracking data.[^flex] For the following analyses,
-therefore, I used polynomial growth curves.
+eyetracking data by assuming an s-shaped curve (a logistic function) and
+then estimating the left and right asymptotes, the slope at the steepest
+point, and the point where the steepest rise occurs. These parameters
+are directly interpretable in terms of looking behaviors, but I have
+found that the technique is not flexible enough to handle the noisier
+shapes of children's eyetracking data.[^flex] For the following
+analyses, therefore, I used polynomial growth curves.
 
-[^flex]: More generally, I think of there being an
+[^flex]: More generally, I think of there being a
   flexibility--interpretability tradeoff with additive models being the
   most flexible but having the least interpretable parameters, functional
   curves being the least flexible but having the most interpretable
-  parameter, polynomials falling in between the two.  
+  parameters, and polynomials falling in between the two.  
 
 
 
