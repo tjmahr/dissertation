@@ -181,6 +181,13 @@ knitr::include_graphics(
   auto_pdf = TRUE)
 ```
 
+This experimental design---an eyetracking study word recognition with
+four images---is referred to as the Visual World Paradigm throughout the
+literature. See @Huettig2011 for a historical review and an overview of
+how it has been used to study syntactic, pragmatic, semantic, and
+phonological processing. The paradigm has been used extensively to study
+word recognition in adult listeners---and in preschool-age children
+[@RWLPaper; @Borovsky2012; @Huang2011; @Chow2017].
 
 
 Experiment administration
