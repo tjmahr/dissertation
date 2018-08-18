@@ -107,14 +107,16 @@ Another limitation here is that the mispronunciations are a particular
 kind of mispronunciation: One-feature onset mismatches. That initial
 segment sets the stage for the processing of a word as it activates a
 word's onset neighbors. Just as it takes longer for a rime to influence
-processing of word---as evidence need to pile up from multiple
+processing of word---as evidence needs to pile up from multiple
 compatible sound in order to overcome an initial mismatch---it should
 also take longer for a child to recover from an onset-mispronunciation.
 Conversely, we might also expect vowel or rime mispronunciation to be
 less disruptive for word recognition because of the useful information
-on the starting segment. By focusing on just onset-mismatches, we miss
-out on categories of mispronunciation that may be more tolerable and
-where that tolerability may itself change over development.
+on the starting segment. Indeed, @Swingley2009 demonstrates that this is
+probably the case. That study tested onset and coda misprounciations in an
+eyetracking task that used two familiar objects. Both adults and
+toddlers responded to coda mispronunciations (e.g., "dut" for *duck*) by
+showing delayed looks *away* from the (mispronounced) target image. 
 
 As I note in [Appendix \@ref(aim2-mp-items)](#aim2-mp-items), the small
 repertoire of mispronunciations is another limitation for this study. It

@@ -41,6 +41,29 @@ of effects was observed in the mispronunciation study by @MPPaper with
 preschoolers mapping real words to familiar objects, nonwords to novel
 objects, and equivocating about mispronunciations of familiar words.
 
+
+# Table Test
+
+\begin{table}
+
+\caption{Ranges of the polynomial time features.}
+\centering
+\begin{tabular}[t]{l|r|r|r}
+\hline
+Feature & Min & Max & Range\\
+\hline
+Time\textasciicircum{}1\textasciicircum{} & \&minus;0.50 & 0.50 & 1.00\\
+\hline
+Time\textasciicircum{}2\textasciicircum{} & \&minus;0.33 & 0.60 & 0.93\\
+\hline
+Time\textasciicircum{}3\textasciicircum{} & \&minus;0.63 & 0.63 & 1.26\\
+\hline
+Trial window (ms) & 250.00 & 1500.00 & 1250.00\\
+\hline
+\end{tabular}
+\end{table}
+
+
 # References {-}
 
 <!-- This manually sets the header for this unnumbered chapter. -->

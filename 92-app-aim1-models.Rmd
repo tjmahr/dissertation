@@ -30,7 +30,7 @@ theme_set(theme_teej())
 
 d_m <- readr::read_csv("./data/aim1-model-ready.csv.gz")
 
-d_m %>% 
+time_kable <- d_m %>% 
   distinct(Time, ot1, ot2, ot3) %>% 
   rename(`Trial window (ms)` = Time) %>% 
   tidyr::gather("Feature", "Value") %>% 
@@ -43,6 +43,44 @@ d_m %>%
   knitr::kable(
     align = c("l", "r", "r", "r"),
     caption = "Ranges of the polynomial time features.")
+
+fmt_fix_digits2 <- function(x, y = 100, n1 = 2, n2 = 0) {
+  ifelse(x < y,
+    x %>% printy::fmt_fix_digits(n1) %>% printy::fmt_minus_sign(),
+    x %>% printy::fmt_fix_digits(n2) %>% printy::fmt_minus_sign())
+}
+
+time_kable <- d_m %>% 
+  distinct(Time, ot1, ot2, ot3) %>% 
+  rename(`Trial window (ms)` = Time) %>% 
+  tidyr::gather("Feature", "Value") %>% 
+  group_by(Feature) %>% 
+  summarise(Min = min(Value), Max = max(Value), Range = Max - Min) %>% 
+  mutate_if(is.numeric, fmt_fix_digits2) %>% 
+  mutate(Feature = stringr::str_replace(Feature, "ot(\\d)", "Time^\\1^"))
+
+to_print <- if (knitr::is_latex_output()) {
+  time_kable %>% 
+    mutate_all(
+      . %>% 
+        stringr::str_replace_all("&minus;", "$-$") %>% 
+        stringr::str_replace_all(
+          "(\\^)(.+)(\\^)", 
+          "\\\\textsuperscript{\\2}")) %>% 
+    knitr::kable(
+      align = c("l", "r", "r", "r"),
+      format = "latex",
+      booktabs = TRUE,
+      escape = FALSE,
+      caption = "Ranges of the polynomial time features.")
+} else {
+  time_kable %>% 
+    knitr::kable(
+      align = c("l", "r", "r", "r"),
+      caption = "Ranges of the polynomial time features.")
+}
+
+to_print
 ```
 
 It took approximately 24 hours to run the model on four Monte Carlo

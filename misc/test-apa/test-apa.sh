@@ -25,7 +25,8 @@ pandoc "misc/test-apa/test-file.Rmd" \
   --bibliography assets/refs.bib \
   --csl assets/apa.csl \
   --filter pandoc-citeproc \
-  --filter "assets/fix-apa-ampersands.py"
+  --filter "assets/fix-apa-ampersands.py" \
+  --filter "assets/fix-tables.py"
 
 pandoc "misc/test-apa/test-file.Rmd" \
   -o "misc/test-apa/test-file2.md" \

@@ -57,9 +57,19 @@ trial orderings. For the two unrelated foils with more than one word
 listed, the two foils were used in different blocks.
 
 ```{r aim1-all-items, echo = FALSE}
-words %>% 
+c1 <- "Sets of four images used for the Visual World Experiment."
+if (knitr::is_latex_output()) {
   knitr::kable(
-    caption = "Sets of four images used for the Visual World Experiment.")
+    words,
+    format = "latex",
+    booktabs = TRUE,
+    linesep = c("", "", "", "\\addlinespace"),
+    caption = c1)
+} else { 
+  knitr::kable(
+    words,
+    caption = c1)
+}
 ```
  
 For the analysis of phonological competitors, I only used trials where
@@ -70,16 +80,42 @@ semantic foil belonged to the same category
 (Table \@ref(tab:semantic-competitor-items)).
 
 ```{r phonological-competitor-items, echo = FALSE}
-phono_foils$strong_foil %>%
-  select(-Semantic) %>% 
-  knitr::kable(
-    caption = "Items used for the analysis of phonological versus unrelated competitors.")
+c2 <- 
+  "Items used for the analysis of phonological versus unrelated competitors."
+
+if (knitr::is_latex_output()) {
+  phono_foils$strong_foil %>%
+    select(-Semantic) %>% 
+    knitr::kable(
+      format = "latex",
+      booktabs = TRUE,
+      linesep = c("", "", "", "\\addlinespace"),
+      caption = c2)
+} else { 
+  phono_foils$strong_foil %>%
+    select(-Semantic) %>% 
+    knitr::kable(
+      caption = c2)
+}
 ```
 
 ```{r semantic-competitor-items, echo = FALSE}
-semy_foils$strong_foil %>%
-  select(-Phonological) %>% 
-  knitr::kable(
-    caption = "Items used for the analysis of semantic versus unrelated competitors.")
+c3 <- 
+  "Items used for the analysis of semantic versus unrelated competitors."
+
+if (knitr::is_latex_output()) {
+  semy_foils$strong_foil %>%
+    select(-Phonological) %>% 
+    knitr::kable(
+      format = "latex",
+      booktabs = TRUE,
+      linesep = c("", "", "", "\\addlinespace"),
+      caption = c3)
+} else { 
+  semy_foils$strong_foil %>%
+    select(-Phonological) %>% 
+    knitr::kable(
+      caption = c3)
+}
 ```
 

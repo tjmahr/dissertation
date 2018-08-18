@@ -335,17 +335,112 @@ condition.
 
 
 
+```{r, echo = FALSE, message = FALSE, warnings = FALSE}
+m_data <- data %>% 
+  select(Study, ResearchID, Condition, Bias_Fam, TrialID:GazeByImageAOI) %>% 
+  assign_bins(bin_width = opts_model$bin_width, Time, TrialID)
+
+# Compute time at center of each bin
+bin_times <- m_data %>% 
+  distinct(Time, .bin) %>% 
+  group_by(.bin) %>% 
+  mutate(BinTime = round(median(Time), -1)) %>% 
+  ungroup()
+
+# Attach bin times
+binned <- m_data %>% 
+  left_join(bin_times, by = c("Time", ".bin")) %>% 
+  ungroup() %>% 
+  select(-Time) %>% 
+  rename(Time = BinTime) 
+
+d <- binned %>% 
+  aggregate_looks(
+    resp_def, Study + ResearchID + Condition + Bias_Fam + Time ~ GazeByImageAOI)
+
+d_m <- d %>% 
+  filter(0 <= Time, Time <= opts_model$end_time) %>% 
+  polypoly::poly_add_columns(
+    Time, degree = 3, scale_width = 1, prefix = "ot")
+
+readr::write_csv(d_m, "./data/aim2-model-ready.csv.gz")
+```
+
+
 
 ### Classifying trials based on initial fixation location
 
-During preliminary visualization of the study-level growth curves, I
+During preliminary visualization of the age-level growth curves, I
 observed an increasing preference for the unfamiliar image for the
-nonword condition. The growth curves showed a typical pattern of a
-baseline at noun onset followed by a quick change in height as the word
-unfolded. For the nonword condition, this baseline level moved further
-from .5 (chance with two images) with each year of the study: Children
-became more likely to fixate on the novel object at the start of these
-trials. 
+nonword condition---see Figure \@ref(fig:novelty-bias). The growth curves
+showed a typical pattern of a baseline at noun onset followed by a quick
+change in height as the word unfolded. For the nonword condition, this
+baseline level moved further from .5 (chance with two images) with each
+year of the study: Children became more likely to fixate on the novel
+object at the start of these trials. 
+
+(ref:novelty-bias) Observed average looks to the target on nonword trials. At the onset of the target noun, there is a novelty preference that increases with each year of the study. This novelty preference is the motivation for separating trials based on gaze location at target onset. Points and intervals represent the mean and standard error of children's empirical growth curves.
+
+(ref:novelty-bias-scap) Observed average looks to the target on nonword trials. 
+
+```{r novelty-bias, fig.cap = "(ref:novelty-bias)", fig.scap = "(ref:novelty-bias)", out.width = out_tex80_else50, echo = FALSE, message = FALSE, warnings = FALSE, fig.width = 5, fig.height = 3.5, out.width = out_tex80_else66}
+constants$cap_mean_se <- "Empirical mean ± SE"
+
+d2 <- binned %>% 
+  filter(Condition == "nonsense") %>% 
+  aggregate_looks(
+    resp_def, Study + ResearchID + Condition + Time ~ GazeByImageAOI) %>% 
+  mutate(PropTarget = 1 - Prop) %>% 
+  filter(-100 <= Time, Time <= opts_model$end_time) %>%
+  mutate(
+    Study = convert_study_to_age(Study),
+    Condition = factor(
+      Condition, 
+      levels = c("real", "nonsense", "MP"), 
+      labels = c("Real word", "Nonword", "Mispronunciation"))) 
+
+
+nw_age_labs <- tibble::tribble(
+  ~Bias_Fam, ~Study, ~Time, ~PropTarget,
+  "Unfamiliar", "Age 3", 300, .52,
+  # "Unfamiliar", "Age 4", 250, .90,
+  "Unfamiliar", "Age 5", 100, .68)
+
+
+nw_age_labs2 <- tibble::tribble(
+  ~Bias_Fam, ~Study, ~Time, ~Prop,
+  "Unfamiliar", "Age 3", 450, .85,
+  # "Unfamiliar", "Age 4", 250, .90,
+  "Unfamiliar", "Age 5", 1200, .05)
+
+
+ggplot(d2) + 
+  aes(x = Time, y = PropTarget) + 
+  geom_hline(yintercept = .5, color = "white", size = 2) + 
+  geom_vline(xintercept = 0, color = "white", size = 2) + 
+  stat_summary(
+    aes(color = Study), 
+    fun.data = mean_se) +
+  geom_text(
+    aes(color = Study, label = Study),
+    data = nw_age_labs,
+    size = 5, 
+    hjust = 0,
+    family = "Lato Semibold") +
+  labs(
+    x = constants$x_time,
+    y = constants$y_prop_target,
+    title = "Growing novelty preference during nonword trials",
+    caption = constants$cap_mean_se) + 
+  guides(color = FALSE, linetype = FALSE) + 
+  theme(
+    strip.background.y = element_blank(), 
+    strip.text.y = element_blank(),
+    strip.background.x = element_blank(), 
+    strip.text.x = element_blank()) + 
+  scale_color_study()
+```
+
 
 Because this was a two-image task, I was able to account for the
 location of the child's gaze at the onset of the target noun. For each
@@ -509,45 +604,19 @@ screening and preparation steps.
 
 
 
-```{r, echo = FALSE, message = FALSE, warnings = FALSE}
-m_data <- data %>% 
-  select(Study, ResearchID, Condition, Bias_Fam, TrialID:GazeByImageAOI) %>% 
-  assign_bins(bin_width = opts_model$bin_width, Time, TrialID)
-
-# Compute time at center of each bin
-bin_times <- m_data %>% 
-  distinct(Time, .bin) %>% 
-  group_by(.bin) %>% 
-  mutate(BinTime = round(median(Time), -1)) %>% 
-  ungroup()
-
-# Attach bin times
-binned <- m_data %>% 
-  left_join(bin_times, by = c("Time", ".bin")) %>% 
-  ungroup() %>% 
-  select(-Time) %>% 
-  rename(Time = BinTime) 
-
-d <- binned %>% 
-  aggregate_looks(
-    resp_def, Study + ResearchID + Condition + Bias_Fam + Time ~ GazeByImageAOI)
-
-d_m <- d %>% 
-  filter(0 <= Time, Time <= opts_model$end_time) %>% 
-  polypoly::poly_add_columns(
-    Time, degree = 3, scale_width = 1, prefix = "ot")
-
-readr::write_csv(d_m, "./data/aim2-model-ready.csv.gz")
-```
-
-
 
 
 (ref:aim2-real-word-spaghetti) Empirical word recognition growth curves from each year of the study for the real word condition. Each line represents an individual child's proportion of looks to the target image over time. The heavy lines are the averages of the lines for each year. Only the steep, upward growth curves from unfamiliar-initial trials are analyzed.
 
+(ref:aim2-real-word-spaghetti-scap) Empirical word recognition growth curves from each year of the study for the real word condition. 
+
 (ref:aim2-nonword-spaghetti) Empirical word recognition growth curves for nonword condition. Only the steep, downward growth curves from familiar-initial trials are analyzed.
 
+(ref:aim2-nonword-spaghetti-scap) Empirical word recognition growth curves for nonword condition.
+
 (ref:aim2-mispronunciation-spaghetti) Empirical word recognition growth curves for mispronunciation condition. Both types of curves analyzed.
+
+(ref:aim2-mispronunciation-spaghetti-scap) Empirical word recognition growth curves for mispronunciation condition.
 
 ```{r aim2-spaghetti, echo = FALSE, message = FALSE, out.width = "100%", fig.height = 6, fig.width = 5}
 d_plot <- d %>% 
@@ -666,7 +735,7 @@ p2 <- d_plot %>%
 
 
 
-```{r aim2-real-word-spaghetti, fig.cap = "(ref:aim2-real-word-spaghetti)", fig.width = 7, fig.height = 4.5, out.width = "100%"}
+```{r aim2-real-word-spaghetti, fig.cap = "(ref:aim2-real-word-spaghetti)", fig.scap = "(ref:aim2-real-word-spaghetti-scap)", fig.width = 7, fig.height = 4.5, out.width = "100%"}
 library(patchwork)
 rw_super <- p2 + p1 + 
   plot_layout(widths = c(4, 6)) + 
@@ -686,75 +755,16 @@ nw_super <- p2_nw + p1_nw +
 rw_super
 ```
 
-```{r aim2-nonword-spaghetti, fig.cap = "(ref:aim2-nonword-spaghetti)", fig.width = 7, fig.height = 4.5, out.width = "100%"}
+```{r aim2-nonword-spaghetti, fig.cap = "(ref:aim2-nonword-spaghetti)", fig.scap = "(ref:aim2-nonword-spaghetti-scap)", fig.width = 7, fig.height = 4.5, out.width = "100%"}
 nw_super
 ```
 
-```{r aim2-mispronunciation-spaghetti, fig.cap = "(ref:aim2-mispronunciation-spaghetti)",  fig.width = 7, fig.height = 4.5, out.width = "100%"}
+```{r aim2-mispronunciation-spaghetti, fig.cap = "(ref:aim2-mispronunciation-spaghetti)", fig.scap = "(ref:aim2-mispronunciation-spaghetti-scap)",  fig.width = 7, fig.height = 4.5, out.width = "100%"}
 mp_super
 ```
 
 ```{r, eval = FALSE, include = FALSE}
-constants$cap_mean_se <- "Empirical mean ± SE"
 
-d2 <- binned %>% 
-  filter(Condition == "nonsense") %>% 
-  aggregate_looks(
-    resp_def, Study + ResearchID + Condition + Time ~ GazeByImageAOI) %>% 
-  mutate(PropTarget = 1 - Prop) %>% 
-  filter(-100 <= Time, Time <= opts_model$end_time) %>%
-  mutate(
-    Study = convert_study_to_age(Study),
-    Condition = factor(
-      Condition, 
-      levels = c("real", "nonsense", "MP"), 
-      labels = c("Real word", "Nonword", "Mispronunciation"))) 
-
-
-nw_age_labs <- tibble::tribble(
-  ~Bias_Fam, ~Study, ~Time, ~PropTarget,
-  "Unfamiliar", "Age 3", 300, .52,
-  # "Unfamiliar", "Age 4", 250, .90,
-  "Unfamiliar", "Age 5", 100, .68)
-
-
-nw_age_labs2 <- tibble::tribble(
-  ~Bias_Fam, ~Study, ~Time, ~Prop,
-  "Unfamiliar", "Age 3", 450, .85,
-  # "Unfamiliar", "Age 4", 250, .90,
-  "Unfamiliar", "Age 5", 1200, .05)
-
-
-ggplot(d2) + 
-  aes(x = Time, y = PropTarget) + 
-  geom_hline(yintercept = .5, color = "white", size = 2) + 
-  # geom_line(
-  #   aes(group = ResearchID), 
-  #   color = constants$col_off_black, 
-  #   alpha = .10, 
-  #   position = position_jitter(height = .015)) +
-  stat_summary(
-    aes(color = Study), 
-    fun.data = mean_se) +
-  geom_text(
-    aes(color = Study, label = Study),
-    data = nw_age_labs,
-    size = 6.5, 
-    hjust = 0,
-    family = "Lato Semibold") +
-  labs(
-    x = constants$x_time,
-    y = constants$y_prop_target,
-    title = "Growing novelty preference for nonword trials",
-    caption = constants$cap_mean_se) + 
-  guides(color = FALSE, linetype = FALSE) + 
-  theme_teej(base_size = 18) +
-  theme(
-    strip.background.y = element_blank(), 
-    strip.text.y = element_blank(),
-    strip.background.x = element_blank(), 
-    strip.text.x = element_blank()) + 
-  scale_color_study()
 
 # ggpreview(width = 7.7, height = 5, dpi = 600)
 
