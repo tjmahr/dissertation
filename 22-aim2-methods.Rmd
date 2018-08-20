@@ -93,8 +93,8 @@ mispronunciation of the first consonant of the target word (*shoup*).
 These conditions are designed to test whether children associate
 mispronunciations with novel objects. To encourage fast referent selection,
 there were also trials in a *nonword* condition where the label was an
-unambiguous novel word (e.g., *cheem* presented with images of a bed and
-a novel-looking pastry mixer). Each nonword was constructed to match the
+unambiguous novel word (e.g., *shann* presented with images of a cup and
+a novel-looking bassoon reed). Each nonword was constructed to match the
 phonotactic probability of one of the mispronunciations. 
 Figure \@ref(fig:sample-mp-screen) shows the screens used in two trials.
 Importantly, within a block of trials, the child never hears both the
@@ -104,9 +104,9 @@ comparison so that the child can decide that "guck" is probably not
 "duck"---the design used here avoided this situation and is a change
 from the design of @MPPaper.
 
-(ref:sample-mp-screen-cap) Example displays for a trial in which *duck* is mispronounced as "guck" (*left*) and a trial in which the nonword "cheem" is presented (*right*).
+(ref:sample-mp-screen-cap) Example displays for a trial in which *duck* is mispronounced as "guck" (*left*) and a trial in which the nonword "shann" is presented (*right*).
 
-(ref:sample-mp-screen-scap) Example displays for a trial in which *duck* is mispronounced as "guck" and a trial in which the nonword "cheem" is presented.
+(ref:sample-mp-screen-scap) Example displays for a trial in which *duck* is mispronounced as "guck" and a trial in which the nonword "shann" is presented.
 
 ```{r sample-mp-screen, fig.cap = "(ref:sample-mp-screen-cap)", fig.scap = "(ref:sample-mp-screen-scap)", echo = FALSE, out.width = "100%"}
 library(magick)
@@ -118,7 +118,7 @@ i1 <- dir_screens %>%
   image_scale("x400")
 
 i2 <- dir_screens %>% 
-  file.path("Block1_14_nonsense_bed2_mixer2_ImageL_Cim.png") %>% 
+  file.path("Block1_24_nonsense_cup2_reed2_ImageL_San.png") %>% 
   image_read() %>% 
   image_scale("x400")
 
@@ -164,16 +164,28 @@ rainbow-filled flasks used for *sooze* (mispronounced *shoes*) were called
 Following the open-set naming test, children had a closed-set
 recognition test. Two of the novel objects were paired. One of the
 objects was from a mispronunciation trial and the other was from a
-nonword trial. For example, the flasks (*sooze*) were paired with the
-trolley (*geeve*) from the nonword condition. The pairs were yoked, as
-each nonword was designed to have the same phonotactic probability as
+nonword trial. For example, the toy creature (*guck*) was paired with the
+bassoon reed (*shann*) from the nonword condition. The pairs were yoked, as
+each nonword was designed to match the phonotactic probability of
 one of the mispronunciations. During the retention test, children saw
-two images of the novel objects (say, *trolley1.jpeg* and
-*flasks1.jpeg*), heard one of novel labels (*geeve*), and had to point
-to the named object. In a later trial during testing, the other label
-(*sooze*) was tested but using different images for the objects
-(*trolley2.jpeg* and *flasks2.jpeg*). In a block of testing, there
-were 12 trials, 6 for nonwords and 6 for mispronunciations.
+two images of the novel objects (say, *reed1.jpeg* and *toy1.jpeg*)
+printed on a letter-size sheet of paper, heard one of novel labels
+(*shann*), and had to point to the named object.
+Figure \@ref(fig:retention-display) shows an example of what the
+children saw when tested on *guck* and *shann*. In a later trial, the
+other label (*guck*) was tested but using different image assets for the
+objects (*toy2.jpeg* and *reed2.jpeg*). In a block of testing, there
+were 12 trials, 6 for nonwords and 6 for mispronunciations. 
+
+(ref:retention-display) Examples of retention trials that tested *guck* and *shann*. During the first retention trial (*left*), children heard one of the unfamiliar words (e.g., *guck*). The correct response was to point to the toy bull creature because it was the unfamiliar object used on the *duck*--*guck* trials. During a later trial that used different image assets (*right*), children heard the other word (*shann*). The correct response was to point to the bassoon reed because it was the unfamiliar object used on the *shann* trials. 
+
+(ref:retention-display-scap) Examples of retention trials that tested *guck* and *shann*.
+
+```{r retention-display, fig.cap = "(ref:retention-display)", fig.scap = "(ref:retention-display-scap)", echo = FALSE, out.width="100%"}
+knitr::include_graphics("./misc/retention-shann-guck.png")
+```
+
+
 
 
 Data screening {#aim2-screening}
