@@ -194,8 +194,8 @@ time1_5 <- age5 %>% pull_time1()
 ## Nonwords versus familiar words
 
 I asked whether the recognition of familiar words differed from the
-fast selection of referents for nonwords. I fit a Bayesian mixed-effects
-logistic regression growth-curve model, as in
+fast selection of referents for nonwords. I fit a Bayesian, mixed effects
+logistic regression, growth curve model, as in
 [Chapter \@ref(fam-rec)](#fam-rec). For the real word and nonword
 conditions, there is a well-defined target image: the familiar image for
 real words and the novel/unfamiliar image for nonwords. The outcome
