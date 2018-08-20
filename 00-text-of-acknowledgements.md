@@ -35,11 +35,13 @@ children who participated in our research. </p>
 
 <p>I am grateful for the financial support from the NIH grants that
 supported me as a trainee or as a research assistant: NICHD
-Grant 2-T32-HD049899 to Maryellen MacDonald, NIDCD Grant R01 DC012513 to
-Susan Ellis Weismer, Jan Edwards, and Jenny R. Saffran, and NIDCD T32
-DC05359-10 to Susan Ellis Weismer. Thanks to departmental administrators
-who kept the machine running: Maureen Garity, Amanda Talbert, Choutae
-Yang.</p>
+Grant 2-T32-HD049899 to Maryellen MacDonald, NIDCD R01 DC012513 to Susan
+Ellis Weismer, Jan Edwards, and Jenny R. Saffran, and NIDCD T32
+DC05359-10 to Susan Ellis Weismer. The data for this project were
+collected as part of the Learning to Talk project which was funded by
+NIDCD R01 DC002932 to Jan Edwards, Mary E. Beckman, and Benjamin Munson.
+Thanks to departmental administrators who kept the machine running:
+Maureen Garity, Amanda Talbert, Choutae Yang.</p>
 
 <p>I spend all day working in R and RStudio. I want to thank Hadley Wickham
 for fixing the language and for working in open source so that I could learn
