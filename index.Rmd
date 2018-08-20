@@ -15,7 +15,7 @@ oral-date: August 7, 2018
 abstract-school: "The University of Wisconsin--Madison"
 abstract-year: 2018
 abstract-advisor: "Professor Jan Edwards and Professor Susan Ellis Weismer"
-abstract: '`r paste0(readr::read_lines("abstract.md"), collapse = " ")`'
+abstract: '`r paste0(readr::read_lines("00-text-of-abstract.md"), collapse = " ")`'
 acknowledgements: '`r paste0(readr::read_lines("00-text-of-acknowledgements.md"), collapse = " ")`'
 affiliation: > 
   Department of Communication Sciences and Disorders, 
