@@ -130,6 +130,7 @@ T32
 DC05359
 U54
 HD090256
+1.275in
  - README.md
 gh-pages
 Yihui's
@@ -144,6 +145,9 @@ MPPaper
 shoop
 cheem
 McMurray2012
+aim1-discussion
+aim2-introduction
+aim2-method
  - 10-part-aim1.Rmd
 part-aim1
  - 12-aim1-methods.Rmd
@@ -159,6 +163,11 @@ aim1-participants
 aim1-procedure
 aim2-method
 aim1-spaghetti-scap
+Huettig2011
+Borovsky2012
+Huang2011
+Chow2017
+blockwise
  - 14-aim1-familiar-word-recognition.Rmd
 GelmanHill
 RethinkingBook
@@ -191,6 +200,27 @@ aim1-gca-models
 mathit
 gamma_
 delta_
+Barr2008
+Mirman2008
+bdots17
+bdots18
+flexibility--interpretability
+tradeoff
+infobox
+collinearity
+normalsize
+curve-features-scap
+average-growth-curves-scap
+effects2-scap
+pairwise-effects-scap
+new-participants-scap
+new-participants-intervals-scap
+90-percentile
+50-percentile
+new-ranges-scap
+kendall-stats-scap
+evt2-gca-cors-scap
+ppvt4-gca-cors-scap
  - 16-aim1-lexical-competitors.Rmd
 RWLPaper
 Barr2008
@@ -229,6 +259,8 @@ phon-vs-unre-fits-scap
 phon-diff-curves-scap
 semy-vs-unre-fits-scap
 semy-diff-curves-scap
+normalsize
+ProtoMinPair
  - 92-app-aim1-models.Rmd
 aim1-gca-models
 lkj-prior
@@ -362,6 +394,7 @@ Chow2017
 aim1-h-check
 pre-analysis
 21-month-olds
+unpictured
  - 18-aim1-general-discussion.Rmd
 aim1-discussion
 McMurray2010
@@ -372,6 +405,7 @@ fernald
 Saffran
 Fernald2012
 Cristia2014_Review
+Allopenna1998---which
  - 97-app-related-work.Rmd
 MPPaper
 RWLPaper
@@ -476,7 +510,7 @@ suze
 5-years-olds
 aim2-real-word-spaghetti
 aim2-nonword-spaghetti
- - abstract.md
+ - 00-text-of-abstract.md
 suze
 geeve
  - 00-text-of-acknowledgements.md
@@ -524,6 +558,7 @@ nerdery
 Kiki
 Choutae
 Nooper
+DC002932
  - 28-aim2-general-discussion.Rmd
 aim2-discussion
 Bion2013
