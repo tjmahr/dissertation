@@ -352,54 +352,6 @@ of frequentist versus Bayesian statistics.
 
 
 
-
-<!-- There is a 90% probability a true parameter value is in a 90% uncertainty interval. A parameter value is either inside or outside the frequentist confidence interval: The probability is 100% or 0%. For a 90% confidence interval, that probability will be 100% 90% of the time. -->
-
-
-
-
-
-
-<!-- Here I briefly describe how these models work. -->
-
-<!-- In Bayesian statistics, we have some *data*, a *likelihood* and some -->
-<!-- *prior information*. The likelihood is a story for how the data were -->
-<!-- generated. For example, suppose we want to estimate the difference in -->
-<!-- test scores between two groups and that we decided to use a conventional -->
-<!-- linear model where Group 1 is the reference group. Our data-generating -->
-<!-- story therefore is that we can use a linear combination of variables to -->
-<!-- estimate the average value in each group and that the observed data are -->
-<!-- drawn from a normal distribution around each group's mean. In notation: -->
-
-<!-- $$ -->
-<!-- \begin{align*} -->
-<!--   y_i \sim\ &\text{Normal}(\mu_i, \sigma) &\text{[likelihood]} \\ -->
-<!--   \mu_i =\ &\text{Group\,1} + \beta\text{Group\,2}_i &\text{[linear model]} \\ -->
-<!--   \alpha :\  & \text{Group\,1 average} & \\ -->
-<!--   \beta :\   & \text{Difference between Group\,1 and Group\,2 averages} & \\ -->
-<!--   \sigma :\  & \text{Standard deviation for residual error} & \\ -->
-<!-- \end{align*} -->
-<!-- $$ -->
-
-<!-- In this arrangement, there are three parameters that need to be -->
-<!-- estimated: An intercept *α* (the average for Group 1), the group -->
-<!-- difference (*β*), and the error *σ*. For any set of parameter values, we can compute a likelihood value. This tells us how well the parameters *fit* the data.  -->
-
-<!--   <!-- &&\textit{Equivalent, residuals version:}\\ --> -->
-<!--   <!-- y_i =\ &\text{Group\,1} + \beta\text{Group\,2}_i + \epsilon_i &\text{[linear model]} \\ --> -->
-<!--   <!-- \epsilon_i \sim\ &\text{Normal}(0, \sigma) &\text{[likelihood]} \\ --> -->
-
-<!-- We say that the model -->
-
-<!-- For example, suppose that we are estimating some effect, *θ*. Before seeing the data, we describe our prior information with distribution like *θ* ~ Normal(0 [mean], 1 [sd])---that is, values drawn a normal distribution with a mean of 0 and a standard deviation of 1 are plausible values for *θ*. This prior information is updated in proportion to the likelihood of the data. -->
-
-<!-- We might that some plausible values for a given st -->
-
-<!-- For example, we suppose that before seeing the data,  -->
-
-<!-- A Bayesian model is the posterior distribution -->
-
-
 ### Growth curve features as measures of word recognition performance
 
 As mentioned above, two of the model's growth curve features have
