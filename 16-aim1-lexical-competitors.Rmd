@@ -332,7 +332,7 @@ expressed time as the weighted sum of a linear trend, a quadratic trend
 and cubic trend. That is:
 
 $$
-\text{log odds}(\text{looking}) = 
+\text{log\,odds}(\text{looking}) = 
   \alpha + 
   \beta_1\text{Time}^1 + 
   \beta_2\text{Time}^2 + 
@@ -344,7 +344,7 @@ functions*: A set of features that combine to approximate some nonlinear
 function of time. Under this framework, the model can be expressed as:
 
 $$
-\text{log odds}(\text{looking}) = 
+\text{log\,odds}(\text{looking}) = 
   \alpha + f(\text{Time})
 $$
 
@@ -535,11 +535,11 @@ Altogether, the model contained the following terms:
 `r insert_html_math()`
 \small
 \begin{align*}
-   \text{emp. log odds}(\text{phon. vs. unrelated}) =\
-   & \alpha + \beta_1\text{Age3} + \beta_2\text{Age5} +\ &\text{[growth curve averages]} \\
-   & f_1(\text{Time}, \text{Age4})\ +                    &\text{[reference smooth]} \\
-   & f_2(\text{Time}, \text{Age4} - \text{Age3})\ +      &\text{[difference smooths]} \\
-   & f_3(\text{Time}, \text{Age4} - \text{Age5})\ +      & \\
+   \text{emp.\,log\,odds}(\text{phon. vs. unrelated}) =\
+   & \alpha + \beta_1\text{Age\,3} + \beta_2\text{Age\,5} +\ &\text{[growth curve averages]} \\
+   & f_1(\text{Time}, \text{Age\,4})\ +                    &\text{[reference smooth]} \\
+   & f_2(\text{Time}, \text{Age\,4} - \text{Age\,3})\ +      &\text{[difference smooths]} \\
+   & f_3(\text{Time}, \text{Age\,4} - \text{Age\,5})\ +      & \\
    & f_i(\text{Time}, \text{Child}_i)                    &\text{[by-child random smooths]} \\
 \end{align*}
 \normalsize
@@ -1333,7 +1333,7 @@ vocabulary.
 `r insert_html_math()`
 \small
 \begin{align*}
-   \text{log odds}(\text{choose target}) =\
+   \text{log\,odds}(\text{choose target}) =\
    & \alpha\ +                  &\text{[average child ability]} \\
    & \alpha_i\ +                &\text{[difference of child}\ i
                                        \text{'s ability from average]} \\
@@ -1359,7 +1359,7 @@ therefore:
 `r insert_html_math()`
 \small
 \begin{align*}
-   \text{emp. log odds}(\text{phon. vs. unrelated}) =\
+   \text{emp.\,log\,odds}(\text{phon. vs. unrelated}) =\
    & \alpha\ +\ &\text{[growth curve average]} \\
    & f_1(\text{Time})\ +                    &\text{[time smooth]} \\
    & f_2(\text{Ability})\ +                 &\text{[ability smooth]} \\

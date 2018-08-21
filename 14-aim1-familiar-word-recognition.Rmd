@@ -96,7 +96,7 @@ polynomial function of time. Put differently, I modeled the probability
 of looking to the target during an eyetracking task as:
 
 $$
-\text{log odds}(\text{looking}) = 
+\text{log\,odds}(\text{looking}) = 
   \beta_0 + 
   \beta_1\text{Time}^1 + 
   \beta_2\text{Time}^2 + 
@@ -287,13 +287,13 @@ increasing.
 To study how word recognition changes over time, I modeled how the
 growth curves change over developmental time. This amounted to studying
 how the growth curve parameters changes year over year. I included
-dummy-coded indicators for Age 3, Age 4, and Age 5 and allowed these
+dummy-coded indicators for age 3, age 4, and age 5 and allowed these
 indicators to interact with the growth curve parameters:
 
 `r insert_html_math()`
 \small
 \begin{align*}
-  \text{log odds}(\text{looking}) =\
+  \text{log\,odds}(\text{looking}) =\
     &\beta_0 + 
       \beta_1\text{Time}^1 + 
       \beta_2\text{Time}^2 + 
@@ -302,12 +302,12 @@ indicators to interact with the growth curve parameters:
     (&\gamma_{0} + 
       \gamma_{1}\text{Time}^1 + 
       \gamma_{2}\text{Time}^2 +
-      \gamma_{3}\text{Time}^3)*\text{Age}\,\text{4}\ + \
+      \gamma_{3}\text{Time}^3)*\text{Age\,4}\ + \
       &\text{[age 4 adjustments]} \\
     (&\delta_{0} + 
       \delta_{1}\text{Time}^1 + 
       \delta_{2}\text{Time}^2 +
-      \delta_{3}\text{Time}^3)*\text{Age}\,\text{5} \
+      \delta_{3}\text{Time}^3)*\text{Age\,5} \
       &\text{[age 5 adjustments]} \\
 \end{align*}
 \normalsize
@@ -324,6 +324,80 @@ The models were fit in R (vers. 3.4.3) with the RStanARM package
 contains the R code used to fit the model along with a description of 
 the model specifications represented in the model syntax.
 
+I used Bayesian *uncertainty intervals* to draw statistical inferences.
+A Bayesian model is the posterior distribution: It is a distribution of
+plausible parameter values, given the data, a data-generating model and
+any prior information we have about those parameter values. In practice,
+these distributions are hard to calculate so we use Markov Chain Monte
+Carlo to get a sample of thousands of values from the posterior
+distribution. Thus, rather than having a single best-fitting estimate of
+some effect *β*, we have a sample of, say, 4,000 plausible values for
+*β*. We can quantify our uncertainty about *β* by describing the
+distribution of those values. I use typically two statistics to describe
+that distribution. The median provides a *point estimate* for the
+distribution, and the 90% uncertainty interval represents bounds for the
+effect. These intervals have an intuitive interpretation. Suppose that
+for *β* we get a median of 8 and 90% uncertainty interval of [5, 21].
+This interval means that we can be 90% certain that the "true" value of
+*β* is between 5 and 21, given the data, our prior information and our
+model. Moreover, by inspecting the interval, we pinpoint areas of
+uncertainty. In this example, we can conclude that the effect is likely
+to be positive. The lower interval value of 5 tells us that 90% of the
+plausible values are greater than 5. A wide range of values are covered
+by the interval, however, so we would also conclude that we are not very
+certain about the size of the effect. One cannot interpret frequentist
+confidence intervals in this way. See @Kruschke2017 for a recent review
+of frequentist versus Bayesian statistics.
+
+
+
+
+
+<!-- There is a 90% probability a true parameter value is in a 90% uncertainty interval. A parameter value is either inside or outside the frequentist confidence interval: The probability is 100% or 0%. For a 90% confidence interval, that probability will be 100% 90% of the time. -->
+
+
+
+
+
+
+<!-- Here I briefly describe how these models work. -->
+
+<!-- In Bayesian statistics, we have some *data*, a *likelihood* and some -->
+<!-- *prior information*. The likelihood is a story for how the data were -->
+<!-- generated. For example, suppose we want to estimate the difference in -->
+<!-- test scores between two groups and that we decided to use a conventional -->
+<!-- linear model where Group 1 is the reference group. Our data-generating -->
+<!-- story therefore is that we can use a linear combination of variables to -->
+<!-- estimate the average value in each group and that the observed data are -->
+<!-- drawn from a normal distribution around each group's mean. In notation: -->
+
+<!-- $$ -->
+<!-- \begin{align*} -->
+<!--   y_i \sim\ &\text{Normal}(\mu_i, \sigma) &\text{[likelihood]} \\ -->
+<!--   \mu_i =\ &\text{Group\,1} + \beta\text{Group\,2}_i &\text{[linear model]} \\ -->
+<!--   \alpha :\  & \text{Group\,1 average} & \\ -->
+<!--   \beta :\   & \text{Difference between Group\,1 and Group\,2 averages} & \\ -->
+<!--   \sigma :\  & \text{Standard deviation for residual error} & \\ -->
+<!-- \end{align*} -->
+<!-- $$ -->
+
+<!-- In this arrangement, there are three parameters that need to be -->
+<!-- estimated: An intercept *α* (the average for Group 1), the group -->
+<!-- difference (*β*), and the error *σ*. For any set of parameter values, we can compute a likelihood value. This tells us how well the parameters *fit* the data.  -->
+
+<!--   <!-- &&\textit{Equivalent, residuals version:}\\ --> -->
+<!--   <!-- y_i =\ &\text{Group\,1} + \beta\text{Group\,2}_i + \epsilon_i &\text{[linear model]} \\ --> -->
+<!--   <!-- \epsilon_i \sim\ &\text{Normal}(0, \sigma) &\text{[likelihood]} \\ --> -->
+
+<!-- We say that the model -->
+
+<!-- For example, suppose that we are estimating some effect, *θ*. Before seeing the data, we describe our prior information with distribution like *θ* ~ Normal(0 [mean], 1 [sd])---that is, values drawn a normal distribution with a mean of 0 and a standard deviation of 1 are plausible values for *θ*. This prior information is updated in proportion to the likelihood of the data. -->
+
+<!-- We might that some plausible values for a given st -->
+
+<!-- For example, we suppose that before seeing the data,  -->
+
+<!-- A Bayesian model is the posterior distribution -->
 
 
 ### Growth curve features as measures of word recognition performance
@@ -614,10 +688,10 @@ Year over year changes in word recognition performance
 ------------------------------------------------------------------------
 
 The mixed-effects model estimated a population-average growth curve
-("fixed" effects) and how individual children deviated from average
+("fixed" effects) and how individual children deviated from the average
 ("random" effects). Figure \@ref(fig:average-growth-curves) shows 200
-posterior samples of the average growth curves for each study. On
-average, the growth curves become steeper and achieve higher looking
+posterior samples of the population-average growth curves for each year.
+On average, the growth curves become steeper and achieve higher looking
 probabilities with each year of the study.
 
 (ref:average-growth-curves) Population-average ("fixed effects") word recognition growth curves at each age. Colored lines represent 200 posterior samples of these growth curves; these are included to visualize the uncertainty about the population averages. The thick light lines represent the observed average growth curve in each study.
@@ -1196,10 +1270,10 @@ ggplot(by_draw %>% mutate(Study = convert_study_to_age(Study))) +
 The developmental pattern of increasing reliability and decreasing
 variability was also observed for the growth curve peaks. For the
 synthetic participants, the model predicted that individual peak
-probabilities will increase each year, peak<sub>3</sub> =
+probabilities will increase each year, peak~3~ =
 `r new_peaks_pts$Age3` [90% UI: `r new_peaks_uis$Age3`],
-peak<sub>4</sub> = `r new_peaks_pts$Age4` [`r new_peaks_uis$Age4`],
-peak<sub>5</sub> = `r new_peaks_pts$Age5` [`r new_peaks_uis$Age5`].
+peak~4~ = `r new_peaks_pts$Age4` [`r new_peaks_uis$Age4`],
+peak~5~ = `r new_peaks_pts$Age5` [`r new_peaks_uis$Age5`].
 Moreover, the range of plausible values for the individual peaks
 narrowed each for the simulated data. For instance, the difference
 between the 95^th^ and 5^th^ percentiles was `r new_peaks_diff$Age3` for
@@ -1266,11 +1340,12 @@ for all three years of the study. (That is, I excluded children who only
 had reliable eyetracking data for one or two years.) The judges are the
 sets of growth curve parameters from each year of study. For example,
 the intercept term provides three sets of ratings: The participants'
-intercept terms from year 1 are one set of ratings and the terms from
-years 2 and 3 provide two more sets of ratings. These three ratings are
+intercept terms from age 3 are one set of ratings and the terms from
+ages 4 and 5 provide two more sets of ratings. These three ratings are
 the "judges" used to compute the intercept's *W*. Thus, I computed five
 groups of *W* coefficients, one for each set of growth curve features:
-intercept, Time^1^, Time^2^, Time^3^, and peak looking probability.
+Time^1^, Time^2^, Time^3^, average looking probability, and peak looking
+probability.
 
 
 ```{r table-example-of-feature-ranks, echo = FALSE, eval = FALSE}
@@ -1324,7 +1399,9 @@ meaningfully from chance.
 
 (ref:kendall-stats) Uncertainty intervals for the Kendall's coefficient of concordance. Random ratings provide a baseline of null *W* statistics. The peak, intercept and linear time features are decisively non-null, indicating a significant degree of correspondence in children's relative word recognition reliability and efficiency over the three years of the study.
 
-```{r kendall-stats, fig.cap = "(ref:kendall-stats)", echo = FALSE, out.width = out_tex100_else80, fig.height = 3, fig.width = 6}
+(ref:kendall-stats-scap) Uncertainty intervals for the Kendall's coefficient of concordance. 
+
+```{r kendall-stats, fig.cap = "(ref:kendall-stats)", fig.scap = "(ref:kendall-stats-scap)", echo = FALSE, out.width = out_tex100_else80, fig.height = 3, fig.width = 6}
 subtitle <- glue::glue(
   "Kendall's W. Raters: 3 timepoints. Items: {n_rated} children.")
 
@@ -1574,7 +1651,7 @@ Growth curve peaks from age 3 correlated with age 5 vocabulary with
 `r peak_evt_tp3_uis$TimePoint1`], but the concurrent peaks from age 5
 showed a correlation of just *r* = `r peak_evt_tp3_pts$TimePoint3`
 [`r peak_evt_tp3_uis$TimePoint3`], a difference between age-3 and
-age-5 correlations of *r*<sub>3−5</sub> =
+age-5 correlations of *r*~3−5~ =
 `r peak_evt_tp3_pts[["TP1 - TP3"]]`
 [`r peak_evt_tp3_uis[["TP1 - TP3"]]`]. A similar pattern held for
 lexical processing efficiency values. Linear time features from age 3
@@ -1582,21 +1659,23 @@ correlated with age 5 vocabulary with *r* =
 `r ot1_evt_tp3_pts$TimePoint1` [`r ot1_evt_tp3_uis$TimePoint1`],
 whereas the concurrent lexical processing values from age 5 only showed
 a correlation of *r* = `r ot1_evt_tp3_pts$TimePoint3`
-[`r ot1_evt_tp3_uis$TimePoint3`], a difference of *r*<sub>3−5</sub> =
+[`r ot1_evt_tp3_uis$TimePoint3`], a difference of *r*~3−5~ =
 `r ot1_evt_tp3_pts[["TP1 - TP3"]]`
 [`r ot1_evt_tp3_uis[["TP1 - TP3"]]`]. For the average looking
 probabilities, the correlation for age 3, *r* =
 `r int_evt_tp3_pts$TimePoint1` [`r ot1_evt_tp3_uis$TimePoint1`], was
 probably only slightly greater than the correlation for age 4,
-*r*<sub>3−4</sub> = `r  int_evt_tp3_pts[["TP1 - TP2"]]`
+*r*~3−4~ = `r  int_evt_tp3_pts[["TP1 - TP2"]]`
 [`r int_evt_tp3_uis[["TP1 - TP2"]]`] but considerably greater than the
-concurrent correlation at age 5, *r*<sub>3−5</sub> =
+concurrent correlation at age 5, *r*~3−5~ =
 `r  int_evt_tp3_pts[["TP1 - TP3"]]`
 [`r int_evt_tp3_uis[["TP1 - TP3"]]`].
 
-(ref:evt2-gca-cors) Uncertainty intervals for the correlations of growth curve features at each timepoint with age-5 expressive vocabulary (EVT-2 standard scores). The bottom rows provide intervals for the pairwise differences in correlations between timepoints. For example, the top row of the left panel is the correlation between age-3 peak probability and age-5 expressive vocabulary.
+(ref:evt2-gca-cors) Uncertainty intervals for the correlations of growth curve features at each age with age-5 expressive vocabulary (EVT-2 standard scores). The bottom rows provide intervals for the pairwise differences in correlations between timepoints. For example, the top row of the left panel is the correlation between age-3 peak probability and age-5 expressive vocabulary.
 
-```{r evt2-gca-cors, fig.cap = "(ref:evt2-gca-cors)", out.width = out_tex100_else80, fig.height = 3, fig.width = 6, echo = FALSE}
+(ref:evt2-gca-cors-scap) Uncertainty intervals for the correlations of growth curve features at each age with age-5 expressive vocabulary.
+
+```{r evt2-gca-cors, fig.cap = "(ref:evt2-gca-cors)", fig.scap = "(ref:evt2-gca-cors-scap)", out.width = out_tex100_else80, fig.height = 3, fig.width = 6, echo = FALSE}
 study_map <- c(
   "TimePoint1" = "paste(Age, phantom(l), 3)", 
   "TimePoint2" = "paste(Age, phantom(l), 4)", 
@@ -1646,21 +1725,23 @@ Peak looking probabilities from age 3 were strongly correlated with
 age 4 receptive vocabulary, *r* = `r peak_ppvt_tp2_pts$TimePoint1`
 [`r peak_ppvt_tp2_uis$TimePoint1`], and this correlation was much
 greater than the correlation observed for the age 4 growth curve peaks,
-*r*<sub>3−4</sub> = `r peak_ppvt_tp2_pts[["TP1 - TP2"]]`
+*r*~3−4~ = `r peak_ppvt_tp2_pts[["TP1 - TP2"]]`
 [`r peak_ppvt_tp2_uis[["TP1 - TP2"]]`]. The correlation for age 3
 average looking probabilities, *r* = `r int_ppvt_tp2_pts$TimePoint1`
 [`r int_ppvt_tp2_uis$TimePoint1`], was greater than the age 4
-correlation, *r*<sub>3−4</sub> =
+correlation, *r*~3−4~ =
 `r int_ppvt_tp2_pts[["TP1 - TP2"]]`
 [`r int_ppvt_tp2_uis[["TP1 - TP2"]]`], and the correlation for age 3
 linear time features, *r* = `r ot1_ppvt_tp2_pts$TimePoint1`
 [`r ot1_ppvt_tp2_uis$TimePoint1`], was likewise greater,
-*r*<sub>3−4</sub> = `r ot1_ppvt_tp2_pts[["TP1 - TP2"]]`
+*r*~3−4~ = `r ot1_ppvt_tp2_pts[["TP1 - TP2"]]`
 [`r ot1_ppvt_tp2_uis[["TP1 - TP2"]]`].
 
-(ref:ppvt4-gca-cors) Uncertainty intervals for the correlations of growth curve features from age 43 and age 44 with age-4 receptive vocabulary (PPVT-4 standard scores). The bottom row shows pairwise differences between the age-3 and age-4 correlations.
+(ref:ppvt4-gca-cors) Uncertainty intervals for the correlations of growth curve features from age 3 and age 4 with age-4 receptive vocabulary (PPVT-4 standard scores). The bottom row shows pairwise differences between the age-3 and age-4 correlations.
 
-```{r ppvt4-gca-cors, fig.cap = "(ref:ppvt4-gca-cors)", out.width = out_tex100_else80, fig.height = 2, fig.width = 6, echo = FALSE}
+(ref:ppvt4-gca-cors-scap) Uncertainty intervals for the correlations of growth curve features from age 3 and age 4 with age-4 receptive vocabulary.
+
+```{r ppvt4-gca-cors, fig.cap = "(ref:ppvt4-gca-cors)", fig.scap = "(ref:ppvt4-gca-cors-scap)", out.width = out_tex100_else80, fig.height = 2, fig.width = 6, echo = FALSE}
 main_diffs %>% 
   filter(variable == "r_TimePoint2_PPVT_Standard") %>% 
   filter(Study %in% c("TimePoint1", "TimePoint2", "TP1 - TP2")) %>% 

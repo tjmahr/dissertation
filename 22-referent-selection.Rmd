@@ -216,7 +216,7 @@ with these features. The linear model was:
 `r insert_html_math()`
 \small
 \begin{align*}
-   \text{log-odds}(\text{looking}) =\
+   \text{log\,odds}(\text{looking}) =\
     &\beta_0 + 
       \beta_1\text{Time}^1 + 
       \beta_2\text{Time}^2 + 

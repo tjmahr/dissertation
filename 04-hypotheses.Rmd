@@ -61,6 +61,6 @@ Study 2 (Referent Selection and Mispronunciations) {-}
     tolerate a mispronunciation as a production of familiar word
     compared to children with smaller vocabularies.
 
-  - Mispronunciations that feature later-mastered sounds (e.g.,
-    *rice*-*wice*) will be more likely to be associated to novel objects
-    than earlier-mastered sounds (*duck*-*guck*).
+  - Mispronunciations that feature later-mastered sounds
+    (e.g., *rice-wice*) will be more likely to be associated to novel
+    objects than earlier-mastered sounds (*duck-guck*).

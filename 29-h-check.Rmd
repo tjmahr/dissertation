@@ -60,8 +60,8 @@ mispronunciation trials.
 \bigskip\smallskip
 
 **Mispronunciations that feature later-mastered sounds
-(e.g., *rice*-*wice*) will be more likely to be associated to novel
-objects than earlier-mastered sounds (*duck*-*guck*).**
+(e.g., *rice-wice*) will be more likely to be associated to novel
+objects than earlier-mastered sounds (*duck-guck*).**
 
 Not answered. I present the item-level results in in
 [Appendix \@ref(aim2-mp-items)](#aim2-mp-items). I chose not to formally

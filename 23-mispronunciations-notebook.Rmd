@@ -102,7 +102,7 @@ and Time × Age interactions, as in the model from
 `r insert_html_math()`
 \small
 \begin{align*}
-  \text{log odds}(\text{looking}) =\
+  \text{log\,odds}(\text{looking}) =\
     &\beta_0 + 
       \beta_1\text{Time}^1 + 
       \beta_2\text{Time}^2 + 
@@ -111,12 +111,12 @@ and Time × Age interactions, as in the model from
     (&\gamma_{0} + 
       \gamma_{1}\text{Time}^1 + 
       \gamma_{2}\text{Time}^2 +
-      \gamma_{3}\text{Time}^3)*\text{Age}\,\text{4}\ + \
+      \gamma_{3}\text{Time}^3)*\text{Age\,4}\ + \
       &\text{[age 4 adjustments]} \\
     (&\delta_{0} + 
       \delta_{1}\text{Time}^1 + 
       \delta_{2}\text{Time}^2 +
-      \delta_{3}\text{Time}^3)*\text{Age}\,\text{5} \
+      \delta_{3}\text{Time}^3)*\text{Age\,5} \
       &\text{[age 5 adjustments]} \\
 \end{align*}
 \normalsize
