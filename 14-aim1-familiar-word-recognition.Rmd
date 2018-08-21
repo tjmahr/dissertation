@@ -96,7 +96,7 @@ polynomial function of time. Put differently, I modeled the probability
 of looking to the target during an eyetracking task as:
 
 $$
-\text{log-odds}(\text{looking}) = 
+\text{log odds}(\text{looking}) = 
   \beta_0 + 
   \beta_1\text{Time}^1 + 
   \beta_2\text{Time}^2 + 
@@ -293,7 +293,7 @@ indicators to interact with the growth curve parameters:
 `r insert_html_math()`
 \small
 \begin{align*}
-   \text{log-odds}(\text{looking}) =\
+  \text{log odds}(\text{looking}) =\
     &\beta_0 + 
       \beta_1\text{Time}^1 + 
       \beta_2\text{Time}^2 + 

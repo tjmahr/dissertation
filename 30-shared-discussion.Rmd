@@ -1,4 +1,4 @@
-(PART\*) Afterword  {#part-end-matter .unnumbered}
+(PART\*) Overall discussion  {#part-end-matter .unnumbered}
 =======================================================================
 
 General discussion of both studies {#both-studies-discussion}

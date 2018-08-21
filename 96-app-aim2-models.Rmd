@@ -102,23 +102,90 @@ four processing `cores`. Early attempts at the model produced warnings,
 so I increased the `adapt_delta` control option to make the sampling
 more robust and eliminate the warnings.
 
-Model summary for real words versus nonwords at age 3:
+Model summary for real words versus nonwords at age 3:
 
-```{r, echo = TRUE}
+```{r, echo = FALSE}
+intercept_summary <- function(...) {
+  print_out <- purrr::quietly(print)(summary(...))
+  lines <- print_out$output %>% 
+    stringr::str_split("\n") %>% 
+    unlist()
+  lines
+}
+
+# indent all elements but first
+str_exdent <- function(xs, width = 0) {
+  indent <- stringr::str_pad("", width = width, side = "left", pad = " ")
+  c(xs[1], paste0(indent, xs[-1]))
+}
+
+# add a prefix to all strings that are missing it
+str_prefix_if_needed <- function(xs, comment = "") {
+  to_fix <- !stringr::str_detect(xs, paste0("^", comment))
+  xs[to_fix] <- paste0(comment, xs[to_fix])
+  xs
+}
+
+# wrap the formula line from a brms summary
+wrap_brms_formula <- function(lines, indent = 2, comment = "") {
+  formula_line_no <- lines %>% 
+    stringr::str_which("Formula:") %>% 
+    head(1)
+  
+  formula_indent <- lines[formula_line_no] %>% 
+    stringr::str_locate("Formula: ") %>% 
+    as.list() %>% 
+    getElement(2)
+  
+  formula_indent <- formula_indent - nchar(comment)
+  
+  lines[formula_line_no] <- lines[formula_line_no] %>% 
+    stringr::str_replace(" ~ ", " ~ \n") %>% 
+    stringr::str_replace(" [+] [(]", " + \n(") %>% 
+    stringr::str_split("\n") %>%
+    unlist() %>%
+    str_exdent(formula_indent + indent) %>% 
+    str_prefix_if_needed(comment) %>% 
+    paste0(collapse = "\n")
+  
+  paste0(lines, collapse = "\n")
+}
+```
+
+```{r custom-hook, echo = FALSE}
+# store original processor
+hook_output <- knitr::knit_hooks$get('output')
+
+# if brms_wrap, intercept output and wrap formula line. run processor
+knitr::knit_hooks$set(output = function(x, options) {
+  if (is.null(options$brms_wrap)) { 
+    options$brms_wrap <- FALSE
+  }
+  
+  if (options$brms_wrap) { 
+    x <- knitr:::split_lines(x)
+    x <- wrap_brms_formula(x, indent = 2, comment = options$comment)
+  } 
+  
+  hook_output(x, options)
+})
+```
+
+```{r, echo = TRUE, brms_wrap = TRUE}
 m1 <- readr::read_rds("./data/aim2-real-vs-nw-tp1.rds.gz")
 summary(m1, priors = TRUE, prob = .9)
 ```
 
-Model summary for real words versus nonwords at age 4:
+Model summary for real words versus nonwords at age 4:
 
-```{r, echo = TRUE}
+```{r, echo = TRUE, brms_wrap = TRUE}
 m2 <- readr::read_rds("./data/aim2-real-vs-nw-tp2.rds.gz")
 summary(m2, priors = TRUE, prob = .9)
 ```
 
-Model summary for real words versus nonwords at age 5:
+Model summary for real words versus nonwords at age 5:
 
-```{r, echo = TRUE}
+```{r, echo = TRUE, brms_wrap = TRUE}
 m3 <- readr::read_rds("./data/aim2-real-vs-nw-tp3.rds.gz")
 summary(m3, priors = TRUE, prob = .9)
 ```
@@ -295,13 +362,13 @@ p1 + p2
 
 Model summary for unfamiliar-initial mispronunciation trials:
 
-```{r, echo = TRUE}
+```{r, echo = TRUE, brms_wrap = TRUE}
 summary(mp_unfam, priors = TRUE, prob = .9)
 ```
 
 Model summary for familiar-initial mispronunciation trials:
 
-```{r, echo = TRUE}
+```{r, echo = TRUE, brms_wrap = TRUE}
 summary(mp_fam, priors = TRUE, prob = .9)
 ```
 
@@ -374,8 +441,6 @@ Model summary for retention trials at age 5:
 m_norm <- readr::read_rds("./data/mp-norming-m2.rds.gz")
 ```
 
-```{r, echo = TRUE}
+```{r, echo = TRUE, R.options = list(width = 71), brms_wrap = TRUE}
 summary(m_norm, priors = TRUE, prob = .9)
 ```
-
-

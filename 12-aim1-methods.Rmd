@@ -181,7 +181,7 @@ knitr::include_graphics(
   auto_pdf = TRUE)
 ```
 
-This experimental design---an eyetracking study word recognition with
+This experimental design---an eyetracking study of word recognition with
 four images---is referred to as the Visual World Paradigm throughout the
 literature. See @Huettig2011 for a historical review and an overview of
 how it has been used to study syntactic, pragmatic, semantic, and

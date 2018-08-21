@@ -332,10 +332,11 @@ expressed time as the weighted sum of a linear trend, a quadratic trend
 and cubic trend. That is:
 
 $$
-\text{log-odds}(\mathit{looking}) =
-  \alpha + \beta_1 * \textit{Time}^1 +
-           \beta_2 * \textit{Time}^2 +
-           \beta_3 * \textit{Time}^3
+\text{log odds}(\text{looking}) = 
+  \alpha + 
+  \beta_1\text{Time}^1 + 
+  \beta_2\text{Time}^2 + 
+  \beta_3\text{Time}^3
 $$
 
 But another way to think about the polynomial terms is as *basis
@@ -343,8 +344,8 @@ functions*: A set of features that combine to approximate some nonlinear
 function of time. Under this framework, the model can be expressed as:
 
 $$
-\text{log-odds}(\mathit{looking}) =
-  \alpha + f(\textit{Time})
+\text{log odds}(\text{looking}) = 
+  \alpha + f(\text{Time})
 $$
 
 This is the idea behind generalized additive models and their *smooth
@@ -516,7 +517,7 @@ work like conventional regression effects and determined the growth
 curve's average values. The model used age 4 as the reference year, so
 the intercept represented the average looking probability at
 age 4. The year effects represented differences
-between age 4 vs. age 3 and age 4 vs. age 5.
+between age 4 vs. age 3 and age 4 vs. age 5.
 
 The model also included *smooth* terms to represent the time course of
 the data. As with the parametric effects, age 4 served as the reference
@@ -534,7 +535,7 @@ Altogether, the model contained the following terms:
 `r insert_html_math()`
 \small
 \begin{align*}
-   \text{emp. log-odds}(\mathit{phon.\ vs.\ unrelated}) =\
+   \text{emp. log odds}(\text{phon. vs. unrelated}) =\
    & \alpha + \beta_1\text{Age3} + \beta_2\text{Age5} +\ &\text{[growth curve averages]} \\
    & f_1(\text{Time}, \text{Age4})\ +                    &\text{[reference smooth]} \\
    & f_2(\text{Time}, \text{Age4} - \text{Age3})\ +      &\text{[difference smooths]} \\
@@ -1332,7 +1333,7 @@ vocabulary.
 `r insert_html_math()`
 \small
 \begin{align*}
-   \text{log-odds}(\mathit{choosing\ target}) =\
+   \text{log odds}(\text{choose target}) =\
    & \alpha\ +                  &\text{[average child ability]} \\
    & \alpha_i\ +                &\text{[difference of child}\ i
                                        \text{'s ability from average]} \\
@@ -1358,8 +1359,8 @@ therefore:
 `r insert_html_math()`
 \small
 \begin{align*}
-   \text{emp. log-odds}(\mathit{phon.\ vs.\ unrelated}) =\
-   & \alpha +\ &\text{[growth curve average]} \\
+   \text{emp. log odds}(\text{phon. vs. unrelated}) =\
+   & \alpha\ +\ &\text{[growth curve average]} \\
    & f_1(\text{Time})\ +                    &\text{[time smooth]} \\
    & f_2(\text{Ability})\ +                 &\text{[ability smooth]} \\
    & f_3(\text{Time} * \text{Ability})\ +   &\text{[interaction smooth]} \\

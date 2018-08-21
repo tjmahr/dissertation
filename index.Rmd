@@ -12,6 +12,7 @@ cover-image: "assets/cover.png"
 # Data for the PDF version
 year: 2018
 oral-date: August 7, 2018
+signature: ["Jan Edwards", "Susan Ellis Weismer", "Margarita Kaushanskaya", "Jenny Saffran", "David Kaplan", "Bob McMurray"]
 abstract-school: "The University of Wisconsin--Madison"
 abstract-year: 2018
 abstract-advisor: "Professor Jan Edwards and Professor Susan Ellis Weismer"
@@ -23,11 +24,11 @@ affiliation: >
 school: "University of Wisconsin--Madison"
 program: "Communication Sciences and Disorders"
 chair: "Jan Edwards"
-signature: ["Jan Edwards", "Susan Ellis Weismer", "Margarita Kaushanskaya", "Jenny Saffran", "David Kaplan", "Bob McMurray"]
 dedication: |
   For Penny
 lot: true
 lof: true
+geometry: "left=1.275in,right=1.275in,top=1.275in,bottom=1.275in"
 ---
 
 \frontmatter
