@@ -697,24 +697,24 @@ $for(signature)$\indent $signature$$sep$\\*$endfor$
 % This makes the page numbers Roman (i, ii, etc)
 \clearpage\pagenumbering{roman}
 
-\begin{document}
 
-% \ifpdf
-%   \DeclareGraphicsExtensions{.pdf, .jpg, .tif}
-% \else
-%   \DeclareGraphicsExtensions{.eps, .jpg}
-% \fi
+\begin{document}
 
 \newgeometry{left=1in,right=1in,bottom=1in,top=1in}
 \maketitle
-\restoregeometry %sets the margins back to normal
+
+% set margins for rest of book
+$if(geometry)$
+  \newgeometry{$geometry$}
+$else$
+  \restoregeometry
+$endif$
 
 \copyrightpage
 
 \begin{umiabstract}
   $abstract$
 \end{umiabstract}
-
 
 \begin{dedication}
 	\emph{$dedication$}
