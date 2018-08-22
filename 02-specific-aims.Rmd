@@ -37,7 +37,7 @@ measures (such as vocabulary and speech perception).
 Study 1 (Familiar Word Recognition and Lexical Competition) {-}
 ------------------------------------------------------------------------
 
-***Specific Aim:* To characterize the development of familiar word
+***Specific Aim\:* To characterize the development of familiar word
 recognition and lexical competition, I analyze data from a visual world
 paradigm experiment, conducted at age 3, age 4, and age 5.**
 
@@ -69,7 +69,7 @@ lexically relevant alternative.
 Study 2 (Referent Selection and Mispronunciations) {-}
 -----------------------------------------------------------------------
 
-***Specific Aim:* To characterize how fast referent selection develops
+***Specific Aim\:* To characterize how fast referent selection develops
 longitudinally, I analyzed data from a looking-while-listening
 mispronunciation experiment, conducted at age 3, age 4, and age 5.**
 

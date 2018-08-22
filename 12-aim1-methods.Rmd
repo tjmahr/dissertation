@@ -66,6 +66,12 @@ mean_sd_range <- function(xs) {
   sprintf("%.0f (%.0f) [%.0f–%.0f]", mean, sd, range[1], range[2])
 }
 
+# xs -> "Min--Max"
+print_range <- function(xs) {
+  range <- narm_range(xs)
+  sprintf("%.0f–%.0f", range[1], range[2])
+}
+
 # xs -> "Mean (SD)"
 mean_sd <- function(xs) {
   mean <- narm_mean(xs)
@@ -82,7 +88,8 @@ df <- df_all_three %>%
     N = n(),
     BoyGirl = paste_comma(sum(Male), sum(Female)),
     MAEAAE = paste_comma(sum(MAE), sum(AAE)),
-    Age = mean_sd_range(Age),
+    AgeM = mean_sd(Age),
+    Age_Range = print_range(Age),
     LateTalker = sum(LateTalker),
     Medu_Low = narm_sum(Maternal_Education_LMH == "Low"),
     Medu_Mid = narm_sum(Maternal_Education_LMH == "Mid"),
@@ -106,13 +113,14 @@ row_labels <- tibble::tribble(
   ~Order, ~Key, ~Label,
   01, "N",             "N",
   02, "BoyGirl",       "Boys, Girls",
-  03, "Medu_LMHN",     "Maternal ed.: Low, Middle, High",
+  03, "Medu_LMHN",     "Maternal ed.: Low, Mid, High",
   04, "MAEAAE",        "Dialect: MAE, AAE",
   05, "LateTalker",    "Parent-identified late talkers",
-  06, "Age",           "Age (months): Mean (SD) [Range]",
-  07, "EVT_Standard",  "EVT-2 standard: Mean (SD)",
-  08, "PPVT_Standard", "PPVT-4 standard: Mean (SD)",
-  09, "GFTA_Standard", "GFTA-2 standard: Mean (SD)"
+  06, "AgeM",           "Age (months): Mean (SD)",
+  07, "Age_Range",           "Age (months): Range",
+  08, "EVT_Standard",  "EVT-2 standard: Mean (SD)",
+  09, "PPVT_Standard", "PPVT-4 standard: Mean (SD)",
+  10, "GFTA_Standard", "GFTA-2 standard: Mean (SD)"
 )
 
 df_summary <- df %>%
@@ -132,7 +140,7 @@ df_summary <- df %>%
 if (knitr:::is_latex_output()) { 
   caption <- glue::glue(
     "Participant characteristics. Education levels: \\textit{Low}: less than 
-     high school, or high school; \\textit{Middle}: trade school, technical or 
+     high school, or high school; \\textit{Mid}: trade school, technical or 
      associates degree, some college, or college degree; and \\textit{High}: 
      graduate degree. Dialects: \\textit{MAE}: Mainstream American English; 
      \\textit{AAE}: African-American English.", 
@@ -140,7 +148,7 @@ if (knitr:::is_latex_output()) {
 } else {
   caption <- glue::glue(
     "Participant characteristics. Education levels: *Low*: less than high 
-     school, or high school; *Middle*: trade school, technical or associates 
+     school, or high school; *Mid*: trade school, technical or associates 
      degree, some college, or college degree; and *High*: graduate degree.
      Dialects: *MAE*: Mainstream American English; *AAE*: African-American 
      English.")
@@ -453,12 +461,12 @@ screening_results2 <- screening_results %>%
   left_join(na_results) %>% 
   tidyr::gather("Stat", "Value", -Study, -Dataset) %>% 
   tidyr::spread(Dataset, Value) %>% 
-  mutate(`Raw - Screened` = Raw - Screened) %>% 
+  mutate(`Raw $-$ Screened` = Raw - Screened) %>% 
   tidyr::gather(Dataset, "Count", -Study, -Stat) %>% 
   tidyr::spread(Stat, Count) %>% 
   mutate(
     Dataset = Dataset %>% 
-      factor(c("Raw", "Screened", "Raw - Screened")),
+      factor(c("Raw", "Screened", "Raw $-$ Screened")),
     PropNA = scales::percent(PropNA)) %>% 
   select(Dataset, Study, Children, Blocks, Trials, `Percent Missing` = PropNA) %>% 
   arrange(Dataset, Study) %>% 
@@ -471,7 +479,7 @@ knitr::kable(
   align = "llrrrr",
   caption = glue::glue(
     "Eyetracking data before and after data screening. For convenience, the \\
-     number of exclusions is included as Raw − Screened. Percent Missing: \\
+     number of exclusions is included as Raw $-$ Screened. Percent Missing: \\
      Percentage of looks offscreen during 0--2000 ms after target onset."),
   linesep = c("", "", "\\addlinespace"),
   caption.short = "Eyetracking data before and after data screening.", 

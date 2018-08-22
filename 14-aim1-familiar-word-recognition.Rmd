@@ -328,26 +328,27 @@ I used Bayesian *uncertainty intervals* to draw statistical inferences.
 A Bayesian model is the posterior distribution: It is a distribution of
 plausible parameter values, given the data, a data-generating model and
 any prior information we have about those parameter values. In practice,
-these distributions are hard to calculate so we use Markov Chain Monte
+these distributions are hard to calculate, so we use Markov Chain Monte
 Carlo to get a sample of thousands of values from the posterior
 distribution. Thus, rather than having a single best-fitting estimate of
-some effect *β*, we have a sample of, say, 4,000 plausible values for
-*β*. We can quantify our uncertainty about *β* by describing the
+some effect $\beta$, we have a sample of, say, 4,000 plausible values for
+$\beta$. We can quantify our uncertainty about $\beta$ by describing the
 distribution of those values. I use typically two statistics to describe
 that distribution. The median provides a *point estimate* for the
-distribution, and the 90% uncertainty interval represents bounds for the
+distribution, and the 90% uncertainty interval provides bounds for the
 effect. These intervals have an intuitive interpretation. Suppose that
-for *β* we get a median of 8 and 90% uncertainty interval of [5, 21].
+for $\beta$ we get a median of 8 and 90% uncertainty interval of [5, 21].
 This interval means that we can be 90% certain that the "true" value of
-*β* is between 5 and 21, given the data, our prior information and our
-model. Moreover, by inspecting the interval, we pinpoint areas of
+$\beta$ is between 5 and 21, given the data, our model, and our prior
+information. Moreover, by inspecting the interval, we pinpoint areas of
 uncertainty. In this example, we can conclude that the effect is likely
 to be positive. The lower interval value of 5 tells us that 90% of the
 plausible values are greater than 5. A wide range of values are covered
 by the interval, however, so we would also conclude that we are not very
-certain about the size of the effect. One cannot interpret frequentist
-confidence intervals in this way. See @Kruschke2017 for a recent review
-of frequentist versus Bayesian statistics.
+certain about the size of the effect. It bears noting that one cannot
+interpret frequentist confidence intervals in this way. See
+@Kruschke2017 for a recent review of frequentist versus Bayesian
+statistics.
 
 
 
@@ -366,7 +367,7 @@ points on the curve. Figure \@ref(fig:curve-features) shows three
 simulated growth curves and how each of these growth curve features
 relate to word recognition performance.
 
-(ref:curve-features) Illustration of the three growth curve features and how they describe lexical processing performance. The three curves used are simulations of new participants at Age 4.
+(ref:curve-features) Illustration of the three growth curve features and how they describe lexical processing performance. The three curves used are simulations of new participants at age 4.
 
 (ref:curve-features-scap) Illustration of the three growth curve features and how they describe lexical processing performance.
 
@@ -518,7 +519,7 @@ p1 <- ggplot(lpred_lm) +
     color = constants$col_blue_highlight) +
   annotate(
     geom = "text", x = -.20, y = -.66,  color = constants$col_off_black,
-    label = "growth curve estimated\nfor each child x study", family = "Lato",
+    label = "growth curve estimated\nfor each child x year", family = "Lato",
     size = 3.5, vjust = 1, hjust = 0) +
   annotate(
     geom = "text", x = -.50, y = .9,  color = constants$col_blue_highlight,
@@ -646,7 +647,7 @@ posterior samples of the population-average growth curves for each year.
 On average, the growth curves become steeper and achieve higher looking
 probabilities with each year of the study.
 
-(ref:average-growth-curves) Population-average ("fixed effects") word recognition growth curves at each age. Colored lines represent 200 posterior samples of these growth curves; these are included to visualize the uncertainty about the population averages. The thick light lines represent the observed average growth curve in each study.
+(ref:average-growth-curves) Population-average ("fixed effects") word recognition growth curves at each age. Colored lines represent 200 posterior samples of these growth curves; these are included to visualize the uncertainty about the population averages. The thick light lines represent the observed average growth curve at each age.
 
 (ref:average-growth-curves-scap) Population-average ("fixed effects") word recognition growth curves at each age.
 
@@ -852,7 +853,7 @@ p1 <- intervals2 %>%
     labs(
       x = NULL, 
       y = NULL, 
-      title = "Average effects by study",
+      title = "Average effects by age",
       caption = " ") 
 
 p2 <- p1 %+% (intervals2 %>% filter(Scale == "Proportion"))
@@ -1171,7 +1172,7 @@ the 50-percentile (interquartile) range. The ranges of performance
 decrease from age 3 to age 4 to age 5, consistent with the hypothesized
 reduction in variability.
 
-(ref:new-ranges) Ranges of predictions for simulated participants over the course of a trial. The ranges are most similar during the first half of the trial when participants are at chance performance, and the ranges are most different at the end of the trial as children reliably fixate on the target image. The ranges of performance decreases with each year of the study as children show less variability.
+(ref:new-ranges) Ranges of predictions for simulated participants over the course of a trial. The ranges are most similar during the first half of the trial when participants are at chance performance, and the ranges are most different at the end of the trial as children reliably fixate on the target image. The ranges of performance decrease with each year of the study as children show less variability.
 
 (ref:new-ranges-scap) Ranges of predictions for simulated participants over the course of a trial.
 
@@ -1336,7 +1337,7 @@ reduced_data %>%
 
 Because I used a Bayesian model, there is a distribution of ratings and
 thus a distribution of concordance statistics. Each sample of the
-posterior distribution fits a growth curve for each child in each study,
+posterior distribution fits a growth curve for each child in each year,
 so each posterior sample provides a set of ratings for concordance
 coefficients. This distribution of *W*'s lets us quantify our uncertainty
 because we can compute *W*'s for each of the `r nsamples` samples from
@@ -1431,7 +1432,7 @@ claimed that only the intercept, linear time, and peak features have
 psychologically meaningful interpretations and that the higher-order
 time features mainly act to capture the curvature of the data. These
 null concordance statistics support that claim because the Time^2^ and
-Time^3^ features differentiate children across studies as well as random
+Time^3^ features differentiate children across years as well as random
 numbers.
 
 Concordance is strongest for the peak feature, *W* =
@@ -1441,7 +1442,7 @@ the intercept term, *W* = `r w_pts[["Avg.~Probability"]]`
 *W* = `r w_pts[["Time^1"]]` [`r w_uis[["Time^1"]]`]. Because these
 values are far removed from the statistics for random ratings, I
 conclude that there is a credible degree of correspondence across
-studies when ranking children using their peak looking probability,
+years when ranking children using their peak looking probability,
 average look probability (the intercept) or their growth curve slope
 (linear time).
 
