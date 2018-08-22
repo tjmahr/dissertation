@@ -606,7 +606,7 @@ ggplot(counts) +
 To prepare the data for modeling, I downsampled the data into
 `r opts_model$bin_length`-ms (`r opts_model$bin_width`-frame) bins. I
 modeled looks from 300 to 1,500 ms after noun onset. Lastly, I
-aggregated looks by child, study, condition, initial fixation location,
+aggregated looks by child, year, condition, initial fixation location,
 and time, and I created orthogonal polynomials to use as time features
 for the model. Figure \@ref(fig:aim2-real-word-spaghetti),
 Figure \@ref(fig:aim2-nonword-spaghetti), and

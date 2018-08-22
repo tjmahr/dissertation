@@ -43,9 +43,9 @@ general, describing children who participated at each year, but whose
 data may have been excluded from the analyses. Some potential reasons
 for exclusion include: excessive missing data during eyetracking,
 experiment or technology error, developmental concerns not identified
-until later in study, or a failed hearing screening. Final sample sizes
-will depend on the measures needed for an analysis and the results from
-data screening checks.
+until later in the study, or a failed hearing screening. Final sample
+sizes will depend on the measures needed for an analysis and the results
+from data screening checks.
 
 ```{r participant-info}
 path <- file.path(".", "data-raw", "scores_for_participant_summary.csv")
@@ -472,7 +472,8 @@ screening_results2 <- screening_results %>%
   arrange(Dataset, Study) %>% 
   mutate(
     Dataset = Dataset %>% as.character() %>% replace_if_same_as_last(""),
-    Study = convert_study_to_age(Study))
+    Study = convert_study_to_age(Study)) %>% 
+  rename(Year = Study)
 
 knitr::kable(
   screening_results2,
@@ -514,7 +515,7 @@ I modeled the looks from `r opts_model$start_time`
 to `r opts_model$end_time` ms. I chose this window after visualizing the
 observed fixation probabilities and identifying when during a trial the
 probabilities started to rise and later plateaued. Lastly, I aggregated
-looks by child, study and time, and created orthogonal polynomials to
+looks by child, year and time, and created orthogonal polynomials to
 use as time features for the model.
 
 ```{r, echo = FALSE, message = FALSE, warnings = FALSE}
