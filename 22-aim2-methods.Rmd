@@ -177,7 +177,7 @@ other label (*guck*) was tested but using different image assets for the
 objects (*toy2.jpeg* and *reed2.jpeg*). In a block of testing, there
 were 12 trials, 6 for nonwords and 6 for mispronunciations. 
 
-(ref:retention-display) Examples of retention trials that tested *guck* and *shann*. During the first retention trial (*left*), children heard one of the unfamiliar words (e.g., *guck*). The correct response was to point to the toy bull creature because it was the unfamiliar object used on the *duck*--*guck* trials. During a later trial that used different image assets (*right*), children heard the other word (*shann*). The correct response was to point to the bassoon reed because it was the unfamiliar object used on the *shann* trials. 
+(ref:retention-display) Examples of retention trials that tested *guck* and *shann*. During the first retention trial (*left*), children heard one of the unfamiliar words (e.g., *guck*). The correct response was to point to the toy bull creature because it was the unfamiliar object used on the *duck--guck* trials. During a later trial that used different image assets (*right*), children heard the other word (*shann*). The correct response was to point to the bassoon reed because it was the unfamiliar object used on the *shann* trials. 
 
 (ref:retention-display-scap) Examples of retention trials that tested *guck* and *shann*.
 
@@ -311,8 +311,18 @@ screening_results <- list(Screened = clean_looks, Raw = looks) %>%
     `Trials` = n_distinct(TrialID)) %>% 
   ungroup()
 
+na_results <- list(Screened = clean_looks, Raw = looks) %>% 
+  bind_rows(.id = "Dataset") %>% 
+  filter(screening_times[1] <= Time, Time <= screening_times[2]) %>% 
+  mutate(Age = convert_study_to_age(Study)) %>% 
+  aggregate_looks(
+    resp_def, 
+    Age + Dataset ~ GazeByImageAOI) %>% 
+  select(Dataset, Age, PropNA) 
+
 # Add an extra set of rows computing difference
 screening_results2 <- screening_results %>% 
+  left_join(na_results) %>% 
   tidyr::gather("Stat", "Value", -Age, -Dataset) %>% 
   tidyr::spread(Dataset, Value) %>% 
   mutate(`Raw &minus; Screened` = Raw - Screened) %>% 
@@ -320,16 +330,60 @@ screening_results2 <- screening_results %>%
   tidyr::spread(Stat, Count) %>% 
   mutate(
     Dataset = Dataset %>% 
-      factor(c("Raw", "Screened", "Raw &minus; Screened"))) %>% 
-  select(Dataset, Age, `Children`, `Blocks`, `Trials`) %>% 
+      factor(c("Raw", "Screened", "Raw &minus; Screened")),
+    PropNA = scales::percent(PropNA)) %>% 
+  select(
+    Dataset, Age, Children, Blocks, Trials, `Percent Missing` = PropNA) %>% 
   arrange(Dataset, Age) %>% 
-  rename(Study = Age) %>% 
-  mutate(Dataset = Dataset %>% as.character() %>% replace_if_same_as_last(""))
+  rename(Year = Age) %>% 
+  mutate(
+    Dataset = Dataset %>% 
+      as.character() %>% 
+      replace_if_same_as_last(""))
 
-knitr::kable(
-  screening_results2,
-  caption = "Eyetracking data counts before and after data screening.", 
-  booktabs = TRUE)
+
+scap <- "Eyetracking data in Study&nbsp;2 before and after data screening."
+
+if (knitr:::is_latex_output()) { 
+  scap <- scap %>% 
+    stringr::str_replace("&nbsp;", "~")
+  
+  caption <- glue::glue(
+    "Eyetracking data before and after data screening. For convenience, the \\
+     number of exclusions is included as Raw $-$ Screened. \\
+     \\textit{Percent Missing}: \\
+     Percentage of looks offscreen during 0--2000~ms after target onset.",
+    .open = "<<", .close = ">>")
+  
+  to_print <- screening_results2 %>% 
+    mutate(
+      Dataset = stringr::str_replace(Dataset, "&minus;", "$-$"),
+      `Percent Missing` = knitr:::escape_latex(`Percent Missing`)) %>% 
+    knitr::kable(
+      format = "latex",
+      align = "llrrrr",
+      linesep = c("", "", "\\addlinespace"),
+      caption = caption,
+      caption.short = scap, 
+      escape = FALSE,
+      booktabs = TRUE)
+  
+} else {
+  caption <- glue::glue(
+    "Eyetracking data before and after data screening. For convenience, the \\
+     number of exclusions is included as Raw&nbsp;&minus; Screened. \\
+     *Percent Missing*: Percentage of looks offscreen during 0--2000&nbsp;ms \\
+     after target onset.")
+  
+    to_print <- knitr::kable(
+      screening_results2,
+      align = "llrrrr",
+      caption = caption,
+      caption.short = scap)
+}
+rm(looks)
+
+to_print
 ```
 
 After mapping the gaze coordinates onto the onscreen images, I performed
@@ -537,11 +591,11 @@ data %>%
       as.character() %>% 
       printy::str_replace_same_as_previous(" ")) %>% 
   select(-total) %>% 
-    # PropNA = PropNA %>% round(3) %>% scales::percent()) %>%
-  setNames(c("Study", "Condition", "Familiar initial",
+  setNames(c("Year", "Condition", "Familiar initial",
              "Unfamiliar initial", "Neither/excluded")) %>%
   knitr::kable(
     align = c("l", "l", "r", "r", "r"), 
+    linesep = c("", "", "\\addlinespace"),
     booktabs = TRUE,
     caption = "Number of trials classified based on initial fixation location.")
 

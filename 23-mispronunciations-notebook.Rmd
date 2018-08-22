@@ -578,7 +578,7 @@ discrimination at age 3 also did not predict looking behavior.
 
 
 
-Familiar-initial trials: Should I stay or should I go?
+Familiar-initial trials: Should I stay or should I go now?
 ------------------------------------------------------------------------
 
 ```{r mp-fam-effects}
