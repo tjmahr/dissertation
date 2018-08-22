@@ -354,9 +354,11 @@ p1 <- ggplot(data_frame(x = 0:15)) +
 library(patchwork)
 ```
 
-(ref:student-t-priors) Prior densities (left) versus posterior densities (right) for the random-effect standard deviations. I changed the prior to be tighter, so that it favor values up to 7.5. This prior still turned out to be very conservative, given that the posterior samples for these values are all less than 3.
+(ref:student-t-priors) Prior densities (*left*) versus posterior densities (*right*) for the random-effect standard deviations. I changed the prior to be tighter, so that it favor values up to 7.5. This prior still turned out to be very conservative, given that the posterior samples for these values are all less than 3.
 
-```{r student-t-priors, echo = FALSE, fig.cap = "(ref:student-t-priors)", fig.width = 6, fig.height = 2.75, out.width = "100%"}
+(ref:student-t-priors-scap) Prior densities versus posterior densities for the random-effect standard deviations.
+
+```{r student-t-priors, echo = FALSE, fig.cap = "(ref:student-t-priors)", fig.scap = "(ref:student-t-priors-scap)", fig.width = 6, fig.height = 2.75, out.width = "100%"}
 p1 + p2
 ```
 

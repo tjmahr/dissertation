@@ -88,7 +88,7 @@ familiar word on the mispronunciation trials---the less likely they were
 to retain the mispronunciation items.
 
 The interference from the familiar word on encoding and retaining the
-mispronunciation-image pairing is beneficial for word learning. Suppose
+mispronunciation and image pairing is beneficial for word learning. Suppose
 that wordform-object associations are encoded in proportion to the
 activation of the wordforms and objects. For the unambiguous nonwords,
 the strong activations allow the associations to be built up quickly,

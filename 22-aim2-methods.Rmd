@@ -88,8 +88,8 @@ by @WhiteMorgan2008 and @MPPaper. In the experiment, two images are
 presented onscreen—a familiar object and an unfamiliar object—and the
 child hears a prompt to view one of the images. In the *correct
 pronunciation* (or *real word*) and *mispronunciation* conditions, the
-child hears either the familiar word (e.g., *soup*) or a one-feature
-mispronunciation of the first consonant of the target word (*shoup*).
+child hears either the familiar word (e.g., *duck*) or a one-feature
+mispronunciation of the first consonant of the target word (*guck*).
 These conditions are designed to test whether children associate
 mispronunciations with novel objects. To encourage fast referent selection,
 there were also trials in a *nonword* condition where the label was an
@@ -104,7 +104,7 @@ comparison so that the child can decide that "guck" is probably not
 "duck"---the design used here avoided this situation and is a change
 from the design of @MPPaper.
 
-(ref:sample-mp-screen-cap) Example displays for a trial in which *duck* is mispronounced as "guck" (*left*) and a trial in which the nonword "shann" is presented (*right*).
+(ref:sample-mp-screen-cap) Example displays for a trial in which *duck* is mispronounced as "guck" (*left*) and a trial in which the nonword *shann* is presented (*right*).
 
 (ref:sample-mp-screen-scap) Example displays for a trial in which *duck* is mispronounced as "guck" and a trial in which the nonword "shann" is presented.
 
@@ -449,7 +449,7 @@ object at the start of these trials.
 
 (ref:novelty-bias-scap) Observed average looks to the target on nonword trials. 
 
-```{r novelty-bias, fig.cap = "(ref:novelty-bias)", fig.scap = "(ref:novelty-bias)", out.width = out_tex80_else50, echo = FALSE, message = FALSE, warnings = FALSE, fig.width = 5, fig.height = 3.5, out.width = out_tex80_else66}
+```{r novelty-bias, fig.cap = "(ref:novelty-bias)", fig.scap = "(ref:novelty-bias-scap)", out.width = out_tex80_else50, echo = FALSE, message = FALSE, warnings = FALSE, fig.width = 5, fig.height = 3.5, out.width = out_tex80_else66}
 constants$cap_mean_se <- "Empirical mean ± SE"
 
 d2 <- binned %>% 
@@ -672,17 +672,17 @@ screening and preparation steps.
 
 
 
-(ref:aim2-real-word-spaghetti) Empirical word recognition growth curves from each year of the study for the real word condition. Each line represents an individual child's proportion of looks to the target image over time. The heavy lines are the averages of the lines for each year. Only the steep, upward growth curves from unfamiliar-initial trials are analyzed.
+(ref:aim2-real-word-spaghetti) Empirical word recognition growth curves for the real words. Each line represents an individual child's proportion of looks to the target image over time. The heavy lines are the averages of the lines for each year. Only the steep, upward growth curves from unfamiliar-initial trials are analyzed.
 
-(ref:aim2-real-word-spaghetti-scap) Empirical word recognition growth curves from each year of the study for the real word condition. 
+(ref:aim2-real-word-spaghetti-scap) Empirical word recognition growth curves for the real words.
 
-(ref:aim2-nonword-spaghetti) Empirical word recognition growth curves for nonword condition. Only the steep, downward growth curves from familiar-initial trials are analyzed.
+(ref:aim2-nonword-spaghetti) Empirical word recognition growth curves for the nonwords. Only the steep, downward growth curves from familiar-initial trials are analyzed.
 
-(ref:aim2-nonword-spaghetti-scap) Empirical word recognition growth curves for nonword condition.
+(ref:aim2-nonword-spaghetti-scap) Empirical word recognition growth curves for the nonwords.
 
-(ref:aim2-mispronunciation-spaghetti) Empirical word recognition growth curves for mispronunciation condition. Both types of curves analyzed.
+(ref:aim2-mispronunciation-spaghetti) Empirical word recognition growth curves for the mispronunciations. Both types of curves are analyzed.
 
-(ref:aim2-mispronunciation-spaghetti-scap) Empirical word recognition growth curves for mispronunciation condition.
+(ref:aim2-mispronunciation-spaghetti-scap) Empirical word recognition growth curves for the mispronunciations.
 
 ```{r aim2-spaghetti, echo = FALSE, message = FALSE, out.width = "100%", fig.height = 6, fig.width = 5}
 d_plot <- d %>% 
@@ -811,7 +811,7 @@ p1_mp <- p1 %+% (d_plot %>% filter(Condition == "Mispronunciation"))
 p2_mp <- p2 %+% (d_plot %>% filter(Condition == "Mispronunciation"))
 mp_super <- p2_mp + p1_mp + 
   plot_layout(widths = c(4, 6)) + 
-  plot_annotation("\"Find the shoop\": Child hears a mispronunciation")
+  plot_annotation("\"Find the shoup\": Child hears a mispronunciation")
 
 p2_nw <- p2 %+% (d_plot %>% filter(Condition == "Nonword"))
 nw_super <- p2_nw + p1_nw + 

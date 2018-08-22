@@ -189,9 +189,11 @@ children looked to *rice* less than the other real words. Figure
 mispronunciations. 
 
 
-(ref:mp-vs-real) Average proportion of looks to the familiar object for real words and mispronunciations. A *dog*/*tog* pair was administered at age 3 but it was replaced by *rice*/*wice* at age 4.
+(ref:mp-vs-real) Average proportion of looks to the familiar object for real words and mispronunciations. A *dog--tog* pair was administered at age 3 but it was replaced by *rice--wice* at age 4.
 
-```{r mp-vs-real, fig.cap = "(ref:mp-vs-real)", out.width="100%", fig.width = 6, fig.height = 4}
+(ref:mp-vs-real-scap) Average proportion of looks to the familiar object for real words and mispronunciations.
+
+```{r mp-vs-real, fig.cap = "(ref:mp-vs-real)", fig.scap = "(ref:mp-vs-real-scap)", out.width="100%", fig.width = 6, fig.height = 4}
 d_trim %>%
   left_join(pairs) %>%
   filter(Condition != "nonsense", Bias_Fam == "Unfamiliar") %>%
@@ -270,7 +272,7 @@ age for some items. Namely, it appears that *dirl* becomes a worse and
 worse realization of *girl* as children grow older. A similar change
 happens with *shoup* for *soup*.
 
-(ref:mp-real-diffs) Difference between the average proportion of looks to real words and mispronunciations.
+(ref:mp-real-diffs) Differences between the average proportion of looks to real words and mispronunciations.
 
 ```{r mp-real-diffs, fig.cap = "(ref:mp-real-diffs)", out.width="100%", fig.width = 6, fig.height = 4}
 d_trim %>%
