@@ -136,7 +136,7 @@ also take longer for a child to recover from an onset-mispronunciation.
 Conversely, we might also expect vowel or rime mispronunciation to be
 less disruptive for word recognition because of the useful information
 on the starting segment. Indeed, @Swingley2009 demonstrates that this is
-probably the case. That study tested onset and coda misprounciations in an
+probably the case. That study tested onset and coda mispronunciations in an
 eyetracking task that used two familiar objects. Both adults and
 toddlers responded to coda mispronunciations (e.g., "dut" for *duck*) by
 showing delayed looks *away* from the (mispronounced) target image. 

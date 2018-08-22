@@ -104,6 +104,10 @@ suze
 geeve
 nonlinguistic
 sublexical
+wordforms
+normalsize
+5-year-olds
+expectedly
  - index.Rmd
 documentclass
 bookdown
@@ -221,6 +225,7 @@ new-ranges-scap
 kendall-stats-scap
 evt2-gca-cors-scap
 ppvt4-gca-cors-scap
+Kruschke2017
  - 16-aim1-lexical-competitors.Rmd
 RWLPaper
 Barr2008
@@ -269,6 +274,11 @@ itsadug
 Winter2016
 Baayen2016
 R-rstanarm
+Mirman2014
+Gelman2014
+StanManual
+BDA3
+bayesplot
  - 91-app-aim1-items.Rmd
 vw-experiment-items
 aim1-all-items
@@ -357,6 +367,7 @@ dirl
  - 99-references.Rmd
 backmatter
 markboth
+singlespacing
  - 20-part-aim2.Rmd
 part-aim2
  - 11-aim1-introduction.Rmd
@@ -410,6 +421,7 @@ Allopenna1998---which
 MPPaper
 RWLPaper
 Weisleder2013
+Mahr2018
  - 19-h-check.Rmd
 aim1-h-check
 pre-analysis
@@ -483,6 +495,9 @@ Bion2013
 MPPaper
 Horst2011
 Mather2012
+aim2-real-nonword-means-scap
+aim2-gca-peaks-scap
+age-5-from-peaks-scap
  - 23-mispronunciations-notebook.Rmd
 mathit
 beta_0
@@ -510,6 +525,15 @@ suze
 5-years-olds
 aim2-real-word-spaghetti
 aim2-nonword-spaghetti
+unfam-initial-mp-trials-scap
+unfam-peaks-by-age-scap
+fam-initial-mp-trials-scap
+fam-peaks-by-age-scap
+age3-valley-curves-scap
+mp-fam-valley-evt-scap
+mp-fam-prop-ot2-bins-scap
+mp-norm-trials-by-peak-scap
+mp-vs-real-peaks-scap
  - 00-text-of-abstract.md
 suze
 geeve
@@ -570,6 +594,10 @@ evaluat
 WhiteMorgan2008
 aim2-mp-items
 three-year-olds
+wordform-object
+McMurray2012
+Swingley2009
+dut
  - 29-h-check.Rmd
 aim2-h-check
 aim2-mp-items
