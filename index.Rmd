@@ -12,7 +12,13 @@ cover-image: "assets/cover.png"
 # Data for the PDF version
 year: 2018
 oral-date: August 7, 2018
-signature: ["Jan Edwards", "Susan Ellis Weismer", "Margarita Kaushanskaya", "Jenny Saffran", "David Kaplan", "Bob McMurray"]
+signature: 
+  - "Jan Edwards, Professor, Hearing and Speech Sciences (University of Maryland)"
+  - "Susan Ellis Weismer, Professor, Communication Sciences and Disorders"
+  - "Margarita Kaushanskaya, Professor, Communication Sciences and Disorders"
+  - "Jenny Saffran, Professor, Psychology"
+  - "David Kaplan, Professor, Educational Psychology"
+  - "Bob McMurray, Professor, Psychology (University of Iowa)"
 abstract-school: "The University of Wisconsin--Madison"
 abstract-year: 2018
 abstract-advisor: "Professor Jan Edwards and Professor Susan Ellis Weismer"
