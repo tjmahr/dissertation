@@ -106,7 +106,7 @@ from the design of @MPPaper.
 
 (ref:sample-mp-screen-cap) Example displays for a trial in which *duck* is mispronounced as "guck" (*left*) and a trial in which the nonword *shann* is presented (*right*).
 
-(ref:sample-mp-screen-scap) Example displays for a trial in which *duck* is mispronounced as "guck" and a trial in which the nonword "shann" is presented.
+(ref:sample-mp-screen-scap) Example displays for a trial in which *duck* is mispronounced as "guck" and a trial in which the nonword *shann* is presented.
 
 ```{r sample-mp-screen, fig.cap = "(ref:sample-mp-screen-cap)", fig.scap = "(ref:sample-mp-screen-scap)", echo = FALSE, out.width = "100%"}
 library(magick)

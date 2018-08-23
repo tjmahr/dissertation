@@ -13,7 +13,7 @@ of a trial. The presence of the competitor images also allowed
 additional analyses about children's sensitivities to the phonological
 and semantic competitors. The experiment was conducted as part of a
 three-year longitudinal study; children were 28–39 months-old at the
-Age 3 visit, 39–52 at Age 4, and 51–65 at Age 5. The longitudinal
+age 3 visit, 39–52 at age 4, and 51–65 at age 5. The longitudinal
 design allowed me to describe developmental changes in word recognition.
 
 
@@ -108,7 +108,7 @@ Preschoolers showed increased activation of the target noun
 and semantically and phonologically related words but little
 developmental change in lexical inhibition. Paired with the findings
 from older children, these results lead to a compelling developmental
-story. @Rigler2015 compared 9- and 16-year-olds on a visual-world word
+story. @Rigler2015 compared 9- and 16-year-olds on a Visual World word
 recognition experiment with phonological (cohort and rime) competitors.
 The younger children were slower to look to the target image and showed
 more looks to the competitors. The implications are that children's word
@@ -202,7 +202,7 @@ was not feasible. Other eyetracking studies with two images can use the
 latency of how long it takes the child to shift between images as a
 measure like reaction time. This approach does not translate to the
 four-image design, as children can visit multiple images on their way to
-the target. Visual world studies with older participants can obtain an
+the target. Visual World studies with older participants can obtain an
 explicit reaction time measure by means of a mouse click or tap on a
 touchscreen, but those additional task demands may not translate to
 young children like those in this study. Thus, this study could not
@@ -215,7 +215,7 @@ means that word recognition accuracy was never directly measured but
 rather inferred. As a result, the interpretation of peak looking
 probability as a measure of word recognition certainty comes with a
 caveat: It reflects certainty averaging over many familiar words *and
-maybe a few unfamiliar words*. The idea is as follows: Suppose at age 3 a
+maybe a few unfamiliar words*. The idea is as follows: Suppose at age 3 a
 child does not know four of words well. If they had to click or tap
 an image, they would have to guess on these trials. We could exclude
 those trials where they guessed incorrectly, leaving just the trials

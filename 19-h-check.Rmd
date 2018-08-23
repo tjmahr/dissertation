@@ -38,7 +38,7 @@ variable each year.
 
 **Consequently, individual differences in word recognition at
 age 3, for example, will be more discriminating and predictive of
-age 5 language outcomes than differences at age 4 or age 5.**
+age-5 language outcomes than differences at age 4 or age 5.**
 
 Yes. Correlations between growth curve features with future vocabulary
 measures were strongest for the age-3 growth curve features.

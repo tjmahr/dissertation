@@ -50,7 +50,7 @@ semy_foils <- split(words, words$Target %in% aim1_stim$good_semy) %>%
   setNames(c("weak_foil", "strong_foil"))
 ```
 
-Table \@ref(tab:aim1-all-items) lists the items used for the visual world
+Table \@ref(tab:aim1-all-items) lists the items used for the Visual World
 experiment in Study 1. Each row of the table represents a set of four
 images used in a trial. There were two blocks of trials with different
 images and trial orderings. For the two unrelated foils with more than
@@ -59,7 +59,7 @@ one word listed, the two foils were used in different blocks. That is,
 the other block. This happened due to a design oversight.
 
 ```{r aim1-all-items, echo = FALSE}
-c1 <- "Sets of four images used for the Visual World Experiment."
+c1 <- "Sets of four images used for the Visual World experiment."
 if (knitr::is_latex_output()) {
   knitr::kable(
     words,

@@ -34,12 +34,12 @@ dynamics of word recognition change year over year, and I document how
 differences in word recognition performance relate to other child-level
 measures (such as vocabulary and speech perception). 
 
-Study 1 (Familiar Word Recognition and Lexical Competition) {-}
+Study 1: Familiar word recognition and lexical competition {-}
 ------------------------------------------------------------------------
 
 ***Specific Aim\:* To characterize the development of familiar word
-recognition and lexical competition, I analyze data from a visual world
-paradigm experiment, conducted at age 3, age 4, and age 5.**
+recognition and lexical competition, I analyze data from a Visual World
+Paradigm experiment, conducted at age 3, age 4, and age 5.**
 
 In these eyetracking experiments, children were presented with four
 images of familiar objects and heard a prompt to view one of the images.
@@ -51,7 +51,7 @@ recognition develops year over year. Children in this cohort cover a
 range of vocabulary scores at age 3, and this variability allows me to
 investigate individual differences in vocabulary and word recognition
 over time and assess the predictive value of these measures. Of interest
-was how individual differences at age 3 persisted into age 5 and these
+was how individual differences at age 3 persisted into age 5 and how these
 differences related to vocabulary measures at later ages. In
 [Chapter \@ref(lex-competitors)](#lex-competitors), I examine the
 children’s looks to the distractors to study the developmental course of
@@ -66,11 +66,11 @@ related words*. When children err, they become more likely to err on a
 lexically relevant alternative.
 
 
-Study 2 (Referent Selection and Mispronunciations) {-}
+Study 2: Referent selection and mispronunciations {-}
 -----------------------------------------------------------------------
 
 ***Specific Aim\:* To characterize how fast referent selection develops
-longitudinally, I analyzed data from a looking-while-listening
+longitudinally, I analyze data from a looking-while-listening
 mispronunciation experiment, conducted at age 3, age 4, and age 5.**
 
 Not every word children hear are familiar to them. They may hear
@@ -78,11 +78,11 @@ entirely new words, or they may hear variations and corruptions of
 familiar words. How children respond to both kinds of words is
 informative, as I review in
 [Chapter \@ref(aim2-introduction)](#aim2-introduction). I describe this
-eyetracking experiment in detail [based on @WhiteMorgan2008 and
-@MPPaper] in [Chapter \@ref(aim2-method)](#aim2-method). Children saw an
+eyetracking experiment in detail---based on @WhiteMorgan2008 and
+@MPPaper---in [Chapter \@ref(aim2-method)](#aim2-method). Children saw an
 image of a familiar object and an unfamiliar object, and they heard
 either a correct production of the familiar object (e.g., *soup*), a
-one-feature mispronunciation of the familiar object (*shoop*), or a
+one-feature mispronunciation of the familiar object (*shoup*), or a
 novel word unrelated to either image (*cheem*). The correct productions
 tested familiar word recognition and the nonwords tested fast referent
 selection. The mispronunciations tested the child’s phonological
@@ -93,7 +93,7 @@ I use growth curve analyses to study how children’s responses to the
 three word types changed over time. In
 [Chapter \@ref(real-nonword-selection)](#real-nonword-selection), I
 examine familiar word recognition and fast referent selection for novel
-word to determine which feature of lexical processing better predicts
+words to determine which feature of lexical processing better predicts
 vocabulary growth. I compare these two conditions directly to look for
 dissociations or asymmetries in these forms of processing within
 children as a way to empirically assess the claim that "novel word
@@ -104,7 +104,7 @@ I examine how children interpreted mispronunciations of the familiar
 words at each age and study how individual differences in vocabulary and
 speech perception related to children's responses to the
 mispronunciations. I also report how children at age 5 are better able
-to retain nonwords than mispronunciations of familiars words.
+to retain nonwords than mispronunciations of familiar words.
 
 
 
@@ -119,7 +119,7 @@ examines word recognition in two experimental tasks that tap into
 different aspects of word recognition. Specifically, a four-image
 experiment with semantic and phonological foils allows me to study how
 lexical competition develops, and a two-image experiment with nonwords
-and mispronunciations enables me to study how children's response to
+and mispronunciations enables me to study how children's responses to
 unfamiliar words develop over time as well.
 [Chapter \@ref(both-studies-discussion)](#both-studies-discussion)
 reviews the results from both studies in terms of lexical processing as

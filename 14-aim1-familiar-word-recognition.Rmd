@@ -68,7 +68,7 @@ analyses, therefore, I used polynomial growth curves.
 
 
 
-Looks to the familiar image were analyzed using Bayesian mixed effects
+Looks to the familiar image were analyzed using Bayesian, mixed effects
 logistic regression. I used *logistic* regression because the outcome
 measurement is a probability (the log-odds of looking to the target
 image versus the distractors). I used *mixed-effects* models to estimate a
@@ -126,7 +126,7 @@ probability.
 I used orthogonal polynomial features of Time for these growth curve
 models. Unlike natural polynomials, these features are uncorrelated.
 This aspect makes these models more flexible: I do not have to worry
-about any collinearity of Time^1^ between Time^2^. Moreover, adding an
+about any collinearity between Time^1^ and Time^2^. Moreover, adding an
 orthogonal cubic Time^3^ term to a quadratic model will not change any
 of the estimates for Time^1^ or Time^2^ because the added predictor is
 not correlated with the others. One disadvantage of this approach is
@@ -1157,7 +1157,7 @@ ggplot(lpred %>% mutate(Study = convert_study_to_age(Study))) +
     title = "Posterior predictions for 1,000 new participants",
     x = constants$x_time,
     y = constants$y_prop_target,
-    caption = constants$cap_median_90_50)
+    caption = "Lines: 90% and 50% intervals")
 ```
 
 I hypothesized that children would become less variable as they grew

@@ -1031,7 +1031,7 @@ comparable effect for real words was observed at age 3 and age 4 but
 only reliably observed at age 4.
 
 
-## Does age 3 referent selection better predict age 5 vocabulary?
+## Does age-3 referent selection better predict age-5 vocabulary?
 
 I hypothesized that performance on the nonword condition would be a
 better predictor of future vocabulary size than the real word condition.

@@ -20,12 +20,12 @@ Participants {#aim1-participants}
 -----------------------------------------------------------------------
 
 The data were collected as part of a three-year longitudinal
-study.[^1] For convenience, I refer to the three years as Age 3,
-Age 4, and Age 5, although the participants on average were three
+study.[^1] For convenience, I refer to the three years as age 3,
+age 4, and age 5, although the participants on average were three
 months younger than those nominal ages. In particular, the participants
-were 28–39 months-old at Age 3, 39–52 at Age 4, and 51–65 at Age 5.
-Approximately, 180 children participated at Age 3, 170 at Age 4, and 160
-at Age 5. Of these children, approximately 20 were identified by their
+were 28–39 months-old at age 3, 39–52 at age 4, and 51–65 at age 5.
+Approximately, 180 children participated at age 3, 170 at age 4, and 160
+at age 5. Of these children, approximately 20 were identified by their
 parents as late talkers. Prospective families were interviewed over
 telephone before participating in the study. Children were not scheduled
 for testing if a parent reported language problems, vision problems,
@@ -44,7 +44,7 @@ data may have been excluded from the analyses. Some potential reasons
 for exclusion include: excessive missing data during eyetracking,
 experiment or technology error, developmental concerns not identified
 until later in the study, or a failed hearing screening. Final sample
-sizes will depend on the measures needed for an analysis and the results
+sizes depend on the measures needed for an analysis and the results
 from data screening checks.
 
 ```{r participant-info}
@@ -239,7 +239,7 @@ During these breaks, the onstage examiner could reposition the child if
 necessary before resuming the experiment.
 
 We used a gaze-contingent stimulus presentation. First, the images
-appeared in silence on screen for 2 s as a familiarization period. The
+appeared in silence onscreen for 2 s as a familiarization period. The
 experiment's software procedure then checked whether the child's gaze
 was being recorded. If the procedure could continuously track the
 child's gaze for 300 ms, the child's gaze was verified and the trial
@@ -259,22 +259,22 @@ Stimuli
 
 The four images on each trial consisted of a target noun, a phonological
 foil, a semantic foil, and an unrelated word. The phonological
-competitors shared a syllable onset (e.g., *flag*–*fly*, *bell*–*bee*),
+competitors shared a syllable onset (e.g., *flag*–*fly*, *bell*–*bee*),
 shared an initial consonant (*bread*–*bear*, *swing*–*spoon*), had a
-similar phonetically similar consonant onset (*kite*–*gift*), or shared
+phonetically similar consonant onset (*kite*–*gift*), or shared
 a syllable rime (*van*–*pan*). The semantic competitors included words
 from the same category (e.g., *shirt*–*dress*, *horse*–*bear*), words
 that were perceptually similar (*sword*–*pen*, *flag*–*kite*), and words
-with less obvious relationships (*van*–*horse*, *swan*-*bee*). 
+with less obvious relationships (*van*–*horse*, *swan*–*bee*). 
 These
 different competitor types (phonological vs. semantic) and
-subtypes (e.g., shared syllable onset vs. rimes, shared category vs.
+subtypes (e.g., shared syllable onset vs. rimes, shared category vs.
 perceptually similar) likely participate in word recognition to varying
 degrees and at different stages during lexical processing. For the analysis
-of familiar word recognition, I include all the competitors (they are
-aggregated together as *distractors*), but for the analysis of
-phonological and semantic competitor I focus on subsets of competitors:
-the shared syllable onsets for the phonological competitors and the
+of familiar word recognition, I include all the competitors---they are
+aggregated together as *distractors*---but for the analysis of
+phonological and semantic competitors, I focus on subsets of competitors:
+the shared syllable onsets for phonological competitors and the
 category neighbors for semantic competitors.
 [Appendix \@ref(vw-experiment-items)](#vw-experiment-items) provides a
 complete list of the items used in the experiment and in the analyses of competitor effects.
@@ -293,7 +293,7 @@ phrases “find the” and “see the”. These carriers were recorded in the
 frame “find/see the egg” and cross-spliced with the target nouns to
 minimize coarticulatory cues on the determiner “the”. The stimuli were
 re-recorded after the first year of the study with the same speakers so
-that the average duration of the two dialect versions were more similar.
+that the average durations of the two dialect versions were more similar.
 
 The images used in the experiment consisted of color photographs on gray
 backgrounds. These images were piloted with 30 children from two
@@ -539,7 +539,7 @@ opts_model
 To prepare the data for modeling, I downsampled the data into
 `r opts_model$bin_length`-ms (`r opts_model$bin_width`-frame) bins,
 reducing the eyetracker's effective sampling rate to
-`r 60 / opts_model$bin_width` Hz. Eye movements have durations on the
+`r 60 / opts_model$bin_width` Hz. Fixations have durations on the
 order of 100 or 200 ms, so capturing data every 16.67 ms oversamples eye
 movements and can introduce high-frequency noise into the signal.
 Binning together data from neighboring frames can smooth out this noise.
@@ -548,7 +548,8 @@ to `r opts_model$end_time` ms. I chose this window after visualizing the
 observed fixation probabilities and identifying when during a trial the
 probabilities started to rise and later plateaued. Lastly, I aggregated
 looks by child, year and time, and created orthogonal polynomials to
-use as time features for the model.
+use as time features for the model. Orthogonal polynomials are described 
+in the next chapter.
 
 ```{r, echo = FALSE, message = FALSE, warnings = FALSE}
 m_data <- data %>% 

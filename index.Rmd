@@ -27,7 +27,9 @@ chair: "Jan Edwards"
 dedication: |
   For Penny
 lot: true
+lot-title: List of tables
 lof: true
+lof-title: List of figures
 geometry: "left=1.275in,right=1.275in,top=1.275in,bottom=1.275in"
 ---
 

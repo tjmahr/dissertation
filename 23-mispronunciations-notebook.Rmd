@@ -95,8 +95,8 @@ result, I analyzed the mispronunciation trials separately for both
 initial-fixation locations. One analysis handled trials where a child's
 gaze started on the familiar object and another analysis handled trials
 starting on the unfamiliar object. For these models, I fit a Bayesian
-logistic regression growth curve model that included indicators for Age
-and Time × Age interactions, as in the model from
+logistic regression growth curve model that included indicators for age
+and time × age interactions, as in the model from
 [Chapter \@ref(fam-rec)](#fam-rec). The linear model was therefore:
 
 `r insert_html_math()`
@@ -132,7 +132,7 @@ specification/syntax.
 
 For these analyses, I modeled the data from `r min(d$Time)`
 to `r max(d$Time)` ms after target onset. As in the real word vs.
-nonword analyses, I removed any Age × Child levels if the child's data
+nonword analyses, I removed any age × child levels if the child's data
 had fewer than 4 fixations in a single time bin. As a result, children
 had to have at least 4 looks to one of the two images in every 50-ms
 time bin. For the unfamiliar-initial trials, this screening removed
@@ -233,9 +233,9 @@ condition, this threshold is crossed at 1000 ms. Children associate the
 mispronunciation with the familiar object, although they are slower and
 show greater uncertainty compared to real word trials.
 
-(ref:unfam-initial-mp-trials) Average looks to familiar image for mispronunciation trials starting on the unfamiliar image at each age. Lines represent 100 posterior predictions of the group average (the average of participants' individually predicted growth curves). 
+(ref:unfam-initial-mp-trials) Average looks to the familiar image for mispronunciation trials starting on the unfamiliar image at each age. Lines represent 100 posterior predictions of the group average (the average of participants' individually predicted growth curves). 
 
-(ref:unfam-initial-mp-trials-scap) Average looks to familiar image for mispronunciation trials starting on the unfamiliar image at each age.
+(ref:unfam-initial-mp-trials-scap) Average looks to the familiar image for mispronunciation trials starting on the unfamiliar image at each age.
 
 ```{r unfam-initial-mp-trials, fig.scap = "(ref:unfam-initial-mp-trials-scap)", fig.cap = "(ref:unfam-initial-mp-trials)", fig.width = 4.5, fig.height = 3.5, out.width = out_tex80_else66}
 newdata <- d_u %>% 
@@ -970,9 +970,9 @@ the first three bins highlight children with u-shaped trajectories. In
 these curves, the probability of fixating on the familiar image briefly
 decreases, as the child considers the other image.
 
-(ref:age3-valley-curves) Growth curves for mispronunciation trials starting on the familiar object at age 3. Children were grouped into sextiles based on the posterior mean of their growth curve valleys---that is, the lowest point on the growth curve. Ten lines are drawn per child to visualize uncertainty. Children were assigned colors arbitrarily. On the right side of each panel are "rugs" which mark the valleys in that panel.
+(ref:age3-valley-curves) Growth curves for mispronunciation trials starting on the familiar image at age 3. Children were grouped into sextiles based on the posterior mean of their growth curve valleys---that is, the lowest point on the growth curve. Ten lines are drawn per child to visualize uncertainty. Children were assigned colors arbitrarily. On the right side of each panel are "rugs" which mark the valleys in that panel.
 
-(ref:age3-valley-curves-scap) Growth curves for mispronunciation trials starting on the familiar object at age 3 with children binned by growth curve valley.
+(ref:age3-valley-curves-scap) Growth curves for mispronunciation trials starting on the familiar image at age 3 with children binned by growth curve valley.
 
 ```{r age3-valley-curves, fig.cap = "(ref:age3-valley-curves)", fig.scap = "(ref:age3-valley-curves-scap)", width = 6, height = 6, out.width=out_tex100_else80}
 feature_means <- fam_peaks %>% 
@@ -1418,9 +1418,9 @@ quadratic feature was weakly correlated with the growth curve valleys,
 *r* = `r cor_wprop_valley`, and the lack of correlation appears in the
 figure by how the curves in each panel reach different valleys.
 
-(ref:mp-fam-prop-ot2-bins) Growth curves for mispronunciations trials starting on the familiar object at age 5. Children were grouped into sextiles based on the posterior mean of their curves quadratic trend weighted by the height of the curve in the final time bins. Ten lines are drawn per child to visualize uncertainty. Children were assigned colors arbitrarily. 
+(ref:mp-fam-prop-ot2-bins) Growth curves for mispronunciation trials starting on the familiar image at age 5. Children were grouped into sextiles based on the posterior mean of their curves quadratic trend weighted by the height of the curve in the final time bins. Ten lines are drawn per child to visualize uncertainty. Children were assigned colors arbitrarily. 
 
-(ref:mp-fam-prop-ot2-bins-scap) Growth curves for mispronunciations trials starting on the familiar object at age 5 with children binned using the weighted quadratic trend.
+(ref:mp-fam-prop-ot2-bins-scap) Growth curves for mispronunciation trials starting on the familiar image at age 5 with children binned using the weighted quadratic trend.
 
 ```{r mp-fam-prop-ot2-bins, fig.cap = "(ref:mp-fam-prop-ot2-bins)", fig.scap = "(ref:mp-fam-prop-ot2-bins-scap)", width = 6, height = 6, out.width=out_tex100_else80}
 set.seed(20180713)
