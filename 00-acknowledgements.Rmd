@@ -1,6 +1,6 @@
 ```{r, echo = FALSE, results = "asis", include = knitr:::pandoc_to() %in% c("docx", "html")}
 cat("
-# Acknowledgements {-}
+Acknowledgements {-}
 ========================================================================
 
 ")

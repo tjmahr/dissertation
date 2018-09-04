@@ -80,24 +80,25 @@ activates the mispronounced word which in term activates a semantically
 related word.
 
 @Chow2017 performed a very similar study to the one I present in the next chapters.
-They used a Visual World Paradigm with English-learning 24-
-and 30-month-olds. Children saw a 2 x 2 grid of images which included a
+They used the Visual World Paradigm with English-learning 24-
+and 30-month-olds. Children saw a 2 × 2 grid of images which included a
 phonological (cohort) competitor and a semantic competitor, and they
-heard a prompt to view one of the images (*Look at the bee*). On *filler*
+heard a prompt to view one of the images (e.g., *Look at the bee*). On *filler*
 trials, the target word and an unrelated image appear onscreen alongside the
-competitors. On *test* trials, the target word (*bee*) was not pictured
-onscreen, so the display had two unrelated images (*sandwich*, *dress*), a
-phonological competitor (*bus*), and a semantic competitor (*cat*). They found an
-early temporary advantage (a growth curve bump) in looks to the
-phonological competitor, followed by a late, more stable advantage for
-the semantic competitor. Moreover, they found that increased receptive
+competitors. On *test* trials, the display had two unrelated images
+(*sandwich*, *dress*), a phonological competitor (*bus*), and a semantic
+competitor (*cat*) and children were prompted to look at an offscreen,
+unpictured target (*Look at the bee*). They found a
+temporary early advantage for the
+phonological competitor, so that the probability of looking to the
+phonological competitor was greater than the other competitors. This
+early advantage was followed by a late, more stable advantage for the
+semantic competitor. Moreover, they found that increased receptive
 vocabulary predicted more looks to the phonological competitor and fewer
 looks to the semantic competitor. (The looks to the semantic competitor
 were decreased because of the early advantage of the phonological
 competitor.) Their results support a kind of cascading activation in
-which phonological information comes online before semantic information:
-"Toddlers, like adults, extract phonological information from the spoken
-word faster than they extract semantic information."
+which phonological information comes online before semantic information.
 
 
 [^semantic-priming]: @Arias-Trejo2009 is commonly cited as evidence of
@@ -115,11 +116,11 @@ Averaging these results together, so to speak, the studies suggest that
 early word recognition demonstrates some hallmarks of adult behavior:
 Continuous processing of words, integration of information from
 different levels of representation, and the influence of similar,
-unspoken words on recognition of a word. Nevertheless, we only have a
+unspoken words on the recognition of a word. Nevertheless, we only have a
 fragmented view of how familiar word recognition develops within children.
 
 One open question is how lexical competition develops in young
-listeners. For example, how and when do phonological or semantically
+listeners. For example, how and when do phonologically or semantically
 similar words exert their influence on word recognition? @Chow2017
 provide a promising first step, in which two-year-olds looked to the
 phonological and semantic relatives of a named word. (Yet I am skeptical
@@ -143,7 +144,7 @@ Individual differences in word recognition
 We have a rough understanding of the development of word recognition,
 and these gaps in knowledge matter because young children differ in
 their word recognition abilities. These differences are usually measured
-using *accuracy* (a probability of recognizing to a word) or
+using *accuracy* (a probability of recognizing a word) or
 *efficiency* (a reaction time or some measure of how quickly accuracy
 changes over time). These differences are consequential too, as word
 recognition differences correlate with other language measures
@@ -154,7 +155,7 @@ Many studies highlight the predictive power of word recognition ability.
 efficiency at age 2 jointly predicted working memory scores and
 expressive language scores at age 8. @Fernald2012 found that late
 talkers who looked more quickly to a named word at 18 months showed
-larger gains in vocabulary by 30 months compared to late-talkers who
+larger gains in vocabulary by 30 months compared to late talkers who
 looked more slowly at 18 months. @Weisleder2013 found that lexical
 processing and language input at 19 months predicted vocabulary size
 at 25 months and that lexical processing mediated the effect of
@@ -183,7 +184,7 @@ first is that we do not have a clear understanding of how the mechanisms
 underlying word recognition change in early childhood. We know that children
 show plenty of adult-like features of word recognition, but each of
 these findings is an isolated fact. What we need is a coherent set of
-facts that show how specific features of word recognition change with age.
+facts that shows how specific features of word recognition change with age.
 The second gap is that although we know that individual differences in
 word recognition are predictive of later outcomes, we do not have a
 developmental picture of these individual differences.
@@ -205,7 +206,7 @@ these differences would get smaller as children grew older. I also
 examine which word recognition measures correlate with future vocabulary
 size to test how word recognition behavior predicts later outcomes.
 In [Chapter \@ref(lex-competitors)](#lex-competitors), I study how the
-phonological and semantic competitors influence word recognition where I
+phonological and semantic competitors influence word recognition, and I
 test the prediction that children will become more sensitive to
 competitors as they grow older. Finally, in
 [Chapter \@ref(aim1-discussion)](#aim1-discussion), I link these two
