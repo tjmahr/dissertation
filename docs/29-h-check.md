@@ -37,7 +37,7 @@ advantage.
 \bigskip\smallskip
 
 **Although these two measures will be correlated, I predict
-performance in the nonword condition will be a better predict of
+performance in the nonword condition will be a better predictor of
 future vocabulary growth than performance in the real word
 condition. This hypothesis is based on the idea that fast referent
 selection is a more relevant skill for learning new words than
@@ -45,7 +45,7 @@ recognition of known words.**
 
 Yes, peak looking probabilities for the nonword condition at age 3
 predicted expressive vocabulary at age 5, and the real word looking
-probabilities did not. This size of this effect was rather small,
+probabilities did not. The size of this effect was rather small,
 however.
 
 \bigskip\smallskip
@@ -61,8 +61,8 @@ mispronunciation trials.
 \bigskip\smallskip
 
 **Mispronunciations that feature later-mastered sounds
-(e.g., *rice*/*wice*) will be more likely to be associated to novel
-objects than earlier-mastered sounds (*duck*/*guck*).**
+(e.g., *rice-wice*) will be more likely to be associated to novel
+objects than earlier-mastered sounds (*duck-guck*).**
 
 Not answered. I present the item-level results in in
 [Appendix \@ref(aim2-mp-items)](#aim2-mp-items). I chose not to formally

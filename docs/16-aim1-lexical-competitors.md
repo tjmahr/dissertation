@@ -36,7 +36,7 @@ complete list of trials used.
 The outcome measure for these analyses was the log-odds of fixating on
 the phonological competitor versus the unrelated word. Because children
 looked more to the target word with each year of the study, they
-necessarily looked less to the distractors each year. 
+necessarily looked less to the three distractors each year. 
 Figure \@ref(fig:declining-phon-props) illustrates how the proportions
 of looks to the phonological foils declined each year. Therefore, I
 examined the effect of the phonological foil in comparison to the
@@ -65,7 +65,7 @@ As in the models from the previous chapter, I downsampled the data into
 50-ms (3-frame) bins in
 order to smooth the data. For these trials, I modeled the looks
 from 0 to 1500 ms,
-and I aggregated looks by child, study and time bin.
+and I aggregated looks by child, year and time bin.
 To account for the sparseness of the data, I used the empirical log-odds
 (or empirical logit) transformation [@Barr2008]. This transformation
 adds .5 to the looking counts. For example, a time-frame with 4 looks to
@@ -79,7 +79,7 @@ some probabilities that arise in sparse count data.
 
 To model these data, I fit a generalized additive model with fast
 restricted maximum likelihood estimation [@Wood2017; @Winter2016;
-see @Soskuthy2017 for a tutorial for linguists]. Box 1 provides a brief
+see @Soskuthy2017 for a tutorial for linguists]. Box 2 provides a brief
 overview of these models. I used the mgcv R package
 [vers. 1.8.24; @Wood2017] with support from the
 tools in the itsadug R package [vers. 2.3;
@@ -101,7 +101,7 @@ the specifications represented by the model syntax.
 \Begin{infobox}
 <div class = "infobox">
 
-**Box 1: Intuition behind generalized additive models**.
+**Box 2: Intuition behind generalized additive models**.
 
 In these analyses, the outcome of interest is a value that changes over
 time in a nonlinear way. We model these time series by building a set of
@@ -111,10 +111,11 @@ expressed time as the weighted sum of a linear trend, a quadratic trend
 and cubic trend. That is:
 
 $$
-\text{log-odds}(\mathit{looking}) =
-  \alpha + \beta_1 * \textit{Time}^1 +
-           \beta_2 * \textit{Time}^2 +
-           \beta_3 * \textit{Time}^3
+\text{log\,odds}(\text{looking}) = 
+  \alpha + 
+  \beta_1\text{Time}^1 + 
+  \beta_2\text{Time}^2 + 
+  \beta_3\text{Time}^3
 $$
 
 But another way to think about the polynomial terms is as *basis
@@ -122,8 +123,8 @@ functions*: A set of features that combine to approximate some nonlinear
 function of time. Under this framework, the model can be expressed as:
 
 $$
-\text{log-odds}(\mathit{looking}) =
-  \alpha + f(\textit{Time})
+\text{log\,odds}(\text{looking}) = 
+  \alpha + f(\text{Time})
 $$
 
 This is the idea behind generalized additive models and their *smooth
@@ -164,16 +165,16 @@ work like conventional regression effects and determined the growth
 curve's average values. The model used age 4 as the reference year, so
 the intercept represented the average looking probability at
 age 4. The year effects represented differences
-between age 4 vs. age 3 and age 4 vs. age 5.
+between age 4 vs. age 3 and age 4 vs. age 5.
 
 The model also included *smooth* terms to represent the time course of
 the data. As with the parametric effects, age 4 served as the reference
 year. The model estimated a smooth for age 4 and it estimated
 *difference smooths* to capture how the curvature at age 3 and age 5
-differed from the age-4 curvature. Each of these study-level smooths
+differed from the age-4 curvature. Each of these year-level smooths
 used 10 knots (9 basis functions). I also included child-level *random
 smooths* to represent child-level variation in growth curve shapes.
-Because there is much as less data at the child level than at the study
+Because there is much less data at the child level than at the year
 level, these random smooths only included 5 knots (4 basis functions).
 We can think of these simpler splines as coarse adjustments in growth
 curve shape to capture child-level variation from limited data.
@@ -182,11 +183,11 @@ Altogether, the model contained the following terms:
 $$
 \small
 \begin{align*}
-   \text{emp. log-odds}(\mathit{phon.\ vs.\ unrelated}) =\
-   & \alpha + \beta_1\text{Age3} + \beta_2\text{Age5} +\ &\text{[growth curve averages]} \\
-   & f_1(\text{Time}, \text{Age4})\ +                    &\text{[reference smooth]} \\
-   & f_2(\text{Time}, \text{Age4} - \text{Age3})\ +      &\text{[difference smooths]} \\
-   & f_3(\text{Time}, \text{Age4} - \text{Age5})\ +      & \\
+   \text{emp.\,log\,odds}(\text{phon. vs. unrelated}) =\
+   & \alpha + \beta_1\text{Age\,3} + \beta_2\text{Age\,5} +\ &\text{[growth curve averages]} \\
+   & f_1(\text{Time}, \text{Age\,4})\ +                    &\text{[reference smooth]} \\
+   & f_2(\text{Time}, \text{Age\,4} - \text{Age\,3})\ +      &\text{[difference smooths]} \\
+   & f_3(\text{Time}, \text{Age\,4} - \text{Age\,5})\ +      & \\
    & f_i(\text{Time}, \text{Child}_i)                    &\text{[by-child random smooths]} \\
 \end{align*}
 \normalsize
@@ -244,7 +245,7 @@ age-4 and the age-5 curves.
 There was a significant smooth term for time at age 4, estimated degrees
 of freedom (EDF) = 7.28, *p*&nbsp;< .001.
 Figure \@ref(fig:phon-diff-curves) visualizes how and when the smooths
-from other studies differed from the age-4 smooth.
+from other ages differed from the age-4 smooth.
 
 (ref:phon-diff-curves) Differences in the average looks to the phonological competitor versus the unrelated image between age 4 and the other ages. Plotted line is estimated difference and the shaded region is the 95% confidence interval around that difference. Boxes highlight regions where the 95% interval excludes zero. From age 3 to age 4, children become more sensitive to the phonological foil during and after the target noun. The linear difference curve for age 4 versus age 5 indicates that the two years largely have the same curvature, but they steadily diverge over the course of the trial.
 
@@ -279,7 +280,7 @@ the shape of the difference was a flat line. Thus, the difference
 between the age-4 and age-5 smooths is driven primarily by the intercept
 difference and a linear diverging trend---that is, the distance between
 the two grows slowly over time. The same general curvature was
-observed for the two studies, suggesting the same general looking
+observed for the two age smooths, suggesting the same general looking
 behavior at both time points: Children showed an early increase in looks
 to the phonological foil relative to the unrelated image but after
 receiving disqualifying information from the rest of the word, the looks
@@ -313,8 +314,8 @@ example, I included trials with *bee*–*fly*, *shirt*–*dress*, and
 complete list of trials used.
 
 For these trials, I used the same modeling technique as the one used for
-phonological competitors: Generalized additive models with study effects
-and a time smooth, time-by-study difference smooths, and time-by-child
+phonological competitors: Generalized additive models with year effects
+and a time smooth, time-by-year difference smooths, and time-by-child
 random smooths. I modeled the looks
 from 250 to 1800 ms.
 This window was 300 ms longer than the one used
@@ -366,7 +367,7 @@ proportion units, *p*&nbsp;< .001.
 There was a significant smooth term for time at age 4, estimated degrees
 of freedom (EDF) = 7.04, *p*&nbsp;< .001.
 Figure \@ref(fig:semy-diff-curves) visualizes the time course of the
-differences between the smooths from each study.
+differences between the smooths from each year.
 
 (ref:semy-diff-curves) Differences in the average looks to the semantic competitor versus the unrelated word between age 4 and the other ages. Plotted line is estimated difference and the shaded region is the 95% confidence interval around that difference. Boxes highlight regions where the 95% interval excludes zero. The flat line on the left reflects how the shape of the growth curves remained the same from age 3 to age 4 and only differed in average height. From age 4 to age 5, the lines quickly diverge and the age-5 curve reaches a higher peak value.
 
@@ -409,15 +410,16 @@ Child-level differences in competitor sensitivity at age 3
 
 Next, I asked whether children differed reliably in their sensitivity to
 the phonological and semantic foils based on speech perception and
-vocabulary measures collected at age 3
+vocabulary measures collected at age 3.
 
 As a measure of speech perception, I used scores from a minimal pair
 discrimination experiment administered during the first year of the
-study. [citations] The task is essentially an ABX discrimination task:
-A picture of a familiar object is shown and labeled (e.g., "car"),
-another object is shown and labeled ("jar"), and then both images are
-shown and one of the two is named. The child then indicated which word
-they heard by tapping on the image on a touch-screen.
+study. The task [based on @ProtoMinPair] is essentially an ABX
+discrimination task: A picture of a familiar object is shown and labeled
+(e.g., "car"), another object is shown and labeled ("jar"), and then
+both images are shown and one of the two is named. The child then
+indicated which word they heard by tapping on the image on a
+touch-screen.
 
 I derived speech perception scores by fitting a hierarchical
 item-response model. This logistic regression model estimates the
@@ -441,7 +443,7 @@ vocabulary.
 $$
 \small
 \begin{align*}
-   \text{log-odds}(\mathit{choosing\ target}) =\
+   \text{log\,odds}(\text{choose target}) =\
    & \alpha\ +                  &\text{[average child ability]} \\
    & \alpha_i\ +                &\text{[difference of child}\ i
                                        \text{'s ability from average]} \\
@@ -467,8 +469,8 @@ therefore:
 $$
 \small
 \begin{align*}
-   \text{emp. log-odds}(\mathit{phon.\ vs.\ unrelated}) =\
-   & \alpha +\ &\text{[growth curve average]} \\
+   \text{emp.\,log\,odds}(\text{phon. vs. unrelated}) =\
+   & \alpha\ +\ &\text{[growth curve average]} \\
    & f_1(\text{Time})\ +                    &\text{[time smooth]} \\
    & f_2(\text{Ability})\ +                 &\text{[ability smooth]} \\
    & f_3(\text{Time} * \text{Ability})\ +   &\text{[interaction smooth]} \\
@@ -567,7 +569,7 @@ stronger with age, as reflected in children's increasing sensitivity to
 the phonological competitors. Some mechanisms that may explain this
 developmental pattern include changes in lexical organization so that
 neighborhoods of phonologically similar words coactivate and changes in
-lexical representations so that partial information can more eagerly
+lexical representation so that partial information can more eagerly
 activate compatible words.[^connectionism]
 
 [^connectionism]: I am not too committed to any particular mechanisms

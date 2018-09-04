@@ -1,5 +1,5 @@
 
-Items used in the mispronunciation experiment {#mp-experiment-items}
+Items used in Study 2 {#mp-experiment-items}
 ========================================================================
 
 
@@ -7,9 +7,9 @@ Items used in the mispronunciation experiment {#mp-experiment-items}
 
 
 
-Table \@ref(tab:aim2-items) shows the stimuli design from year to
-year. The word list changed between Age 3 and Age 4 where *dog*/*tog* was
-replaced with *rice*/*wice*.
+Table \@ref(tab:aim2-items) shows the stimuli design of each year for the
+mispronunciation experiment in Study 2. The word list changed between
+Age 3 and Age 4 where *dog*/*tog* was replaced with *rice*/*wice*.
 
 
 Table: (\#tab:aim2-items)Items used for the mispronunciation experiment.

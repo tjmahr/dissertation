@@ -1,5 +1,5 @@
 
-(PART\*) Aim 1: Familiar Word Recognition and Lexical Competition {#part-aim1 .unnumbered}
+(PART\*) Study 1: Familiar word recognition and lexical competition {#part-aim1 .unnumbered}
 ===================
 
 

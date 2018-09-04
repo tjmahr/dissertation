@@ -1,13 +1,12 @@
 
 \backmatter
 
-
-
 # References {-}
 
 <!-- This manually sets the header for this unnumbered chapter. -->
 \markboth{References}{References}
 
+\singlespacing
 \sloppy
 
 <!--To remove the indentation of the first entry.-->

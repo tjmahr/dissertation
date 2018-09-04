@@ -1,5 +1,5 @@
 
-Items used in the visual world experiment {#vw-experiment-items}
+Items used in Study 1 {#vw-experiment-items}
 ========================================================================
 
 
@@ -8,14 +8,16 @@ Items used in the visual world experiment {#vw-experiment-items}
 
 
 
-Table \@ref(tab:aim1-all-items) lists the items used for the visual world
-experiment. Each row of the table represents a set of four images used
-in a trial. There were two blocks of trials with different images and
-trial orderings. For the two unrelated foils with more than one word
-listed, the two foils were used in different blocks.
+Table \@ref(tab:aim1-all-items) lists the items used for the Visual World
+experiment in Study 1. Each row of the table represents a set of four
+images used in a trial. There were two blocks of trials with different
+images and trial orderings. For the two unrelated foils with more than
+one word listed, the two foils were used in different blocks. That is,
+*pear* had *ring* as its unrelated competitor in one block and *vase* in
+the other block. This happened due to a design oversight.
 
 
-Table: (\#tab:aim1-all-items)Sets of four images used for the Visual World Experiment.
+Table: (\#tab:aim1-all-items)Sets of four images used for the Visual World experiment.
 
 Target   Phonological   Semantic   Unrelated 
 -------  -------------  ---------  ----------
@@ -43,7 +45,8 @@ swing    spoon          kite       heart
 sword    swan           pen        gift      
 van      pan            horse      sword     
 vase     van            gift       swan      
- 
+
+
 For the analysis of phonological competitors, I only used trials where
 the target and the phonological foil shared the same syllable onset
 (Table \@ref(tab:phonological-competitor-items)). For the analysis of

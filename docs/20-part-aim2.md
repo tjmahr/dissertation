@@ -1,5 +1,5 @@
 
-(PART\*) Aim 2: Referent Selection and Mispronunciations {#part-aim2 .unnumbered}
+(PART\*) Study 2: Referent selection and mispronunciations {#part-aim2 .unnumbered}
 ===================
 
 

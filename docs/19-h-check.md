@@ -39,7 +39,7 @@ variable each year.
 
 **Consequently, individual differences in word recognition at
 age 3, for example, will be more discriminating and predictive of
-age 5 language outcomes than differences at age 4 or age 5.**
+age-5 language outcomes than differences at age 4 or age 5.**
 
 Yes. Correlations between growth curve features with future vocabulary
 measures were strongest for the age-3 growth curve features.
@@ -51,7 +51,7 @@ age, based on the hypothesis that children discover similarities
 among words as a consequence of learning more and more words.**
 
 Yes. The advantage of the phonological competitor and semantic
-competitor over the unrelated word with development.
+competitor over the unrelated word increased with development.
 
 \bigskip\smallskip
 
@@ -61,7 +61,8 @@ child-level measures.**
 
 No evidence to support or refute this hypothesis. I did not find a
 relationship between age-3 measures with the phonological or semantic
-competitors. In principle, however, one could derive a measure from the
-competitor looking curves that does correlate with child-level measures.
+competitors. In principle, however, one could design a task and derive a
+measure from the competitor looking curves that does correlate with
+child-level measures.
 
 \setlength{\parindent}{1.5em}

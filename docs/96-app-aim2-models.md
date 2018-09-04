@@ -1,5 +1,5 @@
 
-Computational details for Specific Aim 2 {#aim2-gca-models}
+Computational details for Study 2 {#aim2-gca-models}
 ========================================================================
 
 
@@ -14,7 +14,7 @@ These models were fit in R [vers. 3.5.0; @R-base] with the brms package
 [vers. 2.3.1; @brms].
 
 The orthogonal polynomial features for Time, they were scaled as in
-Specific Aim 1, so that the linear feature ranged from −.5 to .5. Under
+Study 1, so that the linear feature ranged from −.5 to .5. Under
 this scaling a unit change in Time^1^ was equal to change from the start
 to the end of the analysis window.
 
@@ -45,17 +45,19 @@ formula <- bf(
   family = binomial)
 ```
 
-The priors for the model are described below. The regression effects
-(`class = "b"`) have a moderately informative prior of Normal(0, 1).
-Because most of the action in the growth curves is a sharp rise, the
-linear time effect `ot1` has a slightly wider prior of Normal(0, 2). A
-weakly informative LKJ(2) prior is put on the random-effect
-correlations. I review the role of the LKJ prior in  
+The priors for the model are specified below. The regression effects
+(`class = "b"`) have a prior of Normal(0, 1). Because most of the action
+in the growth curves is a sharp rise, the linear time effect `ot1` has a
+slightly wider prior of Normal(0, 2). These priors are uninformative in
+terms of direction--both positive and negative effects are equally
+likely--but they are informative in terms of magnitude. A weakly
+informative LKJ(2) prior is put on the random-effect correlations. I
+review the role of the LKJ prior in 
 [Appendix \@ref(aim1-gca-models)](#aim1-gca-models). A weakly informative
 prior is put on the random-effect standard deviations
-Student-*t*([df] 7, [mean] 0, [sd] 3). The Student-*t* distribution
-is like the normal distribution but it provides slightly thicker
-tails which allow extreme or outlying values.
+Student-*t*([df] 7, [mean] 0, [sd] 3). The Student-*t*
+distribution is like the normal distribution but it provides slightly
+thicker tails which allow extreme or outlying values.
 
 
 ```r
@@ -99,7 +101,11 @@ four processing `cores`. Early attempts at the model produced warnings,
 so I increased the `adapt_delta` control option to make the sampling
 more robust and eliminate the warnings.
 
-Model summary for real words versus nonwords at age 3:
+Model summary for real words versus nonwords at age 3:
+
+
+
+
 
 
 ```r
@@ -107,7 +113,9 @@ m1 <- readr::read_rds("./data/aim2-real-vs-nw-tp1.rds.gz")
 summary(m1, priors = TRUE, prob = .9)
 #>  Family: binomial 
 #>   Links: mu = logit 
-#> Formula: Target | trials(Trials) ~ (ot1 + ot2 + ot3) * Condition + (ot1 + ot2 + ot3 | ResearchID/Condition) 
+#> Formula: Target | trials(Trials) ~ 
+#>            (ot1 + ot2 + ot3) * Condition + 
+#>            (ot1 + ot2 + ot3 | ResearchID/Condition) 
 #>    Data: test_data_1 (Number of observations: 7450) 
 #> Samples: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
 #>          total post-warmup samples = 4000
@@ -162,7 +170,7 @@ summary(m1, priors = TRUE, prob = .9)
 #> scale reduction factor on split chains (at convergence, Rhat = 1).
 ```
 
-Model summary for real words versus nonwords at age 4:
+Model summary for real words versus nonwords at age 4:
 
 
 ```r
@@ -170,7 +178,9 @@ m2 <- readr::read_rds("./data/aim2-real-vs-nw-tp2.rds.gz")
 summary(m2, priors = TRUE, prob = .9)
 #>  Family: binomial 
 #>   Links: mu = logit 
-#> Formula: Target | trials(Trials) ~ (ot1 + ot2 + ot3) * Condition + (ot1 + ot2 + ot3 | ResearchID/Condition) 
+#> Formula: Target | trials(Trials) ~ 
+#>            (ot1 + ot2 + ot3) * Condition + 
+#>            (ot1 + ot2 + ot3 | ResearchID/Condition) 
 #>    Data: test_data_2 (Number of observations: 7750) 
 #> Samples: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
 #>          total post-warmup samples = 4000
@@ -225,7 +235,7 @@ summary(m2, priors = TRUE, prob = .9)
 #> scale reduction factor on split chains (at convergence, Rhat = 1).
 ```
 
-Model summary for real words versus nonwords at age 5:
+Model summary for real words versus nonwords at age 5:
 
 
 ```r
@@ -233,7 +243,9 @@ m3 <- readr::read_rds("./data/aim2-real-vs-nw-tp3.rds.gz")
 summary(m3, priors = TRUE, prob = .9)
 #>  Family: binomial 
 #>   Links: mu = logit 
-#> Formula: Target | trials(Trials) ~ (ot1 + ot2 + ot3) * Condition + (ot1 + ot2 + ot3 | ResearchID/Condition) 
+#> Formula: Target | trials(Trials) ~ 
+#>            (ot1 + ot2 + ot3) * Condition + 
+#>            (ot1 + ot2 + ot3 | ResearchID/Condition) 
 #>    Data: test_data_3 (Number of observations: 7550) 
 #> Samples: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
 #>          total post-warmup samples = 4000
@@ -292,7 +304,6 @@ summary(m3, priors = TRUE, prob = .9)
 
 Mispronunciation growth curves
 ------------------------------------------------------------------------
-
 
 Like the models above, these ones are Bayesian mixed-effects logistic
 regression growth curve models fit with brms. I used two separate
@@ -365,7 +376,9 @@ are easily enclosed by the prior densities.
 
 
 
-(ref:student-t-priors) Prior densities (left) versus posterior densities (right) for the random-effect standard deviations. I changed the prior to be tighter, so that it favor values up to 7.5. This prior still turned out to be very conservative, given that the posterior samples for these values are all less than 3.
+(ref:student-t-priors) Prior densities (*left*) versus posterior densities (*right*) for the random-effect standard deviations. I changed the prior to be tighter, so that it favor values up to 7.5. This prior still turned out to be very conservative, given that the posterior samples for these values are all less than 3.
+
+(ref:student-t-priors-scap) Prior densities versus posterior densities for the random-effect standard deviations.
 
 <div class="figure" style="text-align: center">
 <img src="96-app-aim2-models_files/figure-html/student-t-priors-1.png" alt="(ref:student-t-priors)" width="100%" />
@@ -379,7 +392,9 @@ Model summary for unfamiliar-initial mispronunciation trials:
 summary(mp_unfam, priors = TRUE, prob = .9)
 #>  Family: binomial 
 #>   Links: mu = logit 
-#> Formula: Target | trials(Trials) ~ (1 + ot1 + ot2 + ot3) * Study + (1 + ot1 + ot2 + ot3 | ResearchID/Study) 
+#> Formula: Target | trials(Trials) ~ 
+#>            (1 + ot1 + ot2 + ot3) * Study + 
+#>            (1 + ot1 + ot2 + ot3 | ResearchID/Study) 
 #>    Data: d_u (Number of observations: 11875) 
 #> Samples: 4 chains, each with iter = 3000; warmup = 1500; thin = 1;
 #>          total post-warmup samples = 6000
@@ -445,7 +460,9 @@ Model summary for familiar-initial mispronunciation trials:
 summary(mp_fam, priors = TRUE, prob = .9)
 #>  Family: binomial 
 #>   Links: mu = logit 
-#> Formula: Target | trials(Trials) ~ (1 + ot1 + ot2 + ot3) * Study + (1 + ot1 + ot2 + ot3 | ResearchID/Study) 
+#> Formula: Target | trials(Trials) ~ 
+#>            (1 + ot1 + ot2 + ot3) * Study + 
+#>            (1 + ot1 + ot2 + ot3 | ResearchID/Study) 
 #>    Data: d_f (Number of observations: 12100) 
 #> Samples: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
 #>          total post-warmup samples = 4000
@@ -567,7 +584,9 @@ Model summary for retention trials at age 5:
 summary(m_norm, priors = TRUE, prob = .9)
 #>  Family: bernoulli 
 #>   Links: mu = logit 
-#> Formula: Correct ~ ItemType * c_peak_10 + (1 | ResearchID/ItemType) + (1 | WordGroup) + (1 | Item) 
+#> Formula: Correct ~ 
+#>            ItemType * c_peak_10 + 
+#>            (1 | ResearchID/ItemType) + (1 | WordGroup) + (1 | Item) 
 #>    Data: d (Number of observations: 1200) 
 #> Samples: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
 #>          total post-warmup samples = 4000
@@ -595,15 +614,18 @@ summary(m_norm, priors = TRUE, prob = .9)
 #> sd(Intercept)     0.46      0.36     0.05     1.11       1152 1.00
 #> 
 #> Population-Level Effects: 
-#>                           Estimate Est.Error l-90% CI u-90% CI Eff.Sample Rhat
-#> Intercept                     0.57      0.37    -0.03     1.16       1992 1.00
-#> ItemTypenonword               0.90      0.40     0.22     1.54       2180 1.00
-#> c_peak_10                    -0.12      0.06    -0.22    -0.02       4000 1.00
-#> ItemTypenonword:c_peak_10     0.04      0.14    -0.20     0.28       4000 1.00
+#>                           Estimate Est.Error l-90% CI u-90% CI
+#> Intercept                     0.57      0.37    -0.03     1.16
+#> ItemTypenonword               0.90      0.40     0.22     1.54
+#> c_peak_10                    -0.12      0.06    -0.22    -0.02
+#> ItemTypenonword:c_peak_10     0.04      0.14    -0.20     0.28
+#>                           Eff.Sample Rhat
+#> Intercept                       1992 1.00
+#> ItemTypenonword                 2180 1.00
+#> c_peak_10                       4000 1.00
+#> ItemTypenonword:c_peak_10       4000 1.00
 #> 
 #> Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
 #> is a crude measure of effective sample size, and Rhat is the potential 
 #> scale reduction factor on split chains (at convergence, Rhat = 1).
 ```
-
-

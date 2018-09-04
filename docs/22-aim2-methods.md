@@ -12,10 +12,10 @@ Method {#aim2-method}
 
 
 Data collection for this experiment occurred during the same
-longitudinal study as the familiar word recognition experiment of Aim 1.
+longitudinal study as the familiar word recognition experiment of Study 1.
 Thus, this experiment used the same participants, the same stimulus
 preparation and style, and the same general experimental procedure as
-those reported in detail in [Chapter \@ref(aim1-method)](#aim1-method).
+those reported in detail in [Chapter \@ref(aim1-method)](#aim1-method).
 
 
 Mispronunciation task
@@ -26,13 +26,13 @@ by @WhiteMorgan2008 and @MPPaper. In the experiment, two images are
 presented onscreen—a familiar object and an unfamiliar object—and the
 child hears a prompt to view one of the images. In the *correct
 pronunciation* (or *real word*) and *mispronunciation* conditions, the
-child hears either the familiar word (e.g., *soup*) or a one-feature
-mispronunciation of the first consonant of the target word (*shoup*).
+child hears either the familiar word (e.g., *duck*) or a one-feature
+mispronunciation of the first consonant of the target word (*guck*).
 These conditions are designed to test whether children associate
 mispronunciations with novel objects. To encourage fast referent selection,
 there were also trials in a *nonword* condition where the label was an
-unambiguous novel word (e.g., *cheem* presented with images of a bed and
-a novel-looking pastry mixer). Each nonword was constructed to match the
+unambiguous novel word (e.g., *shann* presented with images of a cup and
+a novel-looking bassoon reed). Each nonword was constructed to match the
 phonotactic probability of one of the mispronunciations. 
 Figure \@ref(fig:sample-mp-screen) shows the screens used in two trials.
 Importantly, within a block of trials, the child never hears both the
@@ -42,7 +42,9 @@ comparison so that the child can decide that "guck" is probably not
 "duck"---the design used here avoided this situation and is a change
 from the design of @MPPaper.
 
-(ref:sample-mp-screen-cap) Example displays for a trial in which *duck* is mispronounced as "guck" (*left*) and a trial in which the nonword "cheem" is presented (*right*).
+(ref:sample-mp-screen-cap) Example displays for a trial in which *duck* is mispronounced as "guck" (*left*) and a trial in which the nonword *shann* is presented (*right*).
+
+(ref:sample-mp-screen-scap) Example displays for a trial in which *duck* is mispronounced as "guck" and a trial in which the nonword *shann* is presented.
 
 <div class="figure" style="text-align: center">
 <img src="22-aim2-methods_files/figure-html/sample-mp-screen-1.png" alt="(ref:sample-mp-screen-cap)" width="100%" />
@@ -88,16 +90,29 @@ rainbow-filled flasks used for *sooze* (mispronounced *shoes*) were called
 Following the open-set naming test, children had a closed-set
 recognition test. Two of the novel objects were paired. One of the
 objects was from a mispronunciation trial and the other was from a
-nonword trial. For example, the flasks (*sooze*) were paired with the
-trolley (*geeve*) from the nonword condition. The pairs were yoked, as
-each nonword was designed to have the same phonotactic probability as
+nonword trial. For example, the toy creature (*guck*) was paired with the
+bassoon reed (*shann*) from the nonword condition. The pairs were yoked, as
+each nonword was designed to match the phonotactic probability of
 one of the mispronunciations. During the retention test, children saw
-two images of the novel objects (say, *trolley1.jpeg* and
-*flasks1.jpeg*), heard one of novel labels (*geeve*), and had to point
-to the named object. In a later trial during testing, the other label
-(*sooze*) was tested but using different images for the objects
-(*trolley2.jpeg* and *flasks2.jpeg*). In a block of testing, there
-were 12 trials, 6 for nonwords and 6 for mispronunciations.
+two images of the novel objects (say, *reed1.jpeg* and *toy1.jpeg*)
+printed on a letter-size sheet of paper, heard one of novel labels
+(*shann*), and had to point to the named object.
+Figure \@ref(fig:retention-display) shows an example of what the
+children saw when tested on *guck* and *shann*. In a later trial, the
+other label (*guck*) was tested but using different image assets for the
+objects (*toy2.jpeg* and *reed2.jpeg*). In a block of testing, there
+were 12 trials, 6 for nonwords and 6 for mispronunciations. 
+
+(ref:retention-display) Examples of retention trials that tested *guck* and *shann*. During the first retention trial (*left*), children heard one of the unfamiliar words (e.g., *guck*). The correct response was to point to the toy bull creature because it was the unfamiliar object used on the *duck--guck* trials. During a later trial that used different image assets (*right*), children heard the other word (*shann*). The correct response was to point to the bassoon reed because it was the unfamiliar object used on the *shann* trials. 
+
+(ref:retention-display-scap) Examples of retention trials that tested *guck* and *shann*.
+
+<div class="figure" style="text-align: center">
+<img src="./misc/retention-shann-guck.png" alt="(ref:retention-display)" width="100%" />
+<p class="caption">(\#fig:retention-display)(ref:retention-display)</p>
+</div>
+
+
 
 
 Data screening {#aim2-screening}
@@ -117,19 +132,19 @@ to the exclusion of 30 participants from the
 first year.
 
 
-Table: (\#tab:mp-screening-counts)Eyetracking data counts before and after data screening.
+Table: (\#tab:mp-screening-counts)Eyetracking data before and after data screening. For convenience, the number of exclusions is included as Raw&nbsp;&minus; Screened. *Percent Missing*: Percentage of looks offscreen during 0--2000&nbsp;ms after target onset.
 
-Dataset                Study    Children   Blocks   Trials
----------------------  ------  ---------  -------  -------
-Raw                    Age 3         177      341    12245
-                       Age 4         181      349    12600
-                       Age 5         164      325    11736
-Screened               Age 3         162      305     9062
-                       Age 4         170      320    10031
-                       Age 5         157      306    10113
-Raw &minus; Screened   Age 3          15       36     3183
-                       Age 4          11       29     2569
-                       Age 5           7       19     1623
+Dataset                Year     Children   Blocks   Trials   Percent Missing
+---------------------  ------  ---------  -------  -------  ----------------
+Raw                    Age 3         177      341    12245             25.4%
+                       Age 4         181      349    12600             21.4%
+                       Age 5         164      325    11736             16.7%
+Screened               Age 3         162      305     9062              7.9%
+                       Age 4         170      320    10031              8.1%
+                       Age 5         157      306    10113              7.8%
+Raw &minus; Screened   Age 3          15       36     3183             17.6%
+                       Age 4          11       29     2569             13.3%
+                       Age 5           7       19     1623              8.9%
 
 After mapping the gaze coordinates onto the onscreen images, I performed
 data screening following the same set of steps as in
@@ -147,16 +162,29 @@ condition.
 
 
 
+
+
+
 ### Classifying trials based on initial fixation location
 
-During preliminary visualization of the study-level growth curves, I
+During preliminary visualization of the age-level growth curves, I
 observed an increasing preference for the unfamiliar image for the
-nonword condition. The growth curves showed a typical pattern of a
-baseline at noun onset followed by a quick change in height as the word
-unfolded. For the nonword condition, this baseline level moved further
-from .5 (chance with two images) with each year of the study: Children
-became more likely to fixate on the novel object at the start of these
-trials. 
+nonword condition---see Figure \@ref(fig:novelty-bias). The growth curves
+showed a typical pattern of a baseline at noun onset followed by a quick
+change in height as the word unfolded. For the nonword condition, this
+baseline level moved further from .5 (chance with two images) with each
+year of the study: Children became more likely to fixate on the novel
+object at the start of these trials. 
+
+(ref:novelty-bias) Observed average looks to the target on nonword trials. At the onset of the target noun, there is a novelty preference that increases with each year of the study. This novelty preference is the motivation for separating trials based on gaze location at target onset. Points and intervals represent the mean and standard error of children's empirical growth curves.
+
+(ref:novelty-bias-scap) Observed average looks to the target on nonword trials. 
+
+<div class="figure" style="text-align: center">
+<img src="22-aim2-methods_files/figure-html/novelty-bias-1.png" alt="(ref:novelty-bias)" width="66%" />
+<p class="caption">(\#fig:novelty-bias)(ref:novelty-bias)</p>
+</div>
+
 
 Because this was a two-image task, I was able to account for the
 location of the child's gaze at the onset of the target noun. For each
@@ -165,13 +193,15 @@ unfamiliar object during the first 250 ms after target noun onset
 (specifically, 0 ≤ *time* \< 250 ms). If the majority of the looks
 landed on the familiar object, then the trial was a *familiar-initial*
 trial. An analogous rule labeled trials as *unfamiliar-initial* trials.
-Ties were broken by favoring the earlier fixated image. For example, a
-tie might be a trial with 7 frames of looking to the unfamiliar image,
-followed by 1 frame between the two images, followed by 7 frames to the
-familiar image. In this case, the unfamiliar image was viewed first, so
-the trial is classified as unfamiliar-initial. If there were no looks to
-either image during that window, the trial was not classified for either
-image and it was excluded.
+Ties were broken by favoring the earlier fixated image on the assumption
+that the earlier image better reflected the child's fixation location at
+the onset of the target word. For example, a tie might be a trial
+with 7 frames of looking to the unfamiliar image, followed by 1 frame
+between the two images, followed by 7 frames to the familiar image. In
+this case, the unfamiliar image was viewed first, so the trial is
+classified as unfamiliar-initial. If there were no looks to either image
+during that window, the trial was not classified for either image and it
+was excluded.
 
 Table \@ref(tab:mp-initial-looks-counts) shows the counts and percentages of 
 trial classification. About 5% of trials were
@@ -184,17 +214,17 @@ on the initial fixation location.
 
 Table: (\#tab:mp-initial-looks-counts)Number of trials classified based on initial fixation location.
 
-Study   Condition           Familiar initial   Unfamiliar initial   Neither/excluded
+Year    Condition           Familiar initial   Unfamiliar initial   Neither/excluded
 ------  -----------------  -----------------  -------------------  -----------------
-Age 3   Real word               1629 (53.7%)         1250 (41.2%)         154 (5.1%)
-        Nonword                 1284 (43.8%)         1453 (49.6%)         194 (6.6%)
-        Mispronunciation        1608 (51.9%)         1305 (42.1%)         185 (6.0%)
-Age 4   Real word               1561 (45.9%)         1693 (49.8%)         145 (4.3%)
-        Nonword                 1280 (39.2%)         1799 (55.2%)         183 (5.6%)
-        Mispronunciation        1686 (50.0%)         1552 (46.1%)         132 (3.9%)
-Age 5   Real word               1718 (50.5%)         1558 (45.8%)         125 (3.7%)
-        Nonword                 1172 (35.2%)         1959 (58.9%)         194 (5.8%)
-        Mispronunciation        1752 (51.7%)         1487 (43.9%)         148 (4.4%)
+Age 3   Real word               1629 (53.7%)         1250 (41.2%)        154 (5.10%)
+        Nonword                 1284 (43.8%)         1453 (49.6%)        194 (6.60%)
+        Mispronunciation        1608 (51.9%)         1305 (42.1%)        185 (6.00%)
+Age 4   Real word               1561 (45.9%)         1693 (49.8%)        145 (4.30%)
+        Nonword                 1280 (39.2%)         1799 (55.2%)        183 (5.60%)
+        Mispronunciation        1686 (50.0%)         1552 (46.1%)        132 (3.90%)
+Age 5   Real word               1718 (50.5%)         1558 (45.8%)        125 (3.70%)
+        Nonword                 1172 (35.2%)         1959 (58.9%)        194 (5.80%)
+        Mispronunciation        1752 (51.7%)         1487 (43.9%)        148 (4.40%)
 
 
 
@@ -211,7 +241,7 @@ Age 5   Real word               1718 (50.5%)         1558 (45.8%)         125 (3
 To prepare the data for modeling, I downsampled the data into
 50-ms (3-frame) bins. I
 modeled looks from 300 to 1,500 ms after noun onset. Lastly, I
-aggregated looks by child, study, condition, initial fixation location,
+aggregated looks by child, year, condition, initial fixation location,
 and time, and I created orthogonal polynomials to use as time features
 for the model. Figure \@ref(fig:aim2-real-word-spaghetti),
 Figure \@ref(fig:aim2-nonword-spaghetti), and
@@ -223,14 +253,17 @@ screening and preparation steps.
 
 
 
+(ref:aim2-real-word-spaghetti) Empirical word recognition growth curves for the real words. Each line represents an individual child's proportion of looks to the target image over time. The heavy lines are the averages of the lines for each year. Only the steep, upward growth curves from unfamiliar-initial trials are analyzed.
 
+(ref:aim2-real-word-spaghetti-scap) Empirical word recognition growth curves for the real words.
 
+(ref:aim2-nonword-spaghetti) Empirical word recognition growth curves for the nonwords. Only the steep, downward growth curves from familiar-initial trials are analyzed.
 
-(ref:aim2-real-word-spaghetti) Empirical word recognition growth curves from each year of the study for the real word condition. Each line represents an individual child's proportion of looks to the target image over time. The heavy lines are the averages of the lines for each year. Only the steep, upward growth curves from unfamiliar-initial trials are analyzed.
+(ref:aim2-nonword-spaghetti-scap) Empirical word recognition growth curves for the nonwords.
 
-(ref:aim2-nonword-spaghetti) Empirical word recognition growth curves for nonword condition. Only the steep, downward growth curves from familiar-initial trials are analyzed.
+(ref:aim2-mispronunciation-spaghetti) Empirical word recognition growth curves for the mispronunciations. Both types of curves are analyzed.
 
-(ref:aim2-mispronunciation-spaghetti) Empirical word recognition growth curves for mispronunciation condition. Both types of curves analyzed.
+(ref:aim2-mispronunciation-spaghetti-scap) Empirical word recognition growth curves for the mispronunciations.
 
 
 
@@ -251,4 +284,10 @@ screening and preparation steps.
 <img src="22-aim2-methods_files/figure-html/aim2-mispronunciation-spaghetti-1.png" alt="(ref:aim2-mispronunciation-spaghetti)" width="100%" />
 <p class="caption">(\#fig:aim2-mispronunciation-spaghetti)(ref:aim2-mispronunciation-spaghetti)</p>
 </div>
+
+
+
+
+
+
 

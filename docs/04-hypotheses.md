@@ -2,11 +2,11 @@
 Research hypotheses
 ========================================================================
 
-In this section, I outline the main hypotheses I plan to study for each
-specific aim. This section is intended to preregister the main analyses
+In this section, I outline the main hypotheses I plan to examine for each
+study. This section is intended to preregister the main analyses
 for this project.
 
-Specific Aim 1 (Familiar Word Recognition and Lexical Competition)
+Study 1: Familiar word recognition and lexical competition {-}
 ------------------------------------------------------------------------
 
   - Children’s accuracy and efficiency of recognizing words will improve
@@ -22,7 +22,7 @@ Specific Aim 1 (Familiar Word Recognition and Lexical Competition)
 
   - Consequently, individual differences in word recognition at
     age 3, for example, will be more discriminating and predictive of
-    age 5 language outcomes than differences at age 4 or age 5.
+    age-5 language outcomes than differences at age 4 or age 5.
 
   - Children will become more sensitive to lexical competitors as they
     age, based on the hypothesis that children discover similarities
@@ -33,7 +33,8 @@ Specific Aim 1 (Familiar Word Recognition and Lexical Competition)
     child-level measures.
 
 
-Specific Aim 2 (Referent Selection and Mispronunciations)
+
+Study 2: Referent selection and mispronunciations {-}
 ------------------------------------------------------------------------
 
   - Children’s accuracy and efficiency of recognizing real words and
@@ -50,7 +51,7 @@ Specific Aim 2 (Referent Selection and Mispronunciations)
     in younger children.
 
   - Although these two measures will be correlated, I predict
-    performance in the nonword condition will be a better predict of
+    performance in the nonword condition will be a better predictor of
     future vocabulary growth than performance in the real word
     condition. This hypothesis is based on the idea that fast referent
     selection is a more relevant skill for learning new words than
@@ -61,6 +62,6 @@ Specific Aim 2 (Referent Selection and Mispronunciations)
     tolerate a mispronunciation as a production of familiar word
     compared to children with smaller vocabularies.
 
-  - Mispronunciations that feature later-mastered sounds (e.g.,
-    *rice*/*wice*) will be more likely to be associated to novel objects
-    than earlier-mastered sounds (*duck*/*guck*).
+  - Mispronunciations that feature later-mastered sounds
+    (e.g., *rice-wice*) will be more likely to be associated to novel
+    objects than earlier-mastered sounds (*duck-guck*).

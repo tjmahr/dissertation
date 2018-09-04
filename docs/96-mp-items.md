@@ -1,6 +1,7 @@
 
-Effects of specific mispronunciations {#aim2-mp-items}
+Effects of specific mispronunciations in Study 2 {#aim2-mp-items}
 ========================================================================
+
 
 
 
@@ -34,7 +35,9 @@ children looked to *rice* less than the other real words. Figure
 mispronunciations. 
 
 
-(ref:mp-vs-real) Average proportion of looks to the familiar object for real words and mispronunciations. A *dog*/*tog* pair was administered at age 3 but it was replaced by *rice*/*wice* at age 4.
+(ref:mp-vs-real) Average proportion of looks to the familiar object for real words and mispronunciations. A *dog--tog* pair was administered at age 3 but it was replaced by *rice--wice* at age 4.
+
+(ref:mp-vs-real-scap) Average proportion of looks to the familiar object for real words and mispronunciations.
 
 <div class="figure" style="text-align: center">
 <img src="96-mp-items_files/figure-html/mp-vs-real-1.png" alt="(ref:mp-vs-real)" width="100%" />
@@ -59,7 +62,7 @@ age for some items. Namely, it appears that *dirl* becomes a worse and
 worse realization of *girl* as children grow older. A similar change
 happens with *shoup* for *soup*.
 
-(ref:mp-real-diffs) Difference between the average proportion of looks to real words and mispronunciations.
+(ref:mp-real-diffs) Differences between the average proportion of looks to real words and mispronunciations.
 
 <div class="figure" style="text-align: center">
 <img src="96-mp-items_files/figure-html/mp-real-diffs-1.png" alt="(ref:mp-real-diffs)" width="100%" />
