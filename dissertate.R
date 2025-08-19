@@ -28,15 +28,15 @@ run <- function() {
     set_command("help")
   }
 
-  invisible(rlang::invoke(get_command(), get_rest()))
+  invisible(rlang::exec(get_command(), !!! get_rest()))
 }
 
 
 parse_self_docs <- function(filename) {
   # dev version of roxygen2 provides a parser
   x <- roxygen2::parse_file(filename, NULL)
-  titles <- purrr::map_chr(x, purrr::pluck, "title")
-  calls <- purrr::map(x, purrr::pluck, purrr::attr_getter("call"))
+  titles <- purrr::map_chr(x, purrr::pluck, "tags", 1, "val")
+  calls <- purrr::map(x, purrr::pluck, "call")
   fs <- purrr::map_chr(calls, function(x) as.character(x[[2]]))
   list(names = unname(fs), titles = unname(titles))
 }
@@ -48,7 +48,7 @@ help_menu <- function(docs, width = 70) {
                                     exdent = newline_indent)
 
   command_info <- glue::glue("{docs$name_out}{docs$wrapped}")
-  command_info <- glue::collapse(command_info, sep = "\n")
+  command_info <- glue::glue_collapse(command_info, sep = "\n")
 
   msg <- glue::glue(
     "
